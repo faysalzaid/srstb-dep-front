@@ -51,11 +51,15 @@ const routes = [{
         icon: 'ModalsIcon',
         name: 'Project List',
     },
-
     {
         path: '/app/chat',
         icon: 'ChatIcon',
         name: 'Chat',
+    },
+    {
+        path: '/app/projects_list',
+        icon: 'ChatIcon',
+        name: 'Projects',
     },
 
     {

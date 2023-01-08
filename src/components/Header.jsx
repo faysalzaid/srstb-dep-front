@@ -1,5 +1,5 @@
-import React, { useContext, useState } from 'react'
-import { SidebarContext } from '../context/SidebarContext'
+import React, { useContext, useState, useEffect, useRef } from "react";
+import { SidebarContext } from "../context/SidebarContext";
 import {
   SearchIcon,
   MoonIcon,
@@ -9,35 +9,84 @@ import {
   OutlinePersonIcon,
   OutlineCogIcon,
   OutlineLogoutIcon,
-} from '../icons'
-import { Avatar, Badge, Input, Dropdown, DropdownItem, WindmillContext } from '@windmill/react-ui'
-import removeCookie from '../hooks/removeCookie'
-import { AuthContext } from '../hooks/authContext'
-import { useHistory, withRouter } from 'react-router-dom'
+} from "../icons";
+import {
+  Avatar,
+ // Badge,
+  Input,
+  Dropdown,
+  DropdownItem,
+  WindmillContext,
+} from "@windmill/react-ui";
 
+import {Badge} from '@mui/material';
+import {MdMailOutline} from 'react-icons/md';
+import { styled } from '@mui/material/styles';
+import * as constants from '../constants';
+
+import removeCookie from "../hooks/removeCookie";
+import { AuthContext } from "../hooks/authContext";
+import { useHistory, withRouter } from "react-router-dom";
 
 function Header(props) {
-  const [authState ,setAuthState] = useContext(AuthContext)
+  const [authState, setAuthState] = useContext(AuthContext);
   // let history = useHistory()
-  const { mode, toggleMode } = useContext(WindmillContext)
-  const { toggleSidebar } = useContext(SidebarContext)
+  const { mode, toggleMode } = useContext(WindmillContext);
+  const { toggleSidebar } = useContext(SidebarContext);
 
-  const [isNotificationsMenuOpen, setIsNotificationsMenuOpen] = useState(false)
-  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false)
+  const [isNotificationsMenuOpen, setIsNotificationsMenuOpen] = useState(false);
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
 
   function handleNotificationsClick() {
-    setIsNotificationsMenuOpen(!isNotificationsMenuOpen)
+    setIsNotificationsMenuOpen(!isNotificationsMenuOpen);
   }
 
   function handleProfileClick() {
-    setIsProfileMenuOpen(!isProfileMenuOpen)
+    setIsProfileMenuOpen(!isProfileMenuOpen);
   }
 
-  const handleLogout =()=>{
-      removeCookie('accessToken')
-      setAuthState({id:"",username:"",email:"",role:"",state:false})
-      props.history.push('/login')
-  }
+  const handleLogout = () => {
+    removeCookie("accessToken");
+    setAuthState({ id: "", username: "", email: "", role: "", state: false });
+    props.history.push("/login");
+  };
+
+  const StyledBadge = styled(Badge)(({ theme }) => ({
+    '& .MuiBadge-badge': {
+      right: -3,
+      top: 3,
+      border: `2px solid ${theme.palette.background.paper}`,
+      padding: '0 4px',
+    },
+  }));
+
+  const [newMessages, setNewMessages] = useState(0);
+
+  const fetchNewMessage = () => {
+    fetch(`${constants.url}/chat/count`, {
+      method: "GET",
+      credentials: "include",
+    })
+      .then((res) => res.json())
+      .then((resp) => {
+        if (resp.count != newMessages) {
+          setNewMessages((prev)=>resp.count);
+        }
+      })
+      .catch((error) => console.log(error));
+  };
+
+  const interval = useRef();
+
+  useEffect(() => {
+    
+    interval.current = setInterval(() => {
+      fetchNewMessage();
+    }, 7000);
+
+    return () => clearInterval(interval.current);
+  }, [newMessages]);
+
   return (
     <header className="z-40 py-4 bg-white shadow-bottom dark:bg-gray-800">
       <div className="container flex items-center justify-between h-full px-6 mx-auto text-purple-600 dark:text-purple-300">
@@ -70,7 +119,7 @@ function Header(props) {
               onClick={toggleMode}
               aria-label="Toggle color mode"
             >
-              {mode === 'dark' ? (
+              {mode === "dark" ? (
                 <SunIcon className="w-5 h-5" aria-hidden="true" />
               ) : (
                 <MoonIcon className="w-5 h-5" aria-hidden="true" />
@@ -85,13 +134,18 @@ function Header(props) {
               aria-label="Notifications"
               aria-haspopup="true"
             >
-              <BellIcon className="w-5 h-5" aria-hidden="true" />
-              
+              {/* <BellIcon className="w-5 h-5" aria-hidden="true" /> */}
+
               {/* <!-- Notification badge --> */}
-              <span
+
+              {/* <span
                 aria-hidden="true"
                 className="absolute top-0 right-0 inline-block w-3 h-3 transform translate-x-1 -translate-y-1 bg-red-600 border-2 border-white rounded-full dark:border-gray-800"
-              ></span>
+              ></span> */}
+              {newMessages > 0 && <StyledBadge badgeContent={newMessages} color="secondary">
+                <MdMailOutline color="action" style={{fontSize: 21}}/>
+              </StyledBadge>}
+              {newMessages <= 0 && <MdMailOutline color="action" style={{fontSize: 21}}/>}
             </button>
 
             <Dropdown
@@ -107,14 +161,13 @@ function Header(props) {
                 <span>Sales</span>
                 <Badge type="danger">2</Badge>
               </DropdownItem>
-              <DropdownItem onClick={() => alert('Alerts!')}>
+              <DropdownItem onClick={() => alert("Alerts!")}>
                 <span>Alerts</span>
               </DropdownItem>
             </Dropdown>
           </li>
           {/* <!-- Profile menu --> */}
           <li className="relative">
-           
             <button
               className="rounded-full focus:shadow-outline-purple focus:outline-none text-xs px-0 py-2"
               onClick={handleProfileClick}
@@ -122,17 +175,22 @@ function Header(props) {
               // aria-hidden="true"
               aria-haspopup="true"
             >
-            <OutlineLogoutIcon className="w-5 h-5" aria-hidden="true" onClick={handleLogout}/>
-             
+              <OutlineLogoutIcon
+                className="w-5 h-5"
+                aria-hidden="true"
+                onClick={handleLogout}
+              />
             </button>
             <Dropdown
               align="right"
               isOpen={isProfileMenuOpen}
               onClose={() => setIsProfileMenuOpen(false)}
             >
-              
               <DropdownItem tag="a" href="#">
-                <OutlinePersonIcon className="w-4 h-4 mr-3" aria-hidden="true" />
+                <OutlinePersonIcon
+                  className="w-4 h-4 mr-3"
+                  aria-hidden="true"
+                />
                 <span>Profile</span>
               </DropdownItem>
               <DropdownItem tag="a" href="#">
@@ -140,7 +198,10 @@ function Header(props) {
                 <span>Settings</span>
               </DropdownItem>
               <DropdownItem onClick={handleLogout}>
-                <OutlineLogoutIcon className="w-4 h-4 mr-3" aria-hidden="true" />
+                <OutlineLogoutIcon
+                  className="w-4 h-4 mr-3"
+                  aria-hidden="true"
+                />
                 <span>Log out</span>
               </DropdownItem>
             </Dropdown>
@@ -148,7 +209,7 @@ function Header(props) {
         </ul>
       </div>
     </header>
-  )
+  );
 }
 
-export default withRouter(Header)
+export default withRouter(Header);

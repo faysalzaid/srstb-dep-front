@@ -1,5 +1,38 @@
-.sidebar {
-    
+.sidebar {}
+
+.edit-input {
+    border-radius: 5px 15px 15px 5px;
+    padding-left: 10px;
+    padding-right: 30px;
+
+    &:focus {
+        outline: none;
+    }
+}
+
+.send-edit-chat-btn {
+    font-size: 20px;
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: darkslateblue
+}
+
+.no-chat-found {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40vh;
+    padding: 10px 6px;
+
+    p {
+        background-color: #008b8b;
+        padding: 6px 20px;
+        color: white;
+        font-family: ubuntu;
+        border-radius: 20px;
+    }
 }
 
 .position {
@@ -7,17 +40,17 @@
 }
 
 .item-container {
-   // border-bottom: 1px solid rgba(0,0,0,.4);
-   padding: 10px !important;
-   padding-bottom: 15px !important;
-   padding-top: 15px !important;
+    // border-bottom: 1px solid rgba(0,0,0,.4);
+    padding: 10px !important;
+    padding-bottom: 15px !important;
+    padding-top: 15px !important;
 }
 
 .img {
     width: 50px !important;
     height: 50px !important;
     border-radius: 50%;
-    border: 2px solid rgba(0,0,0,.09);
+    border: 2px solid rgba(0, 0, 0, .09);
 }
 
 .name {
@@ -31,15 +64,31 @@
 
 .status {
     font-size: 15px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-right: 10px;
 }
 
 .dot {
-    width: 9px;
-    height: 9px;
+    width: 20px;
+    height: 20px;
     background-color: rgb(226, 1, 1);
     border-radius: 50%;
+    padding: 10px;
     margin-right: 5px;
     margin-top: 3px;
+    position: relative;
+
+    p {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: white;
+        font-size: 12px;
+        font-weight: bold;
+    }
 }
 
 .searchIcon {
@@ -51,6 +100,7 @@
     width: 100%;
     margin-bottom: 20px;
     margin-top: 25px;
+
     .message {
         //background-color: rgba(0,0,0,.1);
         width: auto;
@@ -59,10 +109,10 @@
         border-radius: 0 30px 30px 30px;
         padding: 5px 15px;
         padding-right: 5px;
-        
+
         p {
             font-family: ubuntu;
-            color: rgba(0,0,0,.6);
+            color: rgba(0, 0, 0, .6);
             text-align: left;
             display: flex;
 
@@ -80,6 +130,7 @@
     text-align: right;
     margin-bottom: 20px;
     margin-top: 20px;
+
     .message {
         background-color: #45c8dc;
         width: auto;
@@ -87,12 +138,22 @@
         overflow: auto;
         border-radius: 30px 0 30px 30px;
         padding: 5px 10px;
+        padding-right: 10px;
         padding-left: 20px;
-        
+
         p {
             font-family: ubuntu;
             color: white;
             text-align: left;
+            display: flex;
+
+            .editChat {
+                margin-right: 3px;
+                margin-left: 0;
+                padding-left: 0;
+                font-size: 20px;
+                text-align: left;
+            }
         }
     }
 }
@@ -106,7 +167,7 @@
     height: 40px !important;
     margin-right: 6px;
     border-radius: 50%;
-    border: 1px solid rgba(0,0,0,.3)
+    border: 1px solid rgba(0, 0, 0, .3)
 }
 
 
@@ -115,7 +176,7 @@
     height: 40px !important;
     margin-left: 6px;
     border-radius: 50%;
-    border: 1px solid rgba(0,0,0,.3)
+    border: 1px solid rgba(0, 0, 0, .3)
 }
 
 .no-user {
@@ -126,6 +187,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+
     p {
         background-color: darkcyan;
         border-radius: 30px;
@@ -139,13 +201,19 @@
 .chat-with {
     height: 30px;
     margin-bottom: 30px;
-    border-bottom: 2px solid rgba(0,0,0,.1)
+    border-bottom: 2px solid rgba(0, 0, 0, .1)
 }
 
 @media only screen and (max-width: 500px) {
     .chatFrom {
         .message {
-            border-radius: 0 5px 5px 5px;
+            border-radius: 0 10px 10px 10px;
+        }
+    }
+
+    .chatTo {
+        .message {
+            border-radius: 0 10px 10px 10px;
         }
     }
 }
@@ -154,6 +222,7 @@
     .chat-ui-avatar-from {
         display: none;
     }
+
     .chat-ui-avatar-to {
         display: none;
     }
@@ -170,7 +239,7 @@
 .send-div {
     position: fixed;
     bottom: 30px;
-    border-top: 2px solid rgba(0,0,0,.1);
+    border-top: 2px solid rgba(0, 0, 0, .1);
     padding-top: 15px;
     width: 100%;
     padding-left: 0px !important;
@@ -178,14 +247,16 @@
     outline: none;
 
     input {
-        border: 0px solid rgba(0,0,0,.2);
+        border: 0px solid rgba(0, 0, 0, .2);
         border-radius: 8px;
         padding: 10px;
-        flex: 1       
+        flex: 1
     }
+
     input:focus {
         outline: none;
     }
+
     .send-button {
         color: rgb(53, 90, 224);
         margin-top: 10px;
@@ -197,6 +268,7 @@
         transition: background 0.23s;
     }
 }
+
 .div-top {
     background-color: rgba(66, 70, 61, 0.208) !important;
     width: 100%;
@@ -208,16 +280,16 @@
 .msg-inp {
     flex: 1;
     background: #ddd;
-    border-radius:  30px 10px 10px 30px ;
+    border-radius: 30px 10px 10px 30px;
     padding-left: 20px;
     width: 100%;
-  }
+}
 
-  .msg-inp:focus {
-    outline: 0.1px solid rgba(0,0,200,.4);
-  }
+.msg-inp:focus {
+    outline: 0.1px solid rgba(0, 0, 200, .4);
+}
 
-  .msg-btn {
+.msg-btn {
     margin-left: 10px;
     background: rgb(0, 196, 65);
     color: #fff;
@@ -225,10 +297,11 @@
     cursor: pointer;
     transition: background 0.23s;
     border-radius: 10px;
-  }
-  .msg-btn:hover {
+}
+
+.msg-btn:hover {
     background: rgb(0, 180, 50);
-  }
+}
 
 
 .msg-div {
@@ -236,27 +309,27 @@
     padding: 10px;
     // border-top: var(--border);
     // background: #eee;
-    border-top: 2px solid rgba(0,0,0,.1);
+    border-top: 2px solid rgba(0, 0, 0, .1);
     padding-top: 15px;
     background-color: transparent !important;
-  }
+}
 
-  
-  .msg-div * {
+
+.msg-div * {
     padding: 10px;
     border: none;
     border-radius: 3px;
     font-size: 1em;
-  }
-  
+}
 
-  .editChat {
+
+.editChat {
     opacity: 0;
     cursor: pointer;
     transition: opacity 0.5s;
     margin-top: 3px;
-  }
+}
 
-  .editChat:hover {
+.editChat:hover {
     opacity: 1;
-  }
+}

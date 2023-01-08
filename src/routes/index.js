@@ -60,6 +60,9 @@ const ProjectLists = lazy(() =>
 const Chat = lazy(() =>
     import ('../components/Chat/Chat'))
 
+const Projects = lazy(() =>
+    import ('../components/Projects/Projects'))
+
 const ProjectListsDetail = lazy(() =>
         import ('../pages/ProjectListsDetail'))
 
@@ -187,6 +190,10 @@ const routes = [{
     {
         path: '/chat',
         component: Chat,
+    },
+    {
+        path: '/projects_list',
+        component: Projects,
     },
 ]
 
