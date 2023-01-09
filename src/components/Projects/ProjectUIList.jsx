@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {useState, useEffect} from 'react';
-import "./projects.scss";
 import { BiDotsVerticalRounded } from 'react-icons/bi'; 
 import { Divider, Button } from '@mui/material';
 import {Avatar} from '@mui/material';
@@ -12,7 +11,7 @@ import Fade from '@mui/material/Fade';
 
 import {MdModeEditOutline, MdOutlineDeleteOutline} from 'react-icons/md';
 
-const ProjectUI = ({pr}) => {
+const ProjectUIList = ({pr}) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -25,11 +24,23 @@ const ProjectUI = ({pr}) => {
 
   return (
     <>
-      <div class="max-w-sm rounded overflow-hidden shadow-2xl bg-green-50 dark:bg-gray-700 project">
-        <div className='project-header'>
+      <div class="rounded overflow-hidden shadow-lg bg-green-50 dark:bg-gray-700 project">
+        <div className='project-header-list'>
             <div className='project-icon'>{pr.name[0]}</div>
-            <div className='right'>
+            <div className='body'>
+              <div className='project-name dark:text-gray-200'>{pr.name}</div>
+              <div className='user'>
+                <Avatar sx={{ width: 32, height: 32 }} src={pr.added_by.url} />
+                <div style={{ marginLeft: 5, fontFamily: 'ubuntu', fontSize: 15 }} className="name dark:text-gray-300">{pr.added_by.name}</div>
+              </div>
+              <progress id="file" value={pr.progress} max="100" className='progress'></progress>
+              <div className='category'>
+                  {pr.category}
+              </div>
               <div className='project-status'>{pr.status}</div>
+            </div>
+
+            <div className='right'>
               <BiDotsVerticalRounded className="hover: cursor-pointer dark:text-gray-300 three-dot" style={{fontSize: 20}} onClick={handleClick}/>
               <Menu
                 id="fade-menu"
@@ -49,7 +60,7 @@ const ProjectUI = ({pr}) => {
             </div>
         </div>
         <Divider style={{marginTop: 10}}/>
-        <div className='title dark:text-gray-100'>
+        {/* <div className='title dark:text-gray-100'>
             {pr.name}
         </div>
         <div className='underscore'>
@@ -75,11 +86,11 @@ const ProjectUI = ({pr}) => {
                 Tasks
             </Button>
              
-        </div>
+        </div> */}
         
       </div>
     </>
   );
 }
 
-export default ProjectUI;
+export default ProjectUIList;
