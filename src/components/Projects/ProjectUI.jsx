@@ -12,7 +12,7 @@ import Fade from '@mui/material/Fade';
 
 import {MdModeEditOutline, MdOutlineDeleteOutline} from 'react-icons/md';
 
-const ProjectUI = ({pr}) => {
+const ProjectUI = ({pr, setProfile}) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -67,7 +67,11 @@ const ProjectUI = ({pr}) => {
 
         <Divider style={{marginTop: 10}}/>
         <div className='project-footer'>
-            <div className='user'>
+            <div className='user hover:cursor-pointer'
+              onClick={() => {
+                setProfile({title: pr.added_by.name, url: pr.added_by.url, open: true, job: pr.added_by.job, phone: pr.added_by.phone, email: pr.added_by.email, address: pr.added_by.address});
+              }}
+            >
                 <Avatar sx={{ width: 32, height: 32 }} src={pr.added_by.url} />
                 <div style={{ marginLeft: 5, fontFamily: 'ubuntu', fontSize: 15 }} className="name dark:text-gray-300">{pr.added_by.name}</div>
             </div>

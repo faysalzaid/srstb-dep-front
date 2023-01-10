@@ -29,7 +29,7 @@ const ProjectUIList = ({pr, setProfile}) => {
             <div className='project-icon'>{pr.name[0]}</div>
             <div className='body'>
               <div className='project-name dark:text-gray-200'>{pr.name}</div>
-              <div className='user'
+              <div className='user hover:cursor-pointer'
                 onClick={() => {
                   setProfile({title: pr.added_by.name, url: pr.added_by.url, open: true, job: pr.added_by.job, phone: pr.added_by.phone, email: pr.added_by.email, address: pr.added_by.address});
                 }}
