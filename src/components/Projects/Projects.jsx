@@ -5,11 +5,24 @@ import ProjectUI from './ProjectUI';
 import ProjectUIList from './ProjectUIList';
 import "./projects.scss";
 import {BsGrid, BsList} from 'react-icons/bs';
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
+import { url } from 'config/urlConfig';
 
 const Projects = () => {
   const statuses = {not_started: "Not Started", ongoing: "Ongoing", done: "Done"}
   
   const [list, setList] = useState(true);
+
+  
+  const {isLoading,data} = useQuery('project-list',()=>{
+    return axios.get(`${url}/projects`).then((resp)=>resp.data)
+  })
+
+  const query = []
+  if(!isLoading){
+    query = data
+  }
 
   const projects = [
     {

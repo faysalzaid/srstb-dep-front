@@ -15,22 +15,22 @@ const routes = [{
         icon: 'SunIcon',
         name: 'Companies',
     },
-    {
-        path: '/app/clients',
-        icon: 'FormsIcon',
-        name: 'Clients',
-    },
+    // {
+    //     path: '/app/clients',
+    //     icon: 'FormsIcon',
+    //     name: 'Clients',
+    // },
     {
         path: '/app/bids',
         icon: 'FormsIcon',
         name: 'Bids',
     },
 
-    {
-        path: '/app/projects',
-        icon: 'FormsIcon',
-        name: 'Projects',
-    },
+    // {
+    //     path: '/app/projects',
+    //     icon: 'FormsIcon',
+    //     name: 'Projects',
+    // },
     {
         path: '/app/users',
         icon: 'PeopleIcon',
