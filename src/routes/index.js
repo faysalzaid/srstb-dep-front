@@ -57,7 +57,8 @@ const ProjectDetail = lazy(() =>
 const Chat = lazy(() =>
     import ('../components/Chat/Chat'))
 
-
+const Projects = lazy(() =>
+    import ('../components/Projects/Projects'))
 /**
  * ⚠ These are internal routes!
  * They will be rendered inside the app, using the default `containers/Layout`.
