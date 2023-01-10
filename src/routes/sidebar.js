@@ -53,6 +53,11 @@ const routes = [{
         icon: 'ChatIcon',
         name: 'Chat',
     },
+    {
+        path: '/app/projects_list',
+        icon: 'ChatIcon',
+        name: 'Projects',
+    },
 
     {
         name: 'Office Info',

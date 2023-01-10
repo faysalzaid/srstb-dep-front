@@ -8,13 +8,12 @@ import ThemedSuspense from './components/ThemedSuspense'
 import { Windmill } from '@windmill/react-ui'
 import * as serviceWorker from './serviceWorker'
 import { BrowserRouter } from 'react-router-dom'
-// import 'bootstrap/dist/css/bootstrap.min.css';
-// if (process.env.NODE_ENV !== 'production') {
-//   const axe = require('react-axe')
-//   axe(React, ReactDOM, 1000)
-// }
 
-ReactDOM.render(
+import { createRoot } from 'react-dom/client';
+const container = document.getElementById('root');
+const root = createRoot(container);
+
+root.render(
   <BrowserRouter>
   <SidebarProvider>
     <Suspense fallback={<ThemedSuspense />}>
@@ -26,8 +25,7 @@ ReactDOM.render(
       </Windmill>
     </Suspense>
   </SidebarProvider>
-  </BrowserRouter>,
-  document.getElementById('root')
+  </BrowserRouter>
 )
 
 // If you want your app to work offline and load faster, you can change

@@ -169,6 +169,10 @@ const routes = [{
         path: '/chat',
         component: Chat,
     },
+    {
+        path: '/projects_list',
+        component: Projects,
+    },
 ]
 
 export default routes

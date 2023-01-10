@@ -13,44 +13,18 @@ import {
 } from "react-icons/io";
 
 import ChatUIList from "./ChatUI";
-import * as constants from 'constants.js';
+import * as constants from "constants.js";
 
 const ChatUI = () => {
   const [sideBar, setSideBar] = useState(true);
   const [selected, setSelected] = useState({});
   const [search, setSearch] = useState("");
-  const [selectedUser, setSelectedUser] = useState(0);
+  const [selectedUser, setSelectedUser] = useState({ id: 0, name: "" });
 
   const theme = useTheme();
   const sm = useMediaQuery(theme.breakpoints.down("lg"));
 
-  // const initialChats = [
-  //   {
-  //     id: 1,
-  //     name: "Ousman Seid",
-  //     status: 1,
-  //     profile: A1,
-  //   },
-  //   {
-  //     id: 2,
-  //     name: "Faysal Ali",
-  //     status: 0,
-  //     profile: A6,
-  //   },
-  //   {
-  //     id: 3,
-  //     name: "Khadar Baxar",
-  //     status: 1,
-  //     profile: A3,
-  //   },
-  //   {
-  //     id: 4,
-  //     name: "Samatar Osman",
-  //     status: 0,
-  //     profile: A5,
-  //   },
-  // ];
-  const [initialChts, setInitialChts] = useState([])
+  const [initialChts, setInitialChts] = useState([]);
   const [chats, setChats] = useState([]);
 
   useEffect(() => {
@@ -69,24 +43,27 @@ const ChatUI = () => {
   }, [search]);
 
   const fetchUsers = async () => {
-      // axios.get(`${constants.url}/chat/userslist/show`,{withCredentials: true}).then((resp)=>{
-      //     //console.log(resp.data)
-      // }).catch(error=>console.log(error));
-
-      fetch(`${constants.url}/chat/userslist/show`, {credentials:'include',})
+    fetch(`${constants.url}/chat/userslist/show`, { credentials: "include" })
       .then((res) => res.json())
       .then((resp) => {
-          let users = [];
-          resp.map((val)=>{
-            users.push({id: val.id, name:val.name, status: 0, profile: A1, avatar: val.image})
+        let users = [];
+        resp.sort((a, b) => a.name.localeCompare(b.name))
+        resp.map((val) => {
+          users.push({
+            id: val.id,
+            name: val.name,
+            avatar: val.image,
+            lastMessage: val.lastChat??'',
+            new: val.new??0
           });
-          setInitialChts(ic => users);
-          setChats(ch => users);
+        });
+        setInitialChts((ic) => users);
+        setChats((ch) => users);
       });
-  }
-  useEffect(()=>{
+  };
+  useEffect(() => {
     fetchUsers();
-  },[]);
+  }, [selectedUser.id]);
   return (
     <>
       {sm && (
@@ -102,23 +79,23 @@ const ChatUI = () => {
             className="drop-shadow-xl border-l-2 border-green-400 border-solid dark:bg-gray-700 dark:border-transparent"
             style={{
               minHeight: "100vh",
-              //borderLeft: "8px solid green",
               borderRadius: 0,
             }}
           >
-            {sm &&<IoIosArrowDropleftCircle
-              onClick={() => {
-                setSideBar(false);
-              }}
-              className="hover:cursor-pointer "
-              style={{
-                fontSize: 30,
-                marginLeft: -16,
-                color: "darkcyan",
-                //left: sm ? 345 : '',
-                float:'right'
-              }}
-            /> }
+            {sm && (
+              <IoIosArrowDropleftCircle
+                onClick={() => {
+                  setSideBar(false);
+                }}
+                className="hover:cursor-pointer "
+                style={{
+                  fontSize: 30,
+                  marginLeft: -16,
+                  color: "darkcyan",
+                  float: "right",
+                }}
+              />
+            )}
             <Grid container>
               <TextField
                 value={search}
@@ -143,15 +120,16 @@ const ChatUI = () => {
                   ),
                 }}
               />
-              {chats.map((chat) => {
+              {chats.map((chat, index) => {
                 const label = "chat" + chat.id;
-                //if (chat.id === userId) return;
                 return (
                   <motion.div
                     className="hover:cursor-pointer"
+                    key={index}
                     onClick={() => {
-                      setSelectedUser((su) => chat.id);
-                      setSideBar((sBar)=>false);
+                      let usr = { id: chat.id, name: chat.name };
+                      setSelectedUser((su) => usr);
+                      setSideBar((sBar) => false);
                       setSelected({ [label]: true });
                     }}
                     style={{
@@ -164,26 +142,27 @@ const ChatUI = () => {
                         selected[label] ?? false ? "rgba(0,0,0,.06)" : "",
                     }}
                   >
-                    <Grid item xs={12} className="item-container border-b">
+                    <Grid item xs={12} className="item-container border-b" key={"grid"+index}>
                       <Grid container spacing={0} alignItems="center">
                         <Grid item style={{ width: 50, marginRight: 10 }}>
                           <img src={chat.avatar} className="img" />
                         </Grid>
                         <Grid item style={{ width: 150 }}>
-                          <p className="name">{chat.name}</p>
+                          <p className="name dark:text-gray-300">{chat.name}</p>
                           <div
-                            style={{ display: "flex", alignItems: "center" }}
+                            style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: 260 }}
                           >
-                            <p
+                            
+                            <p className="status dark: text-gray-400">
+                              {chat.lastMessage}
+                            </p>
+                            {chat.new > 0 && <p
                               className="dot"
                               style={{
-                                backgroundColor:
-                                  chat.status === 1 ? "rgba(0,255,0,.9)" : "",
+                                backgroundColor:"purple",
                               }}
-                            ></p>
-                            <p className="status">
-                              {chat.status === 1 ? "online" : "offline"}
-                            </p>
+                            ><p>{chat.new}</p></p>}
+
                           </div>
                         </Grid>
                       </Grid>
@@ -195,7 +174,7 @@ const ChatUI = () => {
           </Card>
         </motion.div>
       )}
-      <div style={{ display: "flex"}} className="dark:bg-gray-700 mt-5">
+      <div style={{ display: "flex" }} className=" mt-5">
         {!sm && (
           <motion.div
             initial={{
@@ -209,10 +188,8 @@ const ChatUI = () => {
               className="drop-shadow-xl bg-white border-l-2 border-green-400 border-solid dark:bg-gray-700 dark:border-transparent"
               style={{
                 minHeight: "100vh",
-                //borderLeft: "2px solid green",
                 borderRadius: 0,
               }}
-
             >
               <Grid container>
                 <TextField
@@ -244,39 +221,46 @@ const ChatUI = () => {
                     <motion.div
                       className="hover:cursor-pointer"
                       onClick={() => {
-                        setSelectedUser((su) => chat.id);
+                        const usr = {id: chat.id, name: chat.name}
+                        setSelectedUser((su) =>usr);
                         setSelected({ [label]: true });
                       }}
                       style={{
-                        borderLeft:
-                          selected[label] ?? false ? "5px solid orange" : "",
+                        // borderLeft:
+                        //   selected[label] ?? false ? "5px solid orange" : "",
+                          
                         width: "100%",
                         marginRight: 5,
-                        borderRadius: 10,
+                        borderRadius: 5,
                         background:
-                          selected[label] ?? false ? "rgba(0,0,0,.06)" : "",
+                          selected[label] ?? false ? "rgba(0,200,0,.15)" : "",
                       }}
                     >
-                      <Grid item xs={12} className="item-container border-b dark:bg-gray-800">
+                      <Grid
+                        item
+                        xs={12}
+                        className="item-container border-b"
+                      >
                         <Grid container spacing={0} alignItems="center">
                           <Grid item style={{ width: 50, marginRight: 10 }}>
                             <img src={chat.avatar} className="img" />
                           </Grid>
                           <Grid item style={{ width: 150 }}>
-                            <p className="name dark:text-gray-100">{chat.name}</p>
+                            <p className="name dark:text-gray-100">
+                              {chat.name}
+                            </p>
                             <div
-                              style={{ display: "flex", alignItems: "center" }}
+                              style={{ display: "flex", alignItems: "center", justifyContent: 'space-between', width: 181 }}
                             >
-                              <p
-                                className="dot"
-                                style={{
-                                  backgroundColor:
-                                    chat.status === 1 ? "rgba(0,255,0,.9)" : "",
-                                }}
-                              ></p>
-                              <p className="status dark:text-gray-300">
-                                {chat.status === 1 ? "online" : "offline"}
-                              </p>
+                              <p className="status dark: text-gray-400">
+                              {chat.lastMessage}
+                            </p>
+                            {chat.new > 0 && <p
+                              className="dot"
+                              style={{
+                                backgroundColor:"purple",
+                              }}
+                            ><p>{chat.new}</p></p>}
                             </div>
                           </Grid>
                         </Grid>
@@ -290,19 +274,21 @@ const ChatUI = () => {
         )}
         <motion.div style={{ width: "100%" }}>
           {sideBar ? (
-            !sm && <IoIosArrowDropleftCircle
-              onClick={() => {
-                setSideBar(false);
-              }}
-              className="hover:cursor-pointer "
-              style={{
-                fontSize: 30,
-                marginLeft: -16,
-                color: "darkcyan",
-                position: "absolute",
-                //left: sm ? 345 : '',
-              }}
-            /> 
+            !sm && (
+              <IoIosArrowDropleftCircle
+                onClick={() => {
+                  setSideBar(false);
+                }}
+                className="hover:cursor-pointer "
+                style={{
+                  fontSize: 30,
+                  marginLeft: -16,
+                  color: "darkcyan",
+                  position: "absolute",
+                  //left: sm ? 345 : '',
+                }}
+              />
+            )
           ) : (
             <IoIosArrowDroprightCircle
               onClick={() => {
@@ -322,12 +308,12 @@ const ChatUI = () => {
           <div style={{ padding: 40 }}>
             <Grid container>
               <Grid item xs={12}>
-                {selectedUser=== 0 ? (
+                {selectedUser.id === 0 ? (
                   <div className="no-user">
                     <p>Select user to chat!</p>
                   </div>
                 ) : (
-                  <ChatUIList to={selectedUser} />
+                  <ChatUIList to={selectedUser.id} toUser={selectedUser.name} />
                 )}
               </Grid>
             </Grid>
