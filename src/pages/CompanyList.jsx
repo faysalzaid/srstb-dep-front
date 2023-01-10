@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import PageTitle from '../components/Typography/PageTitle'
 import SectionTitle from '../components/Typography/SectionTitle'
 import axios from 'axios'
+import { useQuery } from '@tanstack/react-query'
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import {
   Table,
@@ -95,25 +96,17 @@ function CompanyList(props) {
   // useEffect(() => {
   //   setDataTable2(response2.slice((pageTable2 - 1) * resultsPerPage, pageTable2 * resultsPerPage))
   // }, [pageTable2])
-  const [authState] = useContext(AuthContext)
+ 
 
-  useEffect(()=>{
-    if(authState.state!==true){
-      props.history.push('/login')
-    }
-  },[])
 
-  useEffect(()=>{
-    const companyFetch = async()=>{
-        const response = await axios.get('http://localhost:4000/companies').then((resp)=>{
-          
-          setCompanyData(resp.data.company)
-          setCountCp(resp.data.count)
-           
-        })
-    }
-    companyFetch()
-  },[])
+  const {isLoading,data} = useQuery(['company-data'],()=>{
+    return axios.get('http://localhost:4000/companies').then((resp)=>resp.data)
+  })
+
+  let query = [];
+  let count;
+
+
 
   
 
@@ -121,21 +114,19 @@ function CompanyList(props) {
   const searchHandler = async(search)=>{
     setSearchTerm(search)
     if(search!==0){
-      const newEmployeeList = companyData.filter((empl)=>{
+      const newCompanyList = query.filter((empl)=>{
         return Object.values(empl).join(" ").toLowerCase().includes(search.toLowerCase())
       })
       // console.log(newEmployeeList);
-      setSearchResult(newEmployeeList)
+      setSearchResult(newCompanyList)
     }else{
-      setSearchResult(companyData)
+      setSearchResult(query)
     }
   }
 
 
 
-  useEffect(()=>{
-    setFetchedResult(searchTerm.length<1?companyData:searchResult)
-  },[companyData,searchTerm])
+
 
 
 
@@ -149,13 +140,13 @@ function CompanyList(props) {
     if(companyFormData.name==="" || companyFormData.location===""){
       setErrorMessage('Please Provide all data')
     }else{
-      console.log('This is from formdata',companyFormData);
+     
       const response = await axios.post('http://localhost:4000/companies',companyFormData).then((resp)=>{
         if(resp.data.error){
           setErrorMessage(resp.data.error)
         }else{
-          // console.log(resp.data);
-          setCompanyData([...companyData,resp.data])
+          // console.log('added data',resp.data);
+          query.push(resp.data)
           setCompanyFormData({name:"",location:""})
           setSuccessMsg('Successfully Registered')
           setTimeout(() => {
@@ -168,14 +159,19 @@ function CompanyList(props) {
 
 }
 const deleteCompany =async(ids)=>{
+  const newData =query.filter((c)=>c.id===ids)
+  // console.log('new data ',newData[0]);
+  // console.log(query.indexOf(newData[0]));
   const response = await axios.get(`http://localhost:4000/companies/delete/${ids}`).then((resp)=>{
     
     if(resp.data.error){
       setErrorMessage(resp.data.error)
     }else{
-      const newData = companyData.filter((c)=>c.id!==ids)
-      setCompanyData(newData)
-      setSuccessMsg('Successfully Deleted')
+      
+      const newData = query.filter((c)=>c.id===ids)
+      const rdata = query.indexOf(newData[0]);
+      query.splice(rdata,1)
+      setSuccessMsg('Successfully Deleted') 
       setTimeout(() => {
         setSuccessMsg("")
       }, 1000);
@@ -183,6 +179,16 @@ const deleteCompany =async(ids)=>{
     }
   })
 }
+
+
+  if(!isLoading){
+    query = searchTerm.length<1?data?.company:searchResult
+    count = data?.count
+    console.log('data after loading',query);
+  }
+
+
+
 
   return (
     <>
@@ -203,7 +209,7 @@ const deleteCompany =async(ids)=>{
         {/* End of search List */}
       {/* infCarf */}
       <div className="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
-        <InfoCard title="Total Companies" value={countCp}>
+        <InfoCard title="Total Companies" value={count}>
           <RoundIcon
             icon={ChatIcon}
             iconColorClass="text-orange-500 dark:text-orange-100"
@@ -276,7 +282,7 @@ const deleteCompany =async(ids)=>{
             </tr>
           </TableHeader>
           <TableBody>
-            {fetchedResult.map((comp, i) => (
+            {query.map((comp, i) => (
               <TableRow key={i}>
                 <TableCell>
                   <div className="flex items-center text-sm">

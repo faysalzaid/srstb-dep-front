@@ -27,6 +27,7 @@ import { useRef } from 'react'
 
 function EmployeeList(props) {
     const [isModalOpen, setIsModalOpen] = useState(false)
+    const [uplModal,setUplModal] = useState(false)
 
     function openModal() {
       setIsModalOpen(true)
@@ -34,6 +35,15 @@ function EmployeeList(props) {
   
     function closeModal() {
       setIsModalOpen(false)
+    }
+
+
+    function openUploadModal() {
+      setUplModal(true)
+    }
+  
+    function closeUploadModal() {
+      setUplModal(false)
     }
 
     // const [companyData,setCompanyData] = useState([]) 
@@ -89,6 +99,24 @@ const searchHandler = async(search)=>{
 
 
 
+
+    const uploadEmployee =async(e)=>{
+      e.preventDefault()
+      // console.log(e.target[0].files[0]);
+      const file = e.target[0].files[0]
+      const formData = new FormData()
+      formData.append('file',file)
+      await axios.post(`${url}/employees/upload/file`,formData).then((resp)=>{
+        console.log(resp.data);
+        setEmployeeData([...employeeData,...resp.data])
+        setUplModal(false)
+        setSuccessMessage('successfully uploaded')
+        setTimeout(() => {
+          setSuccessMessage("")
+       },2000)
+      })
+
+    }
 
     const addEmployee =async(e)=>{
       e.preventDefault()
@@ -177,6 +205,9 @@ useEffect(()=>{
         <div className='mt-5'>
           <Button onClick={openModal}>Register Employee</Button>
         </div>
+        <div className='mt-5'>
+        <Button onClick={openUploadModal} className="btn-sm" style={{backgroundColor:"green"}}>Upload Excel file</Button>
+        </div>
         <Modal isOpen={isModalOpen} onClose={closeModal}>
           <ModalHeader>Insert Employee Info</ModalHeader>
           <span style={{color:'red'}}>{errorMessage}</span>
@@ -262,6 +293,55 @@ useEffect(()=>{
             </div>
           </ModalFooter>
         </Modal>
+
+
+
+{/* EXCEL UPLOAD MODAL */}
+         <Modal isOpen={uplModal} onClose={closeUploadModal}>
+          <ModalHeader>Upload Excel file</ModalHeader>
+          <span style={{color:'red'}}>{errorMessage}</span>
+          <ModalBody>
+            
+          <form onSubmit={uploadEmployee} encType="multipart/form-data">
+              <Label>
+              <span>Excel</span>
+                    <Input type="file" className="mt-1 block w-full text-sm text-gray-500 file:mr-1 
+                    file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold 
+                    file:bg-white-50 file:text-blue-700 hover:file:bg-white-100" id="file_input" name="file"/>
+                </Label>
+                
+                
+              <Label className="mt-4">
+                <Button type="submit">Save</Button>
+              </Label>
+          </form>
+            
+          </ModalBody>
+          <ModalFooter>
+            <div className="hidden sm:block">
+              <Button layout="outline" onClick={closeUploadModal}>
+                Cancel
+              </Button>
+            </div>
+           
+            <div className="block w-full sm:hidden">
+              <Button block size="large" layout="outline" onClick={closeUploadModal}>
+                Cancel
+              </Button>
+            </div>
+            <div className="block w-full sm:hidden">
+              <Button block size="large">
+                Accept
+              </Button>
+            </div>
+          </ModalFooter>
+        </Modal>
+
+
+{/* END OF UPLOAD MODAL */}
+
+
+
   
         <SectionTitle></SectionTitle>
         {successMessage?

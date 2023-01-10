@@ -90,7 +90,7 @@ function ProjectDetail(props) {
   useEffect(()=>{
     const getBids = async()=>{
       await axios.get(`${url}/bids/${projectData.BidId}`).then((resp)=>{
-        // console.log('grapped bid',resp.data);
+        console.log('grapped bid',resp.data);
         setGrappedBid(resp.data)
       })
     }
@@ -359,7 +359,7 @@ const deleteProject =async()=>{
                   <p>End Time <Badge type="danger">{projectData.endtime}</Badge></p>
                   {/* <p>amount：6000</p>
                   <div>total ：<span className="text-red-500">-900</span></div> */}
-                  <div className="font-bold">Bid Amount ：birr <Badge>{bidData.map((bid)=>bid.id===projectData.BidId?bid.amount:"")}.00</Badge> </div>
+                  <div className="font-bold">Bid Amount ：birr <Badge>{grappedBid.amount}.00</Badge> </div>
                 </div>
               </div>
             </div>

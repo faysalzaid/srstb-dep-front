@@ -24,15 +24,13 @@ const Companylist = lazy(() =>
     import ('../pages/CompanyList'))
 const CompanyDetail = lazy(() =>
     import ('../pages/companyDetail'))
-const ClientList = lazy(() =>
-    import ('../pages/clientList'))
+
 
 const BidsList = lazy(() =>
     import ('../pages/BidList'))
 const BidDetail = lazy(() =>
     import ('../pages/BidDetail'))
-const Clientdetail = lazy(() =>
-    import ('../pages/clientDetail'))
+
 const DepartmentList = lazy(() =>
     import ('../pages/DepartmentList'))
 const DepartmentDetail = lazy(() =>
@@ -54,25 +52,22 @@ const ProjectList = lazy(() =>
 const ProjectDetail = lazy(() =>
     import ('../pages/ProjectDetail'))
 
-const ProjectLists = lazy(() =>
-    import ('../pages/ProjectLists'))
+
 
 const Chat = lazy(() =>
     import ('../components/Chat/Chat'))
 
-const ProjectListsDetail = lazy(() =>
-        import ('../pages/ProjectListsDetail'))
 
-    /**
-     * ⚠ These are internal routes!
-     * They will be rendered inside the app, using the default `containers/Layout`.
-     * If you want to add a route to, let's say, a landing page, you should add
-     * it to the `App`'s router, exactly like `Login`, `CreateAccount` and other pages
-     * are routed.
-     *
-     * If you're looking for the links rendered in the SidebarContent, go to
-     * `routes/sidebar.js`
-     */
+/**
+ * ⚠ These are internal routes!
+ * They will be rendered inside the app, using the default `containers/Layout`.
+ * If you want to add a route to, let's say, a landing page, you should add
+ * it to the `App`'s router, exactly like `Login`, `CreateAccount` and other pages
+ * are routed.
+ *
+ * If you're looking for the links rendered in the SidebarContent, go to
+ * `routes/sidebar.js`
+ */
 const routes = [{
         path: '/dashboard', // the url
         component: Dashboard, // view rendered
@@ -106,14 +101,7 @@ const routes = [{
         path: '/cards',
         component: Cards,
     },
-    {
-        path: '/clients',
-        component: ClientList,
-    },
-    {
-        path: '/clients/:id',
-        component: Clientdetail,
-    },
+
     {
         path: '/users',
         component: UsersList,
@@ -176,14 +164,7 @@ const routes = [{
         path: '/projects/:id',
         component: ProjectDetail,
     },
-    {
-        path: '/pr-list',
-        component: ProjectLists,
-    },
-    {
-        path: '/pr-list/:id',
-        component: ProjectListsDetail,
-    },
+
     {
         path: '/chat',
         component: Chat,

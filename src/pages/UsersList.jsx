@@ -63,9 +63,15 @@ function UsersList(props) {
   };
 
   useEffect(() => {
-    axios.get(`${url}/users`).then((resp) => {
-      console.log("users data ", resp.data);
-      setUsersData(resp.data);
+    axios.get(`${url}/users`,{withCredentials: true}).then((resp) => {
+      if(resp.data.error){
+        setUsersData([])
+        console.log(resp.data.error);
+      }else{
+        console.log("users data ", resp.data);
+        setUsersData(resp.data);
+
+      }
     });
   }, []);
 

@@ -61,8 +61,14 @@ function UsersDetail(props) {
   };
 
   useEffect(() => {
-    axios.get(`${url}/users/${id}`).then((resp) => {
-      setUsersData(resp.data);
+    axios.get(`${url}/users/${id}`,{withCredentials:true}).then((resp) => {
+      if(resp.data.error){
+        setUsersData({})
+        console.log(resp.data.error);
+      }else{
+
+        setUsersData(resp.data);
+      }
     });
   }, []);
 

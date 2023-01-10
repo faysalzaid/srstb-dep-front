@@ -46,11 +46,7 @@ const routes = [{
         icon: 'ButtonsIcon',
         name: 'Buttons',
     },
-    {
-        path: '/app/pr-list',
-        icon: 'ModalsIcon',
-        name: 'Project List',
-    },
+
 
     {
         path: '/app/chat',

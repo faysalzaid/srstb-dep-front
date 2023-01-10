@@ -10,6 +10,7 @@ import Header from './components/Header'
 import { createContext } from 'react'
 import ResetPassword from './pages/ResetPassword'
 import HomePage from './pages/home'
+import { QueryClientProvider,QueryClient } from '@tanstack/react-query'
 
 import Chat from './components/Chat/Chat'
 
@@ -18,6 +19,13 @@ const Layout = lazy(() => import('./containers/Layout'))
 const Login = lazy(() => import('./pages/Login'))
 const CreateAccount = lazy(() => import('./pages/CreateAccount'))
 const ForgotPassword = lazy(() => import('./pages/ForgotPassword'))
+
+const queryClient = new QueryClient({defaultOptions:{
+  queries:{
+    refetchOnWindowFocus:false
+  }
+}})
+
 
 function App(props) {
   let [authState,setAuthState] = useState({id:"",username:"",email:"",role:"",status:false})
@@ -29,12 +37,13 @@ function App(props) {
     // console.log(cookies.accessToken);
      axios.get(`${url}/login/auth`,{withCredentials: true,headers:{accessToken:cookie}}).then((resp)=>{
       if(resp.data.error){
-        console.log('what',resp.data)
+        // console.log('what',resp.data)
         setAuthState({id:"",username:"",email:"",role:"",state:false})
         props.history.push('/login')
         
       }else{
         const data = resp.data
+        // console.log(data);
         setAuthState({id:data.id,username:data.username,email:data.email,role:data.role,state:true})
       }
   })
@@ -46,6 +55,7 @@ function App(props) {
 
   return (
     <>
+    <QueryClientProvider client={queryClient}>
      
      <AuthContext.Provider value={[authState,setAuthState]}>
      
@@ -67,6 +77,7 @@ function App(props) {
           
         </Switch>
         </AuthContext.Provider>
+        </QueryClientProvider>
     </>
     
 
