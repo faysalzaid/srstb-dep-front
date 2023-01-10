@@ -11,7 +11,7 @@ import Fade from '@mui/material/Fade';
 
 import {MdModeEditOutline, MdOutlineDeleteOutline} from 'react-icons/md';
 
-const ProjectUIList = ({pr}) => {
+const ProjectUIList = ({pr, setProfile}) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -29,7 +29,11 @@ const ProjectUIList = ({pr}) => {
             <div className='project-icon'>{pr.name[0]}</div>
             <div className='body'>
               <div className='project-name dark:text-gray-200'>{pr.name}</div>
-              <div className='user'>
+              <div className='user'
+                onClick={() => {
+                  setProfile({title: pr.added_by.name, url: pr.added_by.url, open: true, job: pr.added_by.job, phone: pr.added_by.phone, email: pr.added_by.email, address: pr.added_by.address});
+                }}
+              >
                 <Avatar sx={{ width: 32, height: 32 }} src={pr.added_by.url} />
                 <div style={{ marginLeft: 5, fontFamily: 'ubuntu', fontSize: 15 }} className="name dark:text-gray-300">{pr.added_by.name}</div>
               </div>
@@ -60,35 +64,8 @@ const ProjectUIList = ({pr}) => {
             </div>
         </div>
         <Divider style={{marginTop: 10}}/>
-        {/* <div className='title dark:text-gray-100'>
-            {pr.name}
-        </div>
-        <div className='underscore'>
-            ----
-        </div>
-        <div className='category'>
-            {pr.category}
-        </div>
-        <div className='description dark:text-gray-300'>
-            {pr.description}
-        </div>
-
-        <progress id="file" value={pr.progress} max="100" className='progress'></progress>
-        <p className='percentage dark:text-gray-300'>{pr.progress}% complete</p>
-
-        <Divider style={{marginTop: 10}}/>
-        <div className='project-footer'>
-            <div className='user'>
-                <Avatar sx={{ width: 32, height: 32 }} src={pr.added_by.url} />
-                <div style={{ marginLeft: 5, fontFamily: 'ubuntu', fontSize: 15 }} className="name dark:text-gray-300">{pr.added_by.name}</div>
-            </div>
-            <Button variant="outlined" size="small" color="success" startIcon={<MdOutlineTaskAlt />}>
-                Tasks
-            </Button>
-             
-        </div> */}
-        
       </div>
+      
     </>
   );
 }
