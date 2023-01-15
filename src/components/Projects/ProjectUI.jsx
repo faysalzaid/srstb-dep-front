@@ -12,7 +12,7 @@ import Fade from '@mui/material/Fade';
 
 import {MdModeEditOutline, MdOutlineDeleteOutline} from 'react-icons/md';
 
-const ProjectUI = ({pr}) => {
+const ProjectUI = ({pr, setProfile}) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {

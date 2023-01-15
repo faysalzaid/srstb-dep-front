@@ -48,7 +48,7 @@ const ProjectUIList = ({pr, setProfile}) => {
             <div className='project-icon'>{pr.name[0]}</div>
             <div className='body'>
               <div className='project-name dark:text-gray-200'>{pr.name}</div>
-              <div className='user'
+              <div className='user hover:cursor-pointer'
                 onClick={() => {
                   setProfile({title: 'faysalali', url: url, open: true, job: 'software developer', phone: '09242323', email: 'f@gmail.com', address: 'jijiga'});
                 }}
