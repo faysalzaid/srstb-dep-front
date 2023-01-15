@@ -1,6 +1,6 @@
 import React from 'react';
 import {useState, useEffect} from 'react';
-import { Grid } from '@mui/material';
+import { Grid, Button } from '@mui/material';
 import ProjectUI from './ProjectUI';
 import ProjectUIList from './ProjectUIList';
 import "./projects.scss";
@@ -8,63 +8,100 @@ import {BsGrid, BsList} from 'react-icons/bs';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { url } from 'config/urlConfig';
+import {BiSearch, BiAddToQueue} from 'react-icons/bi';
+import {AiOutlinePlus} from 'react-icons/ai';
+import ShowPhoto from './ShowPhoto';
+import {MdClose} from 'react-icons/md';
 
 const Projects = () => {
   const statuses = {not_started: "Not Started", ongoing: "Ongoing", done: "Done"}
   
   const [list, setList] = useState(true);
-
+  const [search, setSearch] = useState("");
+  const [projects, setProjects] = useState([]);
+  const [searchResult,setSearchResult] = useState([])
+  const [searchTerm,setSearchTerm] = useState("")
   
-  const {isLoading,data} = useQuery('project-list',()=>{
+  
+  const {isLoading,data} = useQuery(['project-list'],()=>{
     return axios.get(`${url}/projects`).then((resp)=>resp.data)
   })
+  
 
-  const query = []
-  if(!isLoading){
-    query = data
+
+  const searchHandler = async(search)=>{
+    setSearchTerm(search)
+    if(search!==0){
+      const newProjectList = query.filter((pr)=>{
+        return Object.values(pr).join(" ").toLowerCase().includes(search.toLowerCase())
+      })
+      // console.log(newEmployeeList);
+      setSearchResult(newProjectList)
+    }else{
+      setSearchResult(query)
+    }
   }
 
-  const projects = [
-    {
-      id: 1,
-      name: "Angular JS",
-      category: "Frontend Development",
-      description: "Master Angular 5 from the basics to building an advanced application with Firebase's Firestore as well",
-      progress: 65,
-      status: statuses.ongoing,
-      added_by: {
-        name: "Ousman Seid Mahmud Zein Mahmud",
-        url: "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50"
-      }
-    },
-    {
-      id: 2,
-      name: "Codeigniter",
-      category: "Backend Development",
-      description: "Learn Php Codeigniter and understand working with MVC and HMVC from zero to nero",
-      progress: 80,
-      status: statuses.done,
-      added_by: {
-        name: "Ousman Seid",
-        url: "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50"
-      }
-    }
-  ]
+
+  
+  let query = []
+  // bidDatas = bidData?.data
+  // console.log(bidDatas);
+  
+  if(!isLoading){
+    query = searchTerm.length<1?data?.projects:searchResult
+    // console.log('queries',query);
+    
+  }
+
+
+
+
+  const handleCloseProfile = () => {
+    setProfile({title: "", url: "", open: false})
+  };
+
+  const [profile, setProfile] = useState({title: "", url: "", open: false});
+
   return (
   <>
-   
+      <ShowPhoto open={profile.open??false} handleClose={handleCloseProfile} profile={profile}/>
       <div className='header'>
-          <div className={list? "icon-div-list" : "icon-div"} onClick={()=>setList(true)}><BsList style={{fontSize: 24}}/></div>
+        <div className='start dark:text-gray-100'>
+          All Projects
+        </div>
+       
+        <div className='end'>
+          <div className='search'>
+            <input placeholder="Search" 
+               value={searchTerm}
+               onChange={(e)=>{
+                searchHandler(e.target.value)
+               }} />
+            <BiSearch className='icon'/>
+            <MdClose 
+              onClick={()=>{
+                  setSearchResult([])
+                  setSearchTerm((prev)=>"");
+              }}
+              className='close'/>
+          </div>
+          <div className={list? "icon-div-list" : "icon-div"} onClick={()=>setList(true)}><BsList style={{fontSize: 22}}/></div>
           <div className={!list? "icon-div-list" : "icon-div"} onClick={()=>setList(false)}><BsGrid style={{fontSize: 20}}/></div>
+          {/* <div className={!list? "icon-div-list" : "icon-div"} onClick={()=>setList(false)}><BiAddToQueue style={{fontSize: 22}}/></div> */}
+          <Button variant="contained" size="small" style={{borderRadius: 3, backgroundColor: '#0052cc', textTransform: 'capitalize', fontSize: 14}} color="success" startIcon={<AiOutlinePlus />}>
+                <p style={{marginTop: 0}}>Add Project</p>
+          </Button>
+        </div>
       </div>
     {!list &&
       <div className='container-div'>
         <Grid container spacing={2}>
           {
-            projects.map((pro,index) => {
+            query.map((pro,index) => {
               return (
                 <Grid key={"pro"+index+"-"+pro.id} item xs={12} sm={6} lg={4} xl={3}>
-                    <ProjectUI pr={pro} key={"pro-item"+index+"-"+pro.id}/>
+                    <ProjectUI pr={pro} key={"pro-item"+index+"-"+pro.id} setProfile={setProfile}/>
                 </Grid>
               )
             })
@@ -78,10 +115,10 @@ const Projects = () => {
       <div className='container-div'>
         <Grid container spacing={0.5}>
           {
-            projects.map((pro,index) => {
+            query.map((pro,index) => {
               return (
                 <Grid key={"pro"+index+"-"+pro.id} item xs={12}>
-                    <ProjectUIList pr={pro} key={"pro-item"+index+"-"+pro.id} />
+                    <ProjectUIList pr={pro} key={"pro-item"+index+"-"+pro.id} setProfile={setProfile} />
                 </Grid>
               )
             })

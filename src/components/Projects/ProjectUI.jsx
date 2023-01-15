@@ -62,14 +62,14 @@ const ProjectUI = ({pr}) => {
             {pr.description}
         </div>
 
-        <progress id="file" value={pr.progress} max="100" className='progress'></progress>
-        <p className='percentage dark:text-gray-300'>{pr.progress}% complete</p>
+        <progress id="file" value={pr.percentage} max="100" className='progress'></progress>
+        <p className='percentage dark:text-gray-300'>{pr.percentage}% complete</p>
 
         <Divider style={{marginTop: 10}}/>
         <div className='project-footer'>
             <div className='user'>
-                <Avatar sx={{ width: 32, height: 32 }} src={pr.added_by.url} />
-                <div style={{ marginLeft: 5, fontFamily: 'ubuntu', fontSize: 15 }} className="name dark:text-gray-300">{pr.added_by.name}</div>
+                <Avatar sx={{ width: 32, height: 32 }} src={''} />
+                <div style={{ marginLeft: 5, fontFamily: 'ubuntu', fontSize: 15 }} className="name dark:text-gray-300">{pr.Bids.map((bid)=>bid.id===pr.BidId?bid.fullname:"")}</div>
             </div>
             <Button variant="outlined" size="small" color="success" startIcon={<MdOutlineTaskAlt />}>
                 Tasks

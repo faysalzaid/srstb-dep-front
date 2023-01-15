@@ -114,7 +114,7 @@ function CompanyList(props) {
   const searchHandler = async(search)=>{
     setSearchTerm(search)
     if(search!==0){
-      const newCompanyList = query.filter((empl)=>{
+      const newCompanyList = query?.filter((empl)=>{
         return Object.values(empl).join(" ").toLowerCase().includes(search.toLowerCase())
       })
       // console.log(newEmployeeList);

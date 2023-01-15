@@ -102,13 +102,9 @@ function ProjectList(props) {
   // useEffect(() => {
   //   setDataTable2(response2.slice((pageTable2 - 1) * resultsPerPage, pageTable2 * resultsPerPage))
   // }, [pageTable2])
-  const [authState] = useContext(AuthContext)
 
-  useEffect(()=>{
-    if(authState.state!==true){
-      props.history.push('/login')
-    }
-  },[])
+
+
 
 
   useEffect(()=>{

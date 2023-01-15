@@ -10,8 +10,11 @@ import MenuItem from '@mui/material/MenuItem';
 import Fade from '@mui/material/Fade';
 
 import {MdModeEditOutline, MdOutlineDeleteOutline} from 'react-icons/md';
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
+import { url } from 'config/urlConfig';
 
-const ProjectUIList = ({pr}) => {
+const ProjectUIList = ({pr, setProfile}) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -20,7 +23,23 @@ const ProjectUIList = ({pr}) => {
   const handleClose = () => {
       setAnchorEl(null);
   };
-  
+
+  const fkurl = 'https://ps.w.org/user-avatar-reloaded/assets/icon-256x256.png?rev=2540745'
+
+  console.log('pr-contains :',pr);
+  let bidDatas = {}
+  const {isLoading,data} = useQuery(['bid-data'],()=>{
+    return axios.get(`${url}/bids`).then((resp)=>resp.data)
+    
+  })
+  // if(!isLoading){
+  //   bidDatas = bidData
+  //   console.log(bidDatas);
+  // }
+  // bidDatas = bidData
+
+  // console.log(data?.bid.Bids.map((bid)=>bid.fullname));
+  // console.log(pr.Bids.map((bid)=>bid.id==pr.BidId?bid.fullname:""));
 
   return (
     <>
@@ -29,11 +48,15 @@ const ProjectUIList = ({pr}) => {
             <div className='project-icon'>{pr.name[0]}</div>
             <div className='body'>
               <div className='project-name dark:text-gray-200'>{pr.name}</div>
-              <div className='user'>
-                <Avatar sx={{ width: 32, height: 32 }} src={pr.added_by.url} />
-                <div style={{ marginLeft: 5, fontFamily: 'ubuntu', fontSize: 15 }} className="name dark:text-gray-300">{pr.added_by.name}</div>
+              <div className='user'
+                onClick={() => {
+                  setProfile({title: 'faysalali', url: url, open: true, job: 'software developer', phone: '09242323', email: 'f@gmail.com', address: 'jijiga'});
+                }}
+              >
+                <Avatar sx={{ width: 32, height: 32 }} src={''} />
+                <div style={{ marginLeft: 5, fontFamily: 'ubuntu', fontSize: 15 }} className="name dark:text-gray-300">{pr.Bids.map((bid)=>bid.id==pr.BidId?bid.fullname:"")}</div>
               </div>
-              <progress id="file" value={pr.progress} max="100" className='progress'></progress>
+              <progress id="file" value={pr.percentage} max="100" className='progress'></progress>
               <div className='category'>
                   {pr.category}
               </div>
@@ -60,35 +83,8 @@ const ProjectUIList = ({pr}) => {
             </div>
         </div>
         <Divider style={{marginTop: 10}}/>
-        {/* <div className='title dark:text-gray-100'>
-            {pr.name}
-        </div>
-        <div className='underscore'>
-            ----
-        </div>
-        <div className='category'>
-            {pr.category}
-        </div>
-        <div className='description dark:text-gray-300'>
-            {pr.description}
-        </div>
-
-        <progress id="file" value={pr.progress} max="100" className='progress'></progress>
-        <p className='percentage dark:text-gray-300'>{pr.progress}% complete</p>
-
-        <Divider style={{marginTop: 10}}/>
-        <div className='project-footer'>
-            <div className='user'>
-                <Avatar sx={{ width: 32, height: 32 }} src={pr.added_by.url} />
-                <div style={{ marginLeft: 5, fontFamily: 'ubuntu', fontSize: 15 }} className="name dark:text-gray-300">{pr.added_by.name}</div>
-            </div>
-            <Button variant="outlined" size="small" color="success" startIcon={<MdOutlineTaskAlt />}>
-                Tasks
-            </Button>
-             
-        </div> */}
-        
       </div>
+      
     </>
   );
 }
