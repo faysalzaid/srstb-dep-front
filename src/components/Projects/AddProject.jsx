@@ -32,7 +32,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const AddProject = ({ open, handleClose, callBackFunction, setOpenError, setOpenSuccess }) => {
+const AddProject = ({ open, handleClose, successCallback, setOpenError, setOpenSuccess }) => {
   const [formData, setFormData] = useState({
     name: {value: "", error: "", optional: false},
     description: {value: "", error: "", optional: false},
@@ -96,11 +96,11 @@ const AddProject = ({ open, handleClose, callBackFunction, setOpenError, setOpen
 
       setLoading(true);
 
-      data.append("project[name]", formData.name);
-      data.append("project[description]", formData.description);
-      data.append("project[startDate]", formData.startDate);
-      data.append("project[endDate]", formData.endDate);
-      data.append("project[status]", formData.status);
+      data.append("project[name]", formData.name.value);
+      data.append("project[description]", formData.description.value);
+      data.append("project[startDate]", formData.startDate.value);
+      data.append("project[endDate]", formData.endDate.value);
+      data.append("project[status]", formData.status.value);
       
       if(validate()) {
         submitToAPI(data);
@@ -119,16 +119,17 @@ const AddProject = ({ open, handleClose, callBackFunction, setOpenError, setOpen
             setLoading((prev)=>false)
             setFormData(
               {
-                name: "",
-                description: "",
-                status: 0,
-                startDate: "",
-                endDate: "",
+                name: {value: "", error: "", optional: false},
+                description: {value: "", error: "", optional: false},
+                descriptionError: {value: "", error: "", optional: false},
+                status:  {value: 0, error: "", optional: false},
+                startDate:  {value: "", error: "", optional: false},
+                endDate:  {value: "", error: "", optional: false},
               }
             );
             const successMessage = {open:true, message:"Successfully Added!"}
             setOpenSuccess((prev)=>successMessage)
-            callBackFunction();
+            successCallback();
             handleClose();
           }
           else {
@@ -253,6 +254,7 @@ const AddProject = ({ open, handleClose, callBackFunction, setOpenError, setOpen
                         label="status"
                         options={statuses}
                         labelText="Project status"
+                        open={open}
                         //selectText="Not Selected"
                       />
                     </div>

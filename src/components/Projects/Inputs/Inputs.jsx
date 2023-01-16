@@ -111,7 +111,7 @@ export const DateInput = ({formData, setFormData, label, labelText, placeholder}
 
 
 
-export const Dropdown = ({formData, setFormData, label, labelText, options, selectText}) => {
+export const Dropdown = ({formData, setFormData, label, labelText, options, selectText, open}) => {
     const catMenu = useRef(null);
     const [show, setShow] = useState(false)
     const closeOpenMenus = (e)=>{
@@ -131,7 +131,7 @@ export const Dropdown = ({formData, setFormData, label, labelText, options, sele
         });
         if(inputRef.current)
         inputRef.current.value = val;
-    },[inputRef.current])
+    },[inputRef.current,open])
     
     return (
     <div className="text-field-container">
