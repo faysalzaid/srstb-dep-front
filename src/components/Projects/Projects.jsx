@@ -63,7 +63,6 @@ const Projects = () => {
 
       });
         startProjects = prjs;
-        console.log(prjs)
         //setProjects(prjs);
      });
   }

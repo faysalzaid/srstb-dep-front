@@ -125,7 +125,7 @@ export const Dropdown = ({formData, setFormData, label, labelText, options, sele
     useEffect(()=>{
         let val = selectText ? selectText :"Not Selected";
         options.map((op)=>{
-            if(op.id === formData[label]) {
+            if(op.id === formData[label]?.value) {
                 val = op.name;
             }
         });
