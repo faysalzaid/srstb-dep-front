@@ -43,8 +43,9 @@ const Projects = () => {
     }else{
       setSearchResult(query)
     }
-  ];
-  const [projects, setProjects] = useState(startProjects);
+  }
+  
+  //const [projects, setProjects] = useState(startProjects);
 
   const handleCloseProfile = () => {
     setProfile({title: "", url: "", open: false})
@@ -163,7 +164,7 @@ const Projects = () => {
             })}
           </Grid>
         </div>
-      )}
+      }
 
    {list &&
       <div className='container-div'>
@@ -182,7 +183,7 @@ const Projects = () => {
             })}
           </Grid>
         </div>
-      )}
+      }
     </>
   );
 }
