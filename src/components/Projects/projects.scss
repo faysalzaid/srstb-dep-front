@@ -54,7 +54,7 @@ $ml: 5%;
                 right: 8px;
                 top: 50%;
                 transform: translateY(-50%);
-                color: rgba(0, 0, 0, .3);
+                //color: rgba(0, 0, 0, .3);
 
                 &:hover {
                     cursor: pointer;
@@ -388,6 +388,19 @@ progress::-moz-progress-bar {
     }
 }
 
+@media only screen and (max-width: 380px) {
+    .header {
+        .start{
+            display: none;
+        }
+        .end {
+            display: flex;
+            justify-content: end;
+            width: 100%;
+        }
+    }
+}
+
 
 
 
@@ -644,6 +657,13 @@ progress::-moz-progress-bar {
         .ch-child-not-selected {
             margin-right: 10px;
         }
+    }
+}
+
+.dialog-detail {
+    
+    .left-content-container {
+        display: none;
     }
 }
 

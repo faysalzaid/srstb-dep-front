@@ -11,6 +11,7 @@ import { MdClose } from "react-icons/md";
 import Slide from "@mui/material/Slide";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { TextField, TextArea, Dropdown, DateInput } from "./Inputs/Inputs";
+import { EditableTextContent } from "./Inputs/EditableInputs";
 import { useTheme } from "@mui/material/styles";
 import { useState } from "react";
 import * as constants from "constants.js";
@@ -19,12 +20,7 @@ import Loader from 'components/Loader';
 
 function PaperComponent(props) {
   return (
-    <Draggable
-      handle="#add-project"
-      cancel={'[class*="MuiDialogContent-root"]'}
-    >
       <Paper {...props} />
-    </Draggable>
   );
 }
 
@@ -32,9 +28,9 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const AddProject = ({ open, handleClose, successCallback, setOpenError, setOpenSuccess }) => {
+const ProjectDetail = ({ open, handleClose, successCallback, setOpenError, setOpenSuccess }) => {
   const [formData, setFormData] = useState({
-    name: {value: "", error: "", optional: false},
+    name: {value: "Interactive tasks list UI with full crud functionality And project Detail", error: "", optional: false},
     description: {value: "", error: "", optional: false},
     descriptionError: {value: "", error: "", optional: false},
     status:  {value: 0, error: "", optional: false},
@@ -60,8 +56,6 @@ const AddProject = ({ open, handleClose, successCallback, setOpenError, setOpenS
       name: "Completed",
     },
   ];
-  const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   const validate = () => {
       let temp = [];
@@ -92,8 +86,6 @@ const AddProject = ({ open, handleClose, successCallback, setOpenError, setOpenS
 
   function handleSubmit(event) {
       event.preventDefault();
-      const successMessage = {open:true, message:"Successfully Added!"}
-      setOpenSuccess((prev)=>successMessage)
       const data = new FormData();
 
       setLoading(true);
@@ -146,27 +138,46 @@ const AddProject = ({ open, handleClose, successCallback, setOpenError, setOpenS
       });
   }
 
+  function callBackFunc(text, label) {
+      //console.log(text)
+     // const fd = {...formData, [label]: {...formData[label], value: text}};
+      //setFormData(formData)
+      console.log(formData.name)
+  }
+
   return (
     <div>
       <Dialog
         open={open}
         onClose={handleClose}
         PaperComponent={PaperComponent}
-        aria-labelledby="add-project"
+        //aria-labelledby="project-detail"
         style={{ backgroundColor: "rgba(0,0,0,.2)"}}
         TransitionComponent={Transition}
         //keepMounted
-        fullScreen={fullScreen}
+        fullScreen={true}
+        disableEscapeKeyDown
       >
-        <div className="bg-white dark:bg-gray-700" style={{ minWidth: !fullScreen ? 500 : 300, resize: "both", overflow:'auto' }}>
+        <div className="dialog-detail bg-white dark:bg-gray-700" style={{ minWidth: 300, overflow:'auto' }}>
           
           <DialogTitle
             sx={{ m: 0, p: 2 }}
-            style={{ cursor: "move", fontFamily: "ubuntu" }}
-            id="add-project"
-            className="text-gray-600 dark:text-gray-200 relative"
+            //style={{ cursor: "move", fontFamily: "ubuntu" }}
+            id="project-detail"
+            className="relative"
           >
-            Add Project
+            <EditableTextContent
+              formData={formData}
+              setFormData={setFormData}
+              label="name"
+              labelText="Project name"
+              placeholder="Enter name"
+              optional = {false}
+              errorLabel="nameError"
+              callBackFun={callBackFunc}
+              width="90%"
+              margin="0px 0px 0px 0px"
+            />
             <IconButton
               aria-label="close"
               onClick={handleClose}
@@ -177,10 +188,10 @@ const AddProject = ({ open, handleClose, successCallback, setOpenError, setOpenS
                 color: (theme) => theme.palette.grey[500],
               }}
             >
-              <MdClose onClick={handleClose}/>
+              <MdClose />
             </IconButton>
           </DialogTitle>
-          <Divider />
+          {/* <Divider /> */}
           <DialogContent>
           {loading && <div><Loader /></div>}
           
@@ -267,7 +278,7 @@ const AddProject = ({ open, handleClose, successCallback, setOpenError, setOpenS
             </div>
           </>}
           </DialogContent>
-          <Divider />
+          {/* <Divider />
           <DialogActions
             style={{
               display: "flex",
@@ -292,7 +303,7 @@ const AddProject = ({ open, handleClose, successCallback, setOpenError, setOpenS
             >
               Create
             </Button>
-          </DialogActions>
+          </DialogActions> */}
          
         </div>
       </Dialog>
@@ -300,4 +311,4 @@ const AddProject = ({ open, handleClose, successCallback, setOpenError, setOpenS
   );
 };
 
-export default AddProject;
+export default ProjectDetail;

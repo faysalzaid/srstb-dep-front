@@ -176,10 +176,12 @@ export const Dropdown = ({formData, setFormData, label, labelText, options, sele
                                    setFormData({...formData, [label]: {...formData[label], value: option.id, error: ""}})
                                 } 
                               }}
-                              className=" dark:bg-gray-800 dark:text-gray-200"
+                              className="dark:bg-gray-800 dark:text-gray-200"
                               style={{
-                                backgroundColor: (formData[label]?.value === option.id) ? "rgba(150,56,255,.5)" : "",
-                                color: (formData[label]?.value === option.id) ? "white" : ""
+                                backgroundColor: (formData[label]?.value === option.id) ? "#deebff" : "",
+                                color: (formData[label]?.value === option.id) ? "#0052cc" : "",
+                                borderLeft: (formData[label]?.value === option.id) ? "3px solid #0052cc" : "",
+
                               }}
                               >{option.name}
                             </div>
