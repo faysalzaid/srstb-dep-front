@@ -25,6 +25,7 @@ import { Modal, ModalHeader, ModalBody, ModalFooter } from '@windmill/react-ui'
 import { Input, HelperText, Label, Select, Textarea } from '@windmill/react-ui'
 import { useContext } from 'react'
 import { AuthContext } from '../hooks/authContext'
+import { bidUrl } from 'config/urlConfig'
 
 function BidDetail(props) {
     const {id} = useParams()
@@ -267,33 +268,34 @@ const deleteBid =async(ids)=>{
           <InfoCard>
           <div className="p-10 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 gap-5">
           <div className="sm:flex sm:items-center px-6 py-4">
-            <a href={`/uploads/docs/${bidsData.license}`} target="_blank">
+            <a href={`${bidUrl}/${bidsData.license}`} target="_blank">
                 <div className="mt-4 mb-4">
                     <button className="text-purple-500 hover:text-white hover:bg-purple-500 border border-purple-500 text-xs font-semibold rounded-full px-4 py-1 leading-normal">license</button>
                 </div>
-                <img className="block mx-auto sm:mx-0 sm:flex-shrink-0 h-16 sm:h-24" src={`/uploads/docs/${bidsData.license}`} alt="Not found Img"/>
+                <img className="block mx-auto sm:mx-0 sm:flex-shrink-0 h-16 sm:h-24" src={`${bidUrl}/${bidsData.license}`} alt="Not found Img"/>
+                
             </a>
                 <div className="mt-4 sm:mt-0 sm:ml-4 text-center sm:text-left">
                 </div>
             </div>
 
             <div className="sm:flex sm:items-center px-6 py-4">
-            <a href={`/uploads/docs/${bidsData.performa}`} target="_blank">
+            <a href={`${bidUrl}/${bidsData.performa}`} target="_blank">
                 <div className="mt-4 mb-4">
                     <button className="text-purple-500 hover:text-white hover:bg-purple-500 border border-purple-500 text-xs font-semibold rounded-full px-4 py-1 leading-normal">Performa</button>
                 </div>
-                <img className="block mx-auto sm:mx-0 sm:flex-shrink-0 h-16 sm:h-24" src={`/uploads/docs/${bidsData.performa}`} alt="Not found Img"/>
+                <img className="block mx-auto sm:mx-0 sm:flex-shrink-0 h-16 sm:h-24" src={`${bidUrl}/${bidsData.performa}`} alt="Not found Img"/>
             </a>
                 <div className="mt-4 sm:mt-0 sm:ml-4 text-center sm:text-left">
                 </div>
             </div>
 
             <div className="sm:flex sm:items-center px-6 py-4">
-            <a href={`/uploads/docs/${bidsData.proposal}`} target="_blank">
+            <a href={`${bidUrl}/${bidsData.proposal}`} target="_blank">
                 <div className="mt-4 mb-4">
                     <button className="text-purple-500 hover:text-white hover:bg-purple-500 border border-purple-500 text-xs font-semibold rounded-full px-4 py-1 leading-normal">Proposal</button>
                 </div>
-                <img className="block mx-auto sm:mx-0 sm:flex-shrink-0 h-16 sm:h-24" src={`/uploads/docs/${bidsData.proposal}`} alt="Not found Img"/>
+                <img className="block mx-auto sm:mx-0 sm:flex-shrink-0 h-16 sm:h-24" src={`${bidUrl}/${bidsData.proposal}`} alt="Not found Img"/>
             </a>
                 <div className="mt-4 sm:mt-0 sm:ml-4 text-center sm:text-left">
                 </div>
@@ -301,11 +303,11 @@ const deleteBid =async(ids)=>{
 
 
             <div className="sm:flex sm:items-center px-6 py-4">
-            <a href={`/uploads/docs/${bidsData.companydoc}`} target="_blank">
+            <a href={`${bidUrl}/${bidsData.companydoc}`} target="_blank">
                 <div className="mt-4 mb-4">
                     <button className="text-purple-500 hover:text-white hover:bg-purple-500 border border-purple-500 text-xs font-semibold rounded-full px-4 py-1 leading-normal">Company Docs</button>
                 </div>
-                <img className="block mx-auto sm:mx-0 sm:flex-shrink-0 h-16 sm:h-24" src={`/uploads/docs/${bidsData.companydoc}`} alt="Not found Img"/>
+                <img className="block mx-auto sm:mx-0 sm:flex-shrink-0 h-16 sm:h-24" src={`${bidUrl}/${bidsData.companydoc}`} alt="Not found Img"/>
             </a>
                 <div className="mt-4 sm:mt-0 sm:ml-4 text-center sm:text-left">
                 </div>

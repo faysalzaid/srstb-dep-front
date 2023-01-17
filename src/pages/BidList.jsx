@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import PageTitle from '../components/Typography/PageTitle'
 import SectionTitle from '../components/Typography/SectionTitle'
 import axios from 'axios'
+
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import {
   Table,
@@ -24,6 +25,7 @@ import {ChatIcon, CartIcon, MoneyIcon, PeopleIcon } from '../icons'
 import InfoCard from '../components/Cards/InfoCard'   
 import RoundIcon from '../components/RoundIcon'
 import { AuthContext } from '../hooks/authContext'
+import { url,bidUrl } from 'config/urlConfig'
 function BidList(props) {
     const [isModalOpen, setIsModalOpen] = useState(false)
 
@@ -38,7 +40,7 @@ function BidList(props) {
     const [companyData,setCompanyData] = useState([]) 
     const [bidsData,setBidData] = useState([])
     const [errorMessage,setErrorMessage] = useState('')
-    const [bidFormData,setBidFormData] = useState({fullname:"",phone:"",license:"",status:"",performa:"",proposal:"",companydoc:"",amount:""})
+    const [bidFormData,setBidFormData] = useState({fullname:"",phone:"",license:"",status:"",performa:"",proposal:"",companydoc:"",amount:"",bidUserPic:""})
     const [frontErrorMessage,setFrontErrorMessage] = useState("")
     const [successMessage,setSuccessMessage] = useState("")
     const [bidCount,setBidCount] = useState(0)
@@ -73,7 +75,7 @@ function BidList(props) {
   const addBid =async(e)=>{
     e.preventDefault()
     console.log('This is from bid data',bidFormData);
-    if(bidFormData.fullname==="" || bidFormData.phone===""||bidFormData.license===""||bidFormData.status===""||bidFormData.performa===""||bidFormData.proposal===""||bidFormData.companydoc===""||bidFormData.amount===""){
+    if(bidFormData.fullname==="" || bidFormData.phone===""||bidFormData.license===""||bidFormData.status===""||bidFormData.performa===""||bidFormData.proposal===""||bidFormData.companydoc===""||bidFormData.amount==="",bidFormData.bidUserPic===""){
       setErrorMessage('Please Provide all data')
     }else{
       const formData = new FormData()
@@ -84,15 +86,15 @@ function BidList(props) {
       formData.append('performa',bidFormData.performa)
       formData.append('proposal',bidFormData.proposal)
       formData.append('companydoc',bidFormData.companydoc)
+      formData.append('bidUserPic',bidFormData.bidUserPic)
       formData.append('amount',bidFormData.amount)
-      e.preventDefault()
        const response = await axios.post('http://localhost:4000/bids',formData).then((resp)=>{
         
         if(resp.data.error){
           setErrorMessage(resp.data.error)
         }else{
             setBidData([...bidsData,resp.data])
-            setBidFormData({fullname:"",phone:"",license:"",status:"",performa:"",proposal:"",companydoc:"",amount:""})
+            setBidFormData({fullname:"",phone:"",license:"",status:"",performa:"",proposal:"",companydoc:"",amount:"",bidUserPic:""})
           closeModal()
           setSuccessMessage("Successfully added")
           setTimeout(() => {
@@ -211,6 +213,10 @@ const searchHandler = async(search)=>{
           <Label>
             <span>CompanyDoc</span>
               <Input type="file" className="mt-1" name="companydoc" onChange={(e)=>setBidFormData({...bidFormData,companydoc:e.target.files[0]})}/>
+          </Label>
+          <Label>
+            <span>Bid Pic</span>
+              <Input type="file" className="mt-1" name="bidUserPic" onChange={(e)=>setBidFormData({...bidFormData,bidUserPic:e.target.files[0]})}/>
           </Label>
 
         <Label className="mt-4">
