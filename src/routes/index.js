@@ -60,8 +60,6 @@ const Projects = lazy(() =>
     import ('../components/Projects/Projects')
 )
 
-// const Projects = lazy(() =>
-//     import ('../components/Projects/Projects'))
 /**
  * ⚠ These are internal routes!
  * They will be rendered inside the app, using the default `containers/Layout`.
