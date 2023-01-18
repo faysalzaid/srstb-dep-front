@@ -34,6 +34,7 @@
     "formik": "^2.2.9",
     "framer-motion": "^8.0.2",
     "js-cookie": "^3.0.1",
+    "or": "^0.2.0",
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-preset-env": "^7.8.2",
     "react": "^18.2.0",

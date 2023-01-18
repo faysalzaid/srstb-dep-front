@@ -26,7 +26,7 @@ const ProjectUIList = ({pr, setProfile}) => {
 
   const fkurl = 'https://ps.w.org/user-avatar-reloaded/assets/icon-256x256.png?rev=2540745'
 
-  console.log('pr-contains :',pr);
+
   let bidDatas = {}
   const {isLoading,data} = useQuery(['bid-data'],()=>{
     return axios.get(`${url}/bids`).then((resp)=>resp.data)
@@ -54,7 +54,7 @@ const ProjectUIList = ({pr, setProfile}) => {
                 }}
               >
                 <Avatar sx={{ width: 32, height: 32 }} src={''} />
-                <div style={{ marginLeft: 5, fontFamily: 'ubuntu', fontSize: 15 }} className="name dark:text-gray-300">{pr.Bids.map((bid)=>bid.id==pr.BidId?bid.fullname:"")}</div>
+                <div style={{ marginLeft: 5, fontFamily: 'ubuntu', fontSize: 15 }} className="name dark:text-gray-300">{pr?.Bids?.map((bid)=>bid.id==pr.BidId?bid.fullname:"")}</div>
               </div>
               <progress id="file" value={pr.percentage} max="100" className='progress'></progress>
               <div className='category'>

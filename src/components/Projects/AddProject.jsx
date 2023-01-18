@@ -15,7 +15,8 @@ import { useTheme } from "@mui/material/styles";
 import { useState } from "react";
 import * as constants from "constants.js";
 import Loader from 'components/Loader';
-
+import {url} from 'config/urlConfig'
+import axios from "axios";
 
 function PaperComponent(props) {
   return (
@@ -32,32 +33,36 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const AddProject = ({ open, handleClose, successCallback, setOpenError, setOpenSuccess }) => {
+const AddProject = ({ open, handleClose, successCallback, setOpenError, setOpenSuccess,pData,setData }) => {
+
   const [formData, setFormData] = useState({
     name: {value: "", error: "", optional: false},
     description: {value: "", error: "", optional: false},
     descriptionError: {value: "", error: "", optional: false},
     status:  {value: 0, error: "", optional: false},
-    startDate:  {value: "", error: "", optional: false},
-    endDate:  {value: "", error: "", optional: false},
+    place:  {value: "", error: "", optional: false},
+    percentage:  {value: "", error: "", optional: false},
+    starttime:  {value: "", error: "", optional: false},
+    endtime:  {value: "", error: "", optional: false},
+    year:  {value: "", error: "", optional: false},
   });
   const [loading, setLoading] = useState(false);
   const statuses = [
     {
       id: 1,
-      name: "Not Started",
+      name: "open",
     },
     {
       id: 2,
-      name: "In Progress",
+      name: "pending",
     },
     {
       id: 3,
-      name: "In Review",
+      name: "active",
     },
     {
       id: 4,
-      name: "Completed",
+      name: "completed",
     },
   ];
   const theme = useTheme();
@@ -67,13 +72,16 @@ const AddProject = ({ open, handleClose, successCallback, setOpenError, setOpenS
       let temp = [];
       temp.name = formData.name.value ? "" : "error";
       temp.description = formData.description.value ? "" : "error";
-      temp.startDate = formData.startDate.value ? "" : "error";
-      temp.endDate = formData.endDate.value ? "" : "error";
+      temp.starttime = formData.starttime.value ? "" : "error";
+      temp.endttime = formData.endtime.value ? "" : "error";
+      temp.place = formData.place.value ? "" : "error";
+      temp.percentage = formData.percentage.value ? "" : "error";
+      temp.year = formData.year.value ? "" : "error";
       
       let val = "error";
       statuses.map((op)=>{
           if(op.id === formData.status.value) {
-              val = "";
+              val = op.name;
           }
       });
       temp.status = val;
@@ -82,40 +90,47 @@ const AddProject = ({ open, handleClose, successCallback, setOpenError, setOpenS
       setFormData({
         name: {...formData.name, error: temp.name},
         description: {...formData.description, error: temp.description},
-        startDate: {...formData.startDate, error: temp.startDate},
-        endDate: {...formData.endDate, error: temp.endDate},
+        starttime: {...formData.starttime, error: temp.starttime},
+        endtime: {...formData.endtime, error: temp.endtime},
         status: {...formData.status, error: temp.status},
+        place: {...formData.place, error: temp.place},
+        percentage: {...formData.percentage, error: temp.percentage},
+        year: {...formData.year, error: temp.year},
 
       })
       return Object.values(temp).every((x) => x == "");
   };
 
   function handleSubmit(event) {
-      event.preventDefault();
-      const data = new FormData();
-
-      setLoading(true);
-
-      data.append("project[name]", formData.name.value);
-      data.append("project[description]", formData.description.value);
-      data.append("project[startDate]", formData.startDate.value);
-      data.append("project[endDate]", formData.endDate.value);
-      data.append("project[status]", formData.status.value);
-      
-      if(validate()) {
-        submitToAPI(data);
-      }
-      else {
-        setLoading(false);
-      }
+   
   }
 
-  function submitToAPI(data) {
-      fetch(constants.url+"/api/projects", {
-          method:"POST",
-          body: data
-      }).then(response=>response.json()).then(data=>{
-          if(data.status??"" === "created") {
+  function submitToAPI(event) {
+    event.preventDefault();
+    const data = new FormData();
+    // const stform = statuses[formData.status.value].name
+    // console.log('stform',stform);
+    
+    let val = "error";
+    statuses.map((op)=>{
+        if(op.id === formData.status.value) {
+            val = op.name;
+        }
+    });
+    console.log(val);
+    data.append("name", formData.name.value);
+    data.append("description", formData.description.value);
+    data.append("starttime", formData.starttime.value);
+    data.append("endtime", formData.endtime.value);
+    data.append("status", val);
+    data.append("percentage", formData.percentage.value);
+    data.append("place", formData.place.value);
+    data.append("year", formData.year.value);
+    
+
+    axios.post(`${url}/projects`,data).then(data=>{
+      console.log(data.data);
+          if(!data.data.error) {
             setLoading((prev)=>false)
             setFormData(
               {
@@ -130,11 +145,12 @@ const AddProject = ({ open, handleClose, successCallback, setOpenError, setOpenS
             const successMessage = {open:true, message:"Successfully Added!"}
             setOpenSuccess((prev)=>successMessage)
             successCallback();
+            setData([...pData,data.data])
             handleClose();
           }
           else {
             setLoading((prev)=>false);
-            const errorMessage = {open:true, message:"Return Mismatch"}
+            const errorMessage = {open:true, message:data.data.error}
             setOpenError((prev)=>errorMessage)
           }
       }).catch((error)=>{
@@ -190,6 +206,7 @@ const AddProject = ({ open, handleClose, successCallback, setOpenError, setOpenS
               </div>
               <div className="project-add-form-container">
                 <div className="parent">
+                  <form>
                   <div className="cat-container">
                     <div className="child"></div>
                     <div className="ch-child-item">
@@ -199,6 +216,21 @@ const AddProject = ({ open, handleClose, successCallback, setOpenError, setOpenS
                         label="name"
                         labelText="Project name"
                         placeholder="Enter name"
+                        optional = {false}
+                        errorLabel="nameError"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="cat-container">
+                    <div className="child"></div>
+                    <div className="ch-child-item">
+                      <TextField
+                        formData={formData}
+                        setFormData={setFormData}
+                        label="place"
+                        labelText="Project Place"
+                        placeholder="Place(jigjiga)"
                         optional = {false}
                         errorLabel="nameError"
                       />
@@ -225,7 +257,7 @@ const AddProject = ({ open, handleClose, successCallback, setOpenError, setOpenS
                       <DateInput
                         formData={formData}
                         setFormData={setFormData}
-                        label="startDate"
+                        label="starttime"
                         labelText="Start date"
                         placeholder="Enter start date"
                       />
@@ -238,12 +270,40 @@ const AddProject = ({ open, handleClose, successCallback, setOpenError, setOpenS
                       <DateInput
                         formData={formData}
                         setFormData={setFormData}
-                        label="endDate"
+                        label="endtime"
                         labelText="End date"
                         placeholder="Enter end date"
                       />
                     </div>
                   </div>
+                  <div className="cat-container">
+                    <div className="child"></div>
+                    <div className="ch-child-item">
+                      <DateInput
+                        formData={formData}
+                        setFormData={setFormData}
+                        label="year"
+                        labelText="Project Year"
+                        placeholder="Enter Project Year"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="cat-container">
+                    <div className="child"></div>
+                    <div className="ch-child-item">
+                      <TextField
+                        formData={formData}
+                        setFormData={setFormData}
+                        label="percentage"
+                        labelText="Project Percentage"
+                        placeholder="Enter Percentage"
+                        optional = {false}
+                        errorLabel="nameError"
+                      />
+                    </div>
+                  </div>
+
 
                   <div className="cat-container">
                     <div className="child"></div>
@@ -259,7 +319,9 @@ const AddProject = ({ open, handleClose, successCallback, setOpenError, setOpenS
                       />
                     </div>
                   </div>
+                  </form>
                 </div>
+                
                 <div className="dot1" style={{ width: 10, height: 10 }}></div>
               </div>
             </div>
@@ -283,7 +345,7 @@ const AddProject = ({ open, handleClose, successCallback, setOpenError, setOpenS
               Cancel
             </Button>
             <Button
-              onClick={(handleSubmit)}
+              onClick={(submitToAPI)}
               variant="outlined"
               style={{ borderRadius: 20, fontFamily: "ubuntu" }}
               className="dark:text-white dark:bg-green-400"

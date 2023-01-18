@@ -35,7 +35,7 @@ const Projects = () => {
     return resp.data;
   });
 
-  let startProjects  = [];
+  let startProjects = [];
 
   const loadProjects = () => {
      const resp = axios.get(`${url}/projects`,{withCredentials: true}).then((dt)=>{
@@ -51,26 +51,24 @@ const Projects = () => {
           p.startTime = pr.starttime;
           p.endtime = pr.endtime;
           p.BidId = pr.BidId;
-          p.added_by = {
-            name: "Ousman Seid",
-            url: "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
-            job: "Main Director",
-            phone: "+251921114160",
-            email: "ousmanseid333@gmail.com",
-            address: "Jigjiga city"
-          };
+          p.Bids = pr.Bids
           prjs.push(p);
-
+          startProjects.push(p);
+          
+        });
+       
+        
+        setProjects(prjs);
       });
-        startProjects = prjs;
-        //setProjects(prjs);
-     });
+      // console.log('prjs is ',startProjects);
   }
 
   useEffect(()=>{
     loadProjects();
   },[])
 
+
+  // console.log('started projects: ',startProjects);
   // const searchHandler = async (search) => {
   //   setSearchTerm(search);
   //   let query = projects;
@@ -139,6 +137,8 @@ const Projects = () => {
         message={openSuccess.message}
       />
       <AddProject
+        setData={setProjects}
+        pData = {projects}
         open={openAdd}
         handleClose={handleCloseAdd} 
         successCallback={()=>{}}
@@ -154,24 +154,29 @@ const Projects = () => {
       <div className="header">
         <div className="start dark:text-gray-100">All Projects</div>
 
-        <div className="end">
+        <div className="end"> 
           <div className="search">
             <input
               placeholder="Search"
               value={search}
               onChange={(e) => {
                 let s = e.target.value;
-                let pr = startProjects.filter((p) =>
-                  p.name.toLocaleLowerCase().startsWith(s)
-                );
-                setProjects((prev) => pr);
-                setSearch((prev) => s);
+                if(s){
+                  let pr = projects.filter((p) =>
+                    p.name.toLocaleLowerCase().startsWith(s)
+                  );
+                  setProjects((prev) => pr);
+                  setSearch((prev) => s);
+                }else{
+                  setProjects((prev)=>projects)
+                  setSearch((prev)=>"")
+                }
               }}
             />
             <BiSearch className="icon" />
             <MdClose
               onClick={() => {
-                setProjects((prev) => startProjects);
+                setProjects((prev) => projects);
                 setSearch((prev) => "");
               }}
               className="close"
