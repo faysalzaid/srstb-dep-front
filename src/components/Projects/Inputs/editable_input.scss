@@ -1,0 +1,29 @@
+$mainColor: green;
+$borderColor: rgba(0,0,0,.2);
+
+.editable-text-field-container {
+.detail-title {
+    font-size: 22px;
+    font-weight: bold;
+    margin-right: 50px;
+    border-radius: 3px;
+    padding: 10px 15px;
+}
+
+.input-text-field {
+    margin-top: 7px;
+    //width: auto;
+    max-width: 90%;
+    font-size: 22px;
+    font-weight: bold;
+    margin-right: 50px;
+    border-radius: 5px;
+    padding: 10px 0px;
+    border: none;
+
+    &:focus {
+      outline: 1px solid $mainColor;
+      padding: 10px 15px;
+    }
+  }
+}

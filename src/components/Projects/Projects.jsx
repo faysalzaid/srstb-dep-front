@@ -14,7 +14,11 @@ import ShowPhoto from "./ShowPhoto";
 import { MdClose } from "react-icons/md";
 
 import AddProject from "./AddProject";
+import ProjectDetail from "./ProjectDetail";
+
 import { ErrorAlert, SuccessAlert } from "components/Alert";
+import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 const Projects = () => {
   const statuses = {
@@ -35,7 +39,10 @@ const Projects = () => {
     return resp.data;
   });
 
-  let startProjects = [];
+  const theme = useTheme();
+  const sm = useMediaQuery(theme.breakpoints.down("sm"));
+
+  let startProjects  = [];
 
   const loadProjects = () => {
      const resp = axios.get(`${url}/projects`,{withCredentials: true}).then((dt)=>{
@@ -124,23 +131,36 @@ const Projects = () => {
     setOpenError({ open: false, message: "" });
   };
 
+  const [selectedProject, setSelectedProject] = useState({id: 0, show: false});
+  const handleCloseDetail = () => {
+    setSelectedProject({id: 0, show: false});
+  };
   return (
     <>
       <ErrorAlert
         open={openError.open}
         handleClose={handleCloseError}
         message={openError.message}
+        horizontal="right"
       />
       <SuccessAlert
         open={openSuccess.open}
         handleClose={handleCloseSuccess}
         message={openSuccess.message}
+        horizontal="right"
       />
       <AddProject
         setData={setProjects}
         pData = {projects}
         open={openAdd}
         handleClose={handleCloseAdd} 
+        successCallback={()=>{}}
+        setOpenError={setOpenError}
+        setOpenSuccess={setOpenSuccess}
+      />
+      <ProjectDetail
+        open={selectedProject.show}
+        handleClose={handleCloseDetail} 
         successCallback={()=>{}}
         setOpenError={setOpenError}
         setOpenSuccess={setOpenSuccess}
@@ -154,8 +174,8 @@ const Projects = () => {
       <div className="header">
         <div className="start dark:text-gray-100">All Projects</div>
 
-        <div className="end"> 
-          <div className="search">
+        <div className="end">
+          {!sm && <div className="search">
             <input
               placeholder="Search"
               value={search}
@@ -173,15 +193,15 @@ const Projects = () => {
                 }
               }}
             />
-            <BiSearch className="icon" />
+            <BiSearch className="icon text-gray-400 dark:text-gray-500" />
             <MdClose
               onClick={() => {
                 setProjects((prev) => projects);
                 setSearch((prev) => "");
               }}
-              className="close"
+              className="close text-gray-400 dark:text-gray-500"
             />
-          </div>
+          </div>}
           <div
             className={list ? "icon-div-list" : "icon-div"}
             onClick={() => setList(true)}
@@ -205,6 +225,9 @@ const Projects = () => {
               fontSize: 14,
             }}
             onClick={handleClickOpenAdd}
+            // onClick={()=>{
+            //   setSelectedProject({id: 1, show: true});
+            // }}
             color="success"
             startIcon={<AiOutlinePlus />}
           >
