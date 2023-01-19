@@ -81,14 +81,12 @@ const AddProject = ({ open, handleClose, successCallback, setOpenError, setOpenS
       let val = "error";
       statuses.map((op)=>{
           if(op.id === formData.status.value) {
-              val = op.name;
+              val = "";
           }
       });
       temp.status = val;
-     
-    
       setFormData({
-        name: {...formData.name, error: temp.name},
+        name: {...formData.name},
         description: {...formData.description, error: temp.description},
         starttime: {...formData.starttime, error: temp.starttime},
         endtime: {...formData.endtime, error: temp.endtime},
@@ -98,38 +96,45 @@ const AddProject = ({ open, handleClose, successCallback, setOpenError, setOpenS
         year: {...formData.year, error: temp.year},
 
       })
-      return Object.values(temp).every((x) => x == "");
+      return Object.values(temp).every(x => x=="");
   };
 
   function handleSubmit(event) {
-   
-  }
-
-  function submitToAPI(event) {
     event.preventDefault();
-    const data = new FormData();
-    // const stform = statuses[formData.status.value].name
-    // console.log('stform',stform);
-    
-    let val = "error";
-    statuses.map((op)=>{
-        if(op.id === formData.status.value) {
-            val = op.name;
+      // const successMessage = {open:true, message:"Successfully Added!"}
+      // setOpenSuccess((prev)=>successMessage)
+      const data = new FormData();
+
+      let status =""
+      statuses.map((op)=>{
+        if(op.id == formData.status.value) {
+            status = op.name;
         }
     });
-    console.log(val);
-    data.append("name", formData.name.value);
-    data.append("description", formData.description.value);
-    data.append("starttime", formData.starttime.value);
-    data.append("endtime", formData.endtime.value);
-    data.append("status", val);
-    data.append("percentage", formData.percentage.value);
-    data.append("place", formData.place.value);
-    data.append("year", formData.year.value);
-    
+ 
+
+      setLoading(true);
+      data.append("name", formData.name.value);
+      data.append("description", formData.description.value);
+      data.append("starttime", formData.starttime.value);
+      data.append("endtime", formData.endtime.value);
+      data.append("status", status);
+      data.append("percentage", formData.percentage.value);
+      data.append("place", formData.place.value);
+      data.append("year", formData.year.value);
+      
+      if(validate()) {
+        submitToAPI(data);
+      }
+      else {
+        setLoading(false);
+        console.log('not validated');
+      }
+  }
+
+  function submitToAPI(data) {
 
     axios.post(`${url}/projects`,data).then(data=>{
-      console.log(data.data);
           if(!data.data.error) {
             setLoading((prev)=>false)
             setFormData(
@@ -345,7 +350,7 @@ const AddProject = ({ open, handleClose, successCallback, setOpenError, setOpenS
               Cancel
             </Button>
             <Button
-              onClick={(submitToAPI)}
+              onClick={(handleSubmit)}
               variant="outlined"
               style={{ borderRadius: 20, fontFamily: "ubuntu" }}
               className="dark:text-white dark:bg-green-400"

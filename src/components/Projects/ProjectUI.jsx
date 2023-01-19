@@ -69,7 +69,7 @@ const ProjectUI = ({pr, setProfile}) => {
         <div className='project-footer'>
             <div className='user'>
                 <Avatar sx={{ width: 32, height: 32 }} src={''} />
-                <div style={{ marginLeft: 5, fontFamily: 'ubuntu', fontSize: 15 }} className="name dark:text-gray-300">{pr.Bids.map((bid)=>bid.id===pr.BidId?bid.fullname:"")}</div>
+                <div style={{ marginLeft: 5, fontFamily: 'ubuntu', fontSize: 15 }} className="name dark:text-gray-300">{pr.Bids?.map((bid)=>bid.id===pr.BidId?bid.fullname:"")}</div>
             </div>
             <Button variant="outlined" size="small" color="success" startIcon={<MdOutlineTaskAlt />}>
                 Tasks

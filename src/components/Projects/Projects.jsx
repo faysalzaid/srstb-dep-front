@@ -60,36 +60,36 @@ const Projects = () => {
           p.BidId = pr.BidId;
           p.Bids = pr.Bids
           prjs.push(p);
-          startProjects.push(p);
+         
           
         });
        
         
         setProjects(prjs);
+        setSearchResult(prjs)
       });
       // console.log('prjs is ',startProjects);
   }
 
   useEffect(()=>{
     loadProjects();
+    startProjects = projects
   },[])
 
 
-  // console.log('started projects: ',startProjects);
-  // const searchHandler = async (search) => {
-  //   setSearchTerm(search);
-  //   let query = projects;
-  //   if (search !== 0) {
-  //     const newProjectList = query.filter((pr) => {
+  // const searchHandler = async (s) => {
+  //   setSearch(s);
+  //   if (s !== 0) {
+  //     const newProjectList = projects.filter((pr) => {
   //       return Object.values(pr)
   //         .join(" ")
   //         .toLowerCase()
   //         .includes(search.toLowerCase());
   //     });
   //     // console.log(newEmployeeList);
-  //     setSearchResult(newProjectList);
+  //     setProjects(newProjectList);
   //   } else {
-  //     setSearchResult(query);
+  //     setProjects(searchResult);
   //   }
   // };
 
@@ -176,7 +176,7 @@ const Projects = () => {
 
         <div className="end">
           {!sm && <div className="search">
-            <input
+          <input
               placeholder="Search"
               value={search}
               onChange={(e) => {
@@ -188,7 +188,7 @@ const Projects = () => {
                   setProjects((prev) => pr);
                   setSearch((prev) => s);
                 }else{
-                  setProjects((prev)=>projects)
+                  setProjects((prev)=>searchResult)
                   setSearch((prev)=>"")
                 }
               }}
@@ -196,7 +196,7 @@ const Projects = () => {
             <BiSearch className="icon text-gray-400 dark:text-gray-500" />
             <MdClose
               onClick={() => {
-                setProjects((prev) => projects);
+                setProjects(searchResult);
                 setSearch((prev) => "");
               }}
               className="close text-gray-400 dark:text-gray-500"
