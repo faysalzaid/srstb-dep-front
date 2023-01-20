@@ -5,17 +5,19 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Paper from "@mui/material/Paper";
-import { IconButton, Divider } from "@mui/material";
+import { IconButton, Divider, Grid } from "@mui/material";
 import Draggable from "react-draggable";
 import { MdClose } from "react-icons/md";
 import Slide from "@mui/material/Slide";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { TextField, TextArea, Dropdown, DateInput } from "./Inputs/Inputs";
-import { EditableTextContent } from "./Inputs/EditableInputs";
+import { EditableTextContent, EditableDate } from "./Inputs/EditableInputs";
 import { useTheme } from "@mui/material/styles";
 import { useState } from "react";
 import * as constants from "constants.js";
 import Loader from 'components/Loader';
+
+import Tasks from './Tasks/Tasks';
 
 
 function PaperComponent(props) {
@@ -30,8 +32,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const ProjectDetail = ({ open, handleClose, successCallback, setOpenError, setOpenSuccess }) => {
   const [formData, setFormData] = useState({
-    name: {value: "Interactive tasks list UI with full crud functionality And project Detail", error: "", optional: false},
-    description: {value: "", error: "", optional: false},
+    name: {value: "Project Management", error: "", optional: false},
+    description: {value: "Interactive project add, project detail with live edit and update and tasks list UI with full crud functionality", error: "", optional: false},
     descriptionError: {value: "", error: "", optional: false},
     status:  {value: 0, error: "", optional: false},
     startDate:  {value: "", error: "", optional: false},
@@ -83,6 +85,8 @@ const ProjectDetail = ({ open, handleClose, successCallback, setOpenError, setOp
       })
       return Object.values(temp).every((x) => x == "");
   };
+
+  
 
   function handleSubmit(event) {
       event.preventDefault();
@@ -145,6 +149,9 @@ const ProjectDetail = ({ open, handleClose, successCallback, setOpenError, setOp
       console.log(formData.name)
   }
 
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
   return (
     <div>
       <Dialog
@@ -152,13 +159,15 @@ const ProjectDetail = ({ open, handleClose, successCallback, setOpenError, setOp
         onClose={handleClose}
         PaperComponent={PaperComponent}
         //aria-labelledby="project-detail"
-        style={{ backgroundColor: "rgba(0,0,0,.2)"}}
+        style={{ backgroundColor: "rgba(0,50,255,.18)"}}
         TransitionComponent={Transition}
         //keepMounted
-        fullScreen={true}
-        disableEscapeKeyDown
+        fullWidth={true}
+        fullScreen={fullScreen}
+        maxWidth='xl'
+        disableEscapeKeyDown 
       >
-        <div className="dialog-detail bg-white dark:bg-gray-700" style={{ minWidth: 300, overflow:'auto' }}>
+        <div className="dialog-detail bg-white dark:bg-gray-700" style={{ minWidth: 300,height: '100%', minHeight: 500, overflow:'auto' }}>
           
           <DialogTitle
             sx={{ m: 0, p: 2 }}
@@ -166,18 +175,7 @@ const ProjectDetail = ({ open, handleClose, successCallback, setOpenError, setOp
             id="project-detail"
             className="relative"
           >
-            <EditableTextContent
-              formData={formData}
-              setFormData={setFormData}
-              label="name"
-              labelText="Project name"
-              placeholder="Enter name"
-              optional = {false}
-              errorLabel="nameError"
-              callBackFun={callBackFunc}
-              width="90%"
-              margin="0px 0px 0px 0px"
-            />
+            
             <IconButton
               aria-label="close"
               onClick={handleClose}
@@ -194,7 +192,90 @@ const ProjectDetail = ({ open, handleClose, successCallback, setOpenError, setOp
           {/* <Divider /> */}
           <DialogContent>
           {loading && <div><Loader /></div>}
-          
+          <Grid container style={{marginTop: 20}}>
+            <Grid item>
+              <EditableTextContent
+                formData={formData}
+                setFormData={setFormData}
+                label="name"
+                labelText="Project name"
+                placeholder="Enter name"
+                errorLabel="nameError"
+                callBackFun={callBackFunc}
+                width="90%"
+                margin="0px 0px 0px 0px"
+                fontSize={25}
+                padding="5px 15px"
+              />
+              <EditableTextContent
+                formData={formData}
+                setFormData={setFormData}
+                label="description"
+                labelText="Project description"
+                placeholder="Enter description"
+                errorLabel="nameError"
+                callBackFun={callBackFunc}
+                width="90%"
+                margin='0'
+                padding="5px 15px"
+                fontWeight="lighter"
+                fontSize={20}
+                fontFamily="ubuntu"
+              />
+              <EditableDate
+                labelText="Start Date"
+                formData={formData}
+                setFormData={setFormData}
+                callBackFun={callBackFunc}
+                label="startDate"
+                parentStyle={{
+                  margin: "10px 15px"
+                }}
+                labelStyle={{
+                  fontWeight: "bold",
+                  fontSize: 16,
+                  fontFamily: 'ubuntu',
+                }}
+                inputStyle={{
+                  marginLeft: 50,
+                  fontFamily: 'ubuntu',
+                  fontWeight: "bold",
+                  fontSize: 15
+                }}
+              />
+              <EditableDate
+                labelText="End Date"
+                formData={formData}
+                setFormData={setFormData}
+                label="endDate"
+                parentStyle={{
+                  margin: "10px 15px"
+                }}
+                labelStyle={{
+                  fontWeight: "bold",
+                  fontSize: 16,
+                  fontFamily: 'ubuntu',
+                }}
+                inputStyle={{
+                  marginLeft: 60,
+                  fontFamily: 'ubuntu',
+                  fontWeight: "bold",
+                  fontSize: 15
+                }}
+              />
+             <div className="detail-progress-container">
+                <progress value={25} max="100" className='progress'></progress>
+                <p className='percentage dark:text-gray-300'>{25}%</p>
+             </div>
+             <div className="tasks-container">
+                <label className="task-label">All Tasks</label>
+                <Tasks />
+             </div>
+            </Grid>
+            <Grid item sm={12} md={12}>
+              
+            </Grid>
+          </Grid>
           {!loading && <>
             <div className="left-content-container">
               <div className="form-label dark:text-gray-200">
