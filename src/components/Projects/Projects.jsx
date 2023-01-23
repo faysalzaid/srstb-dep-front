@@ -131,7 +131,7 @@ const Projects = () => {
     setOpenError({ open: false, message: "" });
   };
 
-  const [selectedProject, setSelectedProject] = useState({id: 0, show: true});
+  const [selectedProject, setSelectedProject] = useState({id: 0, show: false});
   const handleCloseDetail = () => {
     setSelectedProject({id: 0, show: false});
   };

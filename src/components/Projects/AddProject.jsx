@@ -38,7 +38,6 @@ const AddProject = ({ open, handleClose, successCallback, setOpenError, setOpenS
   const [formData, setFormData] = useState({
     name: {value: "", error: "", optional: false},
     description: {value: "", error: "", optional: false},
-    descriptionError: {value: "", error: "", optional: false},
     status:  {value: 0, error: "", optional: false},
     place:  {value: "", error: "", optional: false},
     percentage:  {value: "", error: "", optional: false},
@@ -141,10 +140,12 @@ const AddProject = ({ open, handleClose, successCallback, setOpenError, setOpenS
               {
                 name: {value: "", error: "", optional: false},
                 description: {value: "", error: "", optional: false},
-                descriptionError: {value: "", error: "", optional: false},
                 status:  {value: 0, error: "", optional: false},
-                startDate:  {value: "", error: "", optional: false},
-                endDate:  {value: "", error: "", optional: false},
+                place:  {value: "", error: "", optional: false},
+                percentage:  {value: "", error: "", optional: false},
+                starttime:  {value: "", error: "", optional: false},
+                endtime:  {value: "", error: "", optional: false},
+                year:  {value: "", error: "", optional: false},
               }
             );
             const successMessage = {open:true, message:"Successfully Added!"}
@@ -221,8 +222,6 @@ const AddProject = ({ open, handleClose, successCallback, setOpenError, setOpenS
                         label="name"
                         labelText="Project name"
                         placeholder="Enter name"
-                        optional = {false}
-                        errorLabel="nameError"
                       />
                     </div>
                   </div>
@@ -236,8 +235,6 @@ const AddProject = ({ open, handleClose, successCallback, setOpenError, setOpenS
                         label="place"
                         labelText="Project Place"
                         placeholder="Place(jigjiga)"
-                        optional = {false}
-                        errorLabel="nameError"
                       />
                     </div>
                   </div>
@@ -251,7 +248,6 @@ const AddProject = ({ open, handleClose, successCallback, setOpenError, setOpenS
                         label="description"
                         labelText="Project description"
                         placeholder="Enter description"
-                        optional={false}
                       />
                     </div>
                   </div>
@@ -303,8 +299,6 @@ const AddProject = ({ open, handleClose, successCallback, setOpenError, setOpenS
                         label="percentage"
                         labelText="Project Percentage"
                         placeholder="Enter Percentage"
-                        optional = {false}
-                        errorLabel="nameError"
                       />
                     </div>
                   </div>
