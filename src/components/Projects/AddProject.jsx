@@ -10,7 +10,7 @@ import Draggable from "react-draggable";
 import { MdClose } from "react-icons/md";
 import Slide from "@mui/material/Slide";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { TextField, TextArea, Dropdown, DateInput } from "./Inputs/Inputs";
+import { TextField, TextArea, Dropdown, DateInput, NumberInput } from "./Inputs/Inputs";
 import { useTheme } from "@mui/material/styles";
 import { useState } from "react";
 import * as constants from "constants.js";
@@ -45,6 +45,11 @@ const AddProject = ({ open, handleClose, successCallback, setOpenError, setOpenS
     starttime:  {value: "", error: "", optional: false},
     endtime:  {value: "", error: "", optional: false},
     year:  {value: "", error: "", optional: false},
+    consultant:  {value: "", error: "", optional: false},
+    totalCost:  {value: "", error: "", optional: false},
+    utilizedCost:  {value: "", error: "", optional: false},
+    physicalPerformance:  {value: "", error: "", optional: false},
+    
   });
   const [loading, setLoading] = useState(false);
   const statuses = [
@@ -77,6 +82,10 @@ const AddProject = ({ open, handleClose, successCallback, setOpenError, setOpenS
       temp.place = formData.place.value ? "" : "error";
       temp.percentage = formData.percentage.value ? "" : "error";
       temp.year = formData.year.value ? "" : "error";
+      temp.consultant = formData.consultant.value ? "" : "error";
+      temp.totalCost = formData.totalCost.value ? "" : "error";
+      temp.utilizedCost = formData.utilizedCost.value ? "" : "error";
+      temp.physicalPerformance = formData.physicalPerformance.value ? "" : "error";
       
       let val = "error";
       statuses.map((op)=>{
@@ -94,6 +103,10 @@ const AddProject = ({ open, handleClose, successCallback, setOpenError, setOpenS
         place: {...formData.place, error: temp.place},
         percentage: {...formData.percentage, error: temp.percentage},
         year: {...formData.year, error: temp.year},
+        consultant: {...formData.consultant, error: temp.consultant},
+        totalCost: {...formData.totalCost, error: temp.totalCost},
+        utilizedCost: {...formData.utilizedCost, error: temp.utilizedCost},
+        physicalPerformance: {...formData.physicalPerformance, error: temp.physicalPerformance},
 
       })
       return Object.values(temp).every(x => x=="");
@@ -122,6 +135,10 @@ const AddProject = ({ open, handleClose, successCallback, setOpenError, setOpenS
       data.append("percentage", formData.percentage.value);
       data.append("place", formData.place.value);
       data.append("year", formData.year.value);
+      data.append("consultant", formData.consultant.value);
+      data.append("totalCost", formData.totalCost.value);
+      data.append("utilizedCost", formData.utilizedCost.value);
+      data.append("physicalPerformance", formData.physicalPerformance.value);
       
       if(validate()) {
         submitToAPI(data);
@@ -134,7 +151,7 @@ const AddProject = ({ open, handleClose, successCallback, setOpenError, setOpenS
 
   function submitToAPI(data) {
 
-    axios.post(`${url}/projects`,data).then(data=>{
+    axios.post(`${url}/projects`,data,{withCredentials:true}).then(data=>{
           if(!data.data.error) {
             setLoading((prev)=>false)
             setFormData(
@@ -251,7 +268,7 @@ const AddProject = ({ open, handleClose, successCallback, setOpenError, setOpenS
                         label="description"
                         labelText="Project description"
                         placeholder="Enter description"
-                        optional={false}
+                      
                       />
                     </div>
                   </div>
@@ -303,12 +320,69 @@ const AddProject = ({ open, handleClose, successCallback, setOpenError, setOpenS
                         label="percentage"
                         labelText="Project Percentage"
                         placeholder="Enter Percentage"
-                        optional = {false}
+                       
                         errorLabel="nameError"
                       />
                     </div>
                   </div>
 
+                  <div className="cat-container">
+                    <div className="child"></div>
+                    <div className="ch-child-item">
+                      <TextField
+                        formData={formData}
+                        setFormData={setFormData}
+                        label="consultant"
+                        labelText="Project consultant"
+                        placeholder="Enter consultant"
+                       
+                        errorLabel="nameError"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="cat-container">
+                    <div className="child"></div>
+                    <div className="ch-child-item">
+                      <NumberInput
+                        formData={formData}
+                        setFormData={setFormData}
+                        label="totalCost"
+                        labelText="Project Total Cost   "
+                        placeholder="Enter Total Cost"
+                   
+                        errorLabel="nameError"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="cat-container">
+                    <div className="child"></div>
+                    <div className="ch-child-item">
+                      <TextField
+                        formData={formData}
+                        setFormData={setFormData}
+                        label="utilizedCost"
+                        labelText="Project Utilized Cost"
+                        placeholder="Enter Utilized Cost"
+                        errorLabel="nameError"
+                      />
+                    </div>
+                  </div>
+                  <div className="cat-container">
+                    <div className="child"></div>
+                    <div className="ch-child-item">
+                      <TextField
+                        formData={formData}
+                        setFormData={setFormData}
+                        label="physicalPerformance"
+                        labelText="Project Physical Performance"
+                        placeholder="Enter physical Performance"
+
+                        errorLabel="nameError"
+                      />
+                    </div>
+                  </div>
 
                   <div className="cat-container">
                     <div className="child"></div>

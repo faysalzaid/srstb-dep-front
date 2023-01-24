@@ -25,7 +25,7 @@ import { Modal, ModalHeader, ModalBody, ModalFooter } from '@windmill/react-ui'
 import { Input, HelperText, Label, Select, Textarea } from '@windmill/react-ui'
 import { useContext } from 'react'
 import { AuthContext } from '../hooks/authContext'
-import { bidUrl } from 'config/urlConfig'
+import { bidUrl, url } from 'config/urlConfig'
 
 function BidDetail(props) {
     const {id} = useParams()
@@ -42,9 +42,10 @@ function BidDetail(props) {
     const [companyData,setCompanyData] = useState([]) 
     const [bidsData,setBidData] = useState({})
     const [errorMessage,setErrorMessage] = useState('')
-    const [bidFormData,setBidFormData] = useState({fullname:"",phone:"",license:"",status:"",performa:"",proposal:"",companydoc:"",amount:""})
+    const [bidFormData,setBidFormData] = useState({fullname:"",phone:"",license:"",status:"",performa:"",proposal:"",companydoc:"",amount:"",bidUserPic:"",ProjectId:""})
     const [frontErrorMessage,setFrontErrorMessage] = useState("")
     const [successMessage,setSuccessMessage] = useState("")
+    const [projects,setProjects] = useState([])
 
     const [authState] = useContext(AuthContext)
 
@@ -55,7 +56,7 @@ function BidDetail(props) {
 
     useEffect(()=>{
         const bidsFetch = async()=>{
-            const response = await axios.get(`http://localhost:4000/bids/${id}`).then((resp)=>{
+            const response = await axios.get(`${url}/bids/${id}`,{withCredentials:true}).then((resp)=>{
               if(resp.data.error) setErrorMessage(resp.data.error);
               // console.log('from the main response',resp.data);
               setBidData(resp.data)
@@ -67,6 +68,16 @@ function BidDetail(props) {
             })
             // console.log(response.data);
         }
+        axios.get(`${url}/projects`,{withCredentials:true}).then((resp)=>{
+          if(resp.data.error){
+            setErrorMessage(resp.data.error)
+          }else{
+
+            setProjects(resp.data.projects)}
+          
+        })
+
+
         bidsFetch()
         console.count('useEffect runned');  
       },[])
@@ -75,10 +86,11 @@ function BidDetail(props) {
 
   const editBid =async(e)=>{
     e.preventDefault()
-    console.log('This is from bid data',bidFormData);
-    if(bidFormData.fullname==="" || bidFormData.phone===""||bidFormData.license===""||bidFormData.status===""||bidFormData.performa===""||bidFormData.proposal===""||bidFormData.companydoc===""||bidFormData.amount===""){
+    
+    if(bidFormData.fullname==="" || bidFormData.phone===""||bidFormData.license===""||bidFormData.status===""||bidFormData.performa===""||bidFormData.proposal===""||bidFormData.companydoc===""||bidFormData.amount==="",bidFormData.bidUserPic==="",bidFormData.ProjectId===""){
       setErrorMessage('Please Provide all data')
     }else{
+     
       const formData = new FormData()
       formData.append('fullname',bidFormData.fullname)
       formData.append('phone',bidFormData.phone)
@@ -88,26 +100,30 @@ function BidDetail(props) {
       formData.append('proposal',bidFormData.proposal)
       formData.append('companydoc',bidFormData.companydoc)
       formData.append('amount',bidFormData.amount)
-      e.preventDefault()
-       const response = await axios.post(`http://localhost:4000/bids/${id}`,formData).then((resp)=>{
-        console.log('From resp.data',resp.data);
-        if(resp.data.error){
-          setErrorMessage(resp.data.error)
-        }else{
-            const rfs = resp.data
-            setBidData(rfs)
-            // setBidFormData(rfs)
-            console.log(resp.data);
-            closeModal()
-            props.history.push(`../../app/bids/${id}`)
-            setSuccessMessage("Successfully Updated")
-            setTimeout(() => {
-            setSuccessMessage("")
-         }, 2000)
-        }
-      }).catch((err)=>{
-        console.log(err);
-      })
+      formData.append('bidUserPic',bidFormData.bidUserPic)
+      formData.append('ProjectId',bidFormData.ProjectId)
+      const PrId = formData.get('ProjectId')
+      if(PrId==bidsData.ProjectId) console.log('they are equall');
+      if(PrId!=bidsData.ProjectId) console.log('they are not equell');
+      //  const response = await axios.post(`http://localhost:4000/bids/${id}`,formData,{withCredentials:true}).then((resp)=>{
+      //   console.log('From resp.data',resp.data);
+      //   if(resp.data.error){
+      //     setErrorMessage(resp.data.error)
+      //   }else{
+      //       const rfs = resp.data
+      //       setBidData(rfs)
+      //       // setBidFormData(rfs)
+      //       console.log(resp.data);
+      //       closeModal()
+      //       props.history.push(`../../app/bids/${id}`)
+      //       setSuccessMessage("Successfully Updated")
+      //       setTimeout(() => {
+      //       setSuccessMessage("")
+      //    }, 2000)
+      //   }
+      // }).catch((err)=>{
+      //   console.log(err);
+      // })
     }
 
 }
@@ -145,6 +161,14 @@ const deleteBid =async(ids)=>{
             <span>Fullname</span>
               <Input type="text" className="mt-1" name="fullname" placeholder="Full Name" value={bidFormData.fullname} autoComplete='off' onChange={(e)=>setBidFormData({...bidFormData,fullname:e.target.value})}/>
           </Label>
+          <Label className="mt-4">
+          <span>Project Name</span>
+          <Select className="mt-1" name="ProjectId" value={bidFormData.ProjectId} onChange={(e)=>setBidFormData({...bidFormData,ProjectId:e.target.value})}>
+          <option>Select</option>
+            <option>{projects.map((pr)=>pr.name)}</option>
+            
+          </Select>
+        </Label>
          
           <Label>
             <span>Phone</span>
@@ -181,7 +205,10 @@ const deleteBid =async(ids)=>{
             <span>CompanyDoc</span>
               <Input type="file" className="mt-1" name="companydoc"  onChange={(e)=>setBidFormData({...bidFormData,companydoc:e.target.files[0]})}/>
           </Label>
-
+          <Label>
+            <span>Bid Owner Pic</span>
+              <Input type="file" className="mt-1" name="bidUserPic" onChange={(e)=>setBidFormData({...bidFormData,bidUserPic:e.target.files[0]})}/>
+          </Label>
         <Label className="mt-4">
           <Button type="submit">Save</Button>
         </Label>
@@ -224,6 +251,7 @@ const deleteBid =async(ids)=>{
             <TableHeader>
               <tr>
                 <TableCell>Full Name</TableCell>
+                <TableCell>Project</TableCell>
                 <TableCell>Phone</TableCell>
                 <TableCell>Amount</TableCell>
                 <TableCell>Status</TableCell>
@@ -239,6 +267,16 @@ const deleteBid =async(ids)=>{
                       <div>
                         <p className="font-semibold">{bidsData.fullname}</p>
                         <p className="text-xs text-gray-600 dark:text-gray-400">{bidsData.job}</p>
+                      </div>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center text-sm">
+                      
+                      <div>
+                        <p className="font-semibold">{projects.map(pr=>pr.id===bidsData.ProjectId?pr.name:"")}</p>
+                        {/* <p className='font-semibold'>{bid.ProjectId}sdf</p> */}
+                     
                       </div>
                     </div>
                   </TableCell>
