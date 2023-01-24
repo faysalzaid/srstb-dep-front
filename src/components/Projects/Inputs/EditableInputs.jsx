@@ -217,6 +217,7 @@ export const EditableDate = ({
       </label>
       <input
         type="date"
+        value={formData[label].value}
         className="editable_date_input text-[#172b4d] dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-800 hover:cursor-pointer"
         style={{
           ...inputStyle,

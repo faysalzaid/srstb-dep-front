@@ -18,6 +18,9 @@ import * as constants from "constants.js";
 import Loader from 'components/Loader';
 
 import Tasks from './Tasks/Tasks';
+import { useEffect } from "react";
+import axios from "axios";
+import { url } from "config/urlConfig";
 
 
 function PaperComponent(props) {
@@ -30,7 +33,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const ProjectDetail = ({ open, handleClose, successCallback, setOpenError, setOpenSuccess }) => {
+const ProjectDetail = ({ open, handleClose, successCallback, setOpenError, setOpenSuccess,id }) => {
+const [taskData,setTaskData] = useState([])
   const [formData, setFormData] = useState({
     name: {value: "Project Management", error: "", optional: false},
     description: {value: "Interactive project add, project detail with live edit and update and tasks list UI with full crud functionality", error: "", optional: false},
@@ -38,7 +42,44 @@ const ProjectDetail = ({ open, handleClose, successCallback, setOpenError, setOp
     status:  {value: 0, error: "", optional: false},
     startDate:  {value: "", error: "", optional: false},
     endDate:  {value: "", error: "", optional: false},
+    percentage:{value:"",error:"",option:false},
+    year:{value:"",error:"",option:false},
+    totalCost:{value:"",error:"",option:false},
+    utilizedCost:{value:"",error:"",option:false},
+    remainingCost:{value:"",error:"",option:false},
+    physicalPerformance:{value:"",error:"",option:false},
+    financialPerformance:{value:"",error:"",option:false}
   });
+
+
+  useEffect(()=>{
+    axios.get(`${url}/projects/${id.id}`,{withCredentials:true}).then((resp)=>{
+      const data = resp.data
+      console.log(resp.data);
+      setFormData(
+        {
+          name: {value: data.name, error: "", optional: false},
+          description: {value: data.description, error: "", optional: false},
+          descriptionError: {value: "", error: "", optional: false},
+          status:  {value: data.status, error: "", optional: false},
+          startDate:  {value:data.starttime, error: "", optional: false},
+          endDate:  {value: data.endtime, error: "", optional: false},
+          percentage:{value:data.percentage,error:"",optional:false},
+          year:{value:data.year,error:"",option:false},
+          totalCost:{value:data.totalCost,error:"",option:false},
+          utilizedCost:{value:data.utilizedCost,error:"",option:false},
+          remainingCost:{value:data.remainingCost,error:"",option:false},
+          physicalPerformance:{value:data.physicalPerformance,error:"",option:false},
+          financialPerformance:{value:data.financialPerformance,error:"",option:false}
+        }
+      );
+      setTaskData(resp.data)
+   
+    })
+  },[id.id])
+
+
+  console.log(formData.percentage.value);
   const [loading, setLoading] = useState(false);
   const statuses = [
     {
@@ -146,7 +187,7 @@ const ProjectDetail = ({ open, handleClose, successCallback, setOpenError, setOp
       //console.log(text)
      // const fd = {...formData, [label]: {...formData[label], value: text}};
       //setFormData(formData)
-      console.log(formData.name)
+      // console.log(formData)
   }
 
   const theme = useTheme();
@@ -224,6 +265,7 @@ const ProjectDetail = ({ open, handleClose, successCallback, setOpenError, setOp
               />
               <EditableDate
                 labelText="Start Date"
+                
                 formData={formData}
                 setFormData={setFormData}
                 callBackFun={callBackFunc}
@@ -264,12 +306,12 @@ const ProjectDetail = ({ open, handleClose, successCallback, setOpenError, setOp
                 }}
               />
              <div className="detail-progress-container">
-                <progress value={25} max="100" className='progress'></progress>
-                <p className='percentage dark:text-gray-300'>{25}%</p>
+                <progress value={formData.percentage.value} max="100" className='progress'></progress>
+                <p className='percentage dark:text-gray-300'>{formData.percentage.value}%</p>
              </div>
              <div className="tasks-container">
                 <label className="task-label">All Tasks</label>
-                <Tasks />
+                <Tasks task={taskData} setTask={setTaskData}/>
              </div>
             </Grid>
             <Grid item sm={12} md={12}>

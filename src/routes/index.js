@@ -50,7 +50,7 @@ const UsersDetail = lazy(() =>
 const ProjectList = lazy(() =>
     import ('../pages/projectList'))
 const ProjectDetail = lazy(() =>
-    import ('../pages/ProjectDetail'))
+    import ('../components/Projects/ProjectDetail'))
 
 
 

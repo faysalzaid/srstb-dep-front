@@ -5,7 +5,8 @@ import { MdAdd } from 'react-icons/md';
 import { EditableTextContent, EditableText } from "../Inputs/EditableInputs";
 import { TextField, TextArea, Dropdown, DateInput } from "../Inputs/Inputs";
 
-export const Tasks = () => {
+export const Tasks = ({task,setTask}) => {
+    console.log('this from tasks',task);
   const [tasks, setTasks] = useState([
     {
         id: 1,
@@ -97,7 +98,9 @@ export const Tasks = () => {
     }
     var data = {[label]: text}
     if(text !== editTask.name) {
-       //update data to server .then
+        console.log('task new:',text);
+        console.log(editTask.id);
+    //    update data to server .then
     }
 
     setTasks(tasks.map(task=>task.id ===editTask.id ? {...task, [label]: text} : task))
@@ -118,9 +121,10 @@ export const Tasks = () => {
                     return (
                         <tr>
                             <td className="td-number">
+                               
                                 <div className='number-avatar'>{index+1}</div>
                             </td>
-                            <td className='td-name'>
+                            <td className='td-name'>    
                                 <div className='crud-title'>
                                 {!selected[label] &&<p onClick={()=>{
                                     const sh = {[label]: true};

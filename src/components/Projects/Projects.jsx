@@ -131,10 +131,13 @@ const Projects = () => {
     setOpenError({ open: false, message: "" });
   };
 
-  const [selectedProject, setSelectedProject] = useState({id: 0, show: true});
+  const [selectedProject, setSelectedProject] = useState({id: 0, show: false});
   const handleCloseDetail = () => {
     setSelectedProject({id: 0, show: false});
   };
+  const handleOpenDetail = (id)=>{
+    setSelectedProject({id, show:true})
+  }
   return (
     <>
       <ErrorAlert
@@ -160,6 +163,7 @@ const Projects = () => {
       />
       <ProjectDetail
         open={selectedProject.show}
+        id={selectedProject.id}
         handleClose={handleCloseDetail} 
         successCallback={()=>{}}
         setOpenError={setOpenError}
@@ -249,6 +253,7 @@ const Projects = () => {
                   xl={3}
                 >
                   <ProjectUI
+                    openDetail={handleOpenDetail}
                     pr={pro}
                     key={"pro-item" + index + "-" + pro.id}
                     setProfile={setProfile}
