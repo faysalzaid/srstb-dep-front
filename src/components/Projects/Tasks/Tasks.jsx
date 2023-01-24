@@ -98,13 +98,30 @@ export const Tasks = ({task,setTask}) => {
     }
     var data = {[label]: text}
     if(text !== editTask.name) {
-        console.log('task new:',text);
-        console.log(editTask.id);
+        //console.log('task new:',text);
+        //console.log(editTask.id);
     //    update data to server .then
     }
 
     setTasks(tasks.map(task=>task.id ===editTask.id ? {...task, [label]: text} : task))
     setSelected({});
+  }
+  function callBackFuncAdd(text, label, escape=false) {
+      let newTasks = tasks;
+      tasks.push({
+        id: tasks.length+1,
+        name: text,
+        status: 1,
+      });
+      setTasks((prev)=>tasks);
+      setShow({add: false, edit: false});
+      const addTask = {
+        name: {value: "", error: "", optional: false},
+        status: {value: 1, error: "", optional: false},
+        startDate: {value: "", error: "", optional: false},
+        endDate: {value: "", error: "", optional: false},
+      }
+      setAddTask(()=>addTask)
   }
   return (
     <div className='crud-container'>
@@ -171,7 +188,7 @@ export const Tasks = ({task,setTask}) => {
                                 <EditableText
                                     formData={addTask}
                                     setFormData={setAddTask}
-                                    callBackFun={callBackFuncEdit}
+                                    callBackFun={callBackFuncAdd}
                                     label="name"
                                     parentStyle={{
                                         padding: "5px 5px"
