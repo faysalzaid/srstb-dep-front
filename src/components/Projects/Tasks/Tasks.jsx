@@ -4,46 +4,16 @@ import './tasks.scss';
 import { MdAdd } from 'react-icons/md';
 import { EditableTextContent, EditableText } from "../Inputs/EditableInputs";
 import { TextField, TextArea, Dropdown, DateInput } from "../Inputs/Inputs";
+import axios from 'axios';
+import { url } from 'config/urlConfig';
+import { useEffect } from 'react';
 
 export const Tasks = ({task,setTask}) => {
-    console.log('this from tasks',task);
-  const [tasks, setTasks] = useState([
-    {
-        id: 1,
-        name: "create different kinds of reusable normal and editable inputs ",
-        status: 4,
-    },
-    {
-        id: 2,
-        name: "create custom reusable notification components for success, error, info and warning then integrate with main project window",
-        status: 4,
-    },
-    {
-        id: 3,
-        name: "create responsive project add component and integrate with validation, loader and alert components",
-        status: 3,
-    },
-    {
-        id: 4,
-        name: "create reusable loader component and integrate with add project component",
-        status: 3,
-    },
-    {
-        id: 5,
-        name: "add project detail page",
-        status: 2,
-    },
-    {
-        id: 6,
-        name: "create basic layout of the list view",
-        status: 2,
-    },
-    {
-        id: 7,
-        name: "add full crud functionality with callbacks and integrate them with the tasks list user interface",
-        status: 1,
-    }
-  ]);
+   
+  const [taskData, setTasks] = useState([]);
+  useEffect(()=>{
+    setTasks(task.Tasks)
+  },[task.Tasks])
   const statuses = [
     {
         id: 1,
@@ -66,6 +36,8 @@ export const Tasks = ({task,setTask}) => {
         color: "#37c5ab"
     },
   ];
+
+
   const [formData, setFormData] = useState({
     name: {value: "Project Management", error: "", optional: false},
     description: {value: "Interactive project add, project detail with live edit and update and tasks list UI with full crud functionality", error: "", optional: false},
@@ -99,18 +71,28 @@ export const Tasks = ({task,setTask}) => {
     var data = {[label]: text}
     if(text !== editTask.name) {
         console.log('task new:',text);
-        console.log(editTask.id);
+        const request = {
+            name:text,
+            pid:task.id
+        }
+        axios.post(`${url}/tasks`,request,{withCredentials:true}).then((resp)=>{
+            if(resp.data.error){
+                console.log(resp.data.error);
+            }else{
+                setTasks([...taskData,resp.data])
+            }
+        })
     //    update data to server .then
     }
 
-    setTasks(tasks.map(task=>task.id ===editTask.id ? {...task, [label]: text} : task))
+    setTasks(taskData?.map(task=>task.id ===editTask.id ? {...task, [label]: text} : task))
     setSelected({});
   }
   return (
     <div className='crud-container'>
         <table>
             <tbody>
-                {tasks.map((task, index)=>{
+                {taskData?.map((task, index)=>{
                     let stts = "";
                     statuses.map((st)=>{
                         if(st.id === task.status) {
@@ -164,7 +146,7 @@ export const Tasks = ({task,setTask}) => {
                 })}
                 {show.add && <tr>
                             <td className="td-number">
-                                <div className='number-avatar'>{tasks.length+1}</div>
+                                <div className='number-avatar'>{taskData?.length+1}</div>
                             </td>
                             <td className='td-name'>
                                 <div className='crud-title'>

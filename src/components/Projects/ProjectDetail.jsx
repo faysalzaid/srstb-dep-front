@@ -79,7 +79,6 @@ const [taskData,setTaskData] = useState([])
   },[id.id])
 
 
-  console.log(formData.percentage.value);
   const [loading, setLoading] = useState(false);
   const statuses = [
     {
@@ -150,37 +149,38 @@ const [taskData,setTaskData] = useState([])
   }
 
   function submitToAPI(data) {
-      fetch(constants.url+"/api/projects", {
-          method:"POST",
-          body: data
-      }).then(response=>response.json()).then(data=>{
-          if(data.status??"" === "created") {
-            setLoading((prev)=>false)
-            setFormData(
-              {
-                name: {value: "", error: "", optional: false},
-                description: {value: "", error: "", optional: false},
-                descriptionError: {value: "", error: "", optional: false},
-                status:  {value: 0, error: "", optional: false},
-                startDate:  {value: "", error: "", optional: false},
-                endDate:  {value: "", error: "", optional: false},
-              }
-            );
-            const successMessage = {open:true, message:"Successfully Added!"}
-            setOpenSuccess((prev)=>successMessage)
-            successCallback();
-            handleClose();
-          }
-          else {
-            setLoading((prev)=>false);
-            const errorMessage = {open:true, message:"Return Mismatch"}
-            setOpenError((prev)=>errorMessage)
-          }
-      }).catch((error)=>{
-        console.error(error);
-        setLoading((prev)=>false);
-        setOpenError({open:true, message:"Something went wrong!"})
-      });
+    console.log(data);
+      // fetch(constants.url+"/api/projects", {
+      //     method:"POST",
+      //     body: data
+      // }).then(response=>response.json()).then(data=>{
+      //     if(data.status??"" === "created") {
+      //       setLoading((prev)=>false)
+      //       setFormData(
+      //         {
+      //           name: {value: "", error: "", optional: false},
+      //           description: {value: "", error: "", optional: false},
+      //           descriptionError: {value: "", error: "", optional: false},
+      //           status:  {value: 0, error: "", optional: false},
+      //           startDate:  {value: "", error: "", optional: false},
+      //           endDate:  {value: "", error: "", optional: false},
+      //         }
+      //       );
+      //       const successMessage = {open:true, message:"Successfully Added!"}
+      //       setOpenSuccess((prev)=>successMessage)
+      //       successCallback();
+      //       handleClose();
+      //     }
+      //     else {
+      //       setLoading((prev)=>false);
+      //       const errorMessage = {open:true, message:"Return Mismatch"}
+      //       setOpenError((prev)=>errorMessage)
+      //     }
+      // }).catch((error)=>{
+      //   console.error(error);
+      //   setLoading((prev)=>false);
+      //   setOpenError({open:true, message:"Something went wrong!"})
+      // });
   }
 
   function callBackFunc(text, label) {
@@ -205,7 +205,7 @@ const [taskData,setTaskData] = useState([])
         //keepMounted
         fullWidth={true}
         fullScreen={fullScreen}
-        maxWidth='xl'
+        maxWidth='md'
         disableEscapeKeyDown 
       >
         <div className="dialog-detail bg-white dark:bg-gray-700" style={{ minWidth: 300,height: '100%', minHeight: 500, overflow:'auto' }}>

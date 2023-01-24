@@ -272,6 +272,7 @@ const Projects = () => {
               return (
                 <Grid key={"pro" + index + "-" + pro.id} item xs={12}>
                   <ProjectUIList
+                  openDetail={handleOpenDetail}
                     pr={pro}
                     key={"pro-item" + index + "-" + pro.id}
                     setProfile={setProfile}
