@@ -20,11 +20,11 @@ function Login(props) {
 
 
   // console.log(authState)
-  useEffect(()=>{
-    if(authState.state===true){
+ 
+    if(authState.state==true){
       props.history.push('/app/dashboard')
     }
-  },[])
+
   const validation = Yup.object().shape({
     email:Yup.string().email().min(5).required("Email is required"),
     password:Yup.string().min(3).max(25).required()

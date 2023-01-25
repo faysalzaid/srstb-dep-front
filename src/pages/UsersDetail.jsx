@@ -73,6 +73,7 @@ function UsersDetail(props) {
   }, []);
 
   const updateUser = async (data) => {
+    console.log('data is ',data);
     const formData = new FormData();
     formData.append("name", data.name);
     formData.append("email", data.email);
@@ -80,7 +81,7 @@ function UsersDetail(props) {
     formData.append("password", data.password);
     formData.append("image", userForm.image);
     console.log("this is the data from formik", formData);
-    await axios.post(`${url}/users/${id}`, formData).then((resp) => {
+    await axios.post(`${url}/users/${id}`, formData,{withCredentials:true}).then((resp) => {
       // console.log();
       if (resp.data.error) {
         setErrorMessage(resp.data.error);
@@ -99,7 +100,7 @@ function UsersDetail(props) {
   };
 
   const deleteUser = () => {
-    axios.get(`${url}/users/delete/${id}`).then((resp) => {
+    axios.get(`${url}/users/delete/${id}`,{withCredentials:true}).then((resp) => {
       if (resp.data.error) {
         setErrorMessage(resp.data.error);
       }
@@ -183,13 +184,17 @@ function UsersDetail(props) {
                   className="w-full p-2.5 text-gray-500 bg-white border rounded-md shadow-sm outline-none appearance-none focus:border-indigo-600"
                   name="role"
                 >
-                  <option>Select</option>
+             
                   <option>admin</option>
-                  <option>manager</option>
-                  <option>client</option>
+                  <option>finance</option>
+                  <option>engineer</option>
                   <option>employee</option>
+                  <option>bidadminstration</option>
+                  <option>planning</option>
+                  <option>client</option>
                 </Field>
               </Label>
+
               <Label className="mt-4">
                 <span>Update Image</span>
                 <input

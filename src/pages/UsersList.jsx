@@ -67,6 +67,7 @@ function UsersList(props) {
       if(resp.data.error){
         setUsersData([])
         console.log(resp.data.error);
+        setErrorMessage(resp.data.error)
       }else{
         console.log("users data ", resp.data);
         setUsersData(resp.data);
@@ -300,6 +301,16 @@ function UsersList(props) {
           role="alert"
         >
           <p className="text-sm">{successMessage}.</p>
+        </div>
+      ) : (
+        ""
+      )}
+       {errorMessage ? (
+        <div
+          className="bg-red-100 border-t border-b border-red-500 text-red-700 px-4 py-3"
+          role="alert"
+        >
+          <p className="text-sm">{errorMessage}.</p>
         </div>
       ) : (
         ""

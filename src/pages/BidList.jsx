@@ -40,7 +40,7 @@ function BidList(props) {
     const [companyData,setCompanyData] = useState([]) 
     const [bidsData,setBidData] = useState([])
     const [errorMessage,setErrorMessage] = useState('')
-    const [bidFormData,setBidFormData] = useState({fullname:"",phone:"",license:"",status:"",performa:"",proposal:"",companydoc:"",amount:"",bidUserPic:"",ProjectId:""})
+    const [bidFormData,setBidFormData] = useState({fullname:"",phone:"",license:"",status:"",performa:"",proposal:"",companydoc:"",amount:"",bidUserPic:"",ProjectId:"",UserId:""})
     const [frontErrorMessage,setFrontErrorMessage] = useState("")
     const [successMessage,setSuccessMessage] = useState("")
     const [projects,setProjects] = useState([])
@@ -48,6 +48,7 @@ function BidList(props) {
     const [searchResult,setSearchResult] = useState([])
     const [searchTerm,setSearchTerm] = useState("")
     const [fetchedResult,setFetchedResult] = useState([])
+    const [ users,setUsers] = useState([])
 
     const [authState] = useContext(AuthContext)
 
@@ -64,12 +65,20 @@ function BidList(props) {
             })
             // console.log(response.data);
         }
+        axios.get(`${url}/users`,{withCredentials:true}).then((resp)=>{
+          if(resp.data.error){
+            console.log(resp.data.error);
+          }else{
+            setUsers(resp.data)
+          }
+        })
         axios.get(`${url}/projects`,{withCredentials:true}).then((resp)=>{
           if(resp.data.error){
             setErrorMessage(resp.data.error)
           }else{
 
             setProjects(resp.data.projects)}
+            console.log(resp.data.projects);
           
         })
         bidsFetch()
@@ -84,11 +93,13 @@ function BidList(props) {
   const addBid =async(e)=>{
     e.preventDefault()
     console.log('This is from bid data',bidFormData);
-    if(bidFormData.fullname==="" || bidFormData.phone===""||bidFormData.license===""||bidFormData.status===""||bidFormData.performa===""||bidFormData.proposal===""||bidFormData.companydoc===""||bidFormData.amount==="",bidFormData.bidUserPic==="",bidFormData.ProjectId===""){
+    if(bidFormData.fullname==="" || bidFormData.phone===""||bidFormData.license===""||bidFormData.status===""||bidFormData.performa===""||bidFormData.proposal===""||bidFormData.companydoc===""||bidFormData.amount==="",bidFormData.bidUserPic==="",bidFormData.ProjectId==="",bidFormData.UserId===""){
       setErrorMessage('Please Provide all data')
     }else{
       const projectNameToId = await axios.get(`${url}/projects/name/${bidFormData.ProjectId}`)
-      console.log('projectId',projectNameToId.data.id);
+      const userNameToId = await axios.get(`${url}/users/name/${bidFormData.UserId}`,{withCredentials:true})
+      console.log('projectId',projectNameToId.data);
+      console.log('userId',userNameToId.data);
      
       const formData = new FormData()
       formData.append('fullname',bidFormData.fullname)
@@ -101,6 +112,7 @@ function BidList(props) {
       formData.append('bidUserPic',bidFormData.bidUserPic)
       formData.append('amount',bidFormData.amount)
       formData.append('ProjectId',projectNameToId.data.id)
+      formData.append('UserId',userNameToId.data.id)
       console.log(formData);
        const response = await axios.post('http://localhost:4000/bids',formData,{withCredentials:true}).then((resp)=>{
         
@@ -108,7 +120,7 @@ function BidList(props) {
           setErrorMessage(resp.data.error)
         }else{
             setBidData([...bidsData,resp.data])
-            setBidFormData({fullname:"",phone:"",license:"",status:"",performa:"",proposal:"",companydoc:"",amount:"",bidUserPic:""})
+            setBidFormData({fullname:"",phone:"",license:"",status:"",performa:"",proposal:"",companydoc:"",amount:"",bidUserPic:"",ProjectId:"",UserId:""})
           closeModal()
           setSuccessMessage("Successfully added")
           setTimeout(() => {
@@ -194,7 +206,17 @@ const searchHandler = async(search)=>{
           <span>Project Name</span>
           <Select className="mt-1" name="ProjectId" value={bidFormData.ProjectId} onChange={(e)=>setBidFormData({...bidFormData,ProjectId:e.target.value})}>
           <option>Select</option>
-            <option>{projects.map((pr)=>pr.name)}</option>
+          {projects.map((pr)=>{return  <option>{pr.name}</option>})}
+           
+            
+          </Select>
+        </Label>
+        <Label className="mt-4">
+          <span>User</span>
+          <Select className="mt-1" name="UserId" value={bidFormData.UserId} onChange={(e)=>setBidFormData({...bidFormData,UserId:e.target.value})}>
+          <option>Select</option>
+          {users.map((usr)=>{return  <option>{usr.name}</option>})}
+           
             
           </Select>
         </Label>
@@ -316,6 +338,7 @@ const searchHandler = async(search)=>{
               <tr>
                 <TableCell>Full Name</TableCell>
                 <TableCell>Project</TableCell>
+                <TableCell>Owner</TableCell>
                 <TableCell>Phone</TableCell>
                 <TableCell>Amount</TableCell>
                 <TableCell>Status</TableCell>
@@ -339,6 +362,16 @@ const searchHandler = async(search)=>{
                       
                       <div>
                         <p className="font-semibold">{projects.map(pr=>pr.id===bid.ProjectId?pr.name:"")}</p>
+                        {/* <p className='font-semibold'>{bid.ProjectId}sdf</p> */}
+                     
+                      </div>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center text-sm">
+                      
+                      <div>
+                        <p className="font-semibold">{users.map(usr=>usr.id===bid.UserId?usr.name:"")}</p>
                         {/* <p className='font-semibold'>{bid.ProjectId}sdf</p> */}
                      
                       </div>

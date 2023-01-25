@@ -40,8 +40,8 @@ const [taskData,setTaskData] = useState([])
     description: {value: "Interactive project add, project detail with live edit and update and tasks list UI with full crud functionality", error: "", optional: false},
     descriptionError: {value: "", error: "", optional: false},
     status:  {value: 0, error: "", optional: false},
-    startDate:  {value: "", error: "", optional: false},
-    endDate:  {value: "", error: "", optional: false},
+    starttime:  {value: "", error: "", optional: false},
+    endtime:  {value: "", error: "", optional: false},
     percentage:{value:"",error:"",option:false},
     year:{value:"",error:"",option:false},
     totalCost:{value:"",error:"",option:false},
@@ -55,15 +55,14 @@ const [taskData,setTaskData] = useState([])
   useEffect(()=>{
     axios.get(`${url}/projects/${id.id}`,{withCredentials:true}).then((resp)=>{
       const data = resp.data
-      console.log(resp.data);
       setFormData(
         {
           name: {value: data.name, error: "", optional: false},
           description: {value: data.description, error: "", optional: false},
           descriptionError: {value: "", error: "", optional: false},
           status:  {value: data.status, error: "", optional: false},
-          startDate:  {value:data.starttime, error: "", optional: false},
-          endDate:  {value: data.endtime, error: "", optional: false},
+          starttime:  {value:data.starttime, error: "", optional: false},
+          endtime:  {value: data.endtime, error: "", optional: false},
           percentage:{value:data.percentage,error:"",optional:false},
           year:{value:data.year,error:"",option:false},
           totalCost:{value:data.totalCost,error:"",option:false},
@@ -103,8 +102,8 @@ const [taskData,setTaskData] = useState([])
       let temp = [];
       temp.name = formData.name.value ? "" : "error";
       temp.description = formData.description.value ? "" : "error";
-      temp.startDate = formData.startDate.value ? "" : "error";
-      temp.endDate = formData.endDate.value ? "" : "error";
+      temp.starttime = formData.starttime.value ? "" : "error";
+      temp.endtime = formData.endtime.value ? "" : "error";
       
       let val = "error";
       statuses.map((op)=>{
@@ -118,8 +117,8 @@ const [taskData,setTaskData] = useState([])
       setFormData({
         name: {...formData.name, error: temp.name},
         description: {...formData.description, error: temp.description},
-        startDate: {...formData.startDate, error: temp.startDate},
-        endDate: {...formData.endDate, error: temp.endDate},
+        starttime: {...formData.starttime, error: temp.starttime},
+        endtime: {...formData.endtime, error: temp.endtime},
         status: {...formData.status, error: temp.status},
 
       })
@@ -136,8 +135,8 @@ const [taskData,setTaskData] = useState([])
 
       data.append("project[name]", formData.name.value);
       data.append("project[description]", formData.description.value);
-      data.append("project[startDate]", formData.startDate.value);
-      data.append("project[endDate]", formData.endDate.value);
+      data.append("project[starttime]", formData.starttime.value);
+      data.append("project[endtime]", formData.endtime.value);
       data.append("project[status]", formData.status.value);
       
       if(validate()) {
@@ -162,8 +161,8 @@ const [taskData,setTaskData] = useState([])
       //           description: {value: "", error: "", optional: false},
       //           descriptionError: {value: "", error: "", optional: false},
       //           status:  {value: 0, error: "", optional: false},
-      //           startDate:  {value: "", error: "", optional: false},
-      //           endDate:  {value: "", error: "", optional: false},
+      //           starttime:  {value: "", error: "", optional: false},
+      //           endtime:  {value: "", error: "", optional: false},
       //         }
       //       );
       //       const successMessage = {open:true, message:"Successfully Added!"}
@@ -184,10 +183,11 @@ const [taskData,setTaskData] = useState([])
   }
 
   function callBackFunc(text, label) {
-      //console.log(text)
-     // const fd = {...formData, [label]: {...formData[label], value: text}};
-      //setFormData(formData)
-      // console.log(formData)
+      console.log(text)
+      console.log(label);
+    //  const fd = {...formData, [label]: {...formData[label], value: text}};
+      // setFormData(formData)
+      console.log(formData)
   }
 
   const theme = useTheme();
@@ -269,7 +269,7 @@ const [taskData,setTaskData] = useState([])
                 formData={formData}
                 setFormData={setFormData}
                 callBackFun={callBackFunc}
-                label="startDate"
+                label="starttime"
                 parentStyle={{
                   margin: "10px 15px"
                 }}
@@ -289,7 +289,8 @@ const [taskData,setTaskData] = useState([])
                 labelText="End Date"
                 formData={formData}
                 setFormData={setFormData}
-                label="endDate"
+                callBackFun={callBackFunc}
+                label="endtime"
                 parentStyle={{
                   margin: "10px 15px"
                 }}
@@ -361,7 +362,7 @@ const [taskData,setTaskData] = useState([])
                       <DateInput
                         formData={formData}
                         setFormData={setFormData}
-                        label="startDate"
+                        label="starttime"
                         labelText="Start date"
                         placeholder="Enter start date"
                       />
@@ -374,7 +375,7 @@ const [taskData,setTaskData] = useState([])
                       <DateInput
                         formData={formData}
                         setFormData={setFormData}
-                        label="endDate"
+                        label="endtime"
                         labelText="End date"
                         placeholder="Enter end date"
                       />

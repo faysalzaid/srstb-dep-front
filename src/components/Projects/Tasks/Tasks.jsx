@@ -70,23 +70,42 @@ export const Tasks = ({task,setTask}) => {
     }
     var data = {[label]: text}
     if(text !== editTask.name) {
-        console.log('task new:',text);
+        // console.log('the update task:',text);
         const request = {
             name:text,
             pid:task.id
         }
-        axios.post(`${url}/tasks`,request,{withCredentials:true}).then((resp)=>{
+        // console.log('id is ',editTask.id);
+        axios.post(`${url}/tasks/${editTask.id}`,request,{withCredentials:true}).then((resp)=>{
             if(resp.data.error){
                 console.log(resp.data.error);
             }else{
-                setTasks([...taskData,resp.data])
+                // setTasks([...taskData,resp.data])
             }
         })
+        // console.log('task new:',text);
+        // console.log(editTask.id);
     //    update data to server .then
     }
 
     setTasks(taskData?.map(task=>task.id ===editTask.id ? {...task, [label]: text} : task))
     setSelected({});
+  }
+  function callBackFuncAdd(text, label, escape=false) {
+    //   let newTasks = tasks;
+    //   console.log('the add task:',text);
+      const request = {
+        name:text,
+        pid:task.id
+    }
+    // console.log('id is ',editTask.id);
+    axios.post(`${url}/tasks/`,request,{withCredentials:true}).then((resp)=>{
+        if(resp.data.error){
+            console.log(resp.data.error);
+        }else{
+            setTasks([...taskData,resp.data])
+        }
+    })
   }
   return (
     <div className='crud-container'>
@@ -153,7 +172,7 @@ export const Tasks = ({task,setTask}) => {
                                 <EditableText
                                     formData={addTask}
                                     setFormData={setAddTask}
-                                    callBackFun={callBackFuncEdit}
+                                    callBackFun={callBackFuncAdd}
                                     label="name"
                                     parentStyle={{
                                         padding: "5px 5px"

@@ -32,12 +32,29 @@ import {
   lineLegends,
 } from '../utils/demo/chartsData'
 import { withRouter } from 'react-router-dom'
+import { url } from 'config/urlConfig'
+import axios from 'axios'
 
 function Dashboard(props) {
   const [authState] = useContext(AuthContext)
 
   const [page, setPage] = useState(1)
   const [data, setData] = useState([])
+  const [projects,setProject] = useState([])
+
+
+
+    useEffect(()=>{
+    axios.get(`${url}/projects`,{withCredentials:true}).then((resp)=>{
+      if(resp.data.error){
+        console.log(resp.data.error);
+      }
+    setProject(resp.data.projects)
+
+    },[])
+
+
+},[])
 
   // pagination setup
   const resultsPerPage = 10
@@ -48,11 +65,30 @@ function Dashboard(props) {
     setPage(p)
   }
   
-  useEffect(()=>{
-    if(authState.state!==true){
-      props.history.push('/login')
-    }
-  },[])
+
+
+const projectPercentileGraph = {
+  data: {
+      datasets: [{
+          data: projects?.map(pr=> pr.percentage),
+          /**
+           * These colors come from Tailwind CSS palette
+           * https://tailwindcss.com/docs/customizing-colors/#default-color-palette
+           */
+          backgroundColor: projects?.map(pr=>pr.color),
+          label: 'Percentage',
+      }, ],
+      labels: projects?.map((pr)=>pr.name),
+  },
+  options: {
+      responsive: true,
+      cutoutPercentage: 80,
+  },
+  legend: {
+      display: false,
+  },
+}
+
 
 
   // on page change, load new sliced data
@@ -116,12 +152,17 @@ function Dashboard(props) {
       {/* end of calendar section */}
       </TableContainer>
 
-      <PageTitle></PageTitle>
+      <PageTitle>Projects</PageTitle>
       <div className="grid gap-6 mb-8 md:grid-cols-2">
-        {/* <ChartCard title="Revenue">
-          <Doughnut {...doughnutOptions} />
-          <ChartLegend legends={doughnutLegends} />
-        </ChartCard> */}
+      <ChartCard title="Project Percent Graph">
+          <Doughnut {...projectPercentileGraph} />
+          <ChartLegend legends={projects}/>
+        </ChartCard>
+
+        <ChartCard title="Lines">
+          <Line {...projectPercentileGraph} />
+          <ChartLegend legends={projects}/>
+        </ChartCard>
       </div>
     </>
   )

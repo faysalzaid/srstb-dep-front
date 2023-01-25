@@ -42,11 +42,11 @@ function BidDetail(props) {
     const [companyData,setCompanyData] = useState([]) 
     const [bidsData,setBidData] = useState({})
     const [errorMessage,setErrorMessage] = useState('')
-    const [bidFormData,setBidFormData] = useState({fullname:"",phone:"",license:"",status:"",performa:"",proposal:"",companydoc:"",amount:"",bidUserPic:"",ProjectId:""})
+    const [bidFormData,setBidFormData] = useState({fullname:"",phone:"",license:"",status:"",performa:"",proposal:"",companydoc:"",amount:"",bidUserPic:"",ProjectId:"",UserId:""})
     const [frontErrorMessage,setFrontErrorMessage] = useState("")
     const [successMessage,setSuccessMessage] = useState("")
     const [projects,setProjects] = useState([])
-
+    const [ users,setUsers] = useState([])
     const [authState] = useContext(AuthContext)
 
     
@@ -77,6 +77,14 @@ function BidDetail(props) {
           
         })
 
+        axios.get(`${url}/users`,{withCredentials:true}).then((resp)=>{
+          if(resp.data.error){
+            console.log(resp.data.error);
+          }else{
+            setUsers(resp.data)
+          }
+        })
+
 
         bidsFetch()
         console.count('useEffect runned');  
@@ -87,10 +95,27 @@ function BidDetail(props) {
   const editBid =async(e)=>{
     e.preventDefault()
     
-    if(bidFormData.fullname==="" || bidFormData.phone===""||bidFormData.license===""||bidFormData.status===""||bidFormData.performa===""||bidFormData.proposal===""||bidFormData.companydoc===""||bidFormData.amount==="",bidFormData.bidUserPic==="",bidFormData.ProjectId===""){
+    if(bidFormData.fullname==="" || bidFormData.phone===""||bidFormData.license===""||bidFormData.status===""||bidFormData.performa===""||bidFormData.proposal===""||bidFormData.companydoc===""||bidFormData.amount==="",bidFormData.bidUserPic==="",bidFormData.ProjectId===""||bidFormData.UserId===""){
       setErrorMessage('Please Provide all data')
     }else{
-     
+
+      const PrId = bidFormData.ProjectId
+      const UsrId = bidFormData.UserId
+      let newPrId;
+      let newUsrId;
+      if(PrId!=bidsData.ProjectId){
+        const projectNameToId = await axios.get(`${url}/projects/name/${PrId}`)
+        newPrId = projectNameToId.data.id
+      } else{
+        newPrId = bidFormData.ProjectId
+      }
+      if(UsrId!=bidsData.UserId){
+        const userNameToId = await axios.get(`${url}/users/name/${UsrId}`,{withCredentials:true})
+        newUsrId = userNameToId.data.id
+        console.log('the new id is ',newUsrId);
+      }else{
+        newUsrId = bidFormData.UserId
+      }
       const formData = new FormData()
       formData.append('fullname',bidFormData.fullname)
       formData.append('phone',bidFormData.phone)
@@ -101,51 +126,52 @@ function BidDetail(props) {
       formData.append('companydoc',bidFormData.companydoc)
       formData.append('amount',bidFormData.amount)
       formData.append('bidUserPic',bidFormData.bidUserPic)
-      formData.append('ProjectId',bidFormData.ProjectId)
-      const PrId = formData.get('ProjectId')
-      if(PrId==bidsData.ProjectId) console.log('they are equall');
-      if(PrId!=bidsData.ProjectId) console.log('they are not equell');
-      //  const response = await axios.post(`http://localhost:4000/bids/${id}`,formData,{withCredentials:true}).then((resp)=>{
-      //   console.log('From resp.data',resp.data);
-      //   if(resp.data.error){
-      //     setErrorMessage(resp.data.error)
-      //   }else{
-      //       const rfs = resp.data
-      //       setBidData(rfs)
-      //       // setBidFormData(rfs)
-      //       console.log(resp.data);
-      //       closeModal()
-      //       props.history.push(`../../app/bids/${id}`)
-      //       setSuccessMessage("Successfully Updated")
-      //       setTimeout(() => {
-      //       setSuccessMessage("")
-      //    }, 2000)
-      //   }
-      // }).catch((err)=>{
-      //   console.log(err);
-      // })
+      formData.append('ProjectId',newPrId)
+      formData.append('UserId',newUsrId)
+      console.log(formData);
+       const response = await axios.post(`http://localhost:4000/bids/${id}`,formData,{withCredentials:true}).then((resp)=>{
+        console.log('From resp.data',resp.data);
+        if(resp.data.error){
+          setErrorMessage(resp.data.error)
+        }else{
+            const rfs = resp.data
+            setBidData(rfs)
+            // setBidFormData(rfs)
+            console.log(resp.data);
+            closeModal()
+            // props.history.push(`../../app/bids/${id}`)
+            setSuccessMessage("Successfully Updated")
+            setTimeout(() => {
+            setSuccessMessage("")
+         }, 2000)
+        }
+      }).catch((err)=>{
+        console.log(err);
+      })
     }
 
 }
-const deleteBid =async(ids)=>{
-  const response = await axios.get(`http://localhost:4000/bids/delete/${ids}`).then((resp)=>{
-    
-    if(resp.data.error){
-      setErrorMessage(resp.data.error)
-    }else{
-      setBidData("")
-      setSuccessMessage("Successfully deleted")
-      setTimeout(() => {
-        props.history.push('/app/bids')
-      }, 2000);
+        const deleteBid =async(ids)=>{
+          const response = await axios.get(`http://localhost:4000/bids/delete/${ids}`).then((resp)=>{
+            
+            if(resp.data.error){
+              setErrorMessage(resp.data.error)
+            }else{
+              setBidData("")  
+              setSuccessMessage("Successfully deleted")
+              setTimeout(() => {
+                props.history.push('/app/bids')
+              }, 2000);
 
-      // props.history.push('/app/companies')
-    }
-  })
-}
+              // props.history.push('/app/companies')
+            }
+          })
+        }
 
     return ( 
+      
         <>
+        <link rel="stylesheet" href="https://unpkg.com/flowbite@1.4.4/dist/flowbite.min.css" />
         <PageTitle>Bid From {bidsData.fullname}</PageTitle>
         
         <div>
@@ -164,8 +190,17 @@ const deleteBid =async(ids)=>{
           <Label className="mt-4">
           <span>Project Name</span>
           <Select className="mt-1" name="ProjectId" value={bidFormData.ProjectId} onChange={(e)=>setBidFormData({...bidFormData,ProjectId:e.target.value})}>
-          <option>Select</option>
-            <option>{projects.map((pr)=>pr.name)}</option>
+          <option>{projects.map((pr)=>pr.id==bidsData.ProjectId?pr.name:"")}</option>
+          {projects.map((pr)=>{return  <option>{pr.name}</option>})}
+            
+          </Select>
+        </Label>
+        <Label className="mt-4">
+          <span>User</span>
+          <Select className="mt-1" name="UserId" value={bidFormData.UserId} onChange={(e)=>setBidFormData({...bidFormData,UserId:e.target.value})}>
+          <option>{users.map((usr)=>usr.id==bidsData.UserId?usr.name:"")}</option>
+          {users.map((usr)=>{return  <option>{usr.name}</option>})}
+           
             
           </Select>
         </Label>
@@ -252,6 +287,7 @@ const deleteBid =async(ids)=>{
               <tr>
                 <TableCell>Full Name</TableCell>
                 <TableCell>Project</TableCell>
+                <TableCell>Owner</TableCell>
                 <TableCell>Phone</TableCell>
                 <TableCell>Amount</TableCell>
                 <TableCell>Status</TableCell>
@@ -275,6 +311,16 @@ const deleteBid =async(ids)=>{
                       
                       <div>
                         <p className="font-semibold">{projects.map(pr=>pr.id===bidsData.ProjectId?pr.name:"")}</p>
+                        {/* <p className='font-semibold'>{bid.ProjectId}sdf</p> */}
+                     
+                      </div>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center text-sm">
+                      
+                      <div>
+                        <p className="font-semibold">{users.map(usr=>usr.id===bidsData.UserId?usr.name:"")}</p>
                         {/* <p className='font-semibold'>{bid.ProjectId}sdf</p> */}
                      
                       </div>
@@ -306,11 +352,11 @@ const deleteBid =async(ids)=>{
           <InfoCard>
           <div className="p-10 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 gap-5">
           <div className="sm:flex sm:items-center px-6 py-4">
-            <a href={`${bidUrl}/${bidsData.license}`} target="_blank">
+            <a href={`${bidsData.license}`} target="_blank">
                 <div className="mt-4 mb-4">
                     <button className="text-purple-500 hover:text-white hover:bg-purple-500 border border-purple-500 text-xs font-semibold rounded-full px-4 py-1 leading-normal">license</button>
                 </div>
-                <img className="block mx-auto sm:mx-0 sm:flex-shrink-0 h-16 sm:h-24" src={`${bidUrl}/${bidsData.license}`} alt="Not found Img"/>
+                <img className="block mx-auto sm:mx-0 sm:flex-shrink-0 h-16 sm:h-24" src={`${bidsData.license}`} alt="Not found Img"/>
                 
             </a>
                 <div className="mt-4 sm:mt-0 sm:ml-4 text-center sm:text-left">
@@ -318,22 +364,22 @@ const deleteBid =async(ids)=>{
             </div>
 
             <div className="sm:flex sm:items-center px-6 py-4">
-            <a href={`${bidUrl}/${bidsData.performa}`} target="_blank">
+            <a href={`${bidsData.performa}`} target="_blank">
                 <div className="mt-4 mb-4">
                     <button className="text-purple-500 hover:text-white hover:bg-purple-500 border border-purple-500 text-xs font-semibold rounded-full px-4 py-1 leading-normal">Performa</button>
                 </div>
-                <img className="block mx-auto sm:mx-0 sm:flex-shrink-0 h-16 sm:h-24" src={`${bidUrl}/${bidsData.performa}`} alt="Not found Img"/>
+                <img className="block mx-auto sm:mx-0 sm:flex-shrink-0 h-16 sm:h-24" src={`${bidsData.performa}`} alt="Not found Img"/>
             </a>
                 <div className="mt-4 sm:mt-0 sm:ml-4 text-center sm:text-left">
                 </div>
             </div>
 
             <div className="sm:flex sm:items-center px-6 py-4">
-            <a href={`${bidUrl}/${bidsData.proposal}`} target="_blank">
+            <a href={`${bidsData.proposal}`} target="_blank">
                 <div className="mt-4 mb-4">
                     <button className="text-purple-500 hover:text-white hover:bg-purple-500 border border-purple-500 text-xs font-semibold rounded-full px-4 py-1 leading-normal">Proposal</button>
                 </div>
-                <img className="block mx-auto sm:mx-0 sm:flex-shrink-0 h-16 sm:h-24" src={`${bidUrl}/${bidsData.proposal}`} alt="Not found Img"/>
+                <img className="block mx-auto sm:mx-0 sm:flex-shrink-0 h-16 sm:h-24" src={`${bidsData.proposal}`} alt="Not found Img"/>
             </a>
                 <div className="mt-4 sm:mt-0 sm:ml-4 text-center sm:text-left">
                 </div>
@@ -341,11 +387,11 @@ const deleteBid =async(ids)=>{
 
 
             <div className="sm:flex sm:items-center px-6 py-4">
-            <a href={`${bidUrl}/${bidsData.companydoc}`} target="_blank">
+            <a href={`${bidsData.companydoc}`} target="_blank">
                 <div className="mt-4 mb-4">
                     <button className="text-purple-500 hover:text-white hover:bg-purple-500 border border-purple-500 text-xs font-semibold rounded-full px-4 py-1 leading-normal">Company Docs</button>
                 </div>
-                <img className="block mx-auto sm:mx-0 sm:flex-shrink-0 h-16 sm:h-24" src={`${bidUrl}/${bidsData.companydoc}`} alt="Not found Img"/>
+                <img className="block mx-auto sm:mx-0 sm:flex-shrink-0 h-16 sm:h-24" src={`${bidsData.companydoc}`} alt="Not found Img"/>
             </a>
                 <div className="mt-4 sm:mt-0 sm:ml-4 text-center sm:text-left">
                 </div>
