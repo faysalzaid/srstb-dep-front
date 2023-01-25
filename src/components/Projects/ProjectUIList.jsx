@@ -14,7 +14,7 @@ import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { url } from 'config/urlConfig';
 
-const ProjectUIList = ({pr, setProfile}) => {
+const ProjectUIList = ({pr, setProfile, openDetail}) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -77,7 +77,7 @@ const ProjectUIList = ({pr, setProfile}) => {
                 transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                 anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
               >
-                <MenuItem onClick={handleClose} autoFocus={false}><MdModeEditOutline style={{fontSize: 20, marginRight: 10}}/><p style={{fontFamily: 'ubuntu'}}>Edit Project</p></MenuItem>
+                <MenuItem  onClick={()=>openDetail(pr.id)} autoFocus={false}><MdModeEditOutline style={{fontSize: 20, marginRight: 10}}/><p style={{fontFamily: 'ubuntu'}}>Edit Project</p></MenuItem>
                 <MenuItem onClick={handleClose} autoFocus={false}><MdOutlineDeleteOutline style={{fontSize: 20, marginRight: 10}} /><p style={{fontFamily: 'ubuntu'}}>Delete Project</p></MenuItem>
               </Menu>
             </div>

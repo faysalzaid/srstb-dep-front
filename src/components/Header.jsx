@@ -73,7 +73,8 @@ function Header(props) {
           setNewMessages((prev)=>resp.count);
         }
       })
-      .catch((error) => console.log(error));
+      .catch(()=>{})
+      // .catch((error) => console.log(error));
   };
 
   const interval = useRef();

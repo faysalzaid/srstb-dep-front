@@ -11,17 +11,17 @@ import { MdClose } from "react-icons/md";
 import Slide from "@mui/material/Slide";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { TextField, TextArea, Dropdown, DateInput } from "./Inputs/Inputs";
-import { EditableTextContent, EditableDate } from "./Inputs/EditableInputs";
+import { EditableTextContent, CustomDatePicker } from "./Inputs/EditableInputs";
 import { useTheme } from "@mui/material/styles";
 import { useState } from "react";
 import * as constants from "constants.js";
 import Loader from 'components/Loader';
 
 import Tasks from './Tasks/Tasks';
+import Budgets from "./Tasks/Budgets";
 import { useEffect } from "react";
 import axios from "axios";
 import { url } from "config/urlConfig";
-
 
 function PaperComponent(props) {
   return (
@@ -35,6 +35,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const ProjectDetail = ({ open, handleClose, successCallback, setOpenError, setOpenSuccess,id }) => {
 const [taskData,setTaskData] = useState([])
+const [budgetData, setBudgetData] = useState([]);
+
   const [formData, setFormData] = useState({
     name: {value: "Project Management", error: "", optional: false},
     description: {value: "Interactive project add, project detail with live edit and update and tasks list UI with full crud functionality", error: "", optional: false},
@@ -53,9 +55,8 @@ const [taskData,setTaskData] = useState([])
 
 
   useEffect(()=>{
-    axios.get(`${url}/projects/${id.id}`,{withCredentials:true}).then((resp)=>{
+    axios.get(`${url}/projects/${id}`,{withCredentials:true}).then((resp)=>{
       const data = resp.data
-      console.log(resp.data);
       setFormData(
         {
           name: {value: data.name, error: "", optional: false},
@@ -76,10 +77,9 @@ const [taskData,setTaskData] = useState([])
       setTaskData(resp.data)
    
     })
-  },[id.id])
+  },[id])
 
 
-  console.log(formData.percentage.value);
   const [loading, setLoading] = useState(false);
   const statuses = [
     {
@@ -126,62 +126,6 @@ const [taskData,setTaskData] = useState([])
       })
       return Object.values(temp).every((x) => x == "");
   };
-
-  
-
-  function handleSubmit(event) {
-      event.preventDefault();
-      const data = new FormData();
-
-      setLoading(true);
-
-      data.append("project[name]", formData.name.value);
-      data.append("project[description]", formData.description.value);
-      data.append("project[startDate]", formData.startDate.value);
-      data.append("project[endDate]", formData.endDate.value);
-      data.append("project[status]", formData.status.value);
-      
-      if(validate()) {
-        submitToAPI(data);
-      }
-      else {
-        setLoading(false);
-      }
-  }
-
-  function submitToAPI(data) {
-      fetch(constants.url+"/api/projects", {
-          method:"POST",
-          body: data
-      }).then(response=>response.json()).then(data=>{
-          if(data.status??"" === "created") {
-            setLoading((prev)=>false)
-            setFormData(
-              {
-                name: {value: "", error: "", optional: false},
-                description: {value: "", error: "", optional: false},
-                descriptionError: {value: "", error: "", optional: false},
-                status:  {value: 0, error: "", optional: false},
-                startDate:  {value: "", error: "", optional: false},
-                endDate:  {value: "", error: "", optional: false},
-              }
-            );
-            const successMessage = {open:true, message:"Successfully Added!"}
-            setOpenSuccess((prev)=>successMessage)
-            successCallback();
-            handleClose();
-          }
-          else {
-            setLoading((prev)=>false);
-            const errorMessage = {open:true, message:"Return Mismatch"}
-            setOpenError((prev)=>errorMessage)
-          }
-      }).catch((error)=>{
-        console.error(error);
-        setLoading((prev)=>false);
-        setOpenError({open:true, message:"Something went wrong!"})
-      });
-  }
 
   function callBackFunc(text, label) {
       //console.log(text)
@@ -235,6 +179,7 @@ const [taskData,setTaskData] = useState([])
           {loading && <div><Loader /></div>}
           <Grid container style={{marginTop: 20}}>
             <Grid item>
+              
               <EditableTextContent
                 formData={formData}
                 setFormData={setFormData}
@@ -263,54 +208,61 @@ const [taskData,setTaskData] = useState([])
                 fontSize={20}
                 fontFamily="ubuntu"
               />
-              <EditableDate
-                labelText="Start Date"
-                
-                formData={formData}
-                setFormData={setFormData}
-                callBackFun={callBackFunc}
-                label="startDate"
-                parentStyle={{
-                  margin: "10px 15px"
-                }}
-                labelStyle={{
-                  fontWeight: "bold",
-                  fontSize: 16,
-                  fontFamily: 'ubuntu',
-                }}
-                inputStyle={{
-                  marginLeft: 50,
-                  fontFamily: 'ubuntu',
-                  fontWeight: "bold",
-                  fontSize: 15
-                }}
+              
+              <CustomDatePicker
+                  labelText="Start Date"
+                  formData={formData}
+                  setFormData={setFormData}
+                  label="startDate"
+                  type="desktop"
+                  //views={['year']}
+                  parentStyle={{
+                    margin: "10px 15px"
+                  }}
+                  labelStyle={{
+                    fontWeight: "bold",
+                    fontSize: 16,
+                    fontFamily: 'ubuntu',
+                  }}
+                  inputStyle={{
+                    marginLeft: 50,
+                    fontFamily: 'ubuntu',
+                    fontWeight: "bold",
+                    fontSize: 15
+                  }}
               />
-              <EditableDate
-                labelText="End Date"
-                formData={formData}
-                setFormData={setFormData}
-                label="endDate"
-                parentStyle={{
-                  margin: "10px 15px"
-                }}
-                labelStyle={{
-                  fontWeight: "bold",
-                  fontSize: 16,
-                  fontFamily: 'ubuntu',
-                }}
-                inputStyle={{
-                  marginLeft: 60,
-                  fontFamily: 'ubuntu',
-                  fontWeight: "bold",
-                  fontSize: 15
-                }}
+              <CustomDatePicker
+                  labelText="End Date"
+                  formData={formData}
+                  setFormData={setFormData}
+                  label="endDate"
+                  type="desktop"
+                  //views={['year','month']}
+                  parentStyle={{
+                    margin: "10px 15px"
+                  }}
+                  labelStyle={{
+                    fontWeight: "bold",
+                    fontSize: 16,
+                    fontFamily: 'ubuntu',
+                  }}
+                  inputStyle={{
+                    marginLeft: 60,
+                    fontFamily: 'ubuntu',
+                    fontWeight: "bold",
+                    fontSize: 15
+                  }}
               />
              <div className="detail-progress-container">
                 <progress value={formData.percentage.value} max="100" className='progress'></progress>
                 <p className='percentage dark:text-gray-300'>{formData.percentage.value}%</p>
              </div>
              <div className="tasks-container">
-                <label className="task-label">All Tasks</label>
+                <label className="task-label" style={{color: '#1faaea', fontSize: 20, fontWeight: 'bold'}}>Budget Detail</label>
+                <Budgets budget={budgetData} setBudget={setBudgetData}/>
+             </div>
+             <div className="tasks-container">
+                <label className="task-label" style={{color: '#37c5ab', fontSize: 20, fontWeight: 'bold'}}>All Tasks</label>
                 <Tasks task={taskData} setTask={setTaskData}/>
              </div>
             </Grid>
@@ -318,115 +270,8 @@ const [taskData,setTaskData] = useState([])
               
             </Grid>
           </Grid>
-          {!loading && <>
-            <div className="left-content-container">
-              <div className="form-label dark:text-gray-200">
-                <div>B</div>
-                Basic project detail
-              </div>
-              <div className="project-add-form-container">
-                <div className="parent">
-                  <div className="cat-container">
-                    <div className="child"></div>
-                    <div className="ch-child-item">
-                      <TextField
-                        formData={formData}
-                        setFormData={setFormData}
-                        label="name"
-                        labelText="Project name"
-                        placeholder="Enter name"
-                        optional = {false}
-                        errorLabel="nameError"
-                      />
-                    </div>
-                  </div>
 
-                  <div className="cat-container">
-                    <div className="child"></div>
-                    <div className="ch-child-item">
-                      <TextArea
-                        formData={formData}
-                        setFormData={setFormData}
-                        label="description"
-                        labelText="Project description"
-                        placeholder="Enter description"
-                        optional={false}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="cat-container">
-                    <div className="child"></div>
-                    <div className="ch-child-item">
-                      <DateInput
-                        formData={formData}
-                        setFormData={setFormData}
-                        label="startDate"
-                        labelText="Start date"
-                        placeholder="Enter start date"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="cat-container">
-                    <div className="child"></div>
-                    <div className="ch-child-item">
-                      <DateInput
-                        formData={formData}
-                        setFormData={setFormData}
-                        label="endDate"
-                        labelText="End date"
-                        placeholder="Enter end date"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="cat-container">
-                    <div className="child"></div>
-                    <div className="ch-child-item">
-                      <Dropdown
-                        formData={formData}
-                        setFormData={setFormData}
-                        label="status"
-                        options={statuses}
-                        labelText="Project status"
-                        open={open}
-                        //selectText="Not Selected"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="dot1" style={{ width: 10, height: 10 }}></div>
-              </div>
-            </div>
-          </>}
-          </DialogContent>
-          {/* <Divider />
-          <DialogActions
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              padding: "20px 30px",
-            }}
-          >
-            <Button
-              autoFocus
-              onClick={handleClose}
-              style={{ fontFamily: "ubuntu" }}
-              color="error"
-              className="dark:text-white"
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={(handleSubmit)}
-              variant="outlined"
-              style={{ borderRadius: 20, fontFamily: "ubuntu" }}
-              className="dark:text-white dark:bg-green-400"
-            >
-              Create
-            </Button>
-          </DialogActions> */}
+          </DialogContent>      
          
         </div>
       </Dialog>

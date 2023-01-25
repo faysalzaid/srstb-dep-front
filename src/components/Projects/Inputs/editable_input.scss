@@ -35,17 +35,19 @@ $borderColor: rgba(0,0,0,.2);
   display: flex;
   align-items: center;
   justify-content: start !important;
+ 
   .editable_date_input {
     //height: 30px;
     border-radius: 5px;
-    min-width: 300px;
+   // min-width: 300px;
     padding: 10px 5px;
     &:focus {
-      outline: 2px solid $mainColor;
+      outline: 0px solid $mainColor;
     }
     &:hover {
       cursor: pointer;
     }
+    
   }
 }
 
@@ -53,7 +55,7 @@ $borderColor: rgba(0,0,0,.2);
   .editable-date-field-container {
     .editable_date_input {
       min-width: 10px;
-      width: 200px !important;
+     // width: 200px !important;
       margin-left: 0px;
     }
   }
@@ -69,7 +71,7 @@ $borderColor: rgba(0,0,0,.2);
     .editable_date_input {
       //min-width: 10px;
       margin: 0px;
-      width: 100%;
+      //width: 100%;
       margin-left: 0px;
       
     }

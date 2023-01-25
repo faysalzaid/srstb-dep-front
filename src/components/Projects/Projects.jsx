@@ -275,6 +275,7 @@ const Projects = () => {
                     pr={pro}
                     key={"pro-item" + index + "-" + pro.id}
                     setProfile={setProfile}
+                    openDetail={handleOpenDetail}
                   />
                 </Grid>
               );
