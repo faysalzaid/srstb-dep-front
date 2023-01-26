@@ -12,7 +12,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const DeleteDialog = ({open, handleClose, id, callBack}) => {
+const ApproveConfirm = ({open, handleClose, id, callBack}) => {
  
 
   return (
@@ -23,9 +23,12 @@ const DeleteDialog = ({open, handleClose, id, callBack}) => {
         keepMounted
         onClose={handleClose}
         aria-describedby="delete-budget"
+        style={{
+          zIndex: 100000
+        }}
       >
         <DialogTitle style={{background: '#474950', color: '#fff', fontFamily: 'ubuntu'}}>
-            {"Confirm Deletion"}
+            {"Confirm Approve"}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="delete-budget" className='pt-4'>
@@ -35,7 +38,7 @@ const DeleteDialog = ({open, handleClose, id, callBack}) => {
                 fontSize: 28
               }}/>
                <p className='font-san' style={{fontFamily: 'ubuntu'}}>
-                 Are you sure you want to permanently remove this item?
+                 Are you sure you want to approve this guy?
                </p>
             </div>
           </DialogContentText>
@@ -57,19 +60,19 @@ const DeleteDialog = ({open, handleClose, id, callBack}) => {
                 handleClose();
             }}
             variant="contained" 
-            color="error"
+            color="warning"
             size="small"
            
             style={{
-                backgroundColor: '#e8384f',
+                //backgroundColor: '#e8384f',
                 fontFamily: 'ubuntu',
                 marginLeft: 20
             }}
-          >Ok</Button>
+          >Approve</Button>
         </DialogActions>
       </Dialog>
     </div>
   );
 }
 
-export default DeleteDialog;
+export default ApproveConfirm;

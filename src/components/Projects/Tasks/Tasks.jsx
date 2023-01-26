@@ -123,7 +123,7 @@ export const Tasks = ({task,setTask}) => {
       setAddTask(()=>addTask)
   }
   return (
-    <div className='crud-container'>
+    <div className='crud-container' style={{minWidth: 700}}>
         <table>
             <tbody className='dark:border-gray-400'>
                 {tasks.map((task, index)=>{

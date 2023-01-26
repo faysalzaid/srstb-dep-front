@@ -1,16 +1,12 @@
 import * as React from "react";
-import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Paper from "@mui/material/Paper";
 import { IconButton, Divider, Grid } from "@mui/material";
-import Draggable from "react-draggable";
 import { MdClose } from "react-icons/md";
 import Slide from "@mui/material/Slide";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { TextField, TextArea, Dropdown, DateInput } from "./Inputs/Inputs";
 import { EditableTextContent, CustomDatePicker } from "./Inputs/EditableInputs";
 import { useTheme } from "@mui/material/styles";
 import { useState } from "react";
@@ -19,10 +15,12 @@ import Loader from 'components/Loader';
 
 import Tasks from './Tasks/Tasks';
 import Budgets from "./Tasks/Budgets";
+import {Bids} from "./Bids/Bids";
 import { useEffect } from "react";
 import axios from "axios";
 import { url } from "config/urlConfig";
 
+import {IoIosArrowForward, IoIosArrowDown} from 'react-icons/io';
 function PaperComponent(props) {
   return (
       <Paper {...props} />
@@ -46,8 +44,8 @@ const [budgetData, setBudgetData] = useState([]);
     endDate:  {value: "", error: "", optional: false},
     percentage:{value:"",error:"",option:false},
     year:{value:"",error:"",option:false},
-    totalCost:{value:"",error:"",option:false},
-    utilizedCost:{value:"",error:"",option:false},
+    totalCost:{value:0,error:"",option:false},
+    utilizedCost:{value:0,error:"",option:false},
     remainingCost:{value:"",error:"",option:false},
     physicalPerformance:{value:"",error:"",option:false},
     financialPerformance:{value:"",error:"",option:false}
@@ -67,11 +65,11 @@ const [budgetData, setBudgetData] = useState([]);
           endDate:  {value: data.endtime, error: "", optional: false},
           percentage:{value:data.percentage,error:"",optional:false},
           year:{value:data.year,error:"",option:false},
-          totalCost:{value:data.totalCost,error:"",option:false},
-          utilizedCost:{value:data.utilizedCost,error:"",option:false},
-          remainingCost:{value:data.remainingCost,error:"",option:false},
-          physicalPerformance:{value:data.physicalPerformance,error:"",option:false},
-          financialPerformance:{value:data.financialPerformance,error:"",option:false}
+          totalCost:{value:data.totalCost??0,error:"",option:false},
+          utilizedCost:{value:data.utilizedCost??0,error:"",option:false},
+          remainingCost:{value:data.remainingCost??0,error:"",option:false},
+          physicalPerformance:{value:data.physicalPerformance??0,error:"",option:false},
+          financialPerformance:{value:data.financialPerformance??0,error:"",option:false}
         }
       );
       setTaskData(resp.data)
@@ -129,13 +127,15 @@ const [budgetData, setBudgetData] = useState([]);
 
   function callBackFunc(text, label) {
       //console.log(text)
-     // const fd = {...formData, [label]: {...formData[label], value: text}};
-      //setFormData(formData)
-      // console.log(formData)
+      const fd = {...formData, [label]: {...formData[label], value: text}};
+      setFormData(fd)
   }
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const [bids, setBids] = useState({show: false})
+  const [selectedWinner, setSelectedWinner] = useState();
 
   return (
     <div>
@@ -148,7 +148,7 @@ const [budgetData, setBudgetData] = useState([]);
         TransitionComponent={Transition}
         //keepMounted
         fullWidth={true}
-        fullScreen={fullScreen}
+        fullScreen={true}
         maxWidth='xl'
         disableEscapeKeyDown 
       >
@@ -178,7 +178,7 @@ const [budgetData, setBudgetData] = useState([]);
           <DialogContent>
           {loading && <div><Loader /></div>}
           <Grid container style={{marginTop: 20}}>
-            <Grid item>
+            <Grid item md={12} sm={12}>
               
               <EditableTextContent
                 formData={formData}
@@ -193,6 +193,7 @@ const [budgetData, setBudgetData] = useState([]);
                 fontSize={25}
                 padding="5px 15px"
               />
+            
               <EditableTextContent
                 formData={formData}
                 setFormData={setFormData}
@@ -208,7 +209,9 @@ const [budgetData, setBudgetData] = useState([]);
                 fontSize={20}
                 fontFamily="ubuntu"
               />
-              
+
+            </Grid>
+            <Grid item md={6} sm={12}>
               <CustomDatePicker
                   labelText="Start Date"
                   formData={formData}
@@ -253,7 +256,115 @@ const [budgetData, setBudgetData] = useState([]);
                     fontSize: 15
                   }}
               />
-             <div className="detail-progress-container">
+
+            <div className="flex items-start" style={{marginLeft: 15}}>
+                <label className="dark:text-gray-100" style={{fontFamily:'ubuntu', fontWeight: 'bold', marginTop: 5, marginRight: 45}}>Total Cost</label>
+                <EditableTextContent
+                  formData={formData}
+                  setFormData={setFormData}
+                  label="totalCost"
+                  labelText="Total Cost"
+                  placeholder="Enter total cost"
+                  callBackFun={callBackFunc}
+                  width="90%"
+                  margin='0'
+                  padding="5px 15px"
+                  fontWeight="lighter"
+                  fontSize={17}
+                  fontFamily="ubuntu"
+                  textShadow="0px 0px red"
+                  minWidth={100}
+                  type="number"
+                />
+            </div>
+
+            <div className="flex items-start" style={{marginLeft: 15, marginTop: 15}}>
+                <label className="dark:text-gray-100" style={{fontFamily:'ubuntu', fontWeight: 'bold', marginTop: 5, marginRight: 25}}>Utilized Cost</label>
+                <EditableTextContent
+                  formData={formData}
+                  setFormData={setFormData}
+                  label="utilizedCost"
+                  labelText="Utilized Cost"
+                  placeholder="Enter utilized cost"
+                  callBackFun={callBackFunc}
+                  width="90%"
+                  margin='0'
+                  padding="5px 15px"
+                  fontWeight="lighter"
+                  fontSize={17}
+                  fontFamily="ubuntu"
+                  textShadow="0px 0px red"
+                  minWidth={100}
+                  type="number"
+                />
+            </div>
+
+            </Grid>
+            <Grid item md={6} sm={12}>
+             <div className="flex items-start" style={{marginLeft: 15, marginTop: 15}}>
+                <label className="dark:text-gray-100" style={{fontFamily:'ubuntu', fontWeight: 'bold', marginTop: 5, marginRight: 68}}>Remaining Cost</label>
+                <EditableTextContent
+                    formData={formData}
+                    setFormData={setFormData}
+                    label="remainingCost"
+                    labelText="Remaining Cost"
+                    callBackFun={callBackFunc}
+                    width="90%"
+                    margin='0'
+                    padding="5px 15px"
+                    fontWeight="lighter"
+                    fontSize={17}
+                    fontFamily="ubuntu"
+                    textShadow="0px 0px red"
+                    minWidth={100}
+                    type="number"
+                  />
+              </div>
+
+              <div className="flex items-start" style={{marginLeft: 15, marginTop: 15}}>
+                <label className="dark:text-gray-100" style={{fontFamily:'ubuntu', fontWeight: 'bold', marginTop: 5, marginRight: 25}}>Physical Performance</label>
+                <EditableTextContent
+                    formData={formData}
+                    setFormData={setFormData}
+                    label="physicalPerformance"
+                    labelText="Physical Performance"
+                    callBackFun={callBackFunc}
+                    width="90%"
+                    margin='0'
+                    padding="5px 15px"
+                    fontWeight="lighter"
+                    fontSize={17}
+                    fontFamily="ubuntu"
+                    textShadow="0px 0px red"
+                    minWidth={100}
+                    type="number"
+                  />
+              </div>
+
+              <div className="flex items-start" style={{marginLeft: 15, marginTop: 15}}>
+                <label className="dark:text-gray-100" style={{fontFamily:'ubuntu', fontWeight: 'bold', marginTop: 5, marginRight: 20}}>Financial Performance</label>
+                <EditableTextContent
+                    formData={formData}
+                    setFormData={setFormData}
+                    label="financialPerformance"
+                    labelText="Financial Performance"
+                    callBackFun={callBackFunc}
+                    width="90%"
+                    margin='0'
+                    padding="5px 15px"
+                    fontWeight="lighter"
+                    fontSize={17}
+                    fontFamily="ubuntu"
+                    textShadow="0px 0px red"
+                    minWidth={100}
+                    type="number"
+                  />
+              </div>
+
+
+            </Grid>
+            <Grid item md={12} sm={12}>
+             <div className="detail-progress-container mt-5">
                 <progress value={formData.percentage.value} max="100" className='progress'></progress>
                 <p className='percentage dark:text-gray-300'>{formData.percentage.value}%</p>
              </div>
@@ -262,13 +373,39 @@ const [budgetData, setBudgetData] = useState([]);
                 <Budgets budget={budgetData} setBudget={setBudgetData}/>
              </div>
              <div className="tasks-container">
+                <div className="flex items-center justify-between">
+                   <label className="task-label" style={{color: '#a962e3', fontSize: 20, fontWeight: 'bold'}}>All Bids</label>
+                  {!selectedWinner && <label className="bg-blue-300 px-4 text-white rounded-full font-bold hover:cursor-pointer" style={{fontSize:15,paddingTop:1, paddingBottom: 1}}>No winner selected</label>}
+                  {selectedWinner && <label className="bg-blue-300 px-4 text-white rounded-full font-bold hover:cursor-pointer" style={{fontSize:15,paddingTop:1, paddingBottom: 1}}>{selectedWinner}</label>}
+
+                  <IconButton onClick={()=>setBids({show: !bids.show})}>
+                    {!bids.show &&
+                      <IoIosArrowForward
+                        style={{
+                            color: '#172b4d',
+                            fontSize: 18
+                        }}
+                      />
+                    }
+                    {bids.show &&
+                      <IoIosArrowDown
+                        style={{
+                            color: '#172b4d',
+                            fontSize: 18
+                        }}
+                      />
+                    }
+                  </IconButton>
+                </div>
+                <Bids projectId={id} showInterface={bids.show} setSelectedWinner={setSelectedWinner}/>
+             </div>
+             {!bids.show && <Divider />}
+             <div className="tasks-container">
                 <label className="task-label" style={{color: '#37c5ab', fontSize: 20, fontWeight: 'bold'}}>All Tasks</label>
                 <Tasks task={taskData} setTask={setTaskData}/>
              </div>
             </Grid>
-            <Grid item sm={12} md={12}>
-              
-            </Grid>
+            
           </Grid>
 
           </DialogContent>      

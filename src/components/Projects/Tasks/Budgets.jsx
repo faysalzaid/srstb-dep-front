@@ -67,7 +67,7 @@ export const Budgets = ({budget,setBudget}) => {
   };
 
   return (
-    <div className='crud-container-budget'>
+    <div className='crud-container-budget' style={{minWidth: 700}}>
         <DeleteDialog open={open.show} handleClose={handleClose} id={open.id} callBack={handleDeleteCallBack}/>
         <table>
             <thead className='dark:border-gray-400'>
@@ -85,7 +85,7 @@ export const Budgets = ({budget,setBudget}) => {
                   <tr>
                     <td></td>
                     <td></td>
-                    <td align='center' style={{minWidth: '300px', height: 100, clear:'both'}} className="dark:text-gray-200">
+                    <td align='left' style={{minWidth: '300px', height: 100, clear:'both'}} className="dark:text-gray-200">
                         No Data
                     </td>
                     <td></td>
