@@ -8,6 +8,10 @@ import {
 import { MdClose, MdCheck } from "react-icons/md";
 import { IconButton } from "@mui/material";
 
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DesktopDatePicker, MobileDatePicker, TimePicker, DateTimePicker } from '@mui/x-date-pickers';
+import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
+
 export const EditableTextField = ({
   formData,
   setFormData,
@@ -41,7 +45,7 @@ export const EditableTextField = ({
             }}
             className="detail-title text-[#172b4d] dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-800 hover:cursor-pointer"
           >
-            {formData[label].value}
+            {formData[label]?.value}
           </div>
         </div>
       )}
@@ -124,7 +128,7 @@ export const EditableTextContent = ({
 
   const onCloseAway = (e)=>{
     if(editableRef.current && editable && !editableRef.current.contains(e.target)){
-        editableRef.current.innerText = formData[label].value;
+        editableRef.current.innerText = formData[label]?.value;
         setEditable(false);
     }
 }
@@ -149,7 +153,7 @@ document.addEventListener('mousedown',onCloseAway)
               submitEdit(e.target.innerText);
               setEditable(false);
             } else if (e.key === "Escape") {
-              editableRef.current.innerText = formData[label].value;
+              editableRef.current.innerText = formData[label]?.value;
               setEditable(false);
             }
           }}
@@ -165,14 +169,14 @@ document.addEventListener('mousedown',onCloseAway)
           }}
           className="detail-title text-[#172b4d] dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-800 hover:cursor-pointer"
         >
-          {formData[label].value}
+          {formData[label]?.value}
         </div>
         {editable && (
           <div className="flex justify-end">
             <IconButton>
               <MdClose
                 onClick={() => {
-                  editableRef.current.innerText = formData[label].value;
+                  editableRef.current.innerText = formData[label]?.value;
                   setEditable(false);
                 }}
                 className="bg-red-500 rounded-md text-white"
@@ -217,8 +221,8 @@ export const EditableDate = ({
       </label>
       <input
         type="date"
-        value={formData[label].value}
-        className="editable_date_input text-[#172b4d] dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-800 hover:cursor-pointer"
+        value={formData[label]?.value}
+        className="editable_date_input text-[#172b4d] bg-transparent dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-800 hover:cursor-pointer"
         style={{
           ...inputStyle,
           border: ((formData[label]?.error??"") && (!formData[label]?.optional??false)) ? '1px solid red' : "",
@@ -228,7 +232,7 @@ export const EditableDate = ({
         onChange={(e)=>{
           const fd = {...formData, [label]: {...formData[label], value: e.target.value, error: e.target.value ? "" : "error"}};
           setFormData((prev) => fd);
-          if(formData[label].value) {
+          if(formData[label]?.value) {
             callBackFun(e.target.value, label);
           }
       }}
@@ -245,7 +249,8 @@ export const EditableText = ({
   inputStyle = { marginLeft: 0 },
   crud=false,
   callBackFun = ()=>{},
-  setSelected
+  setSelected,
+  type="text"
 }) => {
   const inputRef = useRef(null);
   const onCloseAway = (e)=>{
@@ -259,7 +264,7 @@ document.addEventListener('mousedown',onCloseAway)
     <div className="editable-date-field-container" style={parentStyle}>
       
       <input
-        type="text"
+        type={type}
         ref={inputRef}
         className="editable_date_input text-[#172b4d] dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-800 hover:cursor-pointer"
         style={{
@@ -277,7 +282,7 @@ document.addEventListener('mousedown',onCloseAway)
       }}
       onKeyDown={(e)=>{
           if (e.key === 'Enter') {
-            if(formData[label].value) {
+            if(formData[label]?.value) {
               callBackFun(e.target.value, label, false);
             }
           }
@@ -289,3 +294,292 @@ document.addEventListener('mousedown',onCloseAway)
     </div>
   );
 };
+
+export const CustomDatePicker = ({
+  formData,
+  setFormData,
+  label,
+  labelText,
+  parentStyle = { margin: "10px 10px" },
+  inputStyle = { marginLeft: 50 },
+  labelStyle,
+  minDate,
+  maxDate,
+  views=['day'],
+  type="desktop",
+  callBackFun = ()=>{},
+  crud=false,
+  value=Date.now(),
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const customInputRef = useRef();
+  const customInputRef2 = useRef();
+  const customInputRef3 = useRef();
+
+  const [dateField, setDateField] = useState(formData[label]?.value);
+  
+
+  useEffect(()=>{
+    const date = formData[label]?.value ?? Date.now();
+    const dt = (crud) ? new Date(value) : new Date(date);
+    let newDate = ('0' + (dt.getMonth()+1)).slice(-2)+" / "+ ('0' + dt.getDate()).slice(-2) + " / " + dt.getFullYear();
+    if(type==="desktop" || type === "mobile") {
+      let day = "";
+      let month = "";
+      let year = "";
+      if(views.length === 1 && views[0] === "day") {
+        newDate = newDate;
+      } else {
+      for(var i = 0; i < views.length; i++) {
+        if(views[i] === "year") {
+          year = dt.getFullYear();
+        }
+        else if(views[i] === "month") {
+          month = dt.getMonth()+1;
+        }
+        else if(views[i] === "day") {
+          day = dt.getDate();
+        }
+      }
+    
+      let nd = "";
+      if(month != "") {
+        nd = nd + ('0' + month).slice(-2);
+      }
+      if(day != "") {
+        nd = nd + (month ? " / " : "") + ('0' + day).slice(-2);
+      }
+      
+      if(year != "") {
+        nd = nd + ((day || month) ? " / " : "") + year;
+      }
+      newDate = nd;
+    }
+  }
+  else if(type === 'time') {
+    let hour = dt.getHours();
+    let minutes = dt.getMinutes();
+    let am = hour >= 12 ? "PM" : "AM";
+    hour = hour >= 12 ? hour - 12 : hour;
+    hour = ('0' + hour).slice(-2);
+    minutes = ('0' + minutes).slice(-2)
+    newDate = hour + " : "+minutes+" "+am;
+  }
+  else if(type === "datetime") {
+    let hour = dt.getHours();
+    let minutes = dt.getMinutes();
+    let am = hour >= 12 ? "PM" : "AM";
+    hour = hour >= 12 ? hour - 12 : hour;
+    hour = ('0' + hour).slice(-2);
+    minutes = ('0' + minutes).slice(-2)
+    newDate = newDate + "  at  " + hour + " : "+minutes+" "+am;
+  }
+
+  setDateField(newDate);
+
+  },[formData[label]?.value])
+  return (
+
+    <div className="editable-date-field-container" style={parentStyle}>
+    {!crud && <label className="dark:text-gray-200">
+      {labelText ? (
+        <p style={labelStyle}>{labelText}</p>
+      ) : (
+        <div style={{ display: "none" }}></div>
+      )}
+    </label>}
+    <LocalizationProvider dateAdapter={AdapterDateFns}>
+      {type==="desktop" && 
+      <DesktopDatePicker 
+        onChange={(date)=>{
+          //date = date.toLocaleDateString("en-US");
+          const fd = {...formData, [label]: {...formData[label], value: date, error: date ? "" : "error"}};
+          setFormData((prev) => fd);
+          if(formData[label]?.value) {
+            callBackFun(date, label);
+          }
+        }}
+        label={labelText}
+        //minDate={dayjs('2012-03-01')}
+        views={views}
+        onClose={() => {setIsOpen(false);}}
+        open={isOpen}
+        value={!crud ? formData[label]?.value : value} 
+        PopperProps={{ anchorEl: customInputRef.current }}
+        renderInput={({
+          ref,
+          inputProps,
+          disabled,
+          onChange,
+          value,
+          ...other
+        }) => (
+          <div ref={ref}>
+            <input
+              onChange={onChange}
+              disabled={disabled}
+              ref={customInputRef}
+              {...inputProps}
+              type="text"
+              value={dateField}
+              readOnly
+              className="editable_date_input text-[#172b4d] focus:outline-none bg-transparent dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-800 hover:cursor-pointer"
+              style={{
+                ...inputStyle,
+                border: ((formData[label]?.error??"") && (!formData[label]?.optional??false)) ? '1px solid red' : "",
+                outline: ((formData[label]?.error??"") && (!formData[label]?.optional??false)) ? '0px solid red' : "",
+              }}
+              
+              onClick={() => {setIsOpen((prev)=>true);}}
+            />
+          </div>)} />
+         }
+         {type==="mobile" && 
+          <MobileDatePicker 
+            onChange={(date)=>{
+              date = date.toLocaleDateString("en-US");
+              const fd = {...formData, [label]: {...formData[label], value: date, error: date ? "" : "error"}};
+              setFormData((prev) => fd);
+              if(formData[label]?.value) {
+                callBackFun(date, label);
+              }
+            }}
+            label={labelText}
+            //minDate={dayjs('2012-03-01')}
+            views={views}
+            onClose={() => {setIsOpen(false);}}
+            open={isOpen}
+            value={!crud ? formData[label]?.value : value} 
+            PopperProps={{ anchorEl: customInputRef.current }}
+            renderInput={({
+              ref,
+              inputProps,
+              disabled,
+              onChange,
+              value,
+              ...other
+            }) => (
+              <div ref={ref}>
+                <input
+                  onChange={onChange}
+                  disabled={disabled}
+                  ref={customInputRef}
+                  {...inputProps}
+                  type="text"
+                  value={dateField}
+                  readOnly
+                  className="editable_date_input text-[#172b4d] focus:outline-none focus:border-indigo-500 bg-transparent dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-800 hover:cursor-pointer"
+                  style={{
+                    ...inputStyle,
+                    border: ((formData[label]?.error??"") && (!formData[label]?.optional??false)) ? '1px solid red' : "",
+                    outline: ((formData[label]?.error??"") && (!formData[label]?.optional??false)) ? '0px solid red' : "",
+                  }}
+                  
+                  onClick={() => {setIsOpen((prev)=>true);}}
+                />
+              </div>)} />
+            }
+         {type==="time" && 
+          <TimePicker 
+            onChange={(date)=>{
+              date = new Date(date);
+              date = date.toISOString();
+              const fd = {...formData, [label]: {...formData[label], value: date, error: date ? "" : "error"}};
+              setFormData((prev) => fd);
+              if(formData[label]?.value) {
+                callBackFun(date, label);
+              }
+            }}
+            label={labelText}
+            //minDate={dayjs('2012-03-01')}
+            //views= {views ? ['day', 'month', 'year'] : ''}
+            onClose={() => {setIsOpen(false);}}
+            open={isOpen}
+            value={!crud ? formData[label]?.value : value} 
+            PopperProps={{ anchorEl: customInputRef2.current }}
+            renderInput={({
+              ref,
+              inputProps,
+              disabled,
+              onChange,
+              value,
+              ...other
+            }) => (
+              <div ref={ref}>
+                <input
+                  //style={{ display: 'none' }}
+                  //value={date.toISOString()}
+                  onChange={onChange}
+                  disabled={disabled}
+                  ref={customInputRef2}
+                  {...inputProps}
+                  type="text"
+                  value={dateField}
+                  readOnly
+                  className="editable_date_input text-[#172b4d] focus:outline-none focus:border-indigo-500 bg-transparent dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-800 hover:cursor-pointer"
+                  style={{
+                    ...inputStyle,
+                    border: ((formData[label]?.error??"") && (!formData[label]?.optional??false)) ? '1px solid red' : "",
+                    outline: ((formData[label]?.error??"") && (!formData[label]?.optional??false)) ? '0px solid red' : "",
+                  }}
+                  
+                  
+                  onClick={() => {setIsOpen(!isOpen);}}
+                />
+              </div>)} />
+            }
+            {type==="datetime" && 
+              <DateTimePicker 
+                onChange={(date)=>{
+                  date = new Date(date);
+                  date = date.toISOString();
+                  
+                  const fd = {...formData, [label]: {...formData[label], value: date, error: date ? "" : "error"}};
+                  setFormData((prev) => fd);
+                  if(formData[label]?.value) {
+                    callBackFun(date, label);
+                  }
+                }}
+                label={labelText}
+                //minDate={dayjs('2012-03-01')}
+                //views= {views ? ['day', 'month', 'year'] : ''}
+                onClose={() => {setIsOpen(false);}}
+                open={isOpen}
+                value={!crud ? formData[label]?.value : value} 
+                PopperProps={{ anchorEl: customInputRef3.current }}
+                renderInput={({
+                  ref,
+                  inputProps,
+                  disabled,
+                  onChange,
+                  value,
+                  ...other
+                }) => (
+                  <div ref={ref}>
+                    <input
+                      //style={{ display: 'none' }}
+                      //value={date.toISOString()}
+                      onChange={onChange}
+                      disabled={disabled}
+                      ref={customInputRef3}
+                      {...inputProps}
+                      type="text"
+                      value={dateField}
+                      readOnly
+                      className="editable_date_input text-[#172b4d] focus:outline-none focus:border-indigo-500 bg-transparent dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-800 hover:cursor-pointer"
+                      style={{
+                        ...inputStyle,
+                        border: ((formData[label]?.error??"") && (!formData[label]?.optional??false)) ? '1px solid red' : "",
+                        outline: ((formData[label]?.error??"") && (!formData[label]?.optional??false)) ? '0px solid red' : "",
+                      }}
+                      
+                      
+                      onClick={() => {setIsOpen(!isOpen);}}
+                    />
+                  </div>)} />
+                }
+    </LocalizationProvider>
+    </div>
+  );
+};
+

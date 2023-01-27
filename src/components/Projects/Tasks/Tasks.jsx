@@ -83,9 +83,6 @@ export const Tasks = ({task,setTask}) => {
                 // setTasks([...taskData,resp.data])
             }
         })
-        // console.log('task new:',text);
-        // console.log(editTask.id);
-    //    update data to server .then
     }
 
     setTasks(taskData?.map(task=>task.id ===editTask.id ? {...task, [label]: text} : task))
@@ -110,7 +107,7 @@ export const Tasks = ({task,setTask}) => {
   return (
     <div className='crud-container'>
         <table>
-            <tbody>
+            <tbody className='dark:border-gray-400'>
                 {taskData?.map((task, index)=>{
                     let stts = "";
                     statuses.map((st)=>{
@@ -120,12 +117,12 @@ export const Tasks = ({task,setTask}) => {
                     })
                     const label = "label"+task.id;
                     return (
-                        <tr>
+                        <tr className='dark:border-transparent'>
                             <td className="td-number">
                                
                                 <div className='number-avatar'>{index+1}</div>
                             </td>
-                            <td className='td-name'>    
+                            <td className='td-name dark:text-gray-100'>    
                                 <div className='crud-title'>
                                 {!selected[label] &&<p onClick={()=>{
                                     const sh = {[label]: true};
@@ -197,7 +194,7 @@ export const Tasks = ({task,setTask}) => {
                         </tr>}
             </tbody>            
         </table>
-        <div className="add-task" onClick={()=>{setShow({add: true, edit: false})}} style={{marginTop: 10, display: 'flex', justifyContent: 'start', alignItems: 'center', fontSize: 18 }}><MdAdd style={{marginRight: 5, fontSize: 22}}/>Add new task</div>
+        <div className="add-task dark:text-gray-100" onClick={()=>{setShow({add: true, edit: false})}} style={{marginTop: 10, display: 'flex', justifyContent: 'start', alignItems: 'center', fontSize: 18 }}><MdAdd style={{marginRight: 5, fontSize: 22}}/>Add new task</div>
     </div>
   )
 }
