@@ -4,6 +4,7 @@ import PageTitle from '../components/Typography/PageTitle'
 import SectionTitle from '../components/Typography/SectionTitle'
 import axios from 'axios'
 
+
 import {
   Table,
   TableHeader,
@@ -171,8 +172,6 @@ function EmployeeDetail(props) {
         }, 1000);
       })
     }
-
-
 
 
     return ( 

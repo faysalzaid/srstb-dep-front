@@ -24,6 +24,7 @@ import { Input, HelperText, Label, Select, Textarea } from '@windmill/react-ui'
 import { url } from '../config/urlConfig'
 import { AuthContext } from '../hooks/authContext'
 import { useRef } from 'react'
+import EditUserDetailDialog from 'components/Users/EditUserDetailModal'
 
 function EmployeeList(props) {
     const [isModalOpen, setIsModalOpen] = useState(false)
@@ -118,6 +119,12 @@ const searchHandler = async(search)=>{
 
     }
 
+    const [openEdit, setOpenEdit] = useState({open: false, props:{}});
+    
+    const handleCloseEdit = () => {
+      setOpenEdit({open: false, props: {}});
+    }
+
     const addEmployee =async(e)=>{
       e.preventDefault()
       // console.log('This is from bid data',bidFormData);
@@ -189,6 +196,7 @@ useEffect(()=>{
 
     return ( 
        <>
+       <EditUserDetailDialog open={openEdit.open} handleClose={handleCloseEdit} user={openEdit.props}/>
        <link rel="stylesheet" href="https://unpkg.com/flowbite@1.4.4/dist/flowbite.min.css" />
        <PageTitle>List of Employees</PageTitle>
         <div>
@@ -389,11 +397,15 @@ useEffect(()=>{
                 </TableCell>
                 <TableCell>
                     <div className="flex items-center space-x-4">
-                      <Link to={{pathname:`/app/employees/${user.id}`}}>
-                      <Button layout="link" size="icon" aria-label="Edit">
+                      {/* <Link to={{pathname:`/app/employees/${user.id}`}}> */}
+                      <Button
+                       onClick={()=>{
+                         setOpenEdit({open: true, props: user})
+                       }}
+                       layout="link" size="icon" aria-label="Edit">
                         <EditIcon className="w-5 h-5" aria-hidden="true" />
                       </Button>
-                      </Link>
+                      {/* </Link> */}
                       <Button onClick={()=>deleteEmployee(user.id)}  style={{color:'red'}} layout="link" size="icon" aria-label="Delete">
                         <TrashIcon className="w-5 h-5" aria-hidden="true" />
                       </Button>
