@@ -46,7 +46,7 @@ $borderColor: rgba(0,0,0,.2);
   }
 
   input {
-     margin-top: 7px;
+     margin-top: 6px;
      position: absolute;
      top: 0;
      left: 0;
@@ -67,13 +67,15 @@ $borderColor: rgba(0,0,0,.2);
   .option {
      position: absolute;
      top: 57px;
-     width: 100%;
-     background-color: #fff;
-     box-shadow: 0 30px 30px rgba(0,0,0,0.3);
-     border-radius: 5px;
+     width: 99.4%;
+     margin-left: 0.3%;
+     background-color: #f1f1f1;
+     box-shadow: 0 10px 10px rgba(79, 79, 79, 0.3);
+     border-radius: 0px 0px 5px 5px;
      overflow: hidden;
      z-index: 100000;
      border: 1px solid $borderColor;
+     border-top: none;
      //display: none;
 
      div {
@@ -90,4 +92,8 @@ $borderColor: rgba(0,0,0,.2);
         }
      }
   }
+}
+
+.ck-editor__editable_inline {
+  min-height: 200px;
 }

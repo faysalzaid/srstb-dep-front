@@ -12,8 +12,6 @@ import ResetPassword from './pages/ResetPassword'
 import HomePage from './pages/home'
 import { QueryClientProvider,QueryClient } from '@tanstack/react-query'
 
-import Chat from './components/Chat/Chat'
-
 
 const Layout = lazy(() => import('./containers/Layout'))
 const Login = lazy(() => import('./pages/Login'))

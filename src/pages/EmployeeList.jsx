@@ -25,6 +25,7 @@ import { url } from '../config/urlConfig'
 import { AuthContext } from '../hooks/authContext'
 import { useRef } from 'react'
 import EditUserDetailDialog from 'components/Users/EditUserDetailModal'
+import EditUser from 'components/Users/EditUser'
 
 function EmployeeList(props) {
     const [isModalOpen, setIsModalOpen] = useState(false)
@@ -119,7 +120,7 @@ const searchHandler = async(search)=>{
 
     }
 
-    const [openEdit, setOpenEdit] = useState({open: false, props:{}});
+    const [openEdit, setOpenEdit] = useState({open: true, props:{}});
     
     const handleCloseEdit = () => {
       setOpenEdit({open: false, props: {}});
@@ -196,7 +197,7 @@ useEffect(()=>{
 
     return ( 
        <>
-       <EditUserDetailDialog open={openEdit.open} handleClose={handleCloseEdit} user={openEdit.props}/>
+       <EditUser open={openEdit.open} handleClose={handleCloseEdit} user={openEdit.props}/>
        <link rel="stylesheet" href="https://unpkg.com/flowbite@1.4.4/dist/flowbite.min.css" />
        <PageTitle>List of Employees</PageTitle>
         <div>

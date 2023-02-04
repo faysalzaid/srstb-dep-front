@@ -101,6 +101,7 @@ const EditUserDetailDialog = ({open, handleClose, user}) => {
                     marginTop: 30
                   }}
                   startIcon={<MdPerson />}
+            
                   />
 
                 <TextField 
@@ -134,7 +135,7 @@ const EditUserDetailDialog = ({open, handleClose, user}) => {
                   }}
                   className={``}
                   startIcon={<MdPhoneInTalk fontSize = {19}/>}
-                  />
+              />
 
               <Dropdown
                 formData={formData}
@@ -148,7 +149,7 @@ const EditUserDetailDialog = ({open, handleClose, user}) => {
                   paddingBottom: 20
                 }}
                 inputStyle={{
-                  
+                   
                 }}
                 startIcon={<AiOutlineCheckCircle fontSize={20}/>}
               />
