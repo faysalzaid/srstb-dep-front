@@ -114,9 +114,15 @@ export const EditableTextContent = ({
   fontSize = 22,
   fontWeight = "bold",
   padding = "10px 15px",
-  textShadow
+  textShadow,
+  minWidth,
+  type="text",
+  showButtons=true
 }) => {
   const editableRef = useRef(null);
+  const outRef = useRef(null);
+
+  
   const [editable, setEditable] = useState(false);
 
   const submitEdit = (text) => {
@@ -127,36 +133,48 @@ export const EditableTextContent = ({
   };
 
   const onCloseAway = (e)=>{
-    if(editableRef.current && editable && !editableRef.current.contains(e.target)){
-        editableRef.current.innerText = formData[label]?.value;
+    if(outRef.current && editable && !outRef.current.contains(e.target)){
+        console.log(formData[label].value+" clickaway")
+        editableRef.current.innerText = formData[label].value;
         setEditable(false);
     }
 }
+// useEffect(()=>{
+//   console.log(formData[label].value)
+//   editableRef.current.innerText = formData[label].value
+//   setFormData(formData)
+// },[formData[label]?.value])
 
-document.addEventListener('mousedown',onCloseAway)
+//document.addEventListener('mousedown',onCloseAway)
+
   return (
     <div className="editable-text-field-container">
       <div
         style={{
           width: width,
           margin: margin,
+          minWidth: minWidth ? minWidth : ""
         }}
-      >
+        ref={outRef}
+        >
         <div
           contentEditable={editable}
           ref={editableRef}
           onClick={() => {
+            //editableRef.current.innerText = parseFloat(formData[label].value);
             setEditable(true);
           }}
           onKeyDown={(e) => {
+            const text =  e.target.innerText;
             if (e.key === "Enter") {
-              submitEdit(e.target.innerText);
+              submitEdit(text);
               setEditable(false);
             } else if (e.key === "Escape") {
               editableRef.current.innerText = formData[label]?.value;
               setEditable(false);
             }
           }}
+
           style={{
             outline: !editable ? "none" : "2px solid green",
             width: "100%",
@@ -171,7 +189,7 @@ document.addEventListener('mousedown',onCloseAway)
         >
           {formData[label]?.value}
         </div>
-        {editable && (
+        {editable && showButtons && (
           <div className="flex justify-end">
             <IconButton>
               <MdClose

@@ -27,7 +27,7 @@ const Projects = () => {
     done: "Done",
   };
 
-  const [list, setList] = useState(true);
+  const [list, setList] = useState(false);
   const [search, setSearch] = useState("");
   const [projects, setProjects] = useState([]);
   const [searchResult, setSearchResult] = useState([]);
@@ -60,8 +60,6 @@ const Projects = () => {
           p.BidId = pr.BidId;
           p.Bids = pr.Bids
           prjs.push(p);
-         
-          
         });
        
         
@@ -75,25 +73,6 @@ const Projects = () => {
     loadProjects();
     startProjects = projects
   },[])
-
-
-  // const searchHandler = async (s) => {
-  //   setSearch(s);
-  //   if (s !== 0) {
-  //     const newProjectList = projects.filter((pr) => {
-  //       return Object.values(pr)
-  //         .join(" ")
-  //         .toLowerCase()
-  //         .includes(search.toLowerCase());
-  //     });
-  //     // console.log(newEmployeeList);
-  //     setProjects(newProjectList);
-  //   } else {
-  //     setProjects(searchResult);
-  //   }
-  // };
-
-  //const [projects, setProjects] = useState(startProjects);
 
   const handleCloseProfile = () => {
     setProfile({ title: "", url: "", open: false });
@@ -138,6 +117,7 @@ const Projects = () => {
   const handleOpenDetail = (id)=>{
     setSelectedProject({id, show:true})
   }
+
   return (
     <>
       <ErrorAlert
@@ -253,7 +233,10 @@ const Projects = () => {
                   xl={3}
                 >
                   <ProjectUI
+                    setProjects={setProjects}
+                    projects={projects}
                     openDetail={handleOpenDetail}
+                    setOpenSuccess={setOpenSuccess}
                     pr={pro}
                     key={"pro-item" + index + "-" + pro.id}
                     setProfile={setProfile}

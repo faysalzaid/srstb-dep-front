@@ -34,7 +34,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 const AddProject = ({ open, handleClose, successCallback, setOpenError, setOpenSuccess,pData,setData }) => {
-
+const [users,setUsers ]= useState([])
   const [formData, setFormData] = useState({
     name: {value: "", error: "", optional: false},
     description: {value: "", error: "", optional: false},
@@ -48,9 +48,21 @@ const AddProject = ({ open, handleClose, successCallback, setOpenError, setOpenS
     totalCost:  {value: "", error: "", optional: false},
     utilizedCost:  {value: "", error: "", optional: false},
     physicalPerformance:  {value: "", error: "", optional: false},
+    engineer:{value:"",error:"",optional:false}
     
   });
+  React.useEffect(()=>{
+    axios.get(`${url}/users`,{withCredentials:true}).then((resp)=>{
+      if(resp.data.error){
+
+      }else{
+        setUsers(resp.data)
+      }
+    })
+  },[])
   const [loading, setLoading] = useState(false);
+  const userNames=users.map((usr)=>({id:usr.id,name:usr.name}))
+
   const statuses = [
     {
       id: 1,
@@ -135,10 +147,12 @@ const AddProject = ({ open, handleClose, successCallback, setOpenError, setOpenS
       data.append("place", formData.place.value);
       data.append("year", formData.year.value);
       data.append("consultant", formData.consultant.value);
-      data.append("totalCost", formData.totalCost.value);
-      data.append("utilizedCost", formData.utilizedCost.value);
+      data.append("totalCost", parseInt(formData.totalCost.value));
+      data.append("utilizedCost", parseInt(formData.utilizedCost.value));
       data.append("physicalPerformance", formData.physicalPerformance.value);
+      data.append("engineer",formData.engineer.value)
       
+      // console.log('the data is ',formData.engineer.value);
       if(validate()) {
         submitToAPI(data);
       }
@@ -163,6 +177,11 @@ const AddProject = ({ open, handleClose, successCallback, setOpenError, setOpenS
                 starttime:  {value: "", error: "", optional: false},
                 endtime:  {value: "", error: "", optional: false},
                 year:  {value: "", error: "", optional: false},
+                consultant:  {value: "", error: "", optional: false},
+                totalCost:  {value: "", error: "", optional: false},
+                utilizedCost:  {value: "", error: "", optional: false},
+                physicalPerformance:  {value: "", error: "", optional: false},
+                engineer:{value:"",error:"",optional:false}
               }
             );
             const successMessage = {open:true, message:"Successfully Added!"}
@@ -375,7 +394,20 @@ const AddProject = ({ open, handleClose, successCallback, setOpenError, setOpenS
                         label="physicalPerformance"
                         labelText="Project Physical Performance"
                         placeholder="Enter physical Performance"
-
+                        errorLabel="nameError"
+                      />
+                    </div>
+                  </div>
+                  <div className="cat-container">
+                    <div className="child"></div>
+                    <div className="ch-child-item">
+                      <Dropdown
+                        formData={formData}
+                        setFormData={setFormData}
+                        label="engineer"
+                        options={userNames}
+                        labelText="Project Assigned Engineer"
+                        placeholder="Enter Assigned Engineer"
                         errorLabel="nameError"
                       />
                     </div>

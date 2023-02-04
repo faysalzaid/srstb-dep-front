@@ -1,16 +1,12 @@
 import * as React from "react";
-import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Paper from "@mui/material/Paper";
 import { IconButton, Divider, Grid } from "@mui/material";
-import Draggable from "react-draggable";
 import { MdClose } from "react-icons/md";
 import Slide from "@mui/material/Slide";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { TextField, TextArea, Dropdown, DateInput } from "./Inputs/Inputs";
 import { EditableTextContent, CustomDatePicker } from "./Inputs/EditableInputs";
 import { useTheme } from "@mui/material/styles";
 import { useState } from "react";
@@ -19,10 +15,12 @@ import Loader from 'components/Loader';
 
 import Tasks from './Tasks/Tasks';
 import Budgets from "./Tasks/Budgets";
+import {Bids} from "./Bids/Bids";
 import { useEffect } from "react";
 import axios from "axios";
 import { url } from "config/urlConfig";
 
+import {IoIosArrowForward, IoIosArrowDown} from 'react-icons/io';
 function PaperComponent(props) {
   return (
       <Paper {...props} />
@@ -35,6 +33,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const ProjectDetail = ({ open, handleClose, successCallback, setOpenError, setOpenSuccess,id }) => {
 const [projectData,setProjectData] = useState([])
+const [selectedBid,setSelectedBid] = useState([])
 
 
   const [formData, setFormData] = useState({
@@ -46,11 +45,12 @@ const [projectData,setProjectData] = useState([])
     endtime:  {value: "", error: "", optional: false},
     percentage:{value:"",error:"",option:false},
     year:{value:"",error:"",option:false},
-    totalCost:{value:"",error:"",option:false},
-    utilizedCost:{value:"",error:"",option:false},
+    totalCost:{value:0,error:"",option:false},
+    utilizedCost:{value:0,error:"",option:false},
     remainingCost:{value:"",error:"",option:false},
     physicalPerformance:{value:"",error:"",option:false},
-    financialPerformance:{value:"",error:"",option:false}
+    financialPerformance:{value:"",error:"",option:false},
+    BidId:{value:"",error:"",option:false},
   });
 
 
@@ -67,11 +67,13 @@ const [projectData,setProjectData] = useState([])
           endtime:  {value: data.endtime, error: "", optional: false},
           percentage:{value:data.percentage,error:"",optional:false},
           year:{value:data.year,error:"",option:false},
-          totalCost:{value:data.totalCost,error:"",option:false},
-          utilizedCost:{value:data.utilizedCost,error:"",option:false},
-          remainingCost:{value:data.remainingCost,error:"",option:false},
-          physicalPerformance:{value:data.physicalPerformance,error:"",option:false},
-          financialPerformance:{value:data.financialPerformance,error:"",option:false}
+          totalCost:{value:parseFloat(data.totalCost).toLocaleString()??0,error:"",option:false},
+          utilizedCost:{value:parseFloat(data.utilizedCost).toLocaleString()??0,error:"",option:false},
+          remainingCost:{value:parseFloat(data.remainingCost).toLocaleString()??0,error:"",option:false},
+          physicalPerformance:{value:data.physicalPerformance??0,error:"",option:false},
+          financialPerformance:{value:data.financialPerformance??0,error:"",option:false},
+          BidId:{value:data.BidId,error:"",option:false},
+          
         }
       );
       setProjectData(resp.data)
@@ -80,6 +82,12 @@ const [projectData,setProjectData] = useState([])
     })
   },[id])
 
+  useEffect(()=>{
+    axios.get(`${url}/bids`,{withCredentials:true}).then((resp)=>{
+      setSelectedBid(resp.data.bid)
+      // console.log(resp.data.bid);
+    })
+  },[])
 
   const [loading, setLoading] = useState(false);
   const statuses = [
@@ -129,15 +137,64 @@ const [projectData,setProjectData] = useState([])
   };
 
   function callBackFunc(text, label) {
-      console.log(text)
-      console.log(label);
-    //  const fd = {...formData, [label]: {...formData[label], value: text}};
-      // setFormData(formData)
-      console.log(formData)
+      //console.log(text)
+      const fd = {...formData, [label]: {...formData[label], value: text}};
+      setFormData(fd)
+
+      const request = {
+        name:fd.name.value,
+        year:fd.year.value,     
+        description:fd.description.value ,
+        starttime:fd.starttime.value,
+        endtime:fd.endtime.value,
+        status:fd.status.value,
+        percentage:fd.percentage.value ,
+        totalCost:parseInt(fd.totalCost.value.replaceAll(',','')),
+        utilizedCost:parseInt(fd.utilizedCost.value.replaceAll(',','')),
+        physicalPerformance:fd.physicalPerformance.value,
+        financialPerformance:fd.financialPerformance.value
+
+
+      }
+      console.log(request);
+      axios.post(`${url}/projects/${id}`,request,{withCredentials:true}).then((resp)=>{
+        console.log('respdata',resp.data)
+        if(!resp.data.error){
+
+      
+        setFormData(
+          {
+            name: {value: resp.data.name, error: "", optional: false},
+            description: {value: resp.data.description, error: "", optional: false},
+            descriptionError: {value: "", error: "", optional: false},
+            status:  {value: resp.data.status, error: "", optional: false},
+            starttime:  {value:resp.data.starttime, error: "", optional: false},
+            endtime:  {value: resp.data.endtime, error: "", optional: false},
+            percentage:{value:resp.data.percentage,error:"",optional:false},
+            year:{value:resp.data.year,error:"",option:false},
+            totalCost:{value:parseFloat(resp.data.totalCost).toLocaleString()??0,error:"",option:false},
+            utilizedCost:{value:parseFloat(resp.data.utilizedCost).toLocaleString()??0,error:"",option:false},
+            remainingCost:{value:parseFloat(resp.data.remainingCost).toLocaleString()??0,error:"",option:false},
+            physicalPerformance:{value:resp.data.physicalPerformance??0,error:"",option:false},
+            financialPerformance:{value:resp.data.financialPerformance??0,error:"",option:false},
+            BidId:{value:resp.data.BidId,error:"",option:false},
+          }
+        );
+       
+        setOpenSuccess((prev)=>({open:true,message:'successfully Updated'}))
+      }else{
+        setOpenError((prev)=>resp.data.error)
+      }
+      })
+      console.log(text,label,id);
+      
   }
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const [bids, setBids] = useState({show: false})
+  const [selectedWinner, setSelectedWinner] = useState();
 
   return (
     <div>
@@ -150,8 +207,8 @@ const [projectData,setProjectData] = useState([])
         TransitionComponent={Transition}
         //keepMounted
         fullWidth={true}
-        fullScreen={fullScreen}
-        maxWidth='md'
+        fullScreen={true}
+        maxWidth='xl'
         disableEscapeKeyDown 
       >
         <div className="dialog-detail bg-white dark:bg-gray-700" style={{ minWidth: 300,height: '100%', minHeight: 500, overflow:'auto' }}>
@@ -180,7 +237,7 @@ const [projectData,setProjectData] = useState([])
           <DialogContent>
           {loading && <div><Loader /></div>}
           <Grid container style={{marginTop: 20}}>
-            <Grid item>
+            <Grid item md={12} sm={12}>
               
               <EditableTextContent
                 formData={formData}
@@ -195,6 +252,7 @@ const [projectData,setProjectData] = useState([])
                 fontSize={25}
                 padding="5px 15px"
               />
+            
               <EditableTextContent
                 formData={formData}
                 setFormData={setFormData}
@@ -210,7 +268,9 @@ const [projectData,setProjectData] = useState([])
                 fontSize={20}
                 fontFamily="ubuntu"
               />
-              
+
+            </Grid>
+            <Grid item md={6} sm={12}>
               <CustomDatePicker
                   labelText="Start Date"
                   formData={formData}
@@ -255,22 +315,176 @@ const [projectData,setProjectData] = useState([])
                     fontSize: 15
                   }}
               />
-             <div className="detail-progress-container">
+
+            <div className="flex items-start" style={{marginLeft: 15}}>
+                <label className="dark:text-gray-100" style={{fontFamily:'ubuntu', fontWeight: 'bold', marginTop: 5, marginRight: 45}}>Total Cost</label>
+                <EditableTextContent
+                  formData={formData}
+                  setFormData={setFormData}
+                  label="totalCost"
+                  labelText="Total Cost"
+                  placeholder="Enter total cost"
+                  callBackFun={callBackFunc}
+                  width="90%"
+                  margin='0'
+                  padding="5px 15px"
+                  fontWeight="lighter"
+                  fontSize={17}
+                  fontFamily="ubuntu"
+                  textShadow="0px 0px red"
+                  minWidth={100}
+                  type="number"
+                />
+            </div>
+
+            <div className="flex items-start" style={{marginLeft: 15, marginTop: 15}}>
+                <label className="dark:text-gray-100" style={{fontFamily:'ubuntu', fontWeight: 'bold', marginTop: 5, marginRight: 25}}>Utilized Cost</label>
+                <EditableTextContent
+                  formData={formData}
+                  setFormData={setFormData}
+                  label="utilizedCost"
+                  labelText="Utilized Cost"
+                  placeholder="Enter utilized cost"
+                  callBackFun={callBackFunc}
+                  width="90%"
+                  margin='0'
+                  padding="5px 15px"
+                  fontWeight="lighter"
+                  fontSize={17}
+                  fontFamily="ubuntu"
+                  textShadow="0px 0px red"
+                  minWidth={100}
+                  type="number"
+                />
+            </div>
+
+            </Grid>
+            <Grid item md={6} sm={12}>
+             <div className="flex items-start" style={{marginLeft: 15, marginTop: 15}}>
+                <label className="dark:text-gray-100" style={{fontFamily:'ubuntu', fontWeight: 'bold', marginTop: 5, marginRight: 68}}>Remaining Cost</label>
+                <EditableTextContent
+                    formData={formData}
+                    setFormData={setFormData}
+                    label="remainingCost"
+                    labelText="Remaining Cost"
+                    callBackFun={callBackFunc}
+                    width="90%"
+                    margin='0'
+                    padding="5px 15px"
+                    fontWeight="lighter"
+                    fontSize={17}
+                    fontFamily="ubuntu"
+                    textShadow="0px 0px red"
+                    minWidth={100}
+                    type="number"
+                  />
+              </div>
+
+              <div className="flex items-start" style={{marginLeft: 15, marginTop: 15}}>
+                <label className="dark:text-gray-100" style={{fontFamily:'ubuntu', fontWeight: 'bold', marginTop: 5, marginRight: 25}}>Physical Performance</label>
+                <EditableTextContent
+                    formData={formData}
+                    setFormData={setFormData}
+                    label="physicalPerformance"
+                    labelText="Physical Performance"
+                    callBackFun={callBackFunc}
+                    width="90%"
+                    margin='0'
+                    padding="5px 15px"
+                    fontWeight="lighter"
+                    fontSize={17}
+                    fontFamily="ubuntu"
+                    textShadow="0px 0px red"
+                    minWidth={100}
+                    type="number"
+                  />
+              </div>
+
+              <div className="flex items-start" style={{marginLeft: 15, marginTop: 15}}>
+                <label className="dark:text-gray-100" style={{fontFamily:'ubuntu', fontWeight: 'bold', marginTop: 5, marginRight: 20}}>Financial Performance</label>
+                <EditableTextContent
+                    formData={formData}
+                    setFormData={setFormData}
+                    label="financialPerformance"
+                    labelText="Financial Performance"
+                    callBackFun={callBackFunc}
+                    width="90%"
+                    margin='0'
+                    padding="5px 15px"
+                    fontWeight="lighter"
+                    fontSize={17}
+                    fontFamily="ubuntu"
+                    textShadow="0px 0px red"
+                    minWidth={100}
+                    type="number"
+                  />
+              </div>
+
+              <div className="flex items-start" style={{marginLeft: 15, marginTop: 15}}>
+                <label className="dark:text-gray-100" style={{fontFamily:'ubuntu', fontWeight: 'bold', marginTop: 5, marginRight: 20}}>Status</label>
+                <EditableTextContent
+                    formData={formData}
+                    setFormData={setFormData}
+                    label="status"
+                    labelText="Status"
+                    callBackFun={callBackFunc}
+                    width="90%"
+                    margin='0'
+                    padding="5px 15px"
+                    fontWeight="lighter"
+                    fontSize={17}
+                    fontFamily="ubuntu"
+                    textShadow="0px 0px red"
+                    minWidth={100}
+                    type="number"
+                  />
+              </div>
+
+
+            </Grid>
+            <Grid item md={12} sm={12}>
+             <div className="detail-progress-container mt-5">
                 <progress value={formData.percentage.value} max="100" className='progress'></progress>
                 <p className='percentage dark:text-gray-300'>{formData.percentage.value}%</p>
              </div>
              <div className="tasks-container">
                 <label className="task-label" style={{color: '#1faaea', fontSize: 20, fontWeight: 'bold'}}>Budget Detail</label>
-                <Budgets budget={projectData}/>
+                <Budgets budget={projectData} setOpenSuccess={setOpenSuccess} setOpenError={setOpenError}/>
              </div>
+             <div className="tasks-container">
+                <div className="flex items-center justify-between">
+                   <label className="task-label" style={{color: '#a962e3', fontSize: 20, fontWeight: 'bold'}}>All Bids</label>
+                  {!formData.BidId.value && <label className="bg-blue-300 px-4 text-white rounded-full font-bold hover:cursor-pointer" style={{fontSize:15,paddingTop:1, paddingBottom: 1}}>No winner selected</label>}
+                 {formData.BidId.value && <label className="bg-blue-300 px-4 text-white rounded-full font-bold hover:cursor-pointer" style={{fontSize:15,paddingTop:1, paddingBottom: 1}}>{selectedBid?.map((bd)=>bd.id===formData.BidId.value?bd.fullname:"")}</label>}
+
+                  <IconButton onClick={()=>setBids({show: !bids.show})}>
+                    {!bids.show &&
+                      <IoIosArrowForward
+                        style={{
+                            color: '#172b4d',
+                            fontSize: 18
+                        }}
+                      />
+                    }
+                    {bids.show &&
+                      <IoIosArrowDown
+                        style={{
+                            color: '#172b4d',
+                            fontSize: 18
+                        }}
+                      />
+                    }
+                  </IconButton>
+                </div>
+                <Bids  setFormData={setFormData} projectId={id} showInterface={bids.show} setSelectedWinner={setSelectedWinner} Bid={projectData} setProject={setProjectData} setOpenSuccess={setOpenSuccess}/>
+             </div>
+             {!bids.show && <Divider />}
              <div className="tasks-container">
                 <label className="task-label" style={{color: '#37c5ab', fontSize: 20, fontWeight: 'bold'}}>All Tasks</label>
                 <Tasks task={projectData} setTask={setProjectData}/>
              </div>
             </Grid>
-            <Grid item sm={12} md={12}>
-              
-            </Grid>
+            
           </Grid>
 
           </DialogContent>      

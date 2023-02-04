@@ -33,6 +33,7 @@ axios.get(`${url}/projects`,{withCredentials:true}).then((resp)=>{
   }
 setProject(resp.data.projects)
 
+
 })
 
 
@@ -62,16 +63,16 @@ const projectFinancialUtilized = {
       display: false,
   },
 }
+const numFor = Intl.NumberFormat('en-US');    
+// let budgets = projects.map((pr)=>numFor.format(pr.utilizedCost))
+// console.log('budget',budgets);
+
 
 
 const projectUtilizedCostGraph = {
   data: {
       datasets: [{
-          data: projects?.map(pr=> pr.utilizedCost),
-          /**
-           * These colors come from Tailwind CSS palette
-           * https://tailwindcss.com/docs/customizing-colors/#default-color-palette
-           */
+          data: projects?.map(pr=>pr.utilizedCost),
           backgroundColor: projects?.map(pr=>pr.color),
           label: 'utilizedCost',
       }, ],

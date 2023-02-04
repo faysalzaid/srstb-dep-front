@@ -41,11 +41,6 @@ const routes = [{
         icon: 'ChartsIcon',
         name: 'Charts',
     },
-    {
-        path: '/app/buttons',
-        icon: 'ButtonsIcon',
-        name: 'Buttons',
-    },
 
 
     {

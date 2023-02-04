@@ -62,7 +62,7 @@ const ChatUIList = ({ to, toUser }) => {
       .then((res) => res.json())
       .then((resp) => {
         let chts = [];
-        resp.map((val) => {
+        resp?.map((val) => {
           chts.push({
             id: val.id,
             message: val.message,
@@ -120,7 +120,7 @@ const ChatUIList = ({ to, toUser }) => {
           let avatar = "";
           let toAvatar = "";
 
-          users.map((user) => {
+          users?.map((user) => {
             if (user.id !== to) {
               avatar = user.image;
             } else {

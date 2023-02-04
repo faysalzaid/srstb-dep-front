@@ -47,6 +47,7 @@ function BidDetail(props) {
     const [successMessage,setSuccessMessage] = useState("")
     const [projects,setProjects] = useState([])
     const [ users,setUsers] = useState([])
+    const [showModal, setShowModal] = useState({show:false,id:""});
     const [authState] = useContext(AuthContext)
 
     
@@ -158,6 +159,7 @@ function BidDetail(props) {
               setErrorMessage(resp.data.error)
             }else{
               setBidData("")  
+              setShowModal({show:false,id:""})
               setSuccessMessage("Successfully deleted")
               setTimeout(() => {
                 props.history.push('/app/bids')
@@ -173,6 +175,63 @@ function BidDetail(props) {
         <>
         <link rel="stylesheet" href="https://unpkg.com/flowbite@1.4.4/dist/flowbite.min.css" />
         <PageTitle>Bid From {bidsData.fullname}</PageTitle>
+
+                  {/* Delete MOdal section  */}
+      {showModal.show ? (
+        <>
+          <div
+            className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
+          >
+            <div className="relative w-auto my-6 mx-auto max-w-3xl">
+              {/*content*/}
+              <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+                {/*header*/}
+                <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
+                  <h3 className="text-3xl font-semibold">
+                    Delete Confirm
+                  </h3>
+                  <button
+                    className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
+                    onClick={() => setShowModal(false)}
+                  >
+                    <span className="bg-transparent text-black opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none">
+                      ×
+                    </span>
+                  </button>
+                </div>
+                {/*body*/}
+                <div className="relative p-6 flex-auto">
+                  <p className="my-4 text-slate-500 text-lg leading-relaxed">
+                   Are You sure you want to Delete This
+                  </p>
+                </div>
+                {/*footer*/}
+                <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
+                  <button
+                    className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                    type="button"
+                    onClick={() => setShowModal({show:false,id:""})}
+                  >
+                    Close
+                  </button>
+                  <button
+                    className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                    type="button"
+                    onClick={() => deleteBid(showModal.id)}
+                    style={{backgroundColor:'darkred'}}
+                  >
+                    Continue Deleting
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
+        </>
+      ) : null}
+      {/* End of Delete Modal Section */}
+
+
         
         <div>
           <Button onClick={openModal}>Edit Bid</Button>
@@ -330,7 +389,7 @@ function BidDetail(props) {
                     <span className="text-sm">{bidsData.phone}</span>
                   </TableCell>
                   <TableCell>
-                    <span className="text-sm">birr {bidsData.amount}</span>
+                    <span className="text-sm">{parseFloat(bidsData?.amount).toLocaleString()} ETB</span>
                   </TableCell>
                   
                   <TableCell>
@@ -340,7 +399,7 @@ function BidDetail(props) {
                   <TableCell>
                     <div className="flex items-center space-x-4">
                       
-                      <Button onClick={()=>deleteBid(bidsData.id)}  style={{color:'red'}} layout="link" size="icon" aria-label="Delete">
+                      <Button onClick={()=>setShowModal({show:true,id:bidsData.id})}  style={{color:'red'}} layout="link" size="icon" aria-label="Delete">
                         <TrashIcon className="w-5 h-5" aria-hidden="true" />
                       </Button>
                     </div>

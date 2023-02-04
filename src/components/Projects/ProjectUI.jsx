@@ -12,15 +12,31 @@ import Fade from '@mui/material/Fade';
 
 import {MdModeEditOutline, MdOutlineDeleteOutline} from 'react-icons/md';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
+import { url } from 'config/urlConfig';
 
-const ProjectUI = ({pr, setProfile,openDetail}) => {
+const ProjectUI = ({pr, setProfile,openDetail,setProjects,projects,setOpenSuccess}) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [showModal, setShowModal] = useState({show:false,id:""});
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
       setAnchorEl(event.currentTarget);  
   };
-  const handleClose = () => {
-      setAnchorEl(null);
+
+  const handleClose = (id) => {
+
+    if(id!==undefined){
+      axios.get(`${url}/projects/delete/${id}`,{withCredentials:true}).then((resp)=>{
+        let newPr = projects.filter((pr)=>pr.id!=id)
+        setProjects(newPr)
+        setOpenSuccess((prev)=>({open:true,message:'successfully Deleted'}))
+        
+       
+      })
+    }
+    setAnchorEl(null);
+
+      
   };
   
 
@@ -39,13 +55,13 @@ const ProjectUI = ({pr, setProfile,openDetail}) => {
                 }}
                 anchorEl={anchorEl}
                 open={open}
-                onClose={handleClose}
+                onClose={()=>handleClose(undefined)}
                 TransitionComponent={Fade}
                 transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                 anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
               >
                 <MenuItem onClick={()=>openDetail(pr.id)} autoFocus={false}><MdModeEditOutline style={{fontSize: 20, marginRight: 10}}/><p style={{fontFamily: 'ubuntu'}}>Edit Project</p></MenuItem>
-                <MenuItem onClick={handleClose} autoFocus={false}><MdOutlineDeleteOutline style={{fontSize: 20, marginRight: 10}} /><p style={{fontFamily: 'ubuntu'}}>Delete Project</p></MenuItem>
+                <MenuItem onClick={()=>handleClose(pr.id)} autoFocus={false}><MdOutlineDeleteOutline style={{fontSize: 20, marginRight: 10}} /><p style={{fontFamily: 'ubuntu'}}>Delete Project</p></MenuItem>
               </Menu>
             </div>
         </div>

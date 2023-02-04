@@ -41,9 +41,12 @@ function Dashboard(props) {
   const [page, setPage] = useState(1)
   const [data, setData] = useState([])
   const [projects,setProject] = useState([])
+  const [countsData,setCountsData] = useState({ projectCount:"",bidCount:"",activeProjects:"",completedProjects:""})
 
 
 
+
+  // console.log('data from app',authState);
     useEffect(()=>{
     axios.get(`${url}/projects`,{withCredentials:true}).then((resp)=>{
       if(resp.data.error){
@@ -54,6 +57,14 @@ function Dashboard(props) {
     },[])
 
 
+},[])
+
+
+useEffect(()=>{
+  axios.get(`${url}/counts`,{withCredentials:true}).then((resp)=>{
+    const data = resp.data
+    setCountsData({ projectCount:data.projectsCount,bidCount:data.countBids,activeProjects:data.activeProjectsCount,completedProjects:data.completedProjects})
+  })
 },[])
 
   // pagination setup
@@ -107,7 +118,7 @@ const projectPercentileGraph = {
 
       {/* <!-- Cards --> */}
       <div className="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
-        <InfoCard title="Total clients" value="6389">
+        <InfoCard title="Total Projects " value={countsData.projectCount}>
           <RoundIcon
             icon={PeopleIcon}
             iconColorClass="text-orange-500 dark:text-orange-100"
@@ -116,7 +127,7 @@ const projectPercentileGraph = {
           />
         </InfoCard>
 
-        <InfoCard title="Account balance" value="$ 46,760.89">
+        <InfoCard title="Bids Registered" value={countsData.bidCount}>
           <RoundIcon
             icon={MoneyIcon}
             iconColorClass="text-green-500 dark:text-green-100"
@@ -125,7 +136,7 @@ const projectPercentileGraph = {
           />
         </InfoCard>
 
-        <InfoCard title="New sales" value="376">
+        <InfoCard title="Active Projects" value={countsData.activeProjects}>
           <RoundIcon
             icon={CartIcon}
             iconColorClass="text-blue-500 dark:text-blue-100"
@@ -134,7 +145,7 @@ const projectPercentileGraph = {
           />
         </InfoCard>
 
-        <InfoCard title="Pending contacts" value="35">
+        <InfoCard title="Completed Projects" value={countsData.completedProjects}>
           <RoundIcon
             icon={ChatIcon}
             iconColorClass="text-teal-500 dark:text-teal-100"

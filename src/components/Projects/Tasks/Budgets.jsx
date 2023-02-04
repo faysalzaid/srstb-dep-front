@@ -10,7 +10,7 @@ import { useEffect } from 'react';
 import axios from 'axios';
 import { url } from 'config/urlConfig';
 
-export const Budgets = ({budget}) => {
+export const Budgets = ({budget,setOpenSuccess,setOpenError}) => {
   let [budgets, setBudgets] = useState([]);
 
  
@@ -51,13 +51,23 @@ export const Budgets = ({budget}) => {
             ProjectId:budget.id
         }
         console.log(request);
+        console.log('Edit:BUdget',editBudget);
         await axios.post(`${url}/budget/${editBudget.id}`,request,{withCredentials:true}).then((resp)=>{
             if(resp.data.error){
-                console.log(resp.data.error);
+              setEditBudget({
+              year: {value: editBudget.year.value, error: "", optional: false},
+              allocatedBudget:{value: " ", error: "", optional: false},
+            })
+              console.log(editBudget)
+              setOpenError((prev)=>({open:true,message:`${resp.data.error}.`}))
+                
+            }else{
+              setOpenSuccess((prev)=>({open:true,message:"Successfully inserted"}))
+              
             }
         })
-        //console.log('budget new:',text);
-    //    update data to server .then
+        // console.log('budget new:',text);
+      //  update data to server .then
 
     }
 
@@ -66,8 +76,13 @@ export const Budgets = ({budget}) => {
   }
 
   const handleDeleteCallBack = (id) => {
-     const bd = budgets?.filter(b=>b.id !== id);
-     setBudgets(bd);
+    axios.get(`${url}/budget/delete/${id}`,{withCredentials:true}).then((resp)=>{
+      const bd = budgets?.filter(b=>b.id !== id);
+     
+      setBudgets(bd)
+    })
+    
+    //  setBudgets(bd);
   }
 
   const [open, setOpen] = useState({show: false, id: 0});
@@ -81,7 +96,7 @@ export const Budgets = ({budget}) => {
   };
 
   return (
-    <div className='crud-container-budget'>
+    <div className='crud-container-budget' style={{minWidth: 700}}>
         <DeleteDialog open={open.show} handleClose={handleClose} id={open.id} callBack={handleDeleteCallBack}/>
         <table>
             <thead className='dark:border-gray-400'>
@@ -99,7 +114,7 @@ export const Budgets = ({budget}) => {
                   <tr>
                     <td></td>
                     <td></td>
-                    <td align='center' style={{minWidth: '300px', height: 100, clear:'both'}} className="dark:text-gray-200">
+                    <td align='left' style={{minWidth: '300px', height: 100, clear:'both'}} className="dark:text-gray-200">
                         No Data
                     </td>
                     <td></td>
@@ -260,6 +275,7 @@ export const Budgets = ({budget}) => {
             const request = {year:year,ProjectId:ProjectId}
             await axios.post(`${url}/budget`,request,{withCredentials:true}).then((resp)=>{
                 setBudgets([...budgets,resp.data])
+                setOpenSuccess((prev)=>({open:true,message:"Successfully Added, Provide other data"}))
             })
 
          

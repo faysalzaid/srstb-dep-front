@@ -8,7 +8,7 @@ import ThemedSuspense from './components/ThemedSuspense'
 import { Windmill } from '@windmill/react-ui'
 import * as serviceWorker from './serviceWorker'
 import { BrowserRouter } from 'react-router-dom'
-
+import { AuthContextProvider } from 'hooks/authContext'
 import { createRoot } from 'react-dom/client';
 const container = document.getElementById('root');
 const root = createRoot(container);
@@ -18,8 +18,11 @@ root.render(
   <SidebarProvider>
     <Suspense fallback={<ThemedSuspense />}>
       <Windmill usePreferences>
-        
+)
+      <AuthContextProvider>
         <App />
+      </AuthContextProvider>
+       
         
         
       </Windmill>

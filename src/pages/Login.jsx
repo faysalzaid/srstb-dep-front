@@ -25,11 +25,20 @@ function Login(props) {
       props.history.push('/app/dashboard')
     }
 
+    // useEffect(()=>{
+
+    // },[])
+
+    // console.log('authState is ',authState);
+
   const validation = Yup.object().shape({
     email:Yup.string().email().min(5).required("Email is required"),
     password:Yup.string().min(3).max(25).required()
 })
+
+const JwtAxios = new axios.create()
 const onSubmit = async(data)=>{
+  try {
     await axios.post(`${url}/login`,data).then((response)=>{
       if(response.data.error){
           setFrontErrorMessage(response.data.error)
@@ -39,20 +48,20 @@ const onSubmit = async(data)=>{
       }else{
         let data = response.data
           setCookie('accessToken',data.token)
-          setAuthState({id:data.id,username:data.username,email:data.email,role:data.role,state:true})
+          setAuthState({id:data.id,username:data.username,email:data.email,role:data.role,state:true,refreshToken:data.refreshToken})
           setSuccessMessage("Successfully logged in ")
           setTimeout(() => {
             setSuccessMessage("")
             props.history.push('/app/dashboard')
           }, 1000);
       }
-    }).catch((err)=>{
-      console.log(err);
-      // setFrontErrorMessage(err)
-      // setTimeout(() => {
-      //   setFrontErrorMessage("")
-      // }, 3000);
     })
+    
+    
+  } catch (error) {
+    console.log(error.message);
+  }
+
 }
 
 const initialValues ={

@@ -49,9 +49,11 @@ function BidList(props) {
     const [searchTerm,setSearchTerm] = useState("")
     const [fetchedResult,setFetchedResult] = useState([])
     const [ users,setUsers] = useState([])
-
+    const [showModal, setShowModal] = useState({show:false,id:""});
     const [authState] = useContext(AuthContext)
-
+    let [approved,setApproved] = useState(0) ;
+    let [processing,setProcessing] = useState(0);
+    let [rejected,setRejected] = useState(0);
     
     useEffect(()=>{
         const bidsFetch = async()=>{
@@ -59,6 +61,10 @@ function BidList(props) {
               if(resp.data.error) setErrorMessage(resp.data.error);
               setBidData(resp.data.bid)
               setBidCount(resp.data.count)
+              setProcessing(resp.data.processing)
+              setApproved(resp.data.approved)
+              setRejected(resp.data.rejected)
+              // console.log(resp.data.processing);
               
             }).catch((err)=>{
               console.log(err);
@@ -78,7 +84,7 @@ function BidList(props) {
           }else{
 
             setProjects(resp.data.projects)}
-            console.log(resp.data.projects);
+            // console.log(resp.data.projects);
           
         })
         bidsFetch()
@@ -142,6 +148,7 @@ const deleteBid =async(ids)=>{
       const newBid = bidsData.filter((d)=>d.id!==ids)
       setBidData(newBid)
       setSuccessMessage("Successfully deleted")
+      setShowModal({show:false,id:""})
       setTimeout(() => {
         setSuccessMessage('')
         props.history.push('/app/bids')
@@ -174,6 +181,61 @@ const searchHandler = async(search)=>{
         <>
          <link rel="stylesheet" href="https://unpkg.com/flowbite@1.4.4/dist/flowbite.min.css" />
         <PageTitle>List of Bids Registered</PageTitle>
+          {/* Delete MOdal section  */}
+      {showModal.show ? (
+        <>
+          <div
+            className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
+          >
+            <div className="relative w-auto my-6 mx-auto max-w-3xl">
+              {/*content*/}
+              <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+                {/*header*/}
+                <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
+                  <h3 className="text-3xl font-semibold">
+                    Delete Confirm
+                  </h3>
+                  <button
+                    className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
+                    onClick={() => setShowModal(false)}
+                  >
+                    <span className="bg-transparent text-black opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none">
+                      ×
+                    </span>
+                  </button>
+                </div>
+                {/*body*/}
+                <div className="relative p-6 flex-auto">
+                  <p className="my-4 text-slate-500 text-lg leading-relaxed">
+                   Are You sure you want to Delete This
+                  </p>
+                </div>
+                {/*footer*/}
+                <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
+                  <button
+                    className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                    type="button"
+                    onClick={() => setShowModal(false)}
+                  >
+                    Close
+                  </button>
+                  <button
+                    className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                    type="button"
+                    onClick={() => deleteBid(showModal.id)}
+                    style={{backgroundColor:'darkred'}}
+                  >
+                    Continue Deleting
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
+        </>
+      ) : null}
+      {/* End of Delete Modal Section */}
+
                 {/* Search section */}
       <div className='mb-5'>
         <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
@@ -303,7 +365,7 @@ const searchHandler = async(search)=>{
             className="mr-4"
           />
         </InfoCard>
-        <InfoCard title="Processing Bids" >
+        <InfoCard title="Processing Bids" value={processing}>
           <RoundIcon
             icon={OutlineCogIcon}
             iconColorClass="text-blue-500 dark:text-blue-100"
@@ -311,7 +373,7 @@ const searchHandler = async(search)=>{
             className="mr-4"
           />
         </InfoCard>
-        <InfoCard title="Approved Bids" >
+        <InfoCard title="Approved Bids" value={approved}>
           <RoundIcon
             icon={BellIcon}
             iconColorClass="text-yellow-500 dark:text-yellow-100"
@@ -319,9 +381,18 @@ const searchHandler = async(search)=>{
             className="mr-4"
           />
         </InfoCard>
+        
+        <InfoCard title="Rejected Bids" value={rejected}>
+          <RoundIcon
+            icon={BellIcon}
+            iconColorClass="text-red-500 dark:text-red-100"
+            bgColorClass="bg-red-100 dark:bg-yellow-500"
+            className="mr-4"
+          />
+        </InfoCard>
 
 
-      </div>
+      </div> .  
 
       {/* End of Card Icons */}
         {successMessage?
@@ -381,7 +452,7 @@ const searchHandler = async(search)=>{
                     <span className="text-sm">{bid.phone}</span>
                   </TableCell>
                   <TableCell>
-                    <span className="text-sm">birr {bid.amount}</span>
+                    <span className="text-sm">{bid.amount.toLocaleString()} ETB</span>
                   </TableCell>
                   
                   <TableCell>
@@ -395,7 +466,7 @@ const searchHandler = async(search)=>{
                         <EditIcon className="w-5 h-5" aria-hidden="true" />
                       </Button>
                       </Link>
-                      <Button onClick={()=>deleteBid(bid.id)} style={{color:'red'}} layout="link" size="icon" aria-label="Delete">
+                      <Button onClick={()=>setShowModal({show:true,id:bid.id})} style={{color:'red'}} layout="link" size="icon" aria-label="Delete">
                         <TrashIcon className="w-5 h-5" aria-hidden="true" />
                       </Button>
                     </div>

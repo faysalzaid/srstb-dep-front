@@ -50,6 +50,7 @@ function UsersList(props) {
   const [searchResult, setSearchResult] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [fetchedResult, setFetchedResult] = useState([]);
+  const [showModal, setShowModal] = useState({show:false,id:""});
 
   const validation = Yup.object().shape({
     name: Yup.string().min(3).max(15).required(),
@@ -69,7 +70,7 @@ function UsersList(props) {
         console.log(resp.data.error);
         setErrorMessage(resp.data.error)
       }else{
-        console.log("users data ", resp.data);
+       
         setUsersData(resp.data);
 
       }
@@ -77,14 +78,23 @@ function UsersList(props) {
   }, []);
 
   const addUser = async (data) => {
+    
+    if(data.role===undefined || data.role==="Select"){
+      setErrorMessage('Please Provide role ')
+      setTimeout(() => {
+        setErrorMessage("")
+      }, 2000);
+    }
+
     const formData = new FormData();
     formData.append("name", data.name);
     formData.append("email", data.email);
     formData.append("role", data.role);
     formData.append("password", data.password);
     formData.append("image", userForm.image);
-    console.log("this is the data from form", formData);
-    await axios.post(`${url}/users`, formData).then((resp) => {
+
+    // console.log("this is the data from form", formData);
+    await axios.post(`${url}/users`, formData,{withCredentials:true}).then((resp) => {
       if (resp.data.error) {
         console.log("error: ", resp.data.error);
         setErrorMessage(resp.data.error);
@@ -110,6 +120,7 @@ function UsersList(props) {
       const newdata = usersData.filter((d) => d.id !== ids);
       setUsersData(newdata);
       closeModal();
+      setShowModal({show:false,id:""})
       setSuccessMessage("Successfully Deleted");
       setTimeout(() => {
         setSuccessMessage("");
@@ -144,6 +155,61 @@ function UsersList(props) {
         href="https://unpkg.com/flowbite@1.4.4/dist/flowbite.min.css"
       />
       <PageTitle>List of Users</PageTitle>
+         {/* Delete MOdal section  */}
+         {showModal.show ? (
+        <>
+          <div
+            className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
+          >
+            <div className="relative w-auto my-6 mx-auto max-w-3xl">
+              {/*content*/}
+              <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+                {/*header*/}
+                <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
+                  <h3 className="text-3xl font-semibold">
+                    Delete Confirm
+                  </h3>
+                  <button
+                    className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
+                    onClick={() => setShowModal({show:false,id:""})}
+                  >
+                    <span className="bg-transparent text-black opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none">
+                      ×
+                    </span>
+                  </button>
+                </div>
+                {/*body*/}
+                <div className="relative p-6 flex-auto">
+                  <p className="my-4 text-slate-500 text-lg leading-relaxed">
+                   Are You sure you want to Delete This
+                  </p>
+                </div>
+                {/*footer*/}
+                <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
+                  <button
+                    className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                    type="button"
+                    onClick={() => setShowModal({show:false,id:""})}
+                  >
+                    Close
+                  </button>
+                  <button
+                    className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                    type="button"
+                    onClick={() => deleteUser(showModal.id)}
+                    style={{backgroundColor:'darkred'}}
+                  >
+                    Continue Deleting
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
+        </>
+      ) : null}
+      {/* End of Delete Modal Section */}
+
 
       {/* Search section */}
       <div className="mb-5">
@@ -366,7 +432,7 @@ function UsersList(props) {
                       </Button>
                     </Link>
                     <Button
-                      onClick={() => deleteUser(user.id)}
+                      onClick={() => setShowModal({show:true,id:user.id})}
                       style={{ color: "red" }}
                       layout="link"
                       size="icon"

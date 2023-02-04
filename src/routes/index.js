@@ -117,10 +117,7 @@ const routes = [{
         path: '/charts',
         component: Charts,
     },
-    {
-        path: '/buttons',
-        component: Buttons,
-    },
+
     {
         path: '/modals',
         component: Modals,

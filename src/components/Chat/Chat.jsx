@@ -47,8 +47,8 @@ const ChatUI = () => {
       .then((res) => res.json())
       .then((resp) => {
         let users = [];
-        resp.sort((a, b) => a.name.localeCompare(b.name))
-        resp.map((val) => {
+        resp?.sort((a, b) => a.name.localeCompare(b.name))
+        resp?.map((val) => {
           users.push({
             id: val.id,
             name: val.name,
