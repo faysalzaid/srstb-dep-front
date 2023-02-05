@@ -42,7 +42,7 @@ const ProjectUI = ({pr, setProfile,openDetail,setProjects,projects,setOpenSucces
 
   return (
     <>
-      <div class="max-w-sm rounded overflow-hidden shadow-2xl bg-green-50 dark:bg-gray-700 project">
+      <div className="max-w-sm rounded overflow-hidden shadow-2xl bg-green-50 dark:bg-gray-700 project">
         <div className='project-header'>
             <div className='project-icon'>{pr.name[0]}</div>
             <div className='right'>

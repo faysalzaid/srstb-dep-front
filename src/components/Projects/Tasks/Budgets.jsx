@@ -47,11 +47,11 @@ export const Budgets = ({budget,setOpenSuccess,setOpenError}) => {
         const request = {
             year:editBudget.year.value,
             allocatedBudget:editBudget.allocatedBudget.value,
-            utilizedBudget:editBudget.utilizedBudget.value,
+            utilizedBudget:parseInt(editBudget.utilizedBudget.value)  ,
             ProjectId:budget.id
         }
-        console.log(request);
-        console.log('Edit:BUdget',editBudget);
+        // console.log('New Data',request);
+        // console.log('Edit:BUdget',editBudget);
         await axios.post(`${url}/budget/${editBudget.id}`,request,{withCredentials:true}).then((resp)=>{
             if(resp.data.error){
               setEditBudget({
