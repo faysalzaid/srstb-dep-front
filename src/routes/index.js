@@ -60,6 +60,9 @@ const Projects = lazy(() =>
     import ('../components/Projects/Projects')
 )
 
+const Messages = lazy(()=> 
+   import ('../components/Messages/Messages'))
+
 /**
  * ⚠ These are internal routes!
  * They will be rendered inside the app, using the default `containers/Layout`.
@@ -161,6 +164,10 @@ const routes = [{
     {
         path: '/projects',
         component: ProjectList,
+    },
+    {
+        path: '/messages',
+        component: Messages,
     },
     {
         path: '/projects/:id',

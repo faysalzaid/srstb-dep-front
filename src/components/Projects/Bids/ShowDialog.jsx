@@ -73,7 +73,7 @@ const ShowDetail = ({open, handleClose, bidDetail, statuses, callBack}) => {
         onClose={handleClose}
         aria-describedby="show-bid-detail"
       >
-        <DialogTitle style={{ fontFamily: 'ubuntu', minWidth: 300, color: '#fff', background: "linear-gradient(to left, #41d1ff,#62a6ff)", fontWeight: 'bold'}} >
+        <DialogTitle style={{ fontFamily: 'ubuntu', minWidth: 300, color: '#fff', background: "linear-gradient(to right, #7e3af2, #9164d1)", fontWeight: 'bold'}} >
             {"Bid Detail"}
             <IconButton
               aria-label="close"
@@ -122,7 +122,7 @@ const ShowDetail = ({open, handleClose, bidDetail, statuses, callBack}) => {
                                window.open(link)
                              }}
                              style={{border: '1px solid rgba(0,130,130,.1)'}}>
-                              <GoBrowser color="#017cf6" fontSize={21}/>
+                              <GoBrowser color="#4a5a74" fontSize={21}/>
                            </IconButton>
                            <IconButton 
                              onClick={()=>{
@@ -136,7 +136,7 @@ const ShowDetail = ({open, handleClose, bidDetail, statuses, callBack}) => {
                              }}
                              style={{border: '1px solid rgba(0,50,250,.1)'}}
                            >
-                              <AiOutlineDownload color="#00abf1" fontSize={22}/>
+                              <AiOutlineDownload color="#4a5a74" fontSize={22}/>
                            </IconButton>
                         </div>
                       </div>
@@ -156,7 +156,7 @@ const ShowDetail = ({open, handleClose, bidDetail, statuses, callBack}) => {
                                window.open(link)
                              }}
                              style={{border: '1px solid rgba(0,130,130,.1)'}}>
-                              <GoBrowser color="#017cf6" fontSize={21}/>
+                              <GoBrowser color="#4a5a74" fontSize={21}/>
                            </IconButton>
                            <IconButton 
                              onClick={()=>{
@@ -170,7 +170,7 @@ const ShowDetail = ({open, handleClose, bidDetail, statuses, callBack}) => {
                              }}
                              style={{border: '1px solid rgba(0,50,250,.1)'}}
                            >
-                              <AiOutlineDownload color="#00abf1" fontSize={22}/>
+                              <AiOutlineDownload color="#4a5a74" fontSize={22}/>
                            </IconButton>
                         </div>
                       </div>
@@ -190,7 +190,7 @@ const ShowDetail = ({open, handleClose, bidDetail, statuses, callBack}) => {
                                window.open(link)
                              }}
                              style={{border: '1px solid rgba(0,130,130,.1)'}}>
-                              <GoBrowser color="#017cf6" fontSize={21}/>
+                              <GoBrowser color="#4a5a74" fontSize={21}/>
                            </IconButton>
                            <IconButton 
                              onClick={()=>{
@@ -204,7 +204,7 @@ const ShowDetail = ({open, handleClose, bidDetail, statuses, callBack}) => {
                              }}
                              style={{border: '1px solid rgba(0,50,250,.1)'}}
                            >
-                              <AiOutlineDownload color="#00abf1" fontSize={22}/>
+                              <AiOutlineDownload color="#4a5a74" fontSize={22}/>
                            </IconButton>
                         </div>
                       </div>
@@ -224,7 +224,7 @@ const ShowDetail = ({open, handleClose, bidDetail, statuses, callBack}) => {
                                window.open(link)
                              }}
                              style={{border: '1px solid rgba(0,130,130,.1)'}}>
-                              <GoBrowser color="#017cf6" fontSize={21}/>
+                              <GoBrowser color="#4a5a74" fontSize={21}/>
                            </IconButton>
                            <IconButton 
                              onClick={()=>{
@@ -238,7 +238,7 @@ const ShowDetail = ({open, handleClose, bidDetail, statuses, callBack}) => {
                              }}
                              style={{border: '1px solid rgba(0,50,250,.1)'}}
                            >
-                              <AiOutlineDownload color="#00abf1" fontSize={22}/>
+                              <AiOutlineDownload color="#4a5a74" fontSize={22}/>
                            </IconButton>
                         </div>
                       </div>
@@ -271,9 +271,10 @@ const ShowDetail = ({open, handleClose, bidDetail, statuses, callBack}) => {
             style={{
                 fontFamily: 'ubuntu',
                 marginRight: 10,
-                marginBottom: 5
+                marginBottom: 5,
+                background: '#7e3af2'
             }}
-            startIcon={<BsFillPatchCheckFill color="3213df" />}
+            startIcon={<BsFillPatchCheckFill />}
           >Approve This Bid</Button>
         </DialogActions>
       </Dialog>

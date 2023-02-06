@@ -123,17 +123,28 @@ export const Dropdown = ({formData, setFormData, label, labelText, options, sele
         }
     }
     const inputRef = useRef();
+    const [avatar, setAvatar] = useState("")
     
     document.addEventListener('mousedown',closeOpenMenus)
     useEffect(()=>{
         let val = selectText ? selectText :"Not Selected";
+        let url;
         options.map((op)=>{
             if(op.id == formData[label]?.value) {
                 val = op.name;
+                if(op.url) {
+                    url = op.url
+                }
             }
         });
-        if(inputRef.current)
-        inputRef.current.value = val;
+        if(inputRef.current) {
+           inputRef.current.value = val;
+           if(url) {
+            
+           }
+           setAvatar((prev)=>url)
+        }
+
     },[inputRef.current,formData[label]])
     
     return (
@@ -155,7 +166,7 @@ export const Dropdown = ({formData, setFormData, label, labelText, options, sele
                  style={{
                      border: ((formData[label]?.error??"") && (!formData[label]?.optional??false)) ? '1px solid red' : "",
                      outline: ((formData[label]?.error??"") && (!formData[label]?.optional??false)) ? '0px solid red' : "",
-                     paddingLeft: startIcon ? 45 : "",
+                     paddingLeft:  avatar ? 55 : startIcon ? 45 : "",
                      paddingRight: endIcon ? 40 : "",
                      ...inputStyle
                     }}
@@ -163,13 +174,16 @@ export const Dropdown = ({formData, setFormData, label, labelText, options, sele
                         setShow(!show)
                     }}
                     />
-                {startIcon && <div style={{position: 'absolute', left: 15, fontSize: 19, top: '50%', transform: "translateY(-25%)"}}>{startIcon}</div>}
+                {avatar && <div style={{position: 'absolute', left: 15, fontSize: 19, top: '50%', transform: "translateY(-38%)"}}><img src={avatar} style={{width: 35, height: 35, borderRadius: '50%'}} className="border"/></div>}
+                {(startIcon && !avatar) && <div style={{position: 'absolute', left: 15, fontSize: 19, top: '50%', transform: "translateY(-25%)"}}>{startIcon}</div>}
                 {endIcon && <div style={{position: 'absolute', right: 15, fontSize: 19, top: '40%'}}>{endIcon}</div>}
                 </div>
                  {show && <div 
                     className="option dark:bg-gray-800 dark:text-gray-200"
                     style={{
                         height: show ?"auto" : 0,
+                        paddingTop: 7,
+                        paddingBottom: 5,
                     }}
                     >
                     {
@@ -185,14 +199,18 @@ export const Dropdown = ({formData, setFormData, label, labelText, options, sele
                                       setFormData({...formData, [label]: {...formData[label], value: option.id, error: ""}})
                                     } 
                                 }}
-                                className="dark:bg-gray-800 dark:text-gray-200"
+                                className="option-select dark:bg-gray-800 dark:text-gray-200"
                                 style={{
                                     backgroundColor: (formData[label]?.value === option.id) ? "#deebff" : "",
                                     color: (formData[label]?.value === option.id) ? "#0052cc" : "",
-                                    borderLeft: (formData[label]?.value === option.id) ? "3px solid #0052cc" : "",
-                                    
+                                    borderLeft: (formData[label]?.value === option.id) ? "3px solid green" : "",
+                                    padding: "10px 15px",
                                 }}
-                                >{option.name}
+                                >
+                                    <div className="flex items-center justify-start gap-2" style={{height: 30}}>
+                                       {option.url && <img src={option.url} style={{width: 40, height: 40, borderRadius: '50%'}} className="border"/>}
+                                       {option.name}
+                                    </div>
                             </div>
                             
                             </>
@@ -212,6 +230,81 @@ export const Dropdown = ({formData, setFormData, label, labelText, options, sele
 
 export const RichTextInput = () => {
     const [text, setText] = useState('');
+    const apiUrl = "http://localhost:4000"
+    const uploadEndPoint = 'api/upload_rich_text'
+    const isDark = false;
+    
+    function uploadAdapter(loader) {
+        return {
+            upload: ()=>{
+                return new Promise((resolve, reject) => {
+                    const body = new FormData();
+                    loader.file.then((file)=>{
+                        body.append("file", file);
+                        fetch(`${apiUrl}/${uploadEndPoint}`, {
+                            method: "post",
+                            body: body
+                        }).then((res=>res.json()))
+                        .then((res) => {
+                            resolve({default: `${apiUrl}/${res.url}`})
+                        })
+                        .catch((err)=>{
+                            reject(err)
+                        })
+                    })
+                })
+            }
+            
+        }
+    }
+    
+    function uploadPlugin(editor) {
+        editor.plugins.get("FileRepository").createUploadAdapter = (loader) => {
+            return uploadAdapter(loader)
+        } 
+    }
+    
+    const onSave = (text) => {
+        let images = []
+        Array.from( new DOMParser().parseFromString( text, 'text/html' )
+        .querySelectorAll( 'img' ) )
+        .map( (img) => {
+            const imgUrl = img.getAttribute( 'src' )
+            if(imgUrl) {
+                images.push(imgUrl)
+            }
+        })
+        console.log(images.length,' ',images.join(', '))
+    }
+    return (
+        <div className={`w-full border border-gray-400 rounded p-4 bg-${isDark ? 'gray-900' : 'white'} text-${isDark ? 'white' : 'gray-900'}`}>
+            <div className="editor">
+                <CKEditor
+                  config={{
+                      extraPlugins: [uploadPlugin],
+                      mediaEmbed: {previewsInData: true},
+                    }}
+                    
+                    editor={ClassicEditor}
+                    data={text}
+                    onChange={(event, editor)=>{
+                        const data = editor.getData()
+                        setText((prev)=>data)
+                    }}
+                    
+                    />
+            </div>
+            <div className="text-black">
+                {/* {parse(DOMPurify.sanitize(text, { ADD_TAGS: ["iframe, ul, li"], ADD_ATTR: ['allow', 'allowfullscreen', 'frameborder', 'scrolling'] }))} */}
+                {/* {parse(text)} */}
+            </div>
+        </div>
+    )
+}
+
+
+export const RichTextLight = ({formData, setFormData, label, labelText, isDark=false}) => {
+    //const [text, setText] = useState('');
     const apiUrl = "http://localhost:4000"
     const uploadEndPoint = 'api/upload_rich_text'
     
@@ -258,26 +351,43 @@ export const RichTextInput = () => {
         console.log(images.length,' ',images.join(', '))
     }
     return (
-        <div className="">
+        <div className={`w-full border-gray-400 rounded bg-${isDark ? 'gray-800 p-2' : 'white'} text-${isDark ? 'white' : 'gray-900'}`}>
+           <label className="dark:text-gray-200">{labelText?<p style={{marginBottom: 10, paddingTop: 10, fontFamily: 'ubuntu'}} className="text-gray-500 dark:text-gray-100">{labelText}</p> : <div style={{marginBottom: 30}}></div>}</label>
             <div className="editor">
                 <CKEditor
                   config={{
                       extraPlugins: [uploadPlugin],
                       mediaEmbed: {previewsInData: true},
-                    }}
+                      toolbar: {
+                        items: [
+                            'heading', '|',
+                            'fontfamily', 'fontsize', '|',
+                            'alignment', '|',
+                            'fontColor', 'fontBackgroundColor', '|',
+                            'bold', 'italic', 'strikethrough', 'underline', 'subscript', 'superscript', '|',
+                            'link', '|',
+                            'outdent', 'indent', '|',
+                            'bulletedList', 'numberedList', 'todoList', '|',
+                            'codeBlock', '|',
+                            'insertTable', 'blockQuote',
+                            'undo', 'redo'
+                        ],
+                        shouldNotGroupWhenFull: true
+                    }                    
+                  }}
                     
                     editor={ClassicEditor}
-                    data={text}
+                    data={formData[label]?.value}
                     onChange={(event, editor)=>{
                         const data = editor.getData()
-                        setText((prev)=>data)
+                        setFormData({...formData, [label]:{...formData[label], value: data}})
                     }}
                     
                     />
             </div>
             <div className="text-black">
                 {/* {parse(DOMPurify.sanitize(text, { ADD_TAGS: ["iframe, ul, li"], ADD_ATTR: ['allow', 'allowfullscreen', 'frameborder', 'scrolling'] }))} */}
-                {parse(text)}
+                {/* {parse(text)} */}
             </div>
         </div>
     )
@@ -294,7 +404,7 @@ export const DateInput = ({
     startIcon, 
     endIcon,
     containerStyle = { },
-    inputStyle = { marginLeft: 50 },
+    inputStyle = { marginLeft: 0 },
     labelStyle,
     views=['day'],
     type="desktop",
@@ -366,7 +476,9 @@ export const DateInput = ({
     minutes = ('0' + minutes).slice(-2)
     newDate = newDate + "  at  " + hour + " : "+minutes+" "+am;
   }
-
+  if(newDate == "aN / aN / NaN") {
+    newDate = "mm / dd / yyyy"
+  }
   setDateField(newDate);
 
   },[formData[label]?.value])
@@ -581,6 +693,121 @@ export const DateInput = ({
                             }
                 </LocalizationProvider>
             {((formData[label]?.error??"") && (!formData[label]?.optional??false)) && <label className="validate-error">{labelText+" is required"}</label>}
+        </div>
+    </div>
+    );
+}
+
+
+export const DropdownMultiple = ({formData, setFormData, label, labelText, options, selectText, open, style, inputStyle, className, startIcon, endIcon}) => {
+    const catMenu = useRef(null);
+    const [show, setShow] = useState(false)
+    const closeOpenMenus = (e)=>{
+        if(catMenu.current && show && !catMenu.current.contains(e.target)){
+            setShow(false)
+        }
+    }
+    const inputRef = useRef();
+    const [avatar, setAvatar] = useState("")
+    
+    document.addEventListener('mousedown',closeOpenMenus)
+    useEffect(()=>{
+        let val = selectText ? selectText :"Not Selected";
+        let url;
+        options.map((op)=>{
+            if(op.id == formData[label]?.value) {
+                val = op.name;
+                if(op.url) {
+                    url = op.url
+                }
+            }
+        });
+        if(inputRef.current) {
+           inputRef.current.value = val;
+           if(url) {
+            
+           }
+           setAvatar((prev)=>url)
+        }
+
+    },[inputRef.current,formData[label]])
+    
+    return (
+        <div className="text-field-container" style={{...style}}>
+        <div className="textfield-container">
+            <label className="dark:text-gray-200">{labelText?labelText : <div style={{marginBottom: 30}}></div>}</label>
+            
+            <div className="dropdown relative" ref={catMenu} style={{marginBottom: show ? 0 : ''}}>
+                {!show && <MdOutlineKeyboardArrowDown className="arrow-icon"/>}
+                {show && <MdOutlineKeyboardArrowUp className="arrow-icon"/>}
+                <div className="">
+                <input 
+                 // type="text" 
+                 ref={inputRef}
+                 className={`textBox dark:bg-gray-800 dark:text-gray-200 ${className}`}
+                 placeholder="Select item" 
+                 //value={"Select Item"}
+                 readonly
+                 style={{
+                     border: ((formData[label]?.error??"") && (!formData[label]?.optional??false)) ? '1px solid red' : "",
+                     outline: ((formData[label]?.error??"") && (!formData[label]?.optional??false)) ? '0px solid red' : "",
+                     paddingLeft:  avatar ? 55 : startIcon ? 45 : "",
+                     paddingRight: endIcon ? 40 : "",
+                     ...inputStyle
+                    }}
+                    onClick={()=>{
+                        setShow(!show)
+                    }}
+                    />
+                {avatar && <div style={{position: 'absolute', left: 15, fontSize: 19, top: '50%', transform: "translateY(-38%)"}}><img src={avatar} style={{width: 35, height: 35, borderRadius: '50%'}} className="border"/></div>}
+                {(startIcon && !avatar) && <div style={{position: 'absolute', left: 15, fontSize: 19, top: '50%', transform: "translateY(-25%)"}}>{startIcon}</div>}
+                {endIcon && <div style={{position: 'absolute', right: 15, fontSize: 19, top: '40%'}}>{endIcon}</div>}
+                </div>
+                 {show && <div 
+                    className="option dark:bg-gray-800 dark:text-gray-200"
+                    style={{
+                        height: show ?"auto" : 0,
+                        paddingTop: 7,
+                        paddingBottom: 5,
+                    }}
+                    >
+                    {
+                        options.map((option,index)=>{
+                            return (
+                                <>
+                            <div
+                              key={"dropdown"+index}
+                              onClick={()=>{
+                                  setShow((prev)=>!prev)
+                                  if(formData[label] != option.id) {
+                                      inputRef.current.value = option.name;
+                                      setFormData({...formData, [label]: {...formData[label], value: option.id, error: ""}})
+                                    } 
+                                }}
+                                className="option-select dark:bg-gray-800 dark:text-gray-200"
+                                style={{
+                                    backgroundColor: (formData[label]?.value === option.id) ? "#deebff" : "",
+                                    color: (formData[label]?.value === option.id) ? "#0052cc" : "",
+                                    borderLeft: (formData[label]?.value === option.id) ? "3px solid green" : "",
+                                    padding: "10px 15px",
+                                }}
+                                >
+                                    <div className="flex items-center justify-start gap-2" style={{height: 30}}>
+                                       {option.url && <img src={option.url} style={{width: 40, height: 40, borderRadius: '50%'}} className="border"/>}
+                                       {option.name}
+                                    </div>
+                            </div>
+                            
+                            </>
+                            );
+                        })
+                    }
+                    
+                  </div>
+                }                 
+                    
+            </div>
+            
         </div>
     </div>
     );

@@ -237,19 +237,27 @@ export const Budgets = ({budget,setBudget}) => {
                
             </tbody>            
         </table>
-        <div  onClick={()=>{
-            let bds = budgets;
-            const dt = new Date();
-            const year = dt.toLocaleDateString('en-us')
-            bds.push({
-                id: budgets.length+1,
-                year: year,
-                budgetAllocated: 0,
-                budgetUtilized: 0,
-            });
-            budgets = bds;
-            setSelected({})
-        }} className="add-budget dark:text-gray-100" style={{marginTop: 10, display: 'flex', justifyContent: 'start', alignItems: 'center', fontSize: 18 }}><MdAdd style={{marginRight: 5, fontSize: 22}} />Add new budget</div>
+        <div className="add-budget dark:text-gray-100" style={{marginTop: 10, display: 'flex', justifyContent: 'start', alignItems: 'center', fontSize: 18 }}>
+                
+                <div
+                  className='flex items-center'
+                  onClick={()=>{
+                    let bds = budgets;
+                    const dt = new Date();
+                    const year = dt.toLocaleDateString('en-us')
+                    bds.push({
+                        id: budgets.length+1,
+                        year: year,
+                        budgetAllocated: 0,
+                        budgetUtilized: 0,
+                    });
+                    budgets = bds;
+                    setSelected({})
+                  }}
+                >
+                    <MdAdd style={{marginRight: 5, fontSize: 22}} />Add new budget
+                </div>
+        </div>
     </div>
   )
 }

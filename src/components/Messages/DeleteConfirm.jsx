@@ -12,7 +12,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const ApproveConfirm = ({open, handleClose, id, callBack}) => {
+const DeleteDialog = ({open, handleClose, ids, exitCallBack=()=>{}, callBack }) => {
  
 
   return (
@@ -23,12 +23,9 @@ const ApproveConfirm = ({open, handleClose, id, callBack}) => {
         keepMounted
         onClose={handleClose}
         aria-describedby="delete-budget"
-        style={{
-          zIndex: 100000
-        }}
       >
         <DialogTitle style={{background: '#474950', color: '#fff', fontFamily: 'ubuntu'}}>
-            {"Confirm Approve"}
+            {"Confirm Deletion"}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="delete-budget" className='pt-4'>
@@ -38,7 +35,7 @@ const ApproveConfirm = ({open, handleClose, id, callBack}) => {
                 fontSize: 28
               }}/>
                <p className='font-san' style={{fontFamily: 'ubuntu'}}>
-                 Are you sure you want to approve this guy?
+                 Are you sure you want to permanently remove this item?
                </p>
             </div>
           </DialogContentText>
@@ -56,11 +53,12 @@ const ApproveConfirm = ({open, handleClose, id, callBack}) => {
           >Cancel</Button>
           <Button 
             onClick={()=>{
-                callBack(id);
+                callBack(ids);
+                exitCallBack()
                 handleClose();
             }}
             variant="contained" 
-            color="warning"
+            color="error"
             size="small"
            
             style={{
@@ -68,11 +66,11 @@ const ApproveConfirm = ({open, handleClose, id, callBack}) => {
                 fontFamily: 'ubuntu',
                 marginLeft: 20
             }}
-          >Approve</Button>
+          >Ok</Button>
         </DialogActions>
       </Dialog>
     </div>
   );
 }
 
-export default ApproveConfirm;
+export default DeleteDialog;
