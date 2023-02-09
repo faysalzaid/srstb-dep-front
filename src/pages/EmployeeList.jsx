@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom'
 import PageTitle from '../components/Typography/PageTitle'
 import SectionTitle from '../components/Typography/SectionTitle'
 import axios from 'axios'
+import { ErrorAlert, SuccessAlert } from "components/Alert";
 
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import {
@@ -22,12 +23,44 @@ import { EditIcon, EyeIconOne, TrashIcon } from '../icons'
 import { Modal, ModalHeader, ModalBody, ModalFooter } from '@windmill/react-ui'
 import { Input, HelperText, Label, Select, Textarea } from '@windmill/react-ui'
 import { url } from '../config/urlConfig'
-import { AuthContext } from '../hooks/authContext'
+import EditUser from 'components/Users/EditUser'
 import { useRef } from 'react'
+import AddEmployee from 'components/Users/AddEmployee'
 
 function EmployeeList(props) {
     const [isModalOpen, setIsModalOpen] = useState(false)
+    const [openEdit, setOpenEdit] = useState({open: false, props:{}});
+    const [openAdd,setOpenAdd] = useState({open:false,props:{}})
     const [uplModal,setUplModal] = useState(false)
+
+
+    const [openSuccess, setOpenSuccess] = useState({ open: false, message: "" })
+    const [openError, setOpenError] = useState({ open: false, message: "" });
+  
+  
+    const handleCloseSuccess = (event, reason) => {
+      if (reason === "clickaway") {
+        return;
+      }
+  
+      setOpenSuccess({ open: false, message: "" });
+    };
+  
+  
+    const handleCloseError = (event, reason) => {
+      if (reason === "clickaway") {
+        return;
+      }
+  
+      setOpenError({ open: false, message: "" });
+    };
+
+
+
+    const handleCloseEdit = () => {
+      setOpenEdit({open: false, props: {}});}  
+      const handleCloseAdd = () => {
+        setOpenAdd({open: false, props: {}});}  
 
     function openModal() {
       setIsModalOpen(true)
@@ -47,7 +80,19 @@ function EmployeeList(props) {
     }
 
     // const [companyData,setCompanyData] = useState([]) 
-    const [emplForm,setEmplForm] = useState({name:"",email:"",phone:"",status:"",image:"",DepartmentId:"",DesignationId:""}) 
+    const [emplForm,setEmplForm] = useState({name:"",email:"",phone:"",status:"",image:"",DepartmentId:"",DesignationId:"", area: "",
+          hiredDate: "",
+          ssn: "",
+          passportNo: "",
+          contactPhone: "",
+          nationality: "",
+          address: "",
+          birthday:"",
+          postCode:""})
+    
+    
+
+
     const [errorMessage,setErrorMessage] = useState('')
     const [successMessage,setSuccessMessage] = useState("")
     const [designationData,setDesignationData] = useState([])
@@ -56,32 +101,37 @@ function EmployeeList(props) {
     const [searchResult,setSearchResult] = useState([])
     const [searchTerm,setSearchTerm] = useState("")
     const [fetchedResult,setFetchedResult] = useState([])
-    const [authState] = useContext(AuthContext)
+
     
     // const {id} = useParams()
 
     useEffect(()=>{
-        axios.get(`${url}/employees/`).then((resp)=>{
-            // console.log('Employees',resp.data);
-            if(resp.data.error){
-              setErrorMessage(resp.data.error)
-            }else{
-              setEmployeeData(resp.data)
-            }
-            
-        })
-    },[])
-
-
-    useEffect(()=>{
+      let isMounted = true
+      if(isMounted){
+        axios.get(`${url}/employees/`,{withCredentials:true}).then((resp)=>{
+          // console.log('Employees',resp.data);
+          if(resp.data.error){
+            setErrorMessage(resp.data.error)
+          }else{
+            setEmployeeData(resp.data)
+          }
+          
+      })
       axios.get(`${url}/departments`).then((resp)=>{
         setDepartmentData(resp.data)
-      }).then(()=>{
-        axios.get(`${url}/designations`).then((resp)=>{
-          setDesignationData(resp.data)
-        })
       })
+
+      axios.get(`${url}/designations`).then((resp)=>{
+        setDesignationData(resp.data)
+      })
+
+      }
+      return ()=>{
+        isMounted=false
+      }
+       
     },[])
+
 
 
 const searchHandler = async(search)=>{
@@ -163,7 +213,13 @@ const searchHandler = async(search)=>{
 
 //
 useEffect(()=>{
-  setFetchedResult(searchTerm.length<1?employeeData:searchResult)
+  let isMounted = true
+  if(isMounted){
+    setFetchedResult(searchTerm.length<1?employeeData:searchResult)
+  }
+ return()=>{
+      isMounted=false
+ }
   // console.log('runned fetched result');
 },[employeeData,searchTerm])
 
@@ -189,7 +245,22 @@ useEffect(()=>{
 
     return ( 
        <>
+      <ErrorAlert
+        open={openError.open}
+        handleClose={handleCloseError}
+        message={openError.message}
+        horizontal="right"
+      />
+      <SuccessAlert
+        open={openSuccess.open}
+        handleClose={handleCloseSuccess}
+        message={openSuccess.message}
+        horizontal="right"
+      />
+
        <link rel="stylesheet" href="https://unpkg.com/flowbite@1.4.4/dist/flowbite.min.css" />
+       <EditUser setOpenError={setOpenError} setOpenSuccess={setOpenSuccess} open={openEdit.open} handleClose={handleCloseEdit} user={openEdit.props}/>
+       <AddEmployee setOpenError={setOpenError} setOpenSuccess={setOpenSuccess} open={openAdd.open} handleClose={handleCloseAdd} setEmployeeData={setEmployeeData} employeeData={employeeData}/>
        <PageTitle>List of Employees</PageTitle>
         <div>
         <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
@@ -202,11 +273,11 @@ useEffect(()=>{
             
         </div>
 
-        <div className='mt-5'>
-          <Button onClick={openModal}>Register Employee</Button>
+        <div className='mt-6'>
+          <Button onClick={()=>setOpenAdd({open:true})}>Register Employee</Button>
         </div>
         <div className='mt-5'>
-        <Button onClick={openUploadModal} className="btn-sm" style={{backgroundColor:"green"}}>Upload Excel file</Button>
+        <Button onClick={openUploadModal} className="btn-sm">Upload Excel file</Button>
         </div>
         <Modal isOpen={isModalOpen} onClose={closeModal}>
           <ModalHeader>Insert Employee Info</ModalHeader>
@@ -254,6 +325,45 @@ useEffect(()=>{
             
           </Select>
         </Label>
+        <Label>
+            <span>Area</span>
+              <Input type="text" className="mt-1" name="area" placeholder="Empl Phone"  autoComplete='off' onChange={(e)=>setEmplForm({...emplForm,area:e.target.value})}/>
+          </Label>
+
+          <Label>
+            <span>Hired Date</span>
+              <Input type="Date" className="mt-1" name="hiredDate" placeholder="Empl Hired Date"  autoComplete='off' onChange={(e)=>setEmplForm({...emplForm,hiredDate:e.target.value})}/>
+          </Label>
+          <Label>
+
+            <span>SSN</span>
+              <Input type="text" className="mt-1" name="ssn" placeholder="Empl ssn"  autoComplete='off' onChange={(e)=>setEmplForm({...emplForm,ssn:e.target.value})}/>
+          </Label>
+
+          <Label>
+            <span>Passport Number</span>
+              <Input type="text" className="mt-1" name="passportNo" placeholder="Empl passportNo"  autoComplete='off' onChange={(e)=>setEmplForm({...emplForm,passportNo:e.target.value})}/>
+          </Label>
+
+          <Label>
+            <span>Contact Phone</span>
+              <Input type="text" className="mt-1" name="contactPhone" placeholder="Empl contactPhone"  autoComplete='off' onChange={(e)=>setEmplForm({...emplForm,contactPhone:e.target.value})}/>
+          </Label>
+
+          <Label>
+            <span>Nationality</span>
+              <Input type="text" className="mt-1" name="nationality" value="Ethiopian" placeholder="Empl nationality"  autoComplete='off' onChange={(e)=>setEmplForm({...emplForm,nationality:e.target.value})}/>
+          </Label>
+          <Label>
+            <span>Address</span>
+              <Input type="text" className="mt-1" name="address" placeholder="Empl address"  autoComplete='off' onChange={(e)=>setEmplForm({...emplForm,address:e.target.value})}/>
+          </Label>
+
+          <Label>
+            <span>BirthDate</span>
+              <Input type="text" className="mt-1" name="birthday" placeholder="Empl birthday"  autoComplete='off' onChange={(e)=>setEmplForm({...emplForm,birthday:e.target.value})}/>
+          </Label>
+
         <Label>
         <span>Image</span>
               <Input type="file" className="mt-1 block w-full text-sm text-gray-500 file:mr-1 
@@ -371,7 +481,7 @@ useEffect(()=>{
               <TableRow key={i}>
                 <TableCell>
                   <div className="flex items-center text-sm">
-                    <Avatar className="hidden mr-3 md:block" src={user.image===null?'/uploads/profile.png':`/uploads/employees/${user.image}`} alt="User" />
+                    <Avatar className="hidden mr-3 md:block" src={user.image} alt="User" />
                     <div>
                       <p className="font-semibold">{user.name}</p>
                       <p className="text-xs text-gray-600 dark:text-gray-400">{user.job}</p>
@@ -389,11 +499,13 @@ useEffect(()=>{
                 </TableCell>
                 <TableCell>
                     <div className="flex items-center space-x-4">
-                      <Link to={{pathname:`/app/employees/${user.id}`}}>
-                      <Button layout="link" size="icon" aria-label="Edit">
+                      
+                      <Button
+                      onClick={()=> setOpenEdit({open: true, props: user})}
+                      layout="link" size="icon" aria-label="Edit">
                         <EditIcon className="w-5 h-5" aria-hidden="true" />
                       </Button>
-                      </Link>
+               
                       <Button onClick={()=>deleteEmployee(user.id)}  style={{color:'red'}} layout="link" size="icon" aria-label="Delete">
                         <TrashIcon className="w-5 h-5" aria-hidden="true" />
                       </Button>
@@ -414,17 +526,3 @@ useEffect(()=>{
 
 export default EmployeeList;
 
-
-
-/**
- * 
- * 
- * 
-
- * 
- * 
- * 
- * 
- * 
- * 
- */

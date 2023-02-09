@@ -1,88 +1,86 @@
 $mainColor: green;
-$borderColor: rgba(0,0,0,.2);
-
-
+$borderColor: rgba(0, 0, 0, .2);
 .textfield-container {
-  label {
-    font-family: ubuntu;
-  }
-  .validate-error {
-    color: #be3c3c;
-    font-size: 14px;
-    padding-left: 5px;
-  }
-  .input-text-field {
-    margin-top: 7px;
-    width: 100%;
-    border: 1px solid $borderColor;
-    padding: 10px;
-    border-radius: 5px;
-
-    &:focus {
-      outline: 1px solid $mainColor;
+    label {
+        font-family: ubuntu;
     }
-
-  }
+    .validate-error {
+        color: #be3c3c;
+        font-size: 14px;
+        padding-left: 5px;
+    }
+    .input-text-field {
+        margin-top: 7px;
+        width: 100%;
+        border: 1px solid $borderColor;
+        padding: 10px;
+        border-radius: 5px;
+        &:focus {
+            outline: 1px solid $mainColor;
+        }
+    }
 }
 
-
 .dropdown {
-  position: relative;
-  //margin-top: 100px;
-  width: 100%;
-  height: 50px;
-  
-  .arrow-icon {
-    position: absolute;
-    right: 20px;
-    top: 20px;
-    z-index: 10000;
-    font-size: 21px;
-  }
-
-  input {
-     margin-top: 7px;
-     position: absolute;
-     top: 0;
-     left: 0;
-     width: 100%;
-     height: 100%;
-     cursor: pointer;
-     background-color: #fff;
-     border: 1px solid $borderColor;
-     outline: none;
-     box-shadow: 0 5px 20px rgba(0,0,0,0.05);
-     padding: 12px 20px;
-     border-radius: 5px;
-     caret-color: transparent; 
-     &:focus {
-      outline: 1px solid $mainColor;
+    position: relative;
+    //margin-top: 100px;
+    width: 100%;
+    height: 50px;
+    .arrow-icon {
+        position: absolute;
+        right: 20px;
+        top: 20px;
+        z-index: 10000;
+        font-size: 21px;
     }
-  }
-  .option {
-     position: absolute;
-     top: 57px;
-     width: 100%;
-     background-color: #fff;
-     box-shadow: 0 30px 30px rgba(0,0,0,0.3);
-     border-radius: 5px;
-     overflow: hidden;
-     z-index: 100000;
-     border: 1px solid $borderColor;
-     //display: none;
-
-     div {
-        padding: 12px 20px;
+    input {
+        margin-top: 6px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
         cursor: pointer;
-        &:hover {
-          background-color: #62baea;
-          color: #fff;
+        background-color: #fff;
+        border: 1px solid $borderColor;
+        outline: none;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+        padding: 12px 20px;
+        border-radius: 5px;
+        caret-color: transparent;
+        &:focus {
+            outline: 1px solid $mainColor;
         }
-        ion-icon {
-          position: relative;
-          top: 4px;
-          font-size: 1.2em;
+    }
+    .option {
+        position: absolute;
+        top: 57px;
+        width: 99.4%;
+        margin-left: 0.3%;
+        background-color: #f1f1f1;
+        box-shadow: 0 10px 10px rgba(79, 79, 79, 0.3);
+        border-radius: 0px 0px 5px 5px;
+        overflow: hidden;
+        z-index: 100000;
+        border: 1px solid $borderColor;
+        border-top: none;
+        //display: none;
+        div {
+            padding: 12px 20px;
+            cursor: pointer;
+            &:hover {
+                background-color: #62baea;
+                color: #fff;
+            }
+            ion-icon {
+                position: relative;
+                top: 4px;
+                font-size: 1.2em;
+            }
         }
-     }
-  }
+    }
+}
+
+.ck-editor__editable_inline {
+    min-height: 200px;
 }

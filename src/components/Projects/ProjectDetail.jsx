@@ -136,7 +136,7 @@ const [selectedBid,setSelectedBid] = useState([])
       return Object.values(temp).every((x) => x == "");
   };
 
-  function callBackFunc(text, label) {
+  async function callBackFunc(text, label) {
       //console.log(text)
       const fd = {...formData, [label]: {...formData[label], value: text}};
       setFormData(fd)
@@ -144,7 +144,7 @@ const [selectedBid,setSelectedBid] = useState([])
       const request = {
         name:fd.name.value,
         year:fd.year.value,     
-        description:fd.description.value ,
+        description:fd.description.value,
         starttime:fd.starttime.value,
         endtime:fd.endtime.value,
         status:fd.status.value,
@@ -152,7 +152,6 @@ const [selectedBid,setSelectedBid] = useState([])
         totalCost:parseInt(fd.totalCost.value.replaceAll(',','')),
         utilizedCost:parseInt(fd.utilizedCost.value.replaceAll(',','')),
         physicalPerformance:fd.physicalPerformance.value,
-        financialPerformance:fd.financialPerformance.value
 
 
       }
@@ -275,7 +274,8 @@ const [selectedBid,setSelectedBid] = useState([])
                   labelText="Start Date"
                   formData={formData}
                   setFormData={setFormData}
-                  label="startDate"
+                  callBackFun={callBackFunc}
+                  label="starttime"
                   type="desktop"
                   //views={['year']}
                   parentStyle={{
@@ -297,7 +297,8 @@ const [selectedBid,setSelectedBid] = useState([])
                   labelText="End Date"
                   formData={formData}
                   setFormData={setFormData}
-                  label="endDate"
+                  callBackFun={callBackFunc}
+                  label="endtime"
                   type="desktop"
                   //views={['year','month']}
                   parentStyle={{

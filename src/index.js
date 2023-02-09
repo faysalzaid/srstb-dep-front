@@ -18,7 +18,7 @@ root.render(
   <SidebarProvider>
     <Suspense fallback={<ThemedSuspense />}>
       <Windmill usePreferences>
-)
+
       <AuthContextProvider>
         <App />
       </AuthContextProvider>
