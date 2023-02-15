@@ -416,9 +416,10 @@ const searchHandler = async(search)=>{
                 <TableCell>Actions</TableCell>
               </tr>
             </TableHeader>
-            <TableBody>
-              {fetchedResult.map((bid, i) => (
-                <TableRow key={i}>
+            {fetchedResult.map((bid, i) => (
+            <TableBody key={i}>
+              
+                <TableRow>
                   <TableCell>
                     <div className="flex items-center text-sm">
                       
@@ -472,8 +473,9 @@ const searchHandler = async(search)=>{
                     </div>
                   </TableCell>
                 </TableRow>
-              ))}
+          
             </TableBody>
+                ))}
           </Table>
           <TableFooter>
             {/* <Pagination

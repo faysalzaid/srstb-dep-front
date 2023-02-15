@@ -50,31 +50,49 @@ const routes = [{
     },
     {
         path: '/app/projects_list',
-        icon: 'ChatIcon',
+        icon: 'TablesIcon',
         name: 'Projects',
     },
-
     {
-        name: 'Office Info',
-        icon: 'PagesIcon',
-        routes: [
-            // submenu
-            {
-                path: '/app/departments',
-                name: 'Departments',
-            },
-            {
-                path: '/app/designations',
-                name: 'Designations',
-            },
-            {
-                path: '/app/employees',
-                icon: 'FormsIcon',
-                name: 'Employees',
-            },
+        path: '/app/departments',
+        name: 'Departments',
+        icon: 'SearchIcon',
 
-        ],
     },
+    {
+        path: '/app/designations',
+        name: 'Designations',
+        icon: 'PagesIcon',
+
+    },
+    {
+        path: '/app/employees',
+        icon: 'MoonIcon',
+        name: 'Employees',
+
+    },
+
+    // {
+    //     name: 'Office Info',
+    //     icon: 'PagesIcon',
+    //     routes: [
+    //         // submenu
+    //         {
+    //             path: '/app/departments',
+    //             name: 'Departments',
+    //         },
+    //         {
+    //             path: '/app/designations',
+    //             name: 'Designations',
+    //         },
+    //         {
+    //             path: '/app/employees',
+    //             icon: 'FormsIcon',
+    //             name: 'Employees',
+    //         },
+
+    //     ],
+    // },
 ]
 
 export default routes

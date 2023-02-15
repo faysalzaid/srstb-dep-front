@@ -5,6 +5,7 @@ import jwt_decode from 'jwt-decode'
 import setCookie from "./setCookie";
 import { url } from "config/urlConfig";
 import { useEffect } from "react";
+import { withRouter } from "react-router-dom";
 
 export const AuthContext = createContext("")
 
@@ -14,7 +15,7 @@ export const AuthContext = createContext("")
 
 
 
-export const AuthContextProvider = (props)=>{
+export const AuthContextProvider = withRouter((props)=>{
 
 
 
@@ -25,14 +26,16 @@ export const AuthContextProvider = (props)=>{
     useEffect(()=>{
         const graphAuth = async ()=>{
             const cookie = getCookie('accessToken')
+            if(!cookie||cookie==undefined){
+                props.history.push('/login')
+                
+            }
             const decodeAccessToken = jwt_decode(cookie)
             let user = {}
             await axios.post(`${url}/login/refreshToken`,{token:decodeAccessToken?.refreshToken},{withCredentials: true}).then((resp)=>{
-                if(resp?.data.error){
-                   setAuthState({
-                        id:"",token:"",username:"",email:"",role:"",status:false,refreshToken:""
-                    })
-                //   props.history.push('/login') 
+                if(resp.data.error){
+                   setAuthState({id:"",token:"",username:"",email:"",role:"",status:false,refreshToken:""})
+                   props.history.push('/login') 
                 }else{
                   const data = resp?.data
                   setCookie('accessToken',data.token)
@@ -52,4 +55,4 @@ export const AuthContextProvider = (props)=>{
             {props.children}
         </AuthContext.Provider>
     )
-}
+})

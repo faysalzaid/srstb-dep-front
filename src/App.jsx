@@ -96,21 +96,7 @@ function App(props) {
 
 
 
-  useEffect(()=>{
-    if(!authState.status){
-      props.history.push('/login')
-    }
-    let isMounted = true
-    if(isMounted){
-      // grapaAuth()
-    }
 
-    return ()=>{
-      isMounted=false
-    }
-
-  
-  },[])
 
 
 
