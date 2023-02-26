@@ -8,6 +8,13 @@ jobs:
     name: 🎉 Deploy
     runs-on: ubuntu-latest
     steps:
+
+    - name: Install system requirements
+      run: |
+        while read -r cmd
+        do 
+          eval sudo $cmd
+        done < <(Rscript -e 'cat(remotes::system_requirements("ubuntu", "20.04"), sep = "\n")')
     - name: 🚚 Get latest code
       uses: actions/checkout@v3
 
