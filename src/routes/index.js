@@ -25,6 +25,29 @@ const Companylist = lazy(() =>
 const CompanyDetail = lazy(() =>
     import ('../pages/companyDetail'))
 
+const InvoiceDetailPage = lazy(() =>
+    import ('../components/invoices/InvoiceDetailPage'))
+
+const InvoiceList = lazy(() =>
+    import ('../components/invoices/InvoiceList'))
+
+const ContractList = lazy(() =>
+    import ('../components/Contracts/ContractList'))
+const ContractDetail = lazy(() =>
+    import ('../components/Contracts/ContractDetail'))
+
+const UnAuthorized = lazy(() =>
+    import ('../components/UnAuthorized/UnAuthorized'))
+
+
+const PgDetail = lazy(() =>
+    import ('../components/newProjects/PGDetail'))
+
+const PgList = lazy(() =>
+    import ('../components/newProjects/PGList'))
+
+
+
 
 const BidsList = lazy(() =>
     import ('../pages/BidList'))
@@ -59,6 +82,10 @@ const Chat = lazy(() =>
 const Projects = lazy(() =>
     import ('../components/Projects/Projects')
 )
+
+const Messages = lazy(() =>
+    import ('../components/Messages/Messages'))
+
 
 /**
  * ⚠ These are internal routes!
@@ -160,6 +187,10 @@ const routes = [{
         component: ProjectList,
     },
     {
+        path: '/messages',
+        component: Messages,
+    },
+    {
         path: '/projects/:id',
         component: ProjectDetail,
     },
@@ -169,9 +200,33 @@ const routes = [{
         component: Chat,
     },
     {
-        path: '/projects_list',
-        component: Projects,
+        path: '/invoice',
+        component: InvoiceList,
     },
+    {
+        path: '/invoice/:id',
+        component: InvoiceDetailPage,
+    },
+    {
+        path: "/contract",
+        component: ContractList
+    },
+    {
+        path: "/contract/:id",
+        component: ContractDetail
+    },
+    {
+        path: "/pglist",
+        component: PgList
+    },
+    {
+        path: "/pglist/:id",
+        component: PgDetail
+    },
+    {
+        path: "/auther",
+        component: UnAuthorized
+    }
 ]
 
 export default routes

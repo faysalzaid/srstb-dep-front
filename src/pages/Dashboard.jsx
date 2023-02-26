@@ -11,6 +11,7 @@ import PageTitle from '../components/Typography/PageTitle'
 import { ChatIcon, CartIcon, MoneyIcon, PeopleIcon } from '../icons'
 import RoundIcon from '../components/RoundIcon'
 import response from '../utils/demo/tableData'
+import UnAuthorized from 'components/UnAuthorized/UnAuthorized'
 
 import {
   TableBody,
@@ -36,13 +37,13 @@ import { url } from 'config/urlConfig'
 import axios from 'axios'
 
 function Dashboard(props) {
-  const [authState] = useContext(AuthContext)
+  const {authState} = useContext(AuthContext)
 
   const [page, setPage] = useState(1)
   const [data, setData] = useState([])
   const [projects,setProject] = useState([])
   const [countsData,setCountsData] = useState({ projectCount:"",bidCount:"",activeProjects:"",completedProjects:""})
-
+  const [authorization,setAuthorization] = useState(false)
 
 
 
@@ -54,7 +55,9 @@ function Dashboard(props) {
       }
     setProject(resp.data.projects)
 
-    },[])
+    }).catch((err)=>{
+      setAuthorization(true)
+    })
 
 
 },[])
@@ -111,7 +114,7 @@ const projectPercentileGraph = {
 
   return (
     <>
-
+        {authorization?<UnAuthorized/>:<>
       <PageTitle>Dashboard welcome  {authState.username}</PageTitle>
 
       {/* <CTA /> */}
@@ -175,6 +178,7 @@ const projectPercentileGraph = {
           <ChartLegend legends={projects}/>
         </ChartCard>
       </div>
+      </>}
     </>
   )
 }

@@ -34,7 +34,7 @@ const queryClient = new QueryClient({defaultOptions:{
 
 
 function App(props) {
-  let [authState,setAuthState] = useContext(AuthContext)
+  let {authState,setAuthState} = useContext(AuthContext)
   let cookie = getCookie('accessToken')
 
 
@@ -94,7 +94,12 @@ function App(props) {
 
   }
 
+useEffect(()=>{
+  if(!cookie||cookie==="undefined"){
+    props.history.push('/login')
+  }
 
+},[])
 
 
 
@@ -104,7 +109,7 @@ function App(props) {
     <>
 
 <QueryClientProvider client={queryClient}>     
-     <AuthContext.Provider value={[authState,setAuthState]}>
+   
      
         <AccessibleNavigationAnnouncer />
         
@@ -123,7 +128,7 @@ function App(props) {
           <Redirect exact from="/" to="/login" />
           
         </Switch>
-        </AuthContext.Provider>
+       
         </QueryClientProvider>
       
     </>

@@ -27,8 +27,9 @@ import * as Yup from 'yup'
 import  Alert  from '@windmill/react-ui'
 import response from '../utils/demo/tableData'
 import { AuthContext } from '../hooks/authContext'
-
+import UnAuthorized from 'components/UnAuthorized/UnAuthorized'
 import { useContext } from 'react'
+import { url } from 'config/urlConfig'
 
 // make a copy of the data, for the second table
 const response2 = response.concat([])
@@ -63,6 +64,8 @@ function CompanyList(props) {
     const [searchResult,setSearchResult] = useState([])
     const [searchTerm,setSearchTerm] = useState("")
     const [fetchedResult,setFetchedResult] = useState([])
+    const [authorization,setAuthorization] = useState(false)
+
     //ENDOF COMPANY DATA
   // setup pages control for every table
   // const [pageTable1, setPageTable1] = useState(1)
@@ -101,7 +104,9 @@ function CompanyList(props) {
 
 
   const {isLoading,data} = useQuery(['company-data'],()=>{
-    return axios.get('http://localhost:4000/companies').then((resp)=>resp.data)
+    return axios.get(`${url}/companies`).then((resp)=>{
+      return resp.data
+  })
   })
 
   let query = [];
@@ -142,7 +147,7 @@ function CompanyList(props) {
       setErrorMessage('Please Provide all data')
     }else{
      
-      const response = await axios.post('http://localhost:4000/companies',companyFormData).then((resp)=>{
+      const response = await axios.post(`${url}/companies`,companyFormData).then((resp)=>{
         if(resp.data.error){
           setErrorMessage(resp.data.error)
         }else{
@@ -163,7 +168,7 @@ const deleteCompany =async(ids)=>{
   const newData =query.filter((c)=>c.id===ids)
   // console.log('new data ',newData[0]);
   // console.log(query.indexOf(newData[0]));
-  const response = await axios.get(`http://localhost:4000/companies/delete/${ids}`).then((resp)=>{
+  const response = await axios.get(`${url}/companies/delete/${ids}`).then((resp)=>{
     
     if(resp.data.error){
       setErrorMessage(resp.data.error)
@@ -193,6 +198,7 @@ const deleteCompany =async(ids)=>{
 
   return (
     <>
+    {authorization?<UnAuthorized/>:<>
       <PageTitle>List of Companies Registered</PageTitle>
       {/* Delete MOdal section  */}
       {showModal.show ? (
@@ -377,6 +383,7 @@ const deleteCompany =async(ids)=>{
           /> */}
         </TableFooter>
       </TableContainer>
+      </>}
     </>
   )
 }

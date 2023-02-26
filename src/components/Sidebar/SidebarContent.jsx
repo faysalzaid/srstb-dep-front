@@ -1,23 +1,50 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import routes from '../../routes/sidebar'
 import { NavLink, Route } from 'react-router-dom'
 import * as Icons from '../../icons'
 import SidebarSubmenu from './SidebarSubmenu'
 import { Button } from '@windmill/react-ui'
+import useAuth from 'hooks/useAuth'
+import { useState } from 'react'
 
 function Icon({ icon, ...props }) {
   const Icon = Icons[icon]
   return <Icon {...props} />
 }
 
+
+
 function SidebarContent() {
+  const {authState} = useAuth()
+  const [newRoleRoutes,setNewRoleRoutes] = useState([])
+  useEffect(()=>{
+    const newRoute = routes
+    if(authState.role=='admin'){  
+      setNewRoleRoutes(routes)
+      
+    }else if(authState.role=='planning'){
+      const n = newRoute.filter((r)=>r.roles.find((r)=>r==='admin'))  
+      setNewRoleRoutes(n)
+    }
+    else if(authState.role=='finance'){
+      const n = newRoute.filter((r)=>r.roles.find((r)=>r==='finance'))  
+      setNewRoleRoutes(n)
+    }
+    else if(authState.role=='engineer'){
+      const n = newRoute.filter((r)=>r.roles.find((r)=>r==='engineer'))  
+      setNewRoleRoutes(n)
+    }
+    // newRoute.filter((r)=>r.roles.find((r)=>r==='admin'))
+    // console.log(newRoute.filter((r)=>r.roles.find((r)=>r==='admin'))); 
+  },[authState.role])
+
   return (
     <div className="py-4 text-gray-500 dark:text-gray-400">
       <a className="ml-6 text-lg font-bold text-gray-800 dark:text-gray-200" href="#">
         Cellu-CRM
       </a>
       <ul className="mt-6">
-        {routes.map((route) =>
+        {newRoleRoutes.map((route) =>
           route.routes ? (
             <SidebarSubmenu route={route} key={route.name} />
           ) : (

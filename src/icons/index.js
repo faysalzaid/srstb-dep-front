@@ -28,6 +28,8 @@ import { ReactComponent as OutlineCogIcon } from './outlineCog.svg'
 import { ReactComponent as OutlineLogoutIcon } from './outlineLogout.svg'
 import { ReactComponent as EyeIcon } from './eye.svg'
 import { ReactComponent as EyeIconOne } from './eye-1.svg'
+import { FaList } from 'react-icons/fa';
+import { FaFileMedicalAlt, FaGripVertical, FaFileContract, FaFileInvoiceDollar } from 'react-icons/fa';
 
 export {
     ButtonsIcon,
@@ -60,4 +62,9 @@ export {
     OutlineLogoutIcon,
     EyeIcon,
     EyeIconOne,
+    FaFileMedicalAlt,
+    FaList,
+    FaFileContract,
+    FaGripVertical,
+    FaFileInvoiceDollar
 }

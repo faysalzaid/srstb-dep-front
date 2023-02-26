@@ -5,41 +5,76 @@
  * If you're looking to actual Router routes, go to
  * `routes/index.js`
  */
-const routes = [{
+
+
+// import { useAuth } from '../hooks/useAuth'
+
+
+// let secret;
+
+
+
+
+// // const { authState } = useAuth(
+// const useCheckPermission = () => {
+//     const { authState } = useAuth()
+//     if (authState.role === "admin") {
+//         return secret = "admin"
+//     } else if (authState.role === "planning") {
+//         return secret = "planning"
+//     } else if (authState.role === "finance") {
+//         return secret = "finance"
+//     } else if (authState.role === "engineer") {
+//         return secret = "engineer"
+//     }
+// }
+
+// useCheckPermission()
+
+let routes;
+
+routes = [{
         path: '/app/dashboard', // the url
         icon: 'HomeIcon', // the component being exported from icons/index.js
         name: 'Dashboard', // name that appear in Sidebar
+        roles: ['admin', 'finance', 'planning', 'engineer']
     },
     {
         path: '/app/companies',
         icon: 'SunIcon',
         name: 'Companies',
+        roles: ['admin', 'finance', 'planning']
     },
     // {
     //     path: '/app/clients',
     //     icon: 'FormsIcon',
     //     name: 'Clients',
+
     // },
     {
         path: '/app/bids',
         icon: 'FormsIcon',
         name: 'Bids',
+        roles: ['admin', 'finance']
     },
 
     // {
     //     path: '/app/projects',
     //     icon: 'FormsIcon',
     //     name: 'Projects',
+
     // },
     {
         path: '/app/users',
         icon: 'PeopleIcon',
         name: 'Users',
+        roles: ['admin', 'finance']
     },
     {
         path: '/app/charts',
         icon: 'ChartsIcon',
         name: 'Charts',
+        roles: ['admin', 'finance', 'planning', 'engineer']
     },
 
 
@@ -47,29 +82,49 @@ const routes = [{
         path: '/app/chat',
         icon: 'ChatIcon',
         name: 'Chat',
+        roles: ['admin', 'finance', 'planning', 'engineer']
     },
     {
-        path: '/app/projects_list',
+        path: '/app/pglist',
         icon: 'TablesIcon',
         name: 'Projects',
+        roles: ['admin', 'finance', 'planning', 'engineer']
+    },
+    {
+        path: '/app/messages',
+        icon: 'CardsIcon',
+        name: 'Letter Requests',
+        roles: ['admin', 'finance', 'planning']
     },
     {
         path: '/app/departments',
         name: 'Departments',
         icon: 'SearchIcon',
-
+        roles: ['admin', 'finance']
     },
     {
         path: '/app/designations',
         name: 'Designations',
         icon: 'PagesIcon',
-
+        roles: ['admin', 'finance']
     },
     {
         path: '/app/employees',
         icon: 'MoonIcon',
         name: 'Employees',
-
+        roles: ['admin', 'finance']
+    },
+    {
+        path: '/app/invoice',
+        icon: 'FaFileInvoiceDollar',
+        name: 'Invoices',
+        roles: ['admin', 'finance']
+    },
+    {
+        path: '/app/contract',
+        icon: 'FaFileContract',
+        name: 'Contracts',
+        roles: ['admin', 'finance', 'planning']
     },
 
     // {

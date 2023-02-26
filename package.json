@@ -20,6 +20,8 @@
         "@ckeditor/ckeditor5-react": "^5.0.6",
         "@emotion/react": "^11.10.5",
         "@emotion/styled": "^11.10.5",
+        "@headlessui/react": "^1.7.11",
+        "@heroicons/react": "^1.0.6",
         "@mui/material": "^5.11.2",
         "@mui/x-date-pickers": "^5.0.15",
         "@tanstack/react-query": "^4.20.4",

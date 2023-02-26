@@ -16,7 +16,7 @@ function Login(props) {
 
   const [frontErrorMessage,setFrontErrorMessage] = useState("")
   const [successMessage,setSuccessMessage] = useState("")
-  const [authState,setAuthState] = useContext(AuthContext)
+  const {authState,setAuthState} = useContext(AuthContext)
 
 
   // console.log(authState)
@@ -36,7 +36,7 @@ function Login(props) {
     password:Yup.string().min(3).max(25).required()
 })
 
-const JwtAxios = new axios.create()
+
 const onSubmit = async(data)=>{
   try {
     await axios.post(`${url}/login`,data).then((response)=>{

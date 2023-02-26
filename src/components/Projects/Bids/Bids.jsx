@@ -172,24 +172,24 @@ let bidsData = Bid.Bids
                             <td className='td-year'>    
                                 <div className='crud-title'>
                                 <p 
-                                    style={{paddingLeft: 10, textShadow: "0.3px 0.3px purple"}}
-                                    className="dark:text-gray-100 font-bold text-orange-400">{bid.fullname}
+                                    style={{paddingLeft: 10, color:"#4a5a74",}}
+                                    className="dark:text-gray-100 font-bold text-orange-400">{bid.name}
                                 </p>
                                 </div>
                             </td>
                             <td className='td-allocated'>    
                             <div className='crud-title flex items-center'>
-                                <IoMdCall fontSize={15} color="green"/>
+                                <IoMdCall fontSize={15} color="#4a5a74"/>
                                 <p 
-                                    style={{paddingLeft: 5}}
-                                    className="dark:text-gray-100 text-purple-500">{bid.phone}
+                                    style={{paddingLeft: 5, color:"#4a5a74"}}
+                                    className="dark:text-gray-100 text-purple-500" >{bid.phone}
                                 </p>
                                 </div>
                             </td>
                             <td className='td-utilized'>    
                                 <div className='crud-title'>
                                     <p 
-                                        style={{paddingLeft: 10}}
+                                        style={{paddingLeft: 10, color:"#4a5a74"}}
                                         className="dark:text-gray-100 text-pink-500">{parseFloat(bid.amount).toLocaleString()+" ETB"}
                                     </p>
                                 </div>
@@ -197,7 +197,7 @@ let bidsData = Bid.Bids
                             <td className='td-remaining'>
                             <div className='crud-title'>
                                 <p 
-                                    style={{paddingLeft: 10}}
+                                    style={{paddingLeft: 10, color:"#4a5a74"}}
                                     className="dark:text-gray-100">{stts}
                                 </p>
                                 </div>
@@ -208,7 +208,7 @@ let bidsData = Bid.Bids
                                     handleClickOpen(bid.id);
                                   }}
                                 >
-                                   <TbListSearch className='text-blue-400 dark:text-gray-100'/>
+                                   <TbListSearch className='text-blue-400 dark:text-gray-100' color="#4a5a74"/>
                                 </IconButton>
                             </td>
                            

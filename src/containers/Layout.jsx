@@ -8,6 +8,7 @@ import Main from './Main'
 import ThemedSuspense from '../components/ThemedSuspense'
 import { SidebarContext } from '../context/SidebarContext'
 import { AuthContext } from '../hooks/authContext'
+import useAuth from 'hooks/useAuth'
 
 const Page404 = lazy(() =>
     import ('../pages/404'))
@@ -15,12 +16,14 @@ const Page404 = lazy(() =>
 function Layout() {
     const { isSidebarOpen, closeSidebar } = useContext(SidebarContext)
     let location = useLocation()
+    const {authState}=useAuth()
+   
         // const [authState] = useContext(AuthContext)
     useEffect(() => {
         closeSidebar()
     }, [location])
 
-    return ( <div className = { `flex h-screen bg-gray-50 dark:bg-gray-900 ${isSidebarOpen && 'overflow-hidden'}` } >
+    return ( <div className = { `flex h-screen bg-white-50 dark:bg-gray-900 ${isSidebarOpen && 'overflow-hidden'}` } >
         <Sidebar / >
 
         <div className = "flex flex-col flex-1 w-full" >

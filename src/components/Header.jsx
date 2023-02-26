@@ -29,7 +29,7 @@ import { AuthContext } from "../hooks/authContext";
 import { useHistory, withRouter } from "react-router-dom";
 
 function Header(props) {
-  const [authState, setAuthState] = useContext(AuthContext);
+  const {authState, setAuthState} = useContext(AuthContext);
   // let history = useHistory()
   const { mode, toggleMode } = useContext(WindmillContext);
   const { toggleSidebar } = useContext(SidebarContext);

@@ -26,7 +26,11 @@ import { useContext } from 'react'
 import { AuthContext } from '../hooks/authContext'
 
 // make a copy of the data, for the second table
-const response2 = response.concat([])
+
+
+
+
+
 
 function CompanyDetail(props) {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -90,7 +94,7 @@ function CompanyDetail(props) {
   // useEffect(() => {
   //   setDataTable2(response2.slice((pageTable2 - 1) * resultsPerPage, pageTable2 * resultsPerPage))
   // }, [pageTable2])
-  const [authState] = useContext(AuthContext)
+
 
 
 
@@ -113,7 +117,6 @@ function CompanyDetail(props) {
     if(companyFormData.name==="" || companyFormData.location===""){
       setErrorMessage('Please Provide all data')
     }else{
-      console.log('This is from formdata',companyFormData);
       const response = await axios.post(`http://localhost:4000/companies/${id}`,companyFormData).then((resp)=>{
         if(resp.data.error){
           setErrorMessage(resp.data.error)

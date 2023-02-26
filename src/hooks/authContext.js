@@ -4,7 +4,7 @@ import getCookie from "./getCookie";
 import jwt_decode from 'jwt-decode'
 import setCookie from "./setCookie";
 import { url } from "config/urlConfig";
-import { useEffect } from "react";
+import { useEffect } from "react";  
 import { withRouter } from "react-router-dom";
 
 export const AuthContext = createContext("")
@@ -28,7 +28,7 @@ export const AuthContextProvider = withRouter((props)=>{
             const cookie = getCookie('accessToken')
             if(!cookie||cookie==undefined){
                 props.history.push('/login')
-                
+                console.log('runned');
             }
             const decodeAccessToken = jwt_decode(cookie)
             let user = {}
@@ -51,7 +51,7 @@ export const AuthContextProvider = withRouter((props)=>{
     // console.log('authcalled');
 
     return (
-        <AuthContext.Provider value={[authState,setAuthState]}>
+        <AuthContext.Provider value={{authState,setAuthState}}>
             {props.children}
         </AuthContext.Provider>
     )

@@ -44,7 +44,7 @@ function DesignationList(props) {
     const [departmentData,setDepartmentData] = useState([])
     
 
-    const [authState] = useContext(AuthContext)
+    const {authState} = useContext(AuthContext)
 
     
 

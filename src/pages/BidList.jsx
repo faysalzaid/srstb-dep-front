@@ -26,6 +26,8 @@ import InfoCard from '../components/Cards/InfoCard'
 import RoundIcon from '../components/RoundIcon'
 import { AuthContext } from '../hooks/authContext'
 import { url,bidUrl } from 'config/urlConfig'
+import UnAuthorized from 'components/UnAuthorized/UnAuthorized'
+
 function BidList(props) {
     const [isModalOpen, setIsModalOpen] = useState(false)
 
@@ -41,7 +43,7 @@ function BidList(props) {
     const [bidsData,setBidData] = useState([])
     const [errorMessage,setErrorMessage] = useState('')
     const [bidFormData,setBidFormData] = useState({fullname:"",phone:"",license:"",status:"",performa:"",proposal:"",companydoc:"",amount:"",bidUserPic:"",ProjectId:"",UserId:""})
-    const [frontErrorMessage,setFrontErrorMessage] = useState("")
+    const [authorization,setAuthorization] = useState(false)
     const [successMessage,setSuccessMessage] = useState("")
     const [projects,setProjects] = useState([])
     const [bidCount,setBidCount] = useState(0)
@@ -50,14 +52,14 @@ function BidList(props) {
     const [fetchedResult,setFetchedResult] = useState([])
     const [ users,setUsers] = useState([])
     const [showModal, setShowModal] = useState({show:false,id:""});
-    const [authState] = useContext(AuthContext)
+    const {authState} = useContext(AuthContext)
     let [approved,setApproved] = useState(0) ;
     let [processing,setProcessing] = useState(0);
     let [rejected,setRejected] = useState(0);
     
     useEffect(()=>{
-        const bidsFetch = async()=>{
-            const response = await axios.get('http://localhost:4000/bids',{withCredentials:true}).then((resp)=>{
+
+             axios.get(`${url}/bids`,{withCredentials:true}).then((resp)=>{
               if(resp.data.error) setErrorMessage(resp.data.error);
               setBidData(resp.data.bid)
               setBidCount(resp.data.count)
@@ -67,10 +69,12 @@ function BidList(props) {
               // console.log(resp.data.processing);
               
             }).catch((err)=>{
-              console.log(err);
+              if(err.response.status===403 || err.response.status===401){
+                setAuthorization(true)
+              }
             })
             // console.log(response.data);
-        }
+        
         axios.get(`${url}/users`,{withCredentials:true}).then((resp)=>{
           if(resp.data.error){
             console.log(resp.data.error);
@@ -87,7 +91,7 @@ function BidList(props) {
             // console.log(resp.data.projects);
           
         })
-        bidsFetch()
+ 
       },[])
       
 
@@ -134,7 +138,6 @@ function BidList(props) {
          }, 2000)
         }
       }).catch((err)=>{
-        console.log(err);
       })
     }
 
@@ -156,6 +159,8 @@ const deleteBid =async(ids)=>{
 
       // props.history.push('/app/companies')
     }
+  }).catch((err)=>{
+
   })
 }
 
@@ -179,8 +184,11 @@ const searchHandler = async(search)=>{
 
     return ( 
         <>
+         {authorization?<UnAuthorized />:
+         <>
          <link rel="stylesheet" href="https://unpkg.com/flowbite@1.4.4/dist/flowbite.min.css" />
         <PageTitle>List of Bids Registered</PageTitle>
+       
           {/* Delete MOdal section  */}
       {showModal.show ? (
         <>
@@ -268,7 +276,7 @@ const searchHandler = async(search)=>{
           <span>Project Name</span>
           <Select className="mt-1" name="ProjectId" value={bidFormData.ProjectId} onChange={(e)=>setBidFormData({...bidFormData,ProjectId:e.target.value})}>
           <option>Select</option>
-          {projects.map((pr)=>{return  <option>{pr.name}</option>})}
+          {projects.map((pr)=>{return  <option value={pr.id}>{pr.name}</option>})}
            
             
           </Select>
@@ -486,8 +494,12 @@ const searchHandler = async(search)=>{
             /> */}
           </TableFooter>
         </TableContainer>
+        </>
+         }
       </>
+      
      );
+     
 }
 
 export default BidList;

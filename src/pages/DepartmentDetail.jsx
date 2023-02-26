@@ -44,7 +44,7 @@ function DepartmentDetail(props) {
     const {id} = useParams()
     
 
-    const [authState] = useContext(AuthContext)
+    const {authState} = useContext(AuthContext)
 
     
 

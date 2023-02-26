@@ -48,7 +48,7 @@ function BidDetail(props) {
     const [projects,setProjects] = useState([])
     const [ users,setUsers] = useState([])
     const [showModal, setShowModal] = useState({show:false,id:""});
-    const [authState] = useContext(AuthContext)
+    const {authState} = useContext(AuthContext)
 
     
 
@@ -57,11 +57,12 @@ function BidDetail(props) {
 
     useEffect(()=>{
         const bidsFetch = async()=>{
-            const response = await axios.get(`${url}/bids/${id}`,{withCredentials:true}).then((resp)=>{
+            await axios.get(`${url}/bids/${id}`,{withCredentials:true}).then((resp)=>{
               if(resp.data.error) setErrorMessage(resp.data.error);
               // console.log('from the main response',resp.data);
+
               setBidData(resp.data)
-              setBidFormData(resp.data)
+              setBidFormData({fullname:resp.data.fullname,phone:resp.data.phone,license:resp.data.license,status:resp.data.status,performa:resp.data.performa,proposal:resp.data.proposal,companydoc:resp.data.companydoc,amount:resp.data.amount,bidUserPic:resp.data.bidUserPic,ProjectId:resp.data.ProjectId,UserId:resp.data.UserId})
             //   console.log('from bidformdata',bidFormData);
               
             }).catch((err)=>{
@@ -88,7 +89,6 @@ function BidDetail(props) {
 
 
         bidsFetch()
-        console.count('useEffect runned');  
       },[])
       
 
@@ -96,7 +96,7 @@ function BidDetail(props) {
   const editBid =async(e)=>{
     e.preventDefault()
     
-    if(bidFormData.fullname==="" || bidFormData.phone===""||bidFormData.license===""||bidFormData.status===""||bidFormData.performa===""||bidFormData.proposal===""||bidFormData.companydoc===""||bidFormData.amount==="",bidFormData.bidUserPic==="",bidFormData.ProjectId===""||bidFormData.UserId===""){
+    if(bidFormData.fullname==="" || bidFormData.phone===""||bidFormData.license===""||bidFormData.status===""||bidFormData.performa===""||bidFormData.proposal===""||bidFormData.companydoc===""||bidFormData.amount===""||bidFormData.bidUserPic===""||bidFormData.ProjectId===""||bidFormData.UserId===""){
       setErrorMessage('Please Provide all data')
     }else{
 
@@ -104,19 +104,19 @@ function BidDetail(props) {
       const UsrId = bidFormData.UserId
       let newPrId;
       let newUsrId;
-      if(PrId!=bidsData.ProjectId){
-        const projectNameToId = await axios.get(`${url}/projects/name/${PrId}`)
-        newPrId = projectNameToId.data.id
-      } else{
-        newPrId = bidFormData.ProjectId
-      }
-      if(UsrId!=bidsData.UserId){
-        const userNameToId = await axios.get(`${url}/users/name/${UsrId}`,{withCredentials:true})
-        newUsrId = userNameToId.data.id
-        console.log('the new id is ',newUsrId);
-      }else{
-        newUsrId = bidFormData.UserId
-      }
+      // if(PrId!=bidsData.ProjectId){
+      //   const projectNameToId = await axios.get(`${url}/projects/name/${PrId}`)
+      //   newPrId = projectNameToId.data.id
+      // } else{
+      //   newPrId = bidFormData.ProjectId
+      // }
+      // if(UsrId!=bidsData.UserId){
+      //   const userNameToId = await axios.get(`${url}/users/name/${UsrId}`,{withCredentials:true})
+      //   newUsrId = userNameToId.data.id
+      //   console.log('the new id is ',newUsrId);
+      // }else{
+      //   newUsrId = bidFormData.UserId
+      // }
       const formData = new FormData()
       formData.append('fullname',bidFormData.fullname)
       formData.append('phone',bidFormData.phone)
@@ -127,9 +127,10 @@ function BidDetail(props) {
       formData.append('companydoc',bidFormData.companydoc)
       formData.append('amount',bidFormData.amount)
       formData.append('bidUserPic',bidFormData.bidUserPic)
-      formData.append('ProjectId',newPrId)
-      formData.append('UserId',newUsrId)
+      formData.append('ProjectId',bidFormData.ProjectId)
+      formData.append('UserId',bidFormData.UserId)
       console.log(formData);
+
        const response = await axios.post(`http://localhost:4000/bids/${id}`,formData,{withCredentials:true}).then((resp)=>{
         console.log('From resp.data',resp.data);
         if(resp.data.error){
@@ -246,21 +247,27 @@ function BidDetail(props) {
             <span>Fullname</span>
               <Input type="text" className="mt-1" name="fullname" placeholder="Full Name" value={bidFormData.fullname} autoComplete='off' onChange={(e)=>setBidFormData({...bidFormData,fullname:e.target.value})}/>
           </Label>
-          <Label className="mt-4">
-          <span>Project Name</span>
-          <Select className="mt-1" name="ProjectId" value={bidFormData.ProjectId} onChange={(e)=>setBidFormData({...bidFormData,ProjectId:e.target.value})}>
-          <option>{projects.map((pr)=>pr.id==bidsData.ProjectId?pr.name:"")}</option>
-          {projects.map((pr)=>{return  <option>{pr.name}</option>})}
-            
-          </Select>
-        </Label>
+
+        <Label>
+            <span>Project</span>
+            <Select
+              className="mt-1"
+              name="ProjectId"
+              value={bidFormData.ProjectId}
+              onChange={(e)=>setBidFormData({...bidFormData,ProjectId:e.target.value})}
+              required
+            >
+              <option value="" disabled>Select a Project</option>
+              {projects.map((ctr,i)=>(
+                <option key={i} value={ctr.id}>{ctr.name}</option>
+              ))}
+              
+            </Select>
+          </Label>
         <Label className="mt-4">
           <span>User</span>
-          <Select className="mt-1" name="UserId" value={bidFormData.UserId} onChange={(e)=>setBidFormData({...bidFormData,UserId:e.target.value})}>
-          <option>{users.map((usr)=>usr.id==bidsData.UserId?usr.name:"")}</option>
-          {users.map((usr)=>{return  <option>{usr.name}</option>})}
-           
-            
+          <Select className="mt-1" name="UserId" value={bidFormData.UserId}  onChange={(e)=>setBidFormData({...bidFormData,UserId:e.target.value})}>
+          {users.map((usr,i)=>( <option key={i} value={usr.id}>{usr.name}</option>))}
           </Select>
         </Label>
          
