@@ -1,7 +1,7 @@
 on: 
   push:
     branches:
-      - "master"
+      - master
 name: 🚀 Deploy website on push
 jobs:
   web-deploy:
@@ -17,7 +17,7 @@ jobs:
         node-version: '18'
       
     - name: 🔨 Build Project
-      # working-directory: /home/runner/work/cellu-pr-front/cellu-pr-front/package.json
+      working-directory: /home/runner/work/cellu-pr-front/cellu-pr-front/package.json
       run: |
         npm install --legacy-peer-deps
         npm run build
