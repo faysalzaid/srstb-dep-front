@@ -17,10 +17,11 @@ jobs:
         node-version: '18'
       
     - name: 🔨 Build Project
+      working-directory: ./cellu-pr-front
       run: |
         npm install --legacy-peer-deps
         npm run build
-      working-directory: ./
+      
     
     - name: 📂 Sync files
       uses: SamKirkland/FTP-Deploy-Action@4.3.3
