@@ -1,8 +1,8 @@
 import "./inputs.scss";
 import {useState, useRef, useEffect} from 'react';
 import {MdOutlineKeyboardArrowDown, MdOutlineKeyboardArrowUp} from 'react-icons/md';
-import  ClassicEditor  from "@ckeditor/ckeditor5-build-classic";
-import {CKEditor} from "@ckeditor/ckeditor5-react";
+
+
 import parse from 'html-react-parser'
 
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -228,170 +228,11 @@ export const Dropdown = ({formData, setFormData, label, labelText, options, sele
     );
 }
 
-export const RichTextInput = () => {
-    const [text, setText] = useState('');
-    const apiUrl = "http://localhost:4000"
-    const uploadEndPoint = 'api/upload_rich_text'
-    const isDark = false;
-    
-    function uploadAdapter(loader) {
-        return {
-            upload: ()=>{
-                return new Promise((resolve, reject) => {
-                    const body = new FormData();
-                    loader.file.then((file)=>{
-                        body.append("file", file);
-                        fetch(`${apiUrl}/${uploadEndPoint}`, {
-                            method: "post",
-                            body: body
-                        }).then((res=>res.json()))
-                        .then((res) => {
-                            resolve({default: `${apiUrl}/${res.url}`})
-                        })
-                        .catch((err)=>{
-                            reject(err)
-                        })
-                    })
-                })
-            }
-            
-        }
-    }
-    
-    function uploadPlugin(editor) {
-        editor.plugins.get("FileRepository").createUploadAdapter = (loader) => {
-            return uploadAdapter(loader)
-        } 
-    }
-    
-    const onSave = (text) => {
-        let images = []
-        Array.from( new DOMParser().parseFromString( text, 'text/html' )
-        .querySelectorAll( 'img' ) )
-        .map( (img) => {
-            const imgUrl = img.getAttribute( 'src' )
-            if(imgUrl) {
-                images.push(imgUrl)
-            }
-        })
-        console.log(images.length,' ',images.join(', '))
-    }
-    return (
-        <div className={`w-full border border-gray-400 rounded p-4 bg-${isDark ? 'gray-900' : 'white'} text-${isDark ? 'white' : 'gray-900'}`}>
-            <div className="editor">
-                <CKEditor
-                  config={{
-                      extraPlugins: [uploadPlugin],
-                      mediaEmbed: {previewsInData: true},
-                    }}
-                    
-                    editor={ClassicEditor}
-                    data={text}
-                    onChange={(event, editor)=>{
-                        const data = editor.getData()
-                        setText((prev)=>data)
-                    }}
-                    
-                    />
-            </div>
-            <div className="text-black">
-                {/* {parse(DOMPurify.sanitize(text, { ADD_TAGS: ["iframe, ul, li"], ADD_ATTR: ['allow', 'allowfullscreen', 'frameborder', 'scrolling'] }))} */}
-                {/* {parse(text)} */}
-            </div>
-        </div>
-    )
-}
 
 
-export const RichTextLight = ({formData, setFormData, label, labelText, isDark=false}) => {
-    //const [text, setText] = useState('');
-    const apiUrl = "http://localhost:4000"
-    const uploadEndPoint = 'api/upload_rich_text'
+
+   
     
-    function uploadAdapter(loader) {
-        return {
-            upload: ()=>{
-                return new Promise((resolve, reject) => {
-                    const body = new FormData();
-                    loader.file.then((file)=>{
-                        body.append("file", file);
-                        fetch(`${apiUrl}/${uploadEndPoint}`, {
-                            method: "post",
-                            body: body
-                        }).then((res=>res.json()))
-                        .then((res) => {
-                            resolve({default: `${apiUrl}/${res.url}`})
-                        })
-                        .catch((err)=>{
-                            reject(err)
-                        })
-                    })
-                })
-            }
-            
-        }
-    }
-    
-    function uploadPlugin(editor) {
-        editor.plugins.get("FileRepository").createUploadAdapter = (loader) => {
-            return uploadAdapter(loader)
-        } 
-    }
-    
-    const onSave = (text) => {
-        let images = []
-        Array.from( new DOMParser().parseFromString( text, 'text/html' )
-        .querySelectorAll( 'img' ) )
-        .map( (img) => {
-            const imgUrl = img.getAttribute( 'src' )
-            if(imgUrl) {
-                images.push(imgUrl)
-            }
-        })
-        console.log(images.length,' ',images.join(', '))
-    }
-    return (
-        <div className={`w-full border-gray-400 rounded bg-${isDark ? 'gray-800 p-2' : 'white'} text-${isDark ? 'white' : 'gray-900'}`}>
-           <label className="dark:text-gray-200">{labelText?<p style={{marginBottom: 10, paddingTop: 10, fontFamily: 'ubuntu'}} className="text-gray-500 dark:text-gray-100">{labelText}</p> : <div style={{marginBottom: 30}}></div>}</label>
-            <div className="editor">
-                <CKEditor
-                  config={{
-                      extraPlugins: [uploadPlugin],
-                      mediaEmbed: {previewsInData: true},
-                      toolbar: {
-                        items: [
-                            'heading', '|',
-                            'fontfamily', 'fontsize', '|',
-                            'alignment', '|',
-                            'fontColor', 'fontBackgroundColor', '|',
-                            'bold', 'italic', 'strikethrough', 'underline', 'subscript', 'superscript', '|',
-                            'link', '|',
-                            'outdent', 'indent', '|',
-                            'bulletedList', 'numberedList', 'todoList', '|',
-                            'codeBlock', '|',
-                            'insertTable', 'blockQuote',
-                            'undo', 'redo'
-                        ],
-                        shouldNotGroupWhenFull: true
-                    }                    
-                  }}
-                    
-                    editor={ClassicEditor}
-                    data={formData[label]?.value}
-                    onChange={(event, editor)=>{
-                        const data = editor.getData()
-                        setFormData({...formData, [label]:{...formData[label], value: data}})
-                    }}
-                    
-                    />
-            </div>
-            <div className="text-black">
-                {/* {parse(DOMPurify.sanitize(text, { ADD_TAGS: ["iframe, ul, li"], ADD_ATTR: ['allow', 'allowfullscreen', 'frameborder', 'scrolling'] }))} */}
-                {/* {parse(text)} */}
-            </div>
-        </div>
-    )
-}
 
 
 

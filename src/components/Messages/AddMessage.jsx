@@ -7,7 +7,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
-import { RichTextLight, TextField, Dropdown } from 'components/Projects/Inputs/Inputs';
+import { TextField, Dropdown } from 'components/Projects/Inputs/Inputs';
 import {A1, A2, A3, A4, A5, A6} from './avatars';
 import { BsPersonPlus } from 'react-icons/bs';
 import { useEffect } from 'react';
@@ -162,13 +162,7 @@ const NewMessageDialog = ({open, handleClose, messages, setMessages,setOpenError
                        marginBottom: 10
                     }}
                 />
-                <RichTextLight
-                    formData={formData}
-                    setFormData={setFormData}
-                    label="message"
-                    labelText="Message"
-                    isDark={false}
-                />
+               
             </div>
           </DialogContentText>
         </DialogContent>

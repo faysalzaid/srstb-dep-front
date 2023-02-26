@@ -16,8 +16,6 @@
         "eject": "react-scripts eject"
     },
     "dependencies": {
-        "@ckeditor/ckeditor5-build-classic": "^36.0.0",
-        "@ckeditor/ckeditor5-react": "^5.0.6",
         "@emotion/react": "^11.10.5",
         "@emotion/styled": "^11.10.5",
         "@headlessui/react": "^1.7.11",
