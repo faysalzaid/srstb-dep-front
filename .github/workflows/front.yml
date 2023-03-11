@@ -31,4 +31,4 @@ jobs:
         server: ftp.amiigotech.com
         username: ${{secrets.ftp_username}}
         password: ${{ secrets.ftp_password }}
-        # local-dir: ./build/
+        local-dir: ./build/
