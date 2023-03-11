@@ -70,10 +70,7 @@ const UsersList = lazy(() =>
     import ('../pages/UsersList'))
 const UsersDetail = lazy(() =>
     import ('../pages/UsersDetail'))
-const ProjectList = lazy(() =>
-    import ('../pages/projectList'))
-const ProjectDetail = lazy(() =>
-    import ('../components/Projects/ProjectDetail'))
+
 
 
 
@@ -100,128 +97,124 @@ const Messages = lazy(() =>
 const routes = [{
         path: '/dashboard', // the url
         component: Dashboard, // view rendered
-    },
-    {
-        path: '/forms',
-        component: Forms,
+        roles: ['admin', 'finance', 'planning', 'engineer']
     },
     {
         path: '/bids',
         component: BidsList,
+        roles: ['admin', 'finance']
     },
 
     {
         path: '/bids/:id',
         component: BidDetail,
+        roles: ['admin', 'finance']
     },
+
     {
         path: '/companies',
-        component: Companylist
+        component: Companylist,
+        roles: ['admin', 'finance', 'planning']
     },
     {
         path: '/companies/:id',
-        component: CompanyDetail
+        component: CompanyDetail,
+        roles: ['admin', 'finance', 'planning']
     },
     {
         path: '/departments/:id',
-        component: DepartmentDetail
-    },
-    {
-        path: '/cards',
-        component: Cards,
+        component: DepartmentDetail,
+        roles: ['admin', 'finance']
     },
 
     {
         path: '/users',
         component: UsersList,
+        roles: ['admin', 'finance']
     },
     {
         path: '/users/:id',
         component: UsersDetail,
+        roles: ['admin', 'finance']
     },
 
     {
         path: '/charts',
         component: Charts,
-    },
-
-    {
-        path: '/modals',
-        component: Modals,
-    },
-    {
-        path: '/tables',
-        component: Tables,
+        roles: ['admin', 'finance', 'planning', 'engineer']
     },
     {
         path: '/designations',
         component: DesignationList,
+        roles: ['admin', 'finance']
     },
     {
         path: '/designations/:id',
         component: DesignationDetail,
+        roles: ['admin', 'finance']
     },
     {
         path: '/departments',
         component: DepartmentList,
+        roles: ['admin', 'finance']
     },
     {
         path: '/employees',
         component: EmployeeList,
+        roles: ['admin', 'finance']
     },
     {
         path: '/employees/:id',
         component: EmployeeDetail,
+        roles: ['admin', 'finance']
     },
 
     {
         path: '/404',
         component: Page404,
     },
-    {
-        path: '/blank',
-        component: Blank,
-    },
-    {
-        path: '/projects',
-        component: ProjectList,
-    },
+
+
     {
         path: '/messages',
         component: Messages,
     },
-    {
-        path: '/projects/:id',
-        component: ProjectDetail,
-    },
+
 
     {
         path: '/chat',
         component: Chat,
+        roles: ['admin', 'finance', 'planning', 'engineer']
     },
     {
         path: '/invoice',
         component: InvoiceList,
+        roles: ['admin', 'finance']
     },
     {
         path: '/invoice/:id',
         component: InvoiceDetailPage,
+        roles: ['admin', 'finance']
     },
     {
         path: "/contract",
-        component: ContractList
+        component: ContractList,
+        roles: ['admin', 'finance', 'planning']
     },
     {
         path: "/contract/:id",
-        component: ContractDetail
+        component: ContractDetail,
+        roles: ['admin', 'finance', 'planning']
     },
     {
         path: "/pglist",
-        component: PgList
+        component: PgList,
+        roles: ['admin', 'finance', 'planning', 'engineer']
     },
     {
         path: "/pglist/:id",
-        component: PgDetail
+        component: PgDetail,
+        roles: ['admin', 'finance', 'planning', 'engineer']
     },
     {
         path: "/auther",

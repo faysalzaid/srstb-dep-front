@@ -1,4 +1,4 @@
-import React, { useContext, Suspense, useEffect, lazy } from 'react'
+import React, { useContext, Suspense, useEffect, lazy, useState } from 'react'
 import { Switch, Route, Redirect, useLocation } from 'react-router-dom'
 import routes from '../routes'
 
@@ -17,13 +17,35 @@ function Layout() {
     const { isSidebarOpen, closeSidebar } = useContext(SidebarContext)
     let location = useLocation()
     const {authState}=useAuth()
-   
+    const [newRoleRoutes,setNewRoleRoutes] = useState([])
+
+
+   useEffect(()=>{
+    const newRoute = routes
+    if(authState.role=='admin'){  
+      setNewRoleRoutes(routes)
+      
+    }else if(authState.role=='planning'){
+      const n = newRoute.filter((r)=>r.roles?.find((r)=>r==='planning'))  
+      setNewRoleRoutes(n)
+    }
+    else if(authState.role=='finance'){
+      const n = newRoute.filter((r)=>r.roles?.find((r)=>r==='finance'))  
+      setNewRoleRoutes(n)
+    }
+    else if(authState.role=='engineer'){
+      const n = newRoute.filter((r)=>r.roles?.find((r)=>r==='engineer'))  
+      setNewRoleRoutes(n)
+    }
+
+
+   },[authState.role])
         // const [authState] = useContext(AuthContext)
     useEffect(() => {
         closeSidebar()
     }, [location])
 
-    return ( <div className = { `flex h-screen bg-white-50 dark:bg-gray-900 ${isSidebarOpen && 'overflow-hidden'}` } >
+    return ( <div className = { `flex h-screen bg-gray-50 dark:bg-gray-900 ${isSidebarOpen && 'overflow-hidden'}` } >
         <Sidebar / >
 
         <div className = "flex flex-col flex-1 w-full" >
@@ -31,7 +53,7 @@ function Layout() {
         <Main >
         <Suspense fallback = { < ThemedSuspense / > } >
         <Switch> {
-            routes.map((route, i) => {
+            newRoleRoutes.map((route, i) => {
                     return route.component ? ( <
                         Route key = { i }
                         exact = { true }

@@ -24,8 +24,11 @@ import * as Yup from 'yup'
 import response from '../utils/demo/tableData'
 import { useContext } from 'react'
 import { AuthContext } from '../hooks/authContext'
+import { url } from 'config/urlConfig'
+import { ErrorAlert, SuccessAlert } from "components/Alert";
 
 // make a copy of the data, for the second table
+
 
 
 
@@ -43,70 +46,79 @@ function CompanyDetail(props) {
     setIsModalOpen(false)
   }
 
-  /**
-   * DISCLAIMER: This code could be badly improved, but for the sake of the example
-   * and readability, all the logic for both table are here.
-   * You would be better served by dividing each table in its own
-   * component, like Table(?) and TableWithActions(?) hiding the
-   * presentation details away from the page view.
-   */
 
-    const {id} = useParams()
+  
+  const {id} = useParams()
+
+
+
+  const [isDeleteOpen,setIsDeleteOpen] = useState({open:false,id:""})
+
+  const closeDelete = ()=>{
+    setIsDeleteOpen(false)
+}
+  const openDelete = (id)=>{
+    setIsDeleteOpen({open:true,id:id})
+}
+
+
+
+
+
+
     
     //COMAPNY DATA STATES
     const [companyData,setCompanyData] = useState([])
-    const [companyFormData,setCompanyFormData] = useState({name:"",location:""})
+    const [companyFormData,setCompanyFormData] = useState({name:"",location:"",UserId:""})
     const [errorMessage,setErrorMessage] = useState('')
     const [frontErrorMessage,setFrontErrorMessage] = useState('')
     const [showModal, setShowModal] = useState({show:false,id:""});
+    const [users,setUsers] = useState([])
 
     //ENDOF COMPANY DATA
-  // setup pages control for every table
-  // const [pageTable1, setPageTable1] = useState(1)
-  // const [pageTable2, setPageTable2] = useState(1)
 
-  // // setup data for every table
-  // const [dataTable1, setDataTable1] = useState([])
-  // const [dataTable2, setDataTable2] = useState([])
+    const [openSuccess, setOpenSuccess] = useState({ open: false, message: "" });
 
-  // // pagination setup
-  // const resultsPerPage = 10
-  // const totalResults = response.length
+    const handleCloseSuccess = (event, reason) => {
+      if (reason === "clickaway") {
+        return;
+      }
+  
+      setOpenSuccess({ open: false, message: "" });
+    };
+  
+    const [openError, setOpenError] = useState({ open: false, message: "" });
+  
+    const handleCloseError = (event, reason) => {
+      if (reason === "clickaway") {
+        return;
+      }
+  
+      setOpenError({ open: false, message: "" });
+    };
 
-  // // pagination change control
-  // function onPageChangeTable1(p) {
-  //   setPageTable1(p)
-  // }
-
-  // // pagination change control
-  // function onPageChangeTable2(p) {
-  //   setPageTable2(p)
-  // }
-
-  // on page change, load new sliced data
-  // here you would make another server request for new data
-  // useEffect(() => {
-  //   setDataTable1(response.slice((pageTable1 - 1) * resultsPerPage, pageTable1 * resultsPerPage))
-  // }, [pageTable1])
-
-  // // on page change, load new sliced data
-  // // here you would make another server request for new data
-  // useEffect(() => {
-  //   setDataTable2(response2.slice((pageTable2 - 1) * resultsPerPage, pageTable2 * resultsPerPage))
-  // }, [pageTable2])
 
 
 
 
   useEffect(()=>{
     const companyFetch = async()=>{
-        const response = await axios.get(`http://localhost:4000/companies/${id}`)
+        const response = await axios.get(`${url}/companies/${id}`)
         if(response.data.error) setFrontErrorMessage(response.data.error)
         setCompanyData(response.data)
-        setCompanyFormData({name:response.data.name,location:response.data.location})
+        setCompanyFormData({name:response.data.name,location:response.data.location,UserId:response.data.UserId})
         // console.log(response.data);
         // console.log('this is from params',id);
     }
+
+    axios.get(`${url}/users`,{withCredentials:true}).then((resp)=>{
+      if(resp.data.error){
+
+      }else{
+        const data = resp.data.filter((usr)=>usr.role=="client")
+        setUsers(data)
+      }
+    })
     companyFetch()
   },[])
 
@@ -115,13 +127,14 @@ function CompanyDetail(props) {
     e.preventDefault()
     // console.log(e.data);
     if(companyFormData.name==="" || companyFormData.location===""){
-      setErrorMessage('Please Provide all data')
+      setErrorMessage('Please Provide all data')  
     }else{
-      const response = await axios.post(`http://localhost:4000/companies/${id}`,companyFormData).then((resp)=>{
+      const response = await axios.post(`${url}/companies/${id}`,companyFormData).then((resp)=>{
         if(resp.data.error){
           setErrorMessage(resp.data.error)
         }else{
           setCompanyData(resp.data)
+          setOpenSuccess({open:true,message:"Successfully Added"})
           closeModal()
         }
       })
@@ -129,12 +142,13 @@ function CompanyDetail(props) {
 
 }
 const deleteCompany =async()=>{
-  const response = await axios.get(`http://localhost:4000/companies/delete/${id}`).then((resp)=>{
+  const response = await axios.get(`${url}/companies/delete/${id}`).then((resp)=>{
     
     if(resp.data.error){
       setErrorMessage(resp.data.error)
     }else{
-      setShowModal({show:false})
+      setOpenSuccess({open:true,message:"Successfully Deleted"})
+      closeDelete()
       props.history.push('/app/companies')
       
     }
@@ -143,60 +157,35 @@ const deleteCompany =async()=>{
   return (
     <>
       <PageTitle>{companyData.name} page</PageTitle>
-        {/* Delete MOdal section  */}
-      {showModal.show ? (
-        <>
-          <div
-            className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
-          >
-            <div className="relative w-auto my-6 mx-auto max-w-3xl">
-              {/*content*/}
-              <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
-                {/*header*/}
-                <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
-                  <h3 className="text-3xl font-semibold">
-                    Delete Confirm
-                  </h3>
-                  <button
-                    className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
-                    onClick={() => setShowModal(false)}
-                  >
-                    <span className="bg-transparent text-black opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none">
-                      ×
-                    </span>
-                  </button>
-                </div>
-                {/*body*/}
-                <div className="relative p-6 flex-auto">
-                  <p className="my-4 text-slate-500 text-lg leading-relaxed">
-                   Are You sure you want to Delete This
-                  </p>
-                </div>
-                {/*footer*/}
-                <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
-                  <button
-                    className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                    type="button"
-                    onClick={() => setShowModal(false)}
-                  >
-                    Close
-                  </button>
-                  <button
-                    className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                    type="button"
-                    onClick={() => deleteCompany()}
-                    style={{backgroundColor:'darkred'}}
-                  >
-                    Continue Deleting
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
-        </>
-      ) : null}
-      {/* End of Delete Modal Section */}
+        {/* Notification Section */}
+        <ErrorAlert
+        open={openError.open}
+        handleClose={handleCloseError}
+        message={openError.message}
+        horizontal="right"
+      />
+      <SuccessAlert
+        open={openSuccess.open}
+        handleClose={handleCloseSuccess}
+        message={openSuccess.message}
+        horizontal="right"
+      />
+
+      {/* Delete Confirm section */}
+      <Modal isOpen={isDeleteOpen.open} onClose={closeDelete}>
+          <ModalHeader>Confirm Action</ModalHeader>
+          <ModalBody>
+            <p>Are you sure you want to perform this action?</p>
+          </ModalBody>
+          <ModalFooter>
+            <button className="px-4 py-2 text-white bg-red-500 rounded-md hover:bg-red-600" onClick={deleteCompany}>
+              Confirm
+            </button>
+          </ModalFooter>
+      </Modal>
+
+        {/* End of delete Section */}
+     
 
       <div>
         <Button onClick={openModal} style={{backgroundColor:'green'}}>Update Data</Button>
@@ -215,7 +204,24 @@ const deleteCompany =async()=>{
           <span>Location</span>
           <Input type="text" className="mt-1" name="location" placeholder="Jijiga"  value={companyFormData.location} onChange={e=>setCompanyFormData({...companyFormData,location:e.target.value})}/>
         </Label>
-        <Button type="submit">Save</Button>
+        <Label>
+            <span>Customer</span>
+            <Select
+              className="mt-1"
+              name="contractType"
+              value={companyFormData.UserId}
+              onChange={(e)=>setCompanyFormData({...companyFormData,UserId:e.target.value})}
+              required
+            >
+              <option value="" >Select a Customer type</option>
+              {users.map((usr,i)=>(
+                <option key={i} value={usr.id}>{usr.name}</option>
+              ))}
+              
+            </Select>
+          </Label>
+
+        <Button className="mt-4" type="submit">Save</Button>
         </form>
             
    
@@ -251,7 +257,7 @@ const deleteCompany =async()=>{
           <TableHeader>
             <tr>
               <TableCell>Company Name</TableCell>
-              {/* <TableCell>Company</TableCell> */}
+              <TableCell>Client</TableCell>
               <TableCell>Location</TableCell>
               <TableCell>Actions</TableCell>
             </tr>
@@ -269,13 +275,16 @@ const deleteCompany =async()=>{
                   </div>
                 </TableCell>
                 <TableCell>
+                  <span className="text-sm">{users.map((usr)=>usr.id===companyData.UserId?usr.name:"")}</span>
+                </TableCell>
+                <TableCell>
                   <span className="text-sm">{companyData.location}</span>
                 </TableCell>
                 
                 <TableCell>
                   <div className="flex items-center space-x-4">
                     
-                    <Button layout="link" size="icon" aria-label="Delete" onClick={()=>setShowModal({show:true,id})}>
+                    <Button layout="link" size="icon" aria-label="Delete" onClick={()=>setIsDeleteOpen(true)}>
                       <TrashIcon style={{color:'red'}} className="w-5 h-5" aria-hidden="true" />
                     </Button>
                   </div>

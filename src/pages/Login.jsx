@@ -11,7 +11,9 @@ import axios from 'axios'
 import {url} from '../config/urlConfig'
 import { useState } from 'react'
 import setCookie from '../hooks/setCookie'
+import getCookie from 'hooks/getCookie'
 import { AuthContext } from '../hooks/authContext'
+
 function Login(props) {
 
   const [frontErrorMessage,setFrontErrorMessage] = useState("")
@@ -21,9 +23,11 @@ function Login(props) {
 
   // console.log(authState)
  
-    if(authState.state==true){
-      props.history.push('/app/dashboard')
+    if(authState.state){
+      props.history.goBack()
     }
+    const cookie = getCookie('accessToken')
+    // const newCookie = JSON.parse(cookie)
 
     // useEffect(()=>{
 
@@ -47,7 +51,19 @@ const onSubmit = async(data)=>{
           }, 2000);
       }else{
         let data = response.data
-          setCookie('accessToken',data.token)
+        const userData ={
+          id:data.id,
+          token: data.token,
+          username:data.username,
+          email: data.email,
+          email:data.email,
+          role:data.role,
+          state:true,
+          refreshToken:data.refreshToken
+          // Add other properties as needed
+        }
+        const stringFied = JSON.stringify(userData?userData:undefined)
+          setCookie('accessToken',stringFied)
           setAuthState({id:data.id,username:data.username,email:data.email,role:data.role,state:true,refreshToken:data.refreshToken})
           setSuccessMessage("Successfully logged in ")
           setTimeout(() => {

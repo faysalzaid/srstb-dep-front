@@ -45,12 +45,7 @@ routes = [{
         name: 'Companies',
         roles: ['admin', 'finance', 'planning']
     },
-    // {
-    //     path: '/app/clients',
-    //     icon: 'FormsIcon',
-    //     name: 'Clients',
 
-    // },
     {
         path: '/app/bids',
         icon: 'FormsIcon',
@@ -58,12 +53,6 @@ routes = [{
         roles: ['admin', 'finance']
     },
 
-    // {
-    //     path: '/app/projects',
-    //     icon: 'FormsIcon',
-    //     name: 'Projects',
-
-    // },
     {
         path: '/app/users',
         icon: 'PeopleIcon',

@@ -23,7 +23,7 @@ function SidebarContent() {
       setNewRoleRoutes(routes)
       
     }else if(authState.role=='planning'){
-      const n = newRoute.filter((r)=>r.roles.find((r)=>r==='admin'))  
+      const n = newRoute.filter((r)=>r.roles.find((r)=>r==='planning'))  
       setNewRoleRoutes(n)
     }
     else if(authState.role=='finance'){
@@ -68,14 +68,14 @@ function SidebarContent() {
           )
         )}
       </ul>
-      <div className="px-6 my-6">
+      {/* <div className="px-6 my-6">
         <Button>
           Create account
           <span className="ml-2" aria-hidden="true">
             +
           </span>
         </Button>
-      </div>
+      </div> */}
     </div>
   )
 }

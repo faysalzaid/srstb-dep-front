@@ -93,6 +93,7 @@ const ContractDetail = (props) => {
             setOpenError({open:true,message:`${resp.data.error}`})
             
           }else{
+            // console.log(resp.data);
             setContracts({ 
               UserId: resp.data.UserId,
               ProjectId:resp.data.ProjectId,
@@ -130,6 +131,7 @@ const ContractDetail = (props) => {
         if(resp.data.error){
           setOpenError({open:true,message:`$${resp.data.error}`})
         }else{
+          
           const filteredClients = resp.data.filter((cl)=>cl.role==="client")
           setUsers(filteredClients)
         }
@@ -568,33 +570,70 @@ const ContractDetail = (props) => {
   
 
   {/* Contract INformation */}
-    <div className="p-4 border rounded-md shadow-md">
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center">
-          <img src={companyLogoUrl} alt="Company Logo" className="w-8 h-8 mr-2" />
-          <h2 className="text-lg text-center font-semibold">{contracts.subject}</h2>
+  <div class="bg-gray-50  flex flex-col justify-center py-12 sm:px-9 lg:px-8">
+  <div class="w-full">
+    <div class="bg-white shadow-md rounded-md overflow-hidden">
+      <div class="px-6 py-8">
+        <div class="flex justify-between items-center">
+          <div class="flex items-center">
+            <img src="https://www.logodesign.net/logo/line-art-house-roof-and-buildings-4485ld.png" alt="Company Logo" class="h-8 w-8 mr-2" />
+            <h2 class="text-lg font-medium text-gray-900">{contracts.subject}</h2>
+          </div>
+          <div class="text-right">
+            <p class="text-sm font-medium text-gray-500">Contract #1234</p>
+            <p class="text-sm font-medium text-gray-500">Signed: {contracts.startDate}</p>
+          </div>
         </div>
-        <button className="ml-0 text-blue-600 hover:text-gray-800">
-          <FaPrint />
-        </button>
+        <div class="mt-6">
+          <h3 class="text-md font-medium text-gray-900">Customer Information</h3>
+          <div class="mt-2">
+            <div class="flex">
+              <p class="text-sm font-medium text-gray-500">Name:</p>
+              <p class="ml-2 text-sm font-medium text-gray-900">{users.map((usr)=>usr.id===contracts.UserId?usr.name:'')}</p>
+            </div>
+            <div class="flex mt-2">
+              <p class="text-sm font-medium text-gray-500">Email:</p>
+              <p class="ml-2 text-sm font-medium text-gray-900">{users.map((usr)=>usr.id===contracts.UserId?usr.email:'')}</p>
+            </div>
+          </div>
+        </div>
+        <div class="mt-6">
+          <h3 class="text-md font-medium text-gray-900">Project Information</h3>
+          <div class="mt-2">
+            <div class="flex">
+              <p class="text-sm font-medium text-gray-500">Project:</p>
+              <p class="ml-2 text-sm font-medium text-gray-900">{projects.map((pr)=>pr.id===contracts.ProjectId?pr.name:'')}</p>
+            </div>
+            <div class="flex mt-2">
+              <p class="text-sm font-medium text-gray-500">Contract Value:</p>
+              <p class="ml-2 text-sm font-medium text-gray-900">ETB {contracts.contractValue.toLocaleString()}</p>
+            </div>
+            <div class="flex mt-2">
+              <p class="text-sm font-medium text-gray-500">Start Date:</p>
+              <p class="ml-2 text-sm font-medium text-gray-900">{contracts.startDate}</p>
+            </div>
+            <div class="flex mt-2">
+              <p class="text-sm font-medium text-gray-500">End Date:</p>
+              <p class="ml-2 text-sm font-medium text-gray-900">{contracts.endDate}</p>
+            </div>
+          </div>
+        </div>
+        <div class="mt-6">
+          <h3 class="text-md font-medium text-gray-900">Contract Status</h3>
+          <div class="mt-2">
+            
+            <div class="flex mt-2">
+              <p class="text-sm font-medium text-gray-500">Status:</p>
+              <p class="ml-2 text-sm font-medium text-gray-900"><span className='text-teal-500 dark:text-teal-100'>{contracts.status}</span></p>
+              </div>
+              </div>
+              </div>
+              </div>
+              </div>
+              </div>
+              </div>
+              
 
-        
-      </div>
-      <div className="flex items-center border-b pb-4 mb-4">
-        <div className="flex-1">
-          <p className="font-bold mb-4">Customer Information</p>
-          <p className="mb-4">Customer: <span className='font-semibold'>{users.map((usr)=>usr.id===contracts.UserId?usr.name:'')}</span></p>
-          <p className="mb-4">Email   : <span className='font-semibold'>{users.map((usr)=>usr.id===contracts.UserId?usr.email:'')}</span></p>
-          <p className="mb-4">Project : <span className='font-semibold'>{projects.map((pr)=>pr.id===contracts.ProjectId?pr.name:'')}</span></p>
-        </div>
-        <div className="flex-2">
-          <p className="font-bold mb-4">Contract Information</p>
-          <p className="mb-4">Contract Value: <span className='font-semibold'>ETB {contracts.contractValue.toLocaleString()}</span></p>
-          <p className="mb-4">Start Date: <span className='font-semibold'>{contracts.startDate}</span></p>
-          <p className="mb-4">End Date: <span className='font-semibold'>{contracts.endDate}</span></p>
-        </div>
-      </div>
-    </div>
 
     {/* Contract information Section */}
 
@@ -605,7 +644,7 @@ const ContractDetail = (props) => {
     
 
 {/* Files LIst section */}
-      <div className="flex flex-col gap-4 mt-4">
+      <div className="ml-6 mr-6 flex flex-col gap-4 mt-4">
       {filesList.map((file, index) => (
       
         <div key={index} className="relative flex justify-between items-center bg-white rounded-md p-4 shadow-md">

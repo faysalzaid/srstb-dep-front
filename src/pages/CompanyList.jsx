@@ -4,6 +4,7 @@ import PageTitle from '../components/Typography/PageTitle'
 import SectionTitle from '../components/Typography/SectionTitle'
 import axios from 'axios'
 import { useQuery } from '@tanstack/react-query'
+import { ErrorAlert, SuccessAlert } from "components/Alert";
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import {
   Table,
@@ -37,6 +38,8 @@ const response2 = response.concat([])
 function CompanyList(props) {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [showModal, setShowModal] = useState({show:false,id:""});
+
+
   function openModal() {
     setIsModalOpen(true)
   }
@@ -45,63 +48,58 @@ function CompanyList(props) {
     setIsModalOpen(false)
   }
 
-  /**
-   * DISCLAIMER: This code could be badly improved, but for the sake of the example
-   * and readability, all the logic for both table are here.
-   * You would be better served by dividing each table in its own
-   * component, like Table(?) and TableWithActions(?) hiding the
-   * presentation details away from the page view.
-   */
+
+  const [openSuccess, setOpenSuccess] = useState({ open: false, message: "" });
+
+    const handleCloseSuccess = (event, reason) => {
+      if (reason === "clickaway") {
+        return;
+      }
+  
+      setOpenSuccess({ open: false, message: "" });
+    };
+  
+    const [openError, setOpenError] = useState({ open: false, message: "" });
+  
+    const handleCloseError = (event, reason) => {
+      if (reason === "clickaway") {
+        return;
+      }
+  
+      setOpenError({ open: false, message: "" });
+    };
+
+
+
 
 
     //COMAPNY DATA STATES
 
     const [companyData,setCompanyData] = useState([])
-    const [companyFormData,setCompanyFormData] = useState({name:"",location:""})
+    const [companyFormData,setCompanyFormData] = useState({name:"",location:"",UserId:""})
     const [errorMessage,setErrorMessage] = useState('')
     const [successMsg,setSuccessMsg] = useState('')
-    const [countCp,setCountCp] = useState(0)
+    const [users,setUsers] = useState([])
     const [searchResult,setSearchResult] = useState([])
     const [searchTerm,setSearchTerm] = useState("")
     const [fetchedResult,setFetchedResult] = useState([])
     const [authorization,setAuthorization] = useState(false)
 
     //ENDOF COMPANY DATA
-  // setup pages control for every table
-  // const [pageTable1, setPageTable1] = useState(1)
-  // const [pageTable2, setPageTable2] = useState(1)
 
-  // // setup data for every table
-  // const [dataTable1, setDataTable1] = useState([])
-  // const [dataTable2, setDataTable2] = useState([])
+useEffect(()=>{
 
-  // // pagination setup
-  // const resultsPerPage = 10
-  // const totalResults = response.length
+  axios.get(`${url}/users`).then((resp)=>{
+    if(resp.data.error){
 
-  // // pagination change control
-  // function onPageChangeTable1(p) {
-  //   setPageTable1(p)
-  // }
+    }else{
+      const data = resp.data.filter((usr)=>usr.role=="client")
+      setUsers(data)
 
-  // // pagination change control
-  // function onPageChangeTable2(p) {
-  //   setPageTable2(p)
-  // }
+    }
+  })
 
-  // on page change, load new sliced data
-  // here you would make another server request for new data
-  // useEffect(() => {
-  //   setDataTable1(response.slice((pageTable1 - 1) * resultsPerPage, pageTable1 * resultsPerPage))
-  // }, [pageTable1])
-
-  // // on page change, load new sliced data
-  // // here you would make another server request for new data
-  // useEffect(() => {
-  //   setDataTable2(response2.slice((pageTable2 - 1) * resultsPerPage, pageTable2 * resultsPerPage))
-  // }, [pageTable2])
- 
-
+},[])
 
   const {isLoading,data} = useQuery(['company-data'],()=>{
     return axios.get(`${url}/companies`).then((resp)=>{
@@ -147,41 +145,36 @@ function CompanyList(props) {
       setErrorMessage('Please Provide all data')
     }else{
      
-      const response = await axios.post(`${url}/companies`,companyFormData).then((resp)=>{
+      const response = await axios.post(`${url}/companies`,companyFormData,{withCredentials:true}).then((resp)=>{
         if(resp.data.error){
-          setErrorMessage(resp.data.error)
+          setOpenError({open:true,message:`${resp.data.error}`})
         }else{
           // console.log('added data',resp.data);
           query.push(resp.data)
-          setCompanyFormData({name:"",location:""})
-          setSuccessMsg('Successfully Registered')
-          setTimeout(() => {
-            setSuccessMsg("")
-          }, 1000);
+          setCompanyFormData({name:"",location:"",UserId:""})
+          setOpenSuccess({open:true,message:"Added Successfully"})
+         
           closeModal()
         }
       })
     }
 
 }
-const deleteCompany =async(ids)=>{
-  const newData =query.filter((c)=>c.id===ids)
+const deleteCompany =async()=>{
+  const newData =query.filter((c)=>c.id===isDeleteOpen.id)
   // console.log('new data ',newData[0]);
   // console.log(query.indexOf(newData[0]));
-  const response = await axios.get(`${url}/companies/delete/${ids}`).then((resp)=>{
+  const response = await axios.get(`${url}/companies/delete/${isDeleteOpen.id}`).then((resp)=>{
     
     if(resp.data.error){
-      setErrorMessage(resp.data.error)
+      setOpenError({open:true,message:`${resp.data.error}`})
     }else{
       
-      const newData = query.filter((c)=>c.id===ids)
+      const newData = query.filter((c)=>c.id===isDeleteOpen.id)
       const rdata = query.indexOf(newData[0]);
       query.splice(rdata,1)
-      setShowModal({show:false,id:""})
-      setSuccessMsg('Successfully Deleted') 
-      setTimeout(() => {
-        setSuccessMsg("")
-      }, 1000);
+      closeDelete() 
+      setOpenSuccess({open:true,message:"Deleted Successfully"})
       // props.history.push('/app/companies')
     }
   })
@@ -194,66 +187,51 @@ const deleteCompany =async(ids)=>{
   }
 
 
+  const [isDeleteOpen,setIsDeleteOpen] = useState({open:false,id:""})
+
+  const closeDelete = ()=>{
+    setIsDeleteOpen(false)
+}
+  const openDelete = (id)=>{
+    setIsDeleteOpen({open:true,id:id})
+}
 
 
   return (
     <>
-    {authorization?<UnAuthorized/>:<>
+   
       <PageTitle>List of Companies Registered</PageTitle>
-      {/* Delete MOdal section  */}
-      {showModal.show ? (
-        <>
-          <div
-            className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
-          >
-            <div className="relative w-auto my-6 mx-auto max-w-3xl">
-              {/*content*/}
-              <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
-                {/*header*/}
-                <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
-                  <h3 className="text-3xl font-semibold">
-                    Delete Confirm
-                  </h3>
-                  <button
-                    className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
-                    onClick={() => setShowModal(false)}
-                  >
-                    <span className="bg-transparent text-black opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none">
-                      ×
-                    </span>
-                  </button>
-                </div>
-                {/*body*/}
-                <div className="relative p-6 flex-auto">
-                  <p className="my-4 text-slate-500 text-lg leading-relaxed">
-                   Are You sure you want to Delete This
-                  </p>
-                </div>
-                {/*footer*/}
-                <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
-                  <button
-                    className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                    type="button"
-                    onClick={() => setShowModal(false)}
-                  >
-                    Close
-                  </button>
-                  <button
-                    className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                    type="button"
-                    onClick={() => deleteCompany(showModal.id)}
-                    style={{backgroundColor:'darkred'}}
-                  >
-                    Continue Deleting
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
-        </>
-      ) : null}
-      {/* End of Delete Modal Section */}
+
+      {/* Notification Section */}
+      <ErrorAlert
+        open={openError.open}
+        handleClose={handleCloseError}
+        message={openError.message}
+        horizontal="right"
+      />
+      <SuccessAlert
+        open={openSuccess.open}
+        handleClose={handleCloseSuccess}
+        message={openSuccess.message}
+        horizontal="right"
+      />
+
+      {/* End of Notification section */}
+     {/* Delete Confirm section */}
+     <Modal isOpen={isDeleteOpen.open} onClose={closeDelete}>
+          <ModalHeader>Confirm Action</ModalHeader>
+          <ModalBody>
+            <p>Are you sure you want to perform this action?</p>
+          </ModalBody>
+          <ModalFooter>
+            <button className="px-4 py-2 text-white bg-red-500 rounded-md hover:bg-red-600" onClick={deleteCompany}>
+              Confirm
+            </button>
+          </ModalFooter>
+      </Modal>
+
+        {/* End of delete Section */}
+
       {/* Search section */}
       <div className='mb-5'>
         <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
@@ -296,10 +274,27 @@ const deleteCompany =async(ids)=>{
             <Input type="text" className="mt-1" name="name" placeholder="Company Name" value={companyFormData.name} autoComplete='off' onChange={e=>setCompanyFormData({...companyFormData, name:e.target.value})}/>
         </Label>
         <Label>
+            <span>Customer</span>
+            <Select
+              className="mt-1"
+              name="contractType"
+              value={companyFormData.UserId}
+              onChange={(e)=>setCompanyFormData({...companyFormData,UserId:e.target.value})}
+              required
+            >
+              <option value="" disabled>Select a Customer type</option>
+              {users.map((usr,i)=>(
+                <option key={i} value={usr.id}>{usr.name}</option>
+              ))}
+              
+            </Select>
+          </Label>
+
+        <Label>
           <span>Location</span>
           <Input type="text" className="mt-1" name="location" placeholder="Jijiga"  value={companyFormData.location} onChange={e=>setCompanyFormData({...companyFormData,location:e.target.value})}/>
         </Label>
-        <Button type="submit">Save</Button>
+        <Button className="mt-4" type="submit">Save</Button>
         </form>
             
    
@@ -329,21 +324,19 @@ const deleteCompany =async(ids)=>{
         </ModalFooter>
       </Modal>
 
-      <SectionTitle>{successMsg?
-        <div className="bg-blue-100 border-t border-b border-blue-500 text-blue-700 px-4 py-3" role="alert">
-        <p className="text-sm">{successMsg}.</p>
-      </div>:''}</SectionTitle>
+      <SectionTitle></SectionTitle>
       <TableContainer className="mb-8">
         <Table>
           <TableHeader>
             <tr>
               <TableCell>Company Name</TableCell>
               <TableCell>Location</TableCell>
+              <TableCell>Client</TableCell>
               <TableCell>Actions</TableCell>
             </tr>
           </TableHeader>
           <TableBody>
-            {query.map((comp, i) => (
+            {query?.map((comp, i) => (
               <TableRow key={i}>
                 <TableCell>
                   <div className="flex items-center text-sm">
@@ -357,6 +350,9 @@ const deleteCompany =async(ids)=>{
                 <TableCell>
                   <span className="text-sm">{comp.location}</span>
                 </TableCell>
+                <TableCell>
+                  <span className="text-sm">{users.map((usr)=>usr.id===comp.UserId?usr.name:"")}</span>
+                </TableCell>
                 
                 <TableCell>
                   <div className="flex items-center space-x-4">
@@ -365,7 +361,7 @@ const deleteCompany =async(ids)=>{
                       <EditIcon className="w-5 h-5" aria-hidden="true" />
                     </Button>
                     </Link>
-                    <Button onClick={()=>setShowModal({show:true,id:comp.id})} style={{color:'red'}} layout="link" size="icon" aria-label="Delete">
+                    <Button onClick={()=>openDelete(comp.id)} style={{color:'red'}} layout="link" size="icon" aria-label="Delete">
                       <TrashIcon className="w-5 h-5" aria-hidden="true" />
                     </Button>
                   </div>
@@ -383,7 +379,7 @@ const deleteCompany =async(ids)=>{
           /> */}
         </TableFooter>
       </TableContainer>
-      </>}
+
     </>
   )
 }

@@ -29,75 +29,25 @@ const queryClient = new QueryClient({defaultOptions:{
 }})
 
 
+const cookie = getCookie('accessToken')
+
 
 
 
 
 function App(props) {
   let {authState,setAuthState} = useContext(AuthContext)
-  let cookie = getCookie('accessToken')
-
-
-  let jwtAxios = axios.create()
-
-
-
-// 
-
-
-
-  jwtAxios.interceptors.request.use(
-    async(config)=>{
-    // config here includes our headers
-    let currentDate = new Date();
-    let decodedToken = jwt_decode(cookie)
-    // console.log(decodedToken.exp*1000<currentDate.getTime()) 
-    if(decodedToken.exp*1000<currentDate.getTime()){
-      console.log('calling grap auth func:::::::::::::::');
-      const nData = grapaAuth()
-    }
-    return config
-  },(error)=>{
-    return Promise.reject(error)
-  })
-
-  jwtAxios.get(`${url}`)
 
 
 
 
 
-
-
-
-  const grapaAuth = async()=>{
-    if(!cookie||cookie==="undefined"){
-      props.history.push('/login')
-      
-    }
-    // console.log('useEffect');
-    const decodeAccessToken = jwt_decode(cookie)
-
-    axios.post(`${url}/login/refreshToken`,{token:decodeAccessToken?.refreshToken},{withCredentials: true}).then((resp)=>{
-      if(resp?.data.error){
-        console.log('what',authState)
-
-        // setAuthState({id:"",username:"",email:"",role:"",status:false,refreshToken:""})
-        props.history.push('/login') 
-        
-      }else{
-        const data = resp?.data
-        setCookie('accessToken',data.token)
-        setAuthState({id:data?.id,username:data?.username,email:data?.email,role:data?.role,state:true,refreshToken:data?.refreshToken})
-      }
-  })
-
-  }
 
 useEffect(()=>{
-  if(!cookie||cookie==="undefined"){
+  if(!authState.state){
     props.history.push('/login')
   }
+
 
 },[])
 

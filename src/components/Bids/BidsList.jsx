@@ -6,51 +6,38 @@ import {FaRegEdit} from 'react-icons/fa'
 import {Link} from 'react-router-dom'
 import axios from 'axios';
 import { url } from 'config/urlConfig';
-function ContractSection({project,id}) {
-  const [contracts,setContracts] = useState([])
-useEffect(()=>{
-  axios.get(`${url}/contract`,{withCredentials:true}).then((resp)=>{
-    if(resp.data.error){
 
-    }else{
-      console.log(resp.data);
-      const data = resp.data.filter((dt)=>dt.ProjectId===id)
-      setContracts(data)
-     
-    }
-  })
-},[id])
+
+
+function BidSection({bid,project}) {
+  const [contracts,setContracts] = useState([])
+
 
   return (
     <section  className="contracts-section p-4 bg-white rounded-md shadow-md">
-      <h2 className="text-xl font-medium mb-4">Contracts</h2>
+      <h2 className="text-xl font-medium mb-4">Bids</h2>
       <TableContainer className="mb-4">
         <Table>
           <TableHeader>
             <TableRow>
-              <TableCell>Subject</TableCell>
-              <TableCell>Value</TableCell>
+              <TableCell>Full Name</TableCell>
               <TableCell>Project</TableCell>
-              <TableCell>Contract Type</TableCell>
+              <TableCell>Owner</TableCell>
+              <TableCell>Phone</TableCell>
+              <TableCell>Amount</TableCell>
               <TableCell>Status</TableCell>
               <TableCell>View</TableCell>
             </TableRow>
           </TableHeader>
           <TableBody>
-          {contracts.map((contract,i)=>
-              <TableRow key={i}>
-                
-                <>
-              
-                <TableCell>
+          {bid.map((bids)=>
+              <TableRow key={bids.id}>
+                <TableCell >
                   <div className="flex items-center text-sm">
                     <div>
-                      <p className="font-semibold">{contract.subject}</p>
+                      <p className="font-semibold">{bids.fullname}</p>
                     </div>
                   </div>
-                </TableCell>
-                <TableCell>
-                  <span className="text-sm">{contract.contractValue.toLocaleString()}</span>
                 </TableCell>
                 <TableCell>
                   <span className="text-sm">{project.name}</span>
@@ -58,14 +45,19 @@ useEffect(()=>{
                 <TableCell>
                   <span className="text-sm"></span>
                 </TableCell>
-           
-             
                 <TableCell>
-                  <Badge style={{color:contract.status==='signed'?'green':'red'}}>{contract.status}</Badge>
+                  <span className="text-sm">{bids.phone}</span>
+                </TableCell>
+           
+                <TableCell>
+                  <span className="text-sm">{bids.amount.toLocaleString()}</span>
+                </TableCell>
+                <TableCell>
+                  <Badge style={{color:bids.status==='signed'?'green':'red'}}>{bids.status}</Badge>
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center space-x-4">
-                  <Link to={`/app/contract/${contract.id}`}>
+                  <Link to={`/app/bids/${bids.id}`}>
                     <Button 
                      layout="link"
                      size="icon"
@@ -78,7 +70,7 @@ useEffect(()=>{
                    </Link>  
                     </div>
                     </TableCell>
-                    </>  
+                
                     </TableRow>
                     )}
   
@@ -90,4 +82,4 @@ useEffect(()=>{
   );
 }
 
-export default ContractSection;
+export default BidSection;

@@ -184,7 +184,7 @@ const searchHandler = async(search)=>{
 
     return ( 
         <>
-         {authorization?<UnAuthorized />:
+      
          <>
          <link rel="stylesheet" href="https://unpkg.com/flowbite@1.4.4/dist/flowbite.min.css" />
         <PageTitle>List of Bids Registered</PageTitle>
@@ -276,7 +276,7 @@ const searchHandler = async(search)=>{
           <span>Project Name</span>
           <Select className="mt-1" name="ProjectId" value={bidFormData.ProjectId} onChange={(e)=>setBidFormData({...bidFormData,ProjectId:e.target.value})}>
           <option>Select</option>
-          {projects.map((pr)=>{return  <option value={pr.id}>{pr.name}</option>})}
+          {projects.map((pr)=>{return  <option key={pr.id} value={pr.id}>{pr.name}</option>})}
            
             
           </Select>
@@ -285,7 +285,7 @@ const searchHandler = async(search)=>{
           <span>User</span>
           <Select className="mt-1" name="UserId" value={bidFormData.UserId} onChange={(e)=>setBidFormData({...bidFormData,UserId:e.target.value})}>
           <option>Select</option>
-          {users.map((usr)=>{return  <option>{usr.name}</option>})}
+          {users.map((usr)=>{return  <option key={usr.id}>{usr.name}</option>})}
            
             
           </Select>
@@ -424,10 +424,10 @@ const searchHandler = async(search)=>{
                 <TableCell>Actions</TableCell>
               </tr>
             </TableHeader>
-            {fetchedResult.map((bid, i) => (
-            <TableBody key={i}>
-              
-                <TableRow>
+            
+            <TableBody>
+            {fetchedResult.map((bid, i) => (  
+                <TableRow key={i}>
                   <TableCell>
                     <div className="flex items-center text-sm">
                       
@@ -481,9 +481,9 @@ const searchHandler = async(search)=>{
                     </div>
                   </TableCell>
                 </TableRow>
-          
+          ))}
             </TableBody>
-                ))}
+                
           </Table>
           <TableFooter>
             {/* <Pagination
@@ -495,7 +495,7 @@ const searchHandler = async(search)=>{
           </TableFooter>
         </TableContainer>
         </>
-         }
+         
       </>
       
      );

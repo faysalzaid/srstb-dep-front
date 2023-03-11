@@ -13,6 +13,7 @@ import { ChatIcon, CartIcon, MoneyIcon, PeopleIcon, TrashIcon, EditIcon } from '
 import RoundIcon from '../RoundIcon'
 import response from '../../utils/demo/tableData'
 import { PlusCircleIcon } from "@heroicons/react/outline";
+import { ErrorAlert, SuccessAlert } from "components/Alert";  
 
 import {
   TableBody,
@@ -45,27 +46,73 @@ import axios from 'axios'
 
 const PgList = () => {
     const {authState} = useContext(AuthContext)
-    const [preview, setPreview] = useState(null);
-    const [page, setPage] = useState(1)
-    const [data, setData] = useState([])
+    const [users, setUsers] = useState(null);
+    const [companies, setCompanies] = useState([])
+    const [projectForm, setProjectForm] = useState({})
     const [projects,setProject] = useState([])
     const [countsData,setCountsData] = useState({ projectCount:"",bidCount:"",activeProjects:"",completedProjects:""})
   
     const [isOpen,setIsOpen] = useState(false)
-    const closeModal = ()=>{
+
+
+
+
+
+    const [isDeleteOpen,setIsDeleteOpen] = useState({open:false,id:""})
+
+    const closeDelete = ()=>{
+      setIsDeleteOpen(false)
+  }
+    const openDelete = (id)=>{
+      setIsDeleteOpen({open:true,id:id})
+  }
+
+
+    
+// Alert logic and initialization
+  const [openSuccess, setOpenSuccess] = useState({ open: false, message: "" });
+
+  const handleCloseSuccess = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpenSuccess({ open: false, message: "" });
+  };
+
+  const [openError, setOpenError] = useState({ open: false, message: "" });
+
+  const handleCloseError = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpenError({ open: false, message: "" });
+  };
+// alert logic and initialization
+
+
+
+    function closeModal(){
         setIsOpen(false)
     }
-    const openModal = ()=>{
+    function openModal(){
         setIsOpen(true)
     }
     const [formValues, setFormValues] = useState({
-        customer: "",
-        project: "",
-        subject: "",
-        contractValue: "",
-        contractType: "",
-        startDate: "",
-        description: ""
+        CompanyId: "",
+        name: "",
+        status: "open",
+        place: "",
+        consultant: "",
+        description: "",
+        starttime: "",
+        endtime: "",
+        year: "",
+        utilizedCost:0,
+        totalCost:0,
+        physicalPerformance:0,
+        percentage:0
       });
 
       const handleChange = e => {
@@ -78,9 +125,36 @@ const PgList = () => {
     
       const handleSubmit = e => {
         e.preventDefault();
+        const request = {
+          CompanyId: formValues.CompanyId,
+          name: formValues.name,
+          status: formValues.status,
+          place: formValues.place,
+          consultant: formValues.consultant,
+          description: formValues.description,
+          starttime: formValues.starttime,
+          endtime: formValues.endtime,
+          year: formValues.year,
+          utilizedCost:parseInt(formValues.utilizedCost),
+          totalCost:parseInt(formValues.totalCost),
+          physicalPerformance:parseInt(formValues.physicalPerformance),
+          percentage:parseInt(formValues.percentage)
+        }
+        console.log(request);
+        axios.post(`${url}/projects`,request,{withCredentials:true}).then((resp)=>{
+            if(resp.data.error){
+              setOpenError({open:true,message:`${resp.data.error}`})
+            }else{
+              setProject([...projects,resp.data])
+              setOpenSuccess({open:true,message:"Successfully Added"})
+              closeModal();
+            }
+        }).catch((error)=>{
+          setOpenError({open:true,message:`${error.response.data.error}`})
+        })
         // handle form submission here
         // e.g. make an API call to save the form data
-        closeModal();
+      
       };
 
       
@@ -94,18 +168,37 @@ const PgList = () => {
         }
       setProject(resp.data.projects)
   
-      },[])
-  
+      })
+
+      axios.get(`${url}/counts`,{withCredentials:true}).then((resp)=>{
+        const data = resp.data
+        setCountsData({ projectCount:data.projectsCount,bidCount:data.countBids,activeProjects:data.activeProjectsCount,completedProjects:data.completedProjects})
+      })
+
+
+      axios.get(`${url}/users`).then((resp)=>{
+        if(resp.data.error){
+          
+        }else{
+          const data = resp.data.filter((usr)=>usr.role=="client")
+          setUsers(data)
+    
+        }
+      })
+
+      axios.get(`${url}/companies`,{withCredentials:true}).then((resp)=>{
+        if(resp.data.error){
+          
+        }else{
+          setCompanies(resp.data.company)
+          
+          
+        }
+      })
   
   },[])
   
-  
-  useEffect(()=>{
-    axios.get(`${url}/counts`,{withCredentials:true}).then((resp)=>{
-      const data = resp.data
-      setCountsData({ projectCount:data.projectsCount,bidCount:data.countBids,activeProjects:data.activeProjectsCount,completedProjects:data.completedProjects})
-    })
-  },[])
+
   
     // pagination setup
 
@@ -114,68 +207,56 @@ const PgList = () => {
 
   
 // Invoice Data  
-const [rows, setRows] = useState([
-    {
-      customer: 'ABC Corp.',
-      project: 'Project A',
-      subject: 'Software Development',
-      contractType: 'Fixed Price',
-      startDate: '2022-01-01',
-      endDate: '2022-03-31',
-    },
-    {
-      customer: 'XYZ Inc.',
-      project: 'Project B',
-      subject: 'Website Redesign',
-      contractType: 'Hourly',
-      startDate: '2022-02-15',
-      endDate: '2022-05-15',
-    },
-    {
-      customer: '123 Co.',
-      project: 'Project C',
-      subject: 'Marketing Campaign',
-      contractType: 'Fixed Price',
-      startDate: '2022-03-01',
-      endDate: '2022-06-30',
-    },
-  ]);
 
 
 
-  const handleEdit = (index) => {
-    // Implement your own edit logic here
-    console.log(`Edit row ${index}`);
-  };
 
-  const handleFile = (e) => {
-    if (e.target.files.length) {
-      setPreview(URL.createObjectURL(e.target.files[0]));
+  const handleDelete = async() => {
+   await axios.get(`${url}/projects/delete/${isDeleteOpen.id}`,{withCredentials:true}).then((resp)=>{
+    if(resp.data.error){
+
+    }else{
+      const data = projects.filter((pr)=>pr.id!==isDeleteOpen.id)
+      setProject(data)
+      setOpenSuccess({open:true,message:"Successfully Deleted"})
+      closeDelete()
     }
-  }
-
-  // Delete row
-  const handleDelete = (index) => {
-    // Implement your own delete logic here
-    console.log(`Delete row ${index}`);
-    setRows((prevState) => prevState.filter((_, i) => i !== index));
+   })
   };
 
-
-// End of invoice data
-  
-    // on page change, load new sliced data
-    // here you would make another server request for new data
 
   
     return (
       <>
+      
   
         <PageTitle>Contracts</PageTitle>
-  
-        {/* <CTA /> */}
-        
-        {/* <!-- Cards --> */}
+        <ErrorAlert
+        open={openError.open}
+        handleClose={handleCloseError}
+        message={openError.message}
+        horizontal="right"
+      />
+      <SuccessAlert
+        open={openSuccess.open}
+        handleClose={handleCloseSuccess}
+        message={openSuccess.message}
+        horizontal="right"
+      />
+        {/* Delete Confirm section */}
+     <Modal isOpen={isDeleteOpen.open} onClose={closeDelete}>
+          <ModalHeader>Confirm Action</ModalHeader>
+          <ModalBody>
+            <p>Are you sure you want to perform this action?</p>
+          </ModalBody>
+          <ModalFooter>
+            <button className="px-4 py-2 text-white bg-red-500 rounded-md hover:bg-red-600" onClick={handleDelete}>
+              Confirm
+            </button>
+          </ModalFooter>
+      </Modal>
+
+        {/* End of delete Section */}
         <div className="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
           <InfoCard title="Total Projects " value={countsData.projectCount}>
             <RoundIcon
@@ -215,86 +296,92 @@ const [rows, setRows] = useState([
         </div>
   
         <TableContainer>
-        {/* Calendar section */}
+   
   
         <Button onClick={openModal}>New Project</Button>
   
-        {/* end of calendar section */}
         </TableContainer>
-
-        <Modal isOpen={isOpen} closeModal={closeModal}>
+        <Modal isOpen={isOpen} onClose={closeModal}>
       <ModalHeader>Add Project</ModalHeader>
       <ModalBody>
-      {preview ? (
-              <img className="object-contain w-full h-48 mb-4" src={preview} alt="Preview" />
-            ) : (
-              <div className="flex justify-center items-center bg-gray-100 w-full h-48 mb-4">
-                <div className="flex flex-col items-center justify-center space-y-1 text-center">
-                  <PlusCircleIcon className="h-8 w-8 text-gray-400" />
-                  <p className="text-gray-400 text-sm">Add an image</p>
-                </div>
-              </div>
-            )}
-
+      <form onSubmit={handleSubmit}>
         <div className="grid grid-cols-2 gap-4">
-          <Label>
-            <span>Customer</span>
+
+        <Label>
+            <span>Name</span>
             <Input
               className="mt-1"
-              name="customer"
-              value={formValues.customer}
-              onChange={handleChange}
+              name="name"
+              value={formValues.name}
+              onChange={(e)=>setFormValues({...formValues,name:e.target.value})}
               required
             />
           </Label>
-
           <Label>
-            <span>Project</span>
-            <Input
-              className="mt-1"
-              name="project"
-              value={formValues.project}
-              onChange={handleChange}
-              required
-            />
-          </Label>
-
-          <Label>
-            <span>Subject</span>
-            <Input
-              className="mt-1"
-              name="subject"
-              value={formValues.subject}
-              onChange={handleChange}
-              required
-            />
-          </Label>
-
-          <Label>
-            <span>Contract Value</span>
-            <Input
-              className="mt-1"
-              name="contractValue"
-              value={formValues.contractValue}
-              onChange={handleChange}
-              required
-            />
-          </Label>
-
-          <Label>
-            <span>Contract Type</span>
+            <span>Company</span>
             <Select
               className="mt-1"
-              name="contractType"
-              value={formValues.contractType}
-              onChange={handleChange}
+              name="CompanyId"
+              value={formValues.CompanyId}
+              onChange={(e)=>setFormValues({...formValues,CompanyId:e.target.value})}
               required
             >
-              <option value="" disabled>Select a contract type</option>
-              <option value="type1">Type 1</option>
-              <option value="type2">Type 2</option>
-              <option value="type3">Type 3</option>
+              <option value="" disabled>Select a Company</option>
+              {companies.map((cp,i)=>(
+                <option key={i} value={cp.id}>{cp.name}</option>
+              ))}
+              
             </Select>
+          </Label>
+
+          <Label>
+            <span>Status</span>
+            <Select
+              className="mt-1"
+              name="status"
+              value={formValues.status}
+              onChange={(e)=>setFormValues({...formValues,status:e.target.value})}
+              required
+            >
+              <option  >Select a Status</option>
+                <option>open</option>
+                <option>pending</option>
+                <option>active</option>
+                <option>completed</option>    
+            </Select>
+          </Label>
+
+          <Label>
+            <span>place</span>
+            <Input
+              className="mt-1"
+              name="place"
+              value={formValues.place}
+              onChange={(e)=>setFormValues({...formValues,place:e.target.value})}
+              required
+            />
+          </Label>
+
+          <Label>
+            <span>Consultant</span>
+            <Input
+              className="mt-1"
+              name="consultant"
+              value={formValues.consultant}
+              onChange={(e)=>setFormValues({...formValues,consultant:e.target.value})}
+              required
+            />
+          </Label>
+
+          <Label>
+            <span>description</span>
+            <Textarea
+              className="mt-1"
+              name="description"
+              value={formValues.description}
+              onChange={(e)=>setFormValues({...formValues,description:e.target.value})}
+              required
+            />
           </Label>
 
           <Label>
@@ -302,46 +389,108 @@ const [rows, setRows] = useState([
             <Input
               type="date"
               className="mt-1"
-              name="startDate"
-              value={formValues.startDate}
-              onChange={handleChange}
+              name="starttime"
+              value={formValues.starttime}
+              onChange={(e)=>setFormValues({...formValues,starttime:e.target.value})}
               required
             />
           </Label>
 
           <Label>
-            <span>Description</span>
-            <Textarea
+            <span>End Date</span>
+            <Input
+              type="date"
               className="mt-1"
-              name="description"
-              value={formValues.description}
-              onChange={handleChange} 
+              name="endtime"
+              value={formValues.endtime}
+              onChange={(e)=>setFormValues({...formValues,endtime:e.target.value})}
               required
             />
           </Label>
-          <div className="grid grid-cols-1 gap-6">
-              <div>
-                <Label>
-                  <span>Upload Image</span>
-                  <Input type="file" accept=".jpg,.jpeg,.png,.gif" onChange={handleFile} />
-               
-                </Label>
-              </div>
-              
 
-                </div>
+          <Label>
+            <span>Physical Performance</span>
+            <Input
+              type="number"
+              className="mt-1"
+              name="physicalPerformance"
+              value={formValues.physicalPerformance}
+              onChange={(e)=>setFormValues({...formValues,physicalPerformance:e.target.value})}
+              required
+            />
+          </Label>
+
+          <Label>
+            <span>Year</span>
+            <Input
+              type="date"
+              className="mt-1"
+              name="year"
+              value={formValues.year}
+              onChange={(e)=>setFormValues({...formValues,year:e.target.value})}
+              required
+            />
+          </Label>
+          
+          <Label>
+            <span>Total Cost</span>
+            <Input
+              type="number"
+              className="mt-1"
+              name="totalCost"
+              value={formValues.totalCost}
+              onChange={(e)=>setFormValues({...formValues,totalCost:e.target.value})}
+              required
+            />
+          </Label>
+
+          <Label>
+            <span>Utilized Cost</span>
+            <Input
+              type="number"
+              className="mt-1"
+              name="utilizedCost"
+              value={formValues.utilizedCost}
+              onChange={(e)=>setFormValues({...formValues,utilizedCost:e.target.value})}
+        
+            />
+          </Label>
+          
+          
+
+              
         </div>
+        <div className="hidden sm:block">
+
+        <Button className="mt-6" type="submit">Submit</Button>
+        </div>
+           <div className=" mt-2 block  sm:hidden">
+            <Button block size="large">
+              Accept
+            </Button>
+          </div>
+      
+        </form>
       </ModalBody>
       <ModalFooter>
-        <Button layout="outline" onClick={closeModal}>
-          Cancel
-        </Button>
-        <Button type="submit" onClick={handleSubmit}>
-          Save
-        </Button>
+      <div className="hidden sm:block">
+            <Button layout="outline" onClick={closeModal}>
+              Cancel
+            </Button>
+        </div>
+        <div className="block w-full sm:hidden">
+            <Button block size="large" layout="outline" onClick={closeModal}>
+              Cancel
+            </Button>
+          </div>
+
+          {/* <div className="block w-full sm:hidden">
+            <Button block size="large">
+              Accept
+            </Button>
+          </div> */}
       </ModalFooter>
     </Modal>
-
 
   
         
@@ -362,7 +511,7 @@ const [rows, setRows] = useState([
             </TableRow>
           </TableHeader>
           <TableBody>
-            {projects.map((project) => (
+            {projects?.map((project) => (
               <TableRow key={project.id}>
                 <TableCell>
                   <div className="flex items-center text-sm">
@@ -372,10 +521,10 @@ const [rows, setRows] = useState([
                   </div>
                 </TableCell>
                 <TableCell>
-                  <span className="text-sm">{project.startDate}</span>
+                  <span className="text-sm">{project.starttime}</span>
                 </TableCell>
                 <TableCell>
-                  <span className="text-sm">{project.endDate}</span>
+                  <span className="text-sm">{project.endtime}</span>
                 </TableCell>
                 <TableCell>
                   <span className="text-sm">{project.totalCost.toLocaleString()}</span>
@@ -410,6 +559,7 @@ const [rows, setRows] = useState([
                     </Button>
                     </Link>
                     <Button 
+                    onClick={()=>openDelete(project.id)}
                      layout="link"
                      size="icon"
                      aria-label="Delete"

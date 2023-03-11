@@ -12,7 +12,10 @@ import PageTitle from '../../components/Typography/PageTitle'
 import { ChatIcon, CartIcon, MoneyIcon, PeopleIcon, TrashIcon, EditIcon } from '../../icons'
 import RoundIcon from '../RoundIcon'
 import response from '../../utils/demo/tableData'
-
+import { Modal, ModalHeader, ModalBody, ModalFooter } from '@windmill/react-ui'
+import { Input, HelperText, Label, Select, Textarea } from '@windmill/react-ui'
+import { ErrorAlert, SuccessAlert } from "components/Alert";
+import { FaPlusCircle } from "react-icons/fa";
 import {
   TableBody,
   TableContainer, 
@@ -24,6 +27,7 @@ import {
   Avatar,
   Badge,
   Pagination,
+  Button
 } from '@windmill/react-ui'
 
 import {
@@ -35,129 +39,411 @@ import {
 import { Link, withRouter } from 'react-router-dom'
 import { url } from 'config/urlConfig'
 import axios from 'axios'
-import { Button } from '@mui/material'
+
+import NewInvoice from './SingleInvoice'
+import { useRef } from 'react'
+import useAuth from 'hooks/useAuth'
 
 
 
 
 const InvoiceList = () => {
-    const {authState} = useContext(AuthContext)
-
-    const [page, setPage] = useState(1)
-    const [data, setData] = useState([])
+    const {authState} = useAuth()
+    const [users, setUsers] = useState([])
+    const [mode,setMode] = useState([])
+    const [invoices, setInvoices] = useState([])
     const [projects,setProject] = useState([])
+    const [modeModel,setModeModel] = useState(false)
     const [countsData,setCountsData] = useState({ projectCount:"",bidCount:"",activeProjects:"",completedProjects:""})
+    const [formValues,setFormValues] = useState({date:"",notes:"",totalPaid:"",total:0,UserId:"",ProjectId:"",PaymentModeId:""})
+    const [isDeleteOpen,setIsDeleteOpen] = useState({open:false,id:""})
+    const modeInput = useRef()
+    let amountRef = useRef()
+
+    const closeDelete = ()=>{
+      setIsDeleteOpen(false)
+  }
+    const openDelete = (id)=>{
+      setIsDeleteOpen({open:true,id:id})
+  }
+
+  const [isOpen,setIsOpen] = useState(false)
+  function closeModal(){
+      setIsOpen(false)
+  }
+  function openModal(){
+    setIsOpen(true)
+  }
   
+
+
+  const addMode =async(e)=>{
+    e.preventDefault()
+
+    console.log();
+    const request = {
+      mode:modeInput.current.value
+    }
+    await axios.post(`${url}/paymentmode`,request,{withCredentials:true}).then((resp)=>{
+      if(resp.data.error){
+        setOpenError({open:true,message:`${resp.data.error}`})
+      }else{
+        setMode([...mode,resp.data])
+        closeModeModel()
+        setOpenSuccess({open:true,message:"Successfully Added"})
+      }
+    }).catch((error)=>{
+      setOpenError({open:true,message:`${error.response.data.error}`})
+    })
+    
+  }
+
+
+  function closeModeModel(){
+    setModeModel(false)
+  }
   
+  //  Notifications
+    const [openSuccess, setOpenSuccess] = useState({ open: false, message: "" });
+
+    const handleCloseSuccess = (event, reason) => {
+      if (reason === "clickaway") {
+        return;
+      }
   
+      setOpenSuccess({ open: false, message: "" });
+    };
   
-    // console.log('data from app',authState);
+    const [openError, setOpenError] = useState({ open: false, message: "" });
+  
+    const handleCloseError = (event, reason) => {
+      if (reason === "clickaway") {
+        return;
+      }
+  
+      setOpenError({ open: false, message: "" });
+    };
+
+    // End of notifications
+
+    // USE EFFECT 
       useEffect(()=>{
       axios.get(`${url}/projects`,{withCredentials:true}).then((resp)=>{
         if(resp.data.error){
           console.log(resp.data.error);
+        }else{
+          setProject(resp.data.projects)
         }
-      setProject(resp.data.projects)
-  
-      },[])
+      })
+      axios.get(`${url}/invoice`,{withCredentials:true}).then((resp)=>{
+          if(resp.data.error){
+
+          }else{
+            setInvoices(resp.data)
+          }
+      })
+
+      axios.get(`${url}/users`,{withCredentials:true}).then((resp)=>{
+        if(resp.data.error){
+        }else{
+          // const filteredClients = resp.data.filter((cl)=>cl.role==="client")
+          setUsers(resp.data)
+        }
+      })
+      axios.get(`${url}/counts`,{withCredentials:true}).then((resp)=>{
+        const data = resp.data
+        setCountsData({ projectCount:data.projectsCount,bidCount:data.countBids,activeProjects:data.activeProjectsCount,completedProjects:data.completedProjects})
+      })
+
+      axios.get(`${url}/paymentmode`,{withCredentials:true}).then((resp)=>{
+       setMode(resp.data)
+      })
+
   
   
   },[])
+
+  // END OF USE EFFECT
   
   
   useEffect(()=>{
-    axios.get(`${url}/counts`,{withCredentials:true}).then((resp)=>{
-      const data = resp.data
-      setCountsData({ projectCount:data.projectsCount,bidCount:data.countBids,activeProjects:data.activeProjectsCount,completedProjects:data.completedProjects})
-    })
-  },[])
+      const newPr = projects.filter((pr)=>pr.id===formValues.ProjectId)
+      setFormValues({...formValues,total:newPr[0]?.totalCost})
+      // console.log('hitted');
+  },[formValues.ProjectId])
   
-    // pagination setup
-    const resultsPerPage = 10
-    const totalResults = response.length
-  
-    // pagination change control
-    function onPageChange(p) {  
-      setPage(p)
-    }
-    
+
   
   
-  const projectPercentileGraph = {
-    data: {
-        datasets: [{
-            data: projects?.map(pr=> pr.percentage),
-            /**
-             * These colors come from Tailwind CSS palette
-             * https://tailwindcss.com/docs/customizing-colors/#default-color-palette
-             */
-            backgroundColor: projects?.map(pr=>pr.color),
-            label: 'Percentage',
-        }, ],
-        labels: projects?.map((pr)=>pr.name),
-    },
-    options: {
-        responsive: true,
-        cutoutPercentage: 80,
-    },
-    legend: {
-        display: false,
-    },
+const handleSubmit = async(e)=>{
+  e.preventDefault();
+  // console.log(formValues);
+  const request = {
+    ProjectId:formValues.ProjectId,
+    UserId:authState.id,
+    date:formValues.date,
+    total:formValues.total,
+    totalPaid:formValues.totalPaid,
+    notes:formValues.notes,
+    PaymentModeId:formValues.PaymentModeId
   }
+  await axios.post(`${url}/invoice`,request,{withCredentials:true}).then((resp)=>{
+    console.log(resp.data);
+    if(resp.data.error){
+      setOpenError({open:true,message:`${resp.data.error}`})
+    }else{
+      setInvoices([...invoices,resp.data])
+      setOpenSuccess({open:true,message:"Succesfully Added"})
+      closeModal()
+    }
+  }).catch((error)=>{
+    setOpenError({open:true,message:`${error.response.data.error}`})
+ 
+  })
+}
+
+const handleDelete = ()=>{
+
+}
   
+const captureProject = ()=>{
+
+}
 // Invoice Data  
-const invoiceList = [
-    {
-      id: 1,
-      totalAmount: 500,
-      date: '2022-05-01',
-      customer: 'ACME Inc.',
-      project: 'Web Development Project',
-      status: 'Paid',
-    },
-    {
-      id: 2,
-      totalAmount: 750,
-      date: '2022-05-15',
-      customer: 'XYZ Corporation',
-      project: 'Mobile App Development',
-      status: 'PartiallyPaid',
-    },
-    {
-      id: 3,
-      totalAmount: 1000,
-      date: '2022-06-01',
-      customer: 'ABC Corp.',
-      project: 'Data Analysis Project',
-      status: 'Overdue',
-    },
-    {
-      id: 4,
-      totalAmount: 250,
-      date: '2022-06-15',
-      customer: '123 Inc.',
-      project: 'Marketing Campaign',
-      status: 'Paid',
-    },
-  ];
+
 
 // End of invoice data
   
     // on page change, load new sliced data
     // here you would make another server request for new data
   
-    useEffect(() => {
-      setData(response.slice((page - 1) * resultsPerPage, page * resultsPerPage))
-    }, [page])
   
     return (
       <>
   
         <PageTitle>Invoices</PageTitle>
+        {/* Notifications */}
+        <ErrorAlert
+        open={openError.open}
+        handleClose={handleCloseError}
+        message={openError.message}
+        horizontal="right"
+      />
+      <SuccessAlert
+        open={openSuccess.open}
+        handleClose={handleCloseSuccess}
+        message={openSuccess.message}
+        horizontal="right"
+      />
+
+        {/* End of Notification */}
   
-        {/* <CTA /> */}
-  
-        {/* <!-- Cards --> */}
+         {/* Delete Confirm section */}
+         <Modal isOpen={isDeleteOpen.open} onClose={closeDelete}>
+          <ModalHeader>Confirm Action</ModalHeader>
+          <ModalBody>
+            <p>Are you sure you want to perform this action?</p>
+          </ModalBody>
+          <ModalFooter>
+            <button className="px-4 py-2 text-white bg-red-500 rounded-md hover:bg-red-600" onClick={handleDelete}>
+              Confirm
+            </button>
+          </ModalFooter>
+      </Modal>
+
+        {/* End of delete Section */}
+
+          {/* Payment MOde section */}
+      <Modal isOpen={modeModel} onClose={closeModeModel}>
+      <ModalHeader>Add Mode</ModalHeader>
+      <ModalBody>
+      <form onSubmit={addMode}>
+        <div className="grid grid-cols-1 gap-4">
+          <Label>
+            <span>Mode</span>
+            <Input
+              type="text"
+              ref={modeInput}
+              className="mt-1"
+              name="totalPaid"
+              onChange={(e)=>setFormValues({...formValues,totalPaid:e.target.value})}
+              required
+            />
+          </Label>
+              
+        </div>
+        <div className="hidden sm:block">
+
+        <Button className="mt-6" type="submit">Submit</Button>
+        </div>
+           <div className=" mt-2 block  sm:hidden">
+            <Button block size="large">
+              Accept
+            </Button>
+          </div>
+      
+        </form>
+      </ModalBody>
+      <ModalFooter>
+      <div className="hidden sm:block">
+            <Button layout="outline" onClick={closeModeModel}>
+              Cancel
+            </Button>
+        </div>
+        <div className="block w-full sm:hidden">
+            <Button block size="large" layout="outline" onClick={closeModeModel}>
+              Cancel
+            </Button>
+          </div>
+
+          {/* <div className="block w-full sm:hidden">
+            <Button block size="large">
+              Accept
+            </Button>
+          </div> */}
+      </ModalFooter>
+    </Modal>
+
+
+        {/* End of Payment Mode Section */}
+
+
+{/* Main Model */}
+        <Modal isOpen={isOpen} onClose={closeModal}>
+      <ModalHeader>Add Invoice</ModalHeader>
+      <ModalBody>
+      <form onSubmit={handleSubmit}>
+        <div className="grid grid-cols-2 gap-4">
+
+          <Label>
+            <span>Project</span>
+            <Select
+              className="mt-1"
+              name="ProjectId"
+              value={formValues.ProjectId}
+              onChange={(e)=>setFormValues({...formValues,ProjectId:e.target.value})}
+              required
+            >
+              <option>Select a Project type</option>
+              {projects.map((pr,i)=>(
+                <option key={i} value={pr.id}>{pr.name}</option>
+              ))}
+              
+              
+            </Select>
+          </Label>
+
+          <Label>
+            <span>Total Amount</span>
+            <Input
+              // ref={amountRef}
+              htmlFor='total'
+              className="mt-1"
+              name="totalPaid"
+              value={formValues.total}
+              required
+              disabled
+            />
+          </Label>
+
+          <Label>
+            <span>Total Paid</span>
+            <Input
+            type="number"
+              className="mt-1"
+              name="totalPaid"
+              value={formValues.totalPaid}
+              onChange={(e)=>setFormValues({...formValues,totalPaid:e.target.value})}
+              required
+            />
+          </Label>
+
+          <Label>
+            <span>Notes</span>
+            <Textarea
+              className="mt-1"
+              name="notes"
+              value={formValues.notes}
+              onChange={(e)=>setFormValues({...formValues,notes:e.target.value})}
+              required
+            />
+          </Label>
+
+         
+
+          <Label>
+            <span>Date</span>
+            <Input
+              type="date"
+              className="mt-1"
+              name="startDate"
+              value={formValues.date}
+              onChange={(e)=>setFormValues({...formValues,date:e.target.value})}
+              required
+            />
+          </Label>
+
+          <Label>
+              
+            <span class="flex">  
+              <FaPlusCircle className='mt-1 mr-1' onClick={()=>setModeModel(true)}/>
+              PaymentMode 
+            </span>
+
+            <Select
+              className="mt-1"
+              name="PaymentModeId"
+              value={formValues.PaymentModeId}
+              onChange={(e)=>setFormValues({...formValues,PaymentModeId:e.target.value})}
+              required
+            >
+              <option>Select a Mode type</option>
+              {mode.map((md,i)=>(
+                <option key={i} value={md.id}>{md.mode}</option>
+              ))}
+              
+              
+            </Select>
+          </Label>
+
+
+              
+        </div>
+        <div className="hidden sm:block">
+
+        <Button className="mt-6" type="submit">Submit</Button>
+        </div>
+           <div className=" mt-2 block  sm:hidden">
+            <Button block size="large">
+              Accept
+            </Button>
+          </div>
+      
+        </form>
+      </ModalBody>
+      <ModalFooter>
+      <div className="hidden sm:block">
+            <Button layout="outline" onClick={closeModal}>
+              Cancel
+            </Button>
+        </div>
+        <div className="block w-full sm:hidden">
+            <Button block size="large" layout="outline" onClick={closeModal}>
+              Cancel
+            </Button>
+          </div>
+
+          {/* <div className="block w-full sm:hidden">
+            <Button block size="large">
+              Accept
+            </Button>
+          </div> */}
+      </ModalFooter>
+    </Modal>
+
+
+{/* End Of Main Modle */}
+
         <div className="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
           <InfoCard title="Total Projects " value={countsData.projectCount}>
             <RoundIcon
@@ -199,7 +485,7 @@ const invoiceList = [
         <TableContainer>
         {/* Calendar section */}
   
-  
+        <Button className="mb-4" onClick={openModal}>New Invoice</Button>
   
         {/* end of calendar section */}
         </TableContainer>
@@ -211,16 +497,16 @@ const invoiceList = [
           <Table>
             <TableHeader>
               <tr>
-                <TableCell>Invoice Id</TableCell>
-                <TableCell>Total Amount</TableCell>
-                <TableCell>Date</TableCell>
-                <TableCell>Customer</TableCell>
+                <TableCell>Invoice Date</TableCell>
+                <TableCell>Total Paid</TableCell>
+                <TableCell>Amount Due</TableCell>
+                <TableCell>Total</TableCell>
                 <TableCell>Project</TableCell>
                 <TableCell>Status</TableCell>
                 <TableCell>Actions</TableCell>
               </tr>
             </TableHeader>
-            {invoiceList.map((bid, i) => (
+            {invoices?.map((invoice, i) => (
             <TableBody key={i}>
               
                 <TableRow>
@@ -228,8 +514,8 @@ const invoiceList = [
                     <div className="flex items-center text-sm">
                       
                       <div>
-                        <p className="font-semibold">{bid.id}</p>
-                        <p className="text-xs text-gray-600 dark:text-gray-400">{bid.job}</p>
+                        <p className="font-semibold">{invoice.date}</p>
+                        <p className="text-xs text-gray-600 dark:text-gray-400">{invoice.date}</p>
                       </div>
                     </div>
                   </TableCell>
@@ -237,8 +523,8 @@ const invoiceList = [
                     <div className="flex items-center text-sm">
                       
                       <div>
-                        <p className="font-semibold">{bid.totalAmount}</p>
-                        {/* <p className='font-semibold'>{bid.ProjectId}sdf</p> */}
+                        <p className="font-semibold">{invoice.totalPaid.toLocaleString()}</p>
+                        {/* <p className='font-semibold'>{invoice.ProjectId}sdf</p> */}
                      
                       </div>
                     </div>
@@ -247,26 +533,26 @@ const invoiceList = [
                     <div className="flex items-center text-sm">
                       
                       <div>
-                        <p className="font-semibold">{bid.date}</p>
-                        {/* <p className='font-semibold'>{bid.ProjectId}sdf</p> */}
+                        <p className="font-semibold">{invoice.amountDue.toLocaleString()}</p>
+                        {/* <p className='font-semibold'>{invoice.ProjectId}sdf</p> */}
                      
                       </div>
                     </div>
                   </TableCell>
                   <TableCell>
-                    <span className="text-sm font-semibold">{bid.customer}</span>
+                    <span className="text-sm font-semibold">{invoice.total.toLocaleString()}</span>
                   </TableCell>
                   <TableCell>
-                    <span className="text-sm font-semibold">{bid.project}</span>
+                    <span className="text-sm font-semibold">{projects.map((pr)=>pr.id===invoice.ProjectId?pr.name:"")}</span>
                   </TableCell>
                   
                   <TableCell>
-                  <Badge type={bid.status==='approved'?"success":"danger"}>{bid.status}</Badge>
+                  <Badge type={invoice.status==='Paid'?"success":"danger"}>{invoice.status}</Badge>
                 </TableCell>
                   
                   <TableCell>
                     <div className="flex items-center space-x-4">
-                      <Link to={{pathname:`/app/invoice/${bid.id}`}}>
+                      <Link to={{pathname:`/app/invoice/${invoice.id}`}}>
                       <Button layout="link" size="icon" aria-label="Edit">
                         <EditIcon className="w-5 h-5" aria-hidden="true" />
                       </Button>
@@ -290,6 +576,8 @@ const invoiceList = [
             /> */}
           </TableFooter>
         </TableContainer>
+
+
 
       </>
     )

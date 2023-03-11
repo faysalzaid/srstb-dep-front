@@ -14,7 +14,7 @@ import { VscFiles } from 'react-icons/vsc'
 import { FaCommentDots } from 'react-icons/fa'
 import { GrTextAlignLeft } from 'react-icons/gr'
 import { AiFillFile, AiOutlineFile } from 'react-icons/ai'
-
+import { ErrorAlert, SuccessAlert } from "components/Alert";  
 
 import {
   TableBody,
@@ -37,21 +37,47 @@ import { url } from 'config/urlConfig'
 import axios from 'axios'
 import { FadeLoader } from 'react-spinners'
 import OverView from 'components/overview/OverView'
+import BudgetList from 'components/Budgets/BudgetSection'
+import BidSection from 'components/Bids/BidsList'
 
 
 
 
 const PgDetail = () => {
-    const [preview, setPreview] = useState(null);
-    const [page, setPage] = useState(1)
-    const [data, setData] = useState([])
-    const [projects,setProject] = useState({})
+    
+    const [companyData, setCompanyData] = useState([])
+    const [usersData, setUsersData] = useState([])
+    const [bids, setBids] = useState([])
+    const [project,setProject] = useState({})
+    const [budgets,setBudgets] = useState([])
     const [countsData,setCountsData] = useState({ projectCount:"",bidCount:"",activeProjects:"",completedProjects:""})
     const [showContract,setShowContract] = useState(false)
     const [showOverview,setShowOverview] = useState(true)
+    const [showBudget,setShowBudget] = useState(false)
     const [showBid,setShowBid] = useState(false)
     const [isOpen,setIsOpen] = useState(false)
 
+// Alert logic and initialization
+const [openSuccess, setOpenSuccess] = useState({ open: false, message: "" });
+
+const handleCloseSuccess = (event, reason) => {
+  if (reason === "clickaway") {
+    return;
+  }
+
+  setOpenSuccess({ open: false, message: "" });
+};
+
+const [openError, setOpenError] = useState({ open: false, message: "" });
+
+const handleCloseError = (event, reason) => {
+  if (reason === "clickaway") {
+    return;
+  }
+
+  setOpenError({ open: false, message: "" });
+};
+// alert logic and initialization
 
     const {id} = useParams()
     const closeModal = ()=>{
@@ -60,23 +86,24 @@ const PgDetail = () => {
     const openModal = ()=>{
         setIsOpen(true)
     }
-    const [formValues, setFormValues] = useState({
-        customer: "",
-        project: "",
-        subject: "",
-        contractValue: "",
-        contractType: "",
-        startDate: "",
-        description: ""
-      });
 
-      const handleChange = e => {
-        const { name, value } = e.target;
-        setFormValues(prevState => ({
-          ...prevState,
-          [name]: value
-        }));
-      };
+    const [formValues, setFormValues] = useState({
+      CompanyId: "",
+      name: "",
+      status: "open",
+      place: "",
+      consultant: "",
+      description: "",
+      starttime: "",
+      endtime: "",
+      year: "",
+      utilizedCost:0,
+      totalCost:0,
+      physicalPerformance:0,
+      percentage:0
+    });
+
+
     
       const handleSubmit = e => {
         e.preventDefault();
@@ -90,21 +117,68 @@ const PgDetail = () => {
   
     // console.log('data from app',authState);
       useEffect(()=>{
-      axios.get(`${url}/projects/${id}`,{withCredentials:true}).then((resp)=>{
-        if(resp.data.error){
-          console.log(resp.data.error);
+        const getDatas = async()=>{
+          await axios.get(`${url}/projects/${id}`,{withCredentials:true}).then((resp)=>{
+            if(resp.data.error){
+            
+            }
+          console.log(resp.data);
+          setProject(resp.data)
+          setBudgets(resp.data.yearlyBudgets)
+          setBids(resp.data.Bids)
+          setFormValues({
+            CompanyId: resp.data.CompanyId,
+            name: resp.data.name,
+            status: resp.data.status,
+            place: resp.data.place,
+            consultant: resp.data.consultant,
+            description: resp.data.description,
+            starttime: resp.data.starttime,
+            endtime: resp.data.endtime,
+            year: resp.data.year,
+            utilizedCost:resp.data.utilizedCost,
+            totalCost:resp.data.totalCost,
+            physicalPerformance:resp.data.physicalPerformance,
+            percentage:resp.data.percentage
+          })
+       
+      
+          })
+    
+          await axios.get(`${url}/counts`,{withCredentials:true}).then((resp)=>{
+            const data = resp.data
+            setCountsData({ projectCount:data.projectsCount,bidCount:data.countBids,activeProjects:data.activeProjectsCount,completedProjects:data.completedProjects})
+          })
+    
+          await axios.get(`${url}/users`,{withCredentials:true}).then((resp)=>{
+            if(resp.data.error){
+    
+            }else{
+              setUsersData(resp.data)
+            }
+          })
+    
+          await axios.get(`${url}/companies`,{withCredentials:true}).then((resp)=>{
+            if(resp.data.error){
+    
+            }else{
+              setCompanyData(resp.data.company)
+            }
+          })
+  
+          await axios.get(`${url}/budget`,{withCredentials:true}).then((resp)=>{
+            if(resp.data.error){
+    
+            }else{
+              setBudgets(resp.data)
+            }
+          })
         }
-      setProject(resp.data)
-      console.log(resp.data);
-  
-      })
 
-      axios.get(`${url}/counts`,{withCredentials:true}).then((resp)=>{
-        const data = resp.data
-        setCountsData({ projectCount:data.projectsCount,bidCount:data.countBids,activeProjects:data.activeProjectsCount,completedProjects:data.completedProjects})
-      })
-  
-  
+
+       getDatas()
+    
+
   },[])
   
   
@@ -134,18 +208,34 @@ setTimeout(() => {
 function handleOverview(){
 setShowOverview(true)
 setShowContract(false)
+setShowBudget(false)
+setShowBid(false)
 }
 
 function handleTask(){
 
 }
 
+function handleBids(){
+  setShowContract(false)
+  setShowOverview(false)
+  setShowBudget(false)
+  setShowBid(true)
+  }
 
+
+function handleBudgets(){
+  setShowContract(false)
+  setShowOverview(false)
+  setShowBudget(true)
+  setShowBid(false)
+  }
 
 function handleContracts(){
-
 setShowContract(true)
 setShowOverview(false)
+setShowBudget(false)
+setShowBid(false)
 }
 
 const handleMenu = () => {
@@ -191,24 +281,44 @@ navWrapper.classList.remove('active')
 
 
 
-  const handleEdit = (index) => {
+  const handleEdit = (e) => {
+    
+    e.preventDefault()
     // Implement your own edit logic here
-    console.log(`Edit row ${index}`);
+    const request = {
+      CompanyId: formValues.CompanyId,
+      name: formValues.name,
+      status: formValues.status,
+      place: formValues.place,
+      consultant: formValues.consultant,
+      description: formValues.description,
+      starttime: formValues.starttime,
+      endtime: formValues.endtime,
+      year: formValues.year,
+      utilizedCost:parseInt(formValues.utilizedCost),
+      totalCost:parseInt(formValues.totalCost),
+      physicalPerformance:parseInt(formValues.physicalPerformance),
+      percentage:parseInt(formValues.percentage)
+    }
+    console.log(request);
+
+    axios.post(`${url}/projects/${id}`,request,{withCredentials:true}).then((resp)=>{
+        if(resp.data.error){
+          setOpenError({open:true,message:`${resp.data.error}`})
+        }else{
+          setProject(resp.data)
+          console.log('resp form server:',resp.data);
+          setOpenSuccess({open:true,message:"Successfully Added"})
+          closeModal()
+        }
+    })
   };
 
-  const handleFile = (e) => {
-    if (e.target.files.length) {
-      setPreview(URL.createObjectURL(e.target.files[0]));
-    }
-  }
+
 
   // Delete row
 
 
-// End of invoice data
-  
-    // on page change, load new sliced data
-    // here you would make another server request for new data
 
   
     return (
@@ -216,11 +326,21 @@ navWrapper.classList.remove('active')
 
    
   
-        <PageTitle>Contracts</PageTitle>
+        <PageTitle>Project | {project.name}</PageTitle>
   
-        {/* <CTA /> */}
-        
-        {/* <!-- Cards --> */}
+        <ErrorAlert
+        open={openError.open}
+        handleClose={handleCloseError}
+        message={openError.message}
+        horizontal="right"
+      />
+      <SuccessAlert
+        open={openSuccess.open}
+        handleClose={handleCloseSuccess}
+        message={openSuccess.message}
+        horizontal="right"
+      />
+
         <div className="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
           <InfoCard title="Total Projects " value={countsData.projectCount}>
             <RoundIcon
@@ -262,89 +382,92 @@ navWrapper.classList.remove('active')
         <TableContainer>
         {/* Calendar section */}
   
-        <Button className="ml-0" onClick={openModal}>New Project</Button>
+        <Button className="ml-0" onClick={openModal}>Update Project</Button>
   
         {/* end of calendar section */}
         </TableContainer>
 
         <Modal isOpen={isOpen} onClose={closeModal}>
-      <ModalHeader>Add Contract</ModalHeader>
+      <ModalHeader>Update Project</ModalHeader>
       <ModalBody>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleEdit}>
         <div className="grid grid-cols-2 gap-4">
-          
-          <Label>
-            <span>Customer</span>
-            <Select
-              className="mt-1"
-              name="contractType"
-              value={formValues.UserId}
-              onChange={(e)=>setFormValues({...formValues,UserId:e.target.value})}
-              required
-            >
-              {/* <option value="" disabled>Select a Customer type</option>
-              {users.map((usr,i)=>(
-                <option key={i} value={usr.id}>{usr.name}</option>
-              ))} */}
-              
-            </Select>
-          </Label>
 
-          <Label>
-            <span>Project</span>
-            <Select
-              className="mt-1"
-              name="ProjectId"
-              // value={formValues.ProjectId}
-              // onChange={(e)=>setFormValues({...formValues,ProjectId:e.target.value})}
-              required
-            >
-              {/* <option value="" disabled>Select a Project type</option>
-              {projects.map((pr,i)=>(
-                <option key={i} value={pr.id}>{pr.name}</option>
-              ))} */}
-              
-              
-            </Select>
-          </Label>
-
-          <Label>
-            <span>Subject</span>
+        <Label>
+            <span>Name</span>
             <Input
               className="mt-1"
-              name="subject"
-              // value={formValues.subject}
-              // onChange={(e)=>setFormValues({...formValues,subject:e.target.value})}
+              name="name"
+              value={formValues.name}
+              onChange={(e)=>setFormValues({...formValues,name:e.target.value})}
+              required
+            />
+          </Label>
+          <Label>
+            <span>Company</span>
+            <Select
+              className="mt-1"
+              name="CompanyId"
+              value={formValues.CompanyId}
+              onChange={(e)=>setFormValues({...formValues,CompanyId:e.target.value})}
+              required
+            >
+              <option>Select a Company</option>
+              {companyData?.map((cp,i)=>(
+                <option key={i} value={cp.id}>{cp.name}</option>
+              ))}
+              
+            </Select>
+          </Label>
+
+          <Label>
+            <span>Status</span>
+            <Select
+              className="mt-1"
+              name="status"
+              value={formValues.status}
+              onChange={(e)=>setFormValues({...formValues,status:e.target.value})}
+              required
+            >
+              <option  >Select a Status</option>
+                <option>open</option>
+                <option>pending</option>
+                <option>active</option>
+                <option>completed</option>    
+            </Select>
+          </Label>
+
+          <Label>
+            <span>place</span>
+            <Input
+              className="mt-1"
+              name="place"
+              value={formValues.place}
+              onChange={(e)=>setFormValues({...formValues,place:e.target.value})}
               required
             />
           </Label>
 
           <Label>
-            <span>Contract Value</span>
+            <span>Consultant</span>
             <Input
               className="mt-1"
-              name="contractValue"
-              // value={formValues.contractValue}
-              // onChange={(e)=>setFormValues({...formValues,contractValue:e.target.value})}
+              name="consultant"
+              value={formValues.consultant}
+              onChange={(e)=>setFormValues({...formValues,consultant:e.target.value})}
               required
             />
           </Label>
 
           <Label>
-            <span>Contract Type</span>
-            <Select
+            <span>description</span>
+            <Textarea
               className="mt-1"
-              name="ContractTypeId"
-              // value={formValues.ContractTypeId}
-              // onChange={(e)=>setFormValues({...formValues,ContractTypeId:e.target.value})}
+              name="description"
+              value={formValues.description}
+              onChange={(e)=>setFormValues({...formValues,description:e.target.value})}
               required
-            >
-              {/* <option value="" disabled>Select a Contract type</option>
-              {contracTypes.map((ctr,i)=>(
-                <option key={i} value={ctr.id}>{ctr.type}</option>
-              ))} */}
-              
-            </Select>
+            />
           </Label>
 
           <Label>
@@ -352,9 +475,9 @@ navWrapper.classList.remove('active')
             <Input
               type="date"
               className="mt-1"
-              name="startDate"
-              // value={formValues.startDate}
-              // onChange={(e)=>setFormValues({...formValues,startDate:e.target.value})}
+              name="starttime"
+              value={formValues.starttime}
+              onChange={(e)=>setFormValues({...formValues,starttime:e.target.value})}
               required
             />
           </Label>
@@ -364,12 +487,61 @@ navWrapper.classList.remove('active')
             <Input
               type="date"
               className="mt-1"
-              name="endDate"
-              value={formValues.endDate}
-              onChange={(e)=>setFormValues({...formValues,endDate:e.target.value})}
+              name="endtime"
+              value={formValues.endtime}
+              onChange={(e)=>setFormValues({...formValues,endtime:e.target.value})}
               required
             />
           </Label>
+
+          <Label>
+            <span>Physical Performance</span>
+            <Input
+              type="number"
+              className="mt-1"
+              name="physicalPerformance"
+              value={formValues.physicalPerformance}
+              onChange={(e)=>setFormValues({...formValues,physicalPerformance:e.target.value})}
+              required
+            />
+          </Label>
+
+          <Label>
+            <span>Year</span>
+            <Input
+              type="date"
+              className="mt-1"
+              name="year"
+              value={formValues.year}
+              onChange={(e)=>setFormValues({...formValues,year:e.target.value})}
+              required
+            />
+          </Label>
+          
+          <Label>
+            <span>Total Cost</span>
+            <Input
+              type="number"
+              className="mt-1"
+              name="totalCost"
+              value={formValues.totalCost}
+              onChange={(e)=>setFormValues({...formValues,totalCost:e.target.value})}
+              required
+            />
+          </Label>
+
+          <Label>
+            <span>Utilized Cost</span>
+            <Input
+              type="number"
+              className="mt-1"
+              name="utilizedCost"
+              value={formValues.utilizedCost}
+              onChange={(e)=>setFormValues({...formValues,utilizedCost:e.target.value})}
+        
+            />
+          </Label>
+          
           
 
               
@@ -406,15 +578,13 @@ navWrapper.classList.remove('active')
       </ModalFooter>
     </Modal>
 
-
-
     <nav className='nav-one'>
       <div className='nav-list-wrapper'>
         <ul className='nav-list-ul'>
             <li className='nav-link active' onClick={()=>{handleOverview(); hideNav()}}><CgMenuGridR/>Overview</li>
             <li className='nav-link' onClick={()=>{handleTask(); hideNav()}}><BiCheckCircle/> Tasks</li>
-            <li className='nav-link' onClick={()=>{handleContracts(); hideNav()}}><VscFiles />Bids</li>
-            
+            <li className='nav-link' onClick={()=>{handleBids(); hideNav()}}><VscFiles />Bids</li>
+            <li className='nav-link' onClick={()=>{handleBudgets(); hideNav()}}><GrTextAlignLeft />Budgets</li>
             <li className='nav-link' onClick={()=>{handleContracts(); hideNav()}}><AiFillFile />Contracts</li>
 
         </ul>
@@ -426,8 +596,10 @@ navWrapper.classList.remove('active')
       </div>
     </nav>       
           
-          {showOverview?<OverView projects={projects} setProject={setProject} />:""}
-          {showContract?<ContractSection project={projects} id={id}/>:""}
+          {showOverview&&<OverView project={project} setProject={setProject} companyData={companyData} id={id} setOpenSuccess={setOpenSuccess}/>}
+          {showContract&&<ContractSection project={project} id={id}/>}
+          {showBudget&&<BudgetList id={id} budgets={budgets} setBudgets={setBudgets} invoiceIds={project?.Invoice?.id}/>}
+          {showBid&&<BidSection bid={bids} project={project}/>}
 
 
 
