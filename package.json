@@ -1,6 +1,5 @@
 {
     "name": "windmill-dashboard-react",
-    "homepage": "http://react.amiigotech.com/login",
     "version": "0.4.0",
     "description": "A multi theme, completely accessible, with components and pages examples, (almost) ready for production dashboard.",
     "private": true,
@@ -10,7 +9,7 @@
         "prestart": "npm run tailwind:dev",
         "start": "react-scripts start",
         "prebuild": "npm run tailwind:build",
-        "build": "INLINE_RUNTIME_CHUNK=false react-scripts build",
+        "build": "react-scripts build",
         "cz": "git-cz",
         "release": "release-it",
         "test": "react-scripts test",
