@@ -13,7 +13,7 @@ import { BiCheckCircle, BiTime } from 'react-icons/bi'
 import { VscFiles } from 'react-icons/vsc'
 import { FaCommentDots } from 'react-icons/fa'
 import { GrTextAlignLeft } from 'react-icons/gr'
-import { AiFillFile, AiOutlineFile } from 'react-icons/ai'
+import { AiFillFile, AiOutlineFile,AiFillAlert,AiOutlineAlert } from 'react-icons/ai'
 import { ErrorAlert, SuccessAlert } from "components/Alert";  
 
 import {
@@ -24,7 +24,7 @@ import {
 } from '@windmill/react-ui'
 import { Card, CardBody } from '@windmill/react-ui';
 import { Modal, ModalHeader, ModalBody, ModalFooter } from '@windmill/react-ui'
-import { Input, HelperText, Label, Select, Textarea } from '@windmill/react-ui'
+import { Input, HelperText, Label, Select, Textarea,Badge } from '@windmill/react-ui'
 
 import {
   doughnutOptions,
@@ -38,7 +38,8 @@ import axios from 'axios'
 import { FadeLoader } from 'react-spinners'
 import OverView from 'components/overview/OverView'
 import BudgetList from 'components/Budgets/BudgetSection'
-import BidSection from 'components/Bids/BidsList'
+import BidSection from 'components/Bids/BidsSection'
+
 
 
 
@@ -120,11 +121,11 @@ const handleCloseError = (event, reason) => {
         const getDatas = async()=>{
           await axios.get(`${url}/projects/${id}`,{withCredentials:true}).then((resp)=>{
             if(resp.data.error){
-            
+              setOpenError({open:true,message:`${resp.data.error}`})
             }
-          console.log(resp.data);
           setProject(resp.data)
           setBudgets(resp.data.yearlyBudgets)
+          // console.log(resp.data.Invoice.length);
           setBids(resp.data.Bids)
           setFormValues({
             CompanyId: resp.data.CompanyId,
@@ -166,13 +167,13 @@ const handleCloseError = (event, reason) => {
             }
           })
   
-          await axios.get(`${url}/budget`,{withCredentials:true}).then((resp)=>{
-            if(resp.data.error){
+          // await axios.get(`${url}/budget`,{withCredentials:true}).then((resp)=>{
+          //   if(resp.data.error){
     
-            }else{
-              setBudgets(resp.data)
-            }
-          })
+          //   }else{
+          //     setBudgets(resp.data)
+          //   }
+          // })
         }
 
 
@@ -300,14 +301,14 @@ navWrapper.classList.remove('active')
       physicalPerformance:parseInt(formValues.physicalPerformance),
       percentage:parseInt(formValues.percentage)
     }
-    console.log(request);
+    // console.log(request);
 
     axios.post(`${url}/projects/${id}`,request,{withCredentials:true}).then((resp)=>{
         if(resp.data.error){
           setOpenError({open:true,message:`${resp.data.error}`})
         }else{
           setProject(resp.data)
-          console.log('resp form server:',resp.data);
+          // console.log('resp form server:',resp.data);
           setOpenSuccess({open:true,message:"Successfully Added"})
           closeModal()
         }
@@ -381,8 +382,13 @@ navWrapper.classList.remove('active')
   
         <TableContainer>
         {/* Calendar section */}
-  
+        <div className='flex mb-2'>
         <Button className="ml-0" onClick={openModal}>Update Project</Button>
+        {project?.Invoice?.ProjectId===project.id?
+        <Badge className='ml-2 mt-2'> <AiFillAlert  className='ml-2 mt-1'/>This Project is invoiced</Badge>
+        :<Link to={'/app/invoice'}> <Badge className='ml-2 mt-2' type="danger"> <AiOutlineAlert  className='ml-2 mt-1'/>Invoice This Project</Badge></Link>
+        }
+        </div>
   
         {/* end of calendar section */}
         </TableContainer>
@@ -541,9 +547,6 @@ navWrapper.classList.remove('active')
         
             />
           </Label>
-          
-          
-
               
         </div>
         <div className="hidden sm:block">
@@ -599,7 +602,7 @@ navWrapper.classList.remove('active')
           {showOverview&&<OverView project={project} setProject={setProject} companyData={companyData} id={id} setOpenSuccess={setOpenSuccess}/>}
           {showContract&&<ContractSection project={project} id={id}/>}
           {showBudget&&<BudgetList id={id} budgets={budgets} setBudgets={setBudgets} invoiceIds={project?.Invoice?.id}/>}
-          {showBid&&<BidSection bid={bids} project={project}/>}
+          {showBid&&<BidSection bid={bids} project={project} users={usersData} setBids={setBids} setProject={setProject}/>}
 
 
 

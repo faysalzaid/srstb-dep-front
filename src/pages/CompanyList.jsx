@@ -83,13 +83,13 @@ function CompanyList(props) {
     const [searchResult,setSearchResult] = useState([])
     const [searchTerm,setSearchTerm] = useState("")
     const [fetchedResult,setFetchedResult] = useState([])
-    const [authorization,setAuthorization] = useState(false)
+    const [count,setCount] = useState(0)
 
     //ENDOF COMPANY DATA
 
 useEffect(()=>{
 
-  axios.get(`${url}/users`).then((resp)=>{
+  axios.get(`${url}/users`,{withCredentials:true}).then((resp)=>{
     if(resp.data.error){
 
     }else{
@@ -99,32 +99,38 @@ useEffect(()=>{
     }
   })
 
+  axios.get(`${url}/companies`,{withCredentials:true}).then((resp)=>{
+    if(resp.data.error){
+
+    }else{
+      setCompanyData(resp.data.company)
+      setCount(resp.data.count)
+    }
+  })
+
 },[])
 
-  const {isLoading,data} = useQuery(['company-data'],()=>{
-    return axios.get(`${url}/companies`).then((resp)=>{
-      return resp.data
-  })
-  })
 
-  let query = [];
-  let count;
+
 
 
 
   
+  useEffect(()=>{
+    setFetchedResult(searchTerm.length<1?companyData:searchResult)
+  },[companyData,searchTerm])
 
 
   const searchHandler = async(search)=>{
     setSearchTerm(search)
     if(search!==0){
-      const newCompanyList = query?.filter((empl)=>{
+      const newCompanyList = companyData?.filter((empl)=>{
         return Object.values(empl).join(" ").toLowerCase().includes(search.toLowerCase())
       })
       // console.log(newEmployeeList);
       setSearchResult(newCompanyList)
     }else{
-      setSearchResult(query)
+      setSearchResult(companyData)
     }
   }
 
@@ -150,7 +156,8 @@ useEffect(()=>{
           setOpenError({open:true,message:`${resp.data.error}`})
         }else{
           // console.log('added data',resp.data);
-          query.push(resp.data)
+      
+          setCompanyData((prev)=>[...prev,resp.data])
           setCompanyFormData({name:"",location:"",UserId:""})
           setOpenSuccess({open:true,message:"Added Successfully"})
          
@@ -161,18 +168,16 @@ useEffect(()=>{
 
 }
 const deleteCompany =async()=>{
-  const newData =query.filter((c)=>c.id===isDeleteOpen.id)
   // console.log('new data ',newData[0]);
   // console.log(query.indexOf(newData[0]));
-  const response = await axios.get(`${url}/companies/delete/${isDeleteOpen.id}`).then((resp)=>{
+  const response = await axios.get(`${url}/companies/delete/${isDeleteOpen.id}`,{withCredentials:true}).then((resp)=>{
     
     if(resp.data.error){
       setOpenError({open:true,message:`${resp.data.error}`})
     }else{
       
-      const newData = query.filter((c)=>c.id===isDeleteOpen.id)
-      const rdata = query.indexOf(newData[0]);
-      query.splice(rdata,1)
+      const newData = companyData.filter((c)=>c.id!==isDeleteOpen.id)
+      setCompanyData(newData)
       closeDelete() 
       setOpenSuccess({open:true,message:"Deleted Successfully"})
       // props.history.push('/app/companies')
@@ -181,10 +186,7 @@ const deleteCompany =async()=>{
 }
 
 
-  if(!isLoading){
-    query = searchTerm.length<1?data?.company:searchResult
-    count = data?.count
-  }
+
 
 
   const [isDeleteOpen,setIsDeleteOpen] = useState({open:false,id:""})
@@ -336,7 +338,7 @@ const deleteCompany =async()=>{
             </tr>
           </TableHeader>
           <TableBody>
-            {query?.map((comp, i) => (
+            {fetchedResult?.map((comp, i) => (
               <TableRow key={i}>
                 <TableCell>
                   <div className="flex items-center text-sm">

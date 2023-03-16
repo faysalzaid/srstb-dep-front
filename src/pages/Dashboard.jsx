@@ -84,7 +84,7 @@ useEffect(()=>{
 const projectPercentileGraph = {
   data: {
       datasets: [{
-          data: projects?.map(pr=> pr.percentage),
+          data: projects?.map(pr=> pr.physicalPerformance),
           /**
            * These colors come from Tailwind CSS palette
            * https://tailwindcss.com/docs/customizing-colors/#default-color-palette

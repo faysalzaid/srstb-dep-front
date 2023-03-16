@@ -13,7 +13,7 @@ useEffect(()=>{
     if(resp.data.error){
 
     }else{
-      console.log(resp.data);
+      // console.log(resp.data);
       const data = resp.data.filter((dt)=>dt.ProjectId===id)
       setContracts(data)
      
@@ -22,7 +22,7 @@ useEffect(()=>{
 },[id])
 
   return (
-    <section  className="contracts-section p-4 bg-white rounded-md shadow-md">
+    <section className="contracts-section p-4 bg-white rounded-md shadow-md">
       <h2 className="text-xl font-medium mb-4">Contracts</h2>
       <TableContainer className="mb-4">
         <Table>

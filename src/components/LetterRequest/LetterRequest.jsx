@@ -40,28 +40,30 @@ import { Link, withRouter } from 'react-router-dom'
 import { url } from 'config/urlConfig'
 import axios from 'axios'
 
-import NewInvoice from './SingleInvoice'
+// import NewInvoice from './SingleInvoice'
 import { useRef } from 'react'
 import useAuth from 'hooks/useAuth'
 
 
 
 
-const InvoiceList = () => {
+const LetterRequest = () => {
     const {authState} = useAuth()
     const [users, setUsers] = useState([])
     const [mode,setMode] = useState([])
     const [invoices, setInvoices] = useState([])
+    const [slipData,setSlipData] = useState([])
     const [projects,setProject] = useState([])
     const [modeModel,setModeModel] = useState(false)
     const [countsData,setCountsData] = useState({ projectCount:"",bidCount:"",activeProjects:"",completedProjects:""})
     const [formValues,setFormValues] = useState({date:"",notes:"",totalPaid:"",total:0,UserId:"",ProjectId:"",PaymentModeId:""})
     const [isDeleteOpen,setIsDeleteOpen] = useState({open:false,id:""})
+    const [letterForm,setLetterForm] = useState({to:"",subject:"",message:"",ProjectId:"",UserId:"",createdBy:"",date:""})
     const modeInput = useRef()
     let amountRef = useRef()
 
     const closeDelete = ()=>{
-      setIsDeleteOpen({open:false})
+      setIsDeleteOpen(false)
   }
     const openDelete = (id)=>{
       setIsDeleteOpen({open:true,id:id})
@@ -81,20 +83,7 @@ const InvoiceList = () => {
     e.preventDefault()
 
     // console.log();
-    const request = {
-      mode:modeInput.current.value
-    }
-    await axios.post(`${url}/paymentmode`,request,{withCredentials:true}).then((resp)=>{
-      if(resp.data.error){
-        setOpenError({open:true,message:`${resp.data.error}`})
-      }else{
-        setMode([...mode,resp.data])
-        closeModeModel()
-        setOpenSuccess({open:true,message:"Successfully Added"})
-      }
-    }).catch((error)=>{
-      setOpenError({open:true,message:`${error.response.data.error}`})
-    })
+
     
   }
 
@@ -159,6 +148,10 @@ const InvoiceList = () => {
        setMode(resp.data)
       })
 
+      axios.get(`${url}/slip`,{withCredentials:true}).then((resp)=>{
+        setSlipData(resp.data.slip)
+       })
+
   
   
   },[])
@@ -166,11 +159,6 @@ const InvoiceList = () => {
   // END OF USE EFFECT
   
   
-  useEffect(()=>{
-      const newPr = projects.filter((pr)=>pr.id===formValues.ProjectId)
-      setFormValues({...formValues,total:newPr[0]?.totalCost})
-      // console.log('hitted');
-  },[formValues.ProjectId])
   
 
   
@@ -179,20 +167,22 @@ const handleSubmit = async(e)=>{
   e.preventDefault();
   // console.log(formValues);
   const request = {
-    ProjectId:formValues.ProjectId,
+    ProjectId:letterForm.ProjectId,
     UserId:authState.id,
-    date:formValues.date,
-    total:formValues.total,
-    totalPaid:formValues.totalPaid,
-    notes:formValues.notes,
-    PaymentModeId:formValues.PaymentModeId
+    to:letterForm.to,
+    subject:letterForm.subject,
+    message:letterForm.message,
+    date:letterForm.date,
+    createdBy:authState.username
+
   }
-  await axios.post(`${url}/invoice`,request,{withCredentials:true}).then((resp)=>{
+  console.log(request);
+  await axios.post(`${url}/slip`,{withCredentials:true},request).then((resp)=>{
     // console.log(resp.data);
     if(resp.data.error){
       setOpenError({open:true,message:`${resp.data.error}`})
     }else{
-      setInvoices([...invoices,resp.data])
+      setSlipData((prev)=>[...prev,resp.data])
       setOpenSuccess({open:true,message:"Succesfully Added"})
       closeModal()
     }
@@ -203,16 +193,6 @@ const handleSubmit = async(e)=>{
 }
 
 const handleDelete = ()=>{
-  axios.delete(`${url}/invoice/${isDeleteOpen.id}`,{withCredentials:true}).then((resp)=>{
-    if(resp.data.error){
-      setOpenError({open:true,message:`${resp.data.error}`})
-    }else{
-      const newData = invoices.filter((inv)=>inv.id!==isDeleteOpen.id)
-      setInvoices(newData)
-      setOpenSuccess({open:true,message:"Successfully Deleted"})
-      closeDelete()
-    }
-  })
 
 }
   
@@ -231,7 +211,7 @@ const captureProject = ()=>{
     return (
       <>
   
-        <PageTitle>Invoices</PageTitle>
+        <PageTitle>Letter | Requests</PageTitle>
         {/* Notifications */}
         <ErrorAlert
         open={openError.open}
@@ -263,75 +243,59 @@ const captureProject = ()=>{
 
         {/* End of delete Section */}
 
-          {/* Payment MOde section */}
-      <Modal isOpen={modeModel} onClose={closeModeModel}>
-      <ModalHeader>Add Mode</ModalHeader>
-      <ModalBody>
-      <form onSubmit={addMode}>
-        <div className="grid grid-cols-1 gap-4">
-          <Label>
-            <span>Mode</span>
-            <Input
-              type="text"
-              ref={modeInput}
-              className="mt-1"
-              name="totalPaid"
-              onChange={(e)=>setFormValues({...formValues,totalPaid:e.target.value})}
-              required
-            />
-          </Label>
-              
-        </div>
-        <div className="hidden sm:block">
-
-        <Button className="mt-6" type="submit">Submit</Button>
-        </div>
-           <div className=" mt-2 block  sm:hidden">
-            <Button block size="large">
-              Accept
-            </Button>
-          </div>
-      
-        </form>
-      </ModalBody>
-      <ModalFooter>
-      <div className="hidden sm:block">
-            <Button layout="outline" onClick={closeModeModel}>
-              Cancel
-            </Button>
-        </div>
-        <div className="block w-full sm:hidden">
-            <Button block size="large" layout="outline" onClick={closeModeModel}>
-              Cancel
-            </Button>
-          </div>
-
-          {/* <div className="block w-full sm:hidden">
-            <Button block size="large">
-              Accept
-            </Button>
-          </div> */}
-      </ModalFooter>
-    </Modal>
-
-
-        {/* End of Payment Mode Section */}
 
 
 {/* Main Model */}
         <Modal isOpen={isOpen} onClose={closeModal}>
-      <ModalHeader>Add Invoice</ModalHeader>
+      <ModalHeader>Request Letter</ModalHeader>
       <ModalBody>
       <form onSubmit={handleSubmit}>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4">
+
+
+
+        <Label>
+            <span>To</span>
+            <Input
+              type="text"
+              ref={modeInput}
+              className="mt-1"
+              name="to"
+              onChange={(e)=>setLetterForm({...letterForm,to:e.target.value})}
+              required
+            />
+          </Label>
+
+        <Label>
+            <span>Date</span>
+            <Input
+              type="date"
+              ref={modeInput}
+              className="mt-1"
+              name="date"
+              onChange={(e)=>setLetterForm({...letterForm,date:e.target.value})}
+              required
+            />
+          </Label>
+          <Label>
+            <span>Subject</span>
+            <Input
+              type="text"
+              ref={modeInput}
+              className="mt-1"
+              name="subject"
+              onChange={(e)=>setLetterForm({...letterForm,subject:e.target.value})}
+              required
+            />
+          </Label>
 
           <Label>
             <span>Project</span>
             <Select
               className="mt-1"
               name="ProjectId"
-              value={formValues.ProjectId}
-              onChange={(e)=>setFormValues({...formValues,ProjectId:e.target.value})}
+            //   value={letterForm.ProjectId}
+              onChange={(e)=>setLetterForm({...letterForm,ProjectId:e.target.value})}
               required
             >
               <option>Select a Project type</option>
@@ -343,80 +307,20 @@ const captureProject = ()=>{
             </Select>
           </Label>
 
-          <Label>
-            <span>Total Amount</span>
-            <Input
-              // ref={amountRef}
-              htmlFor='total'
-              className="mt-1"
-              name="totalPaid"
-              value={formValues.total}
-              required
-              disabled
-            />
-          </Label>
 
-          <Label>
-            <span>Total Paid</span>
-            <Input
-            type="number"
-              className="mt-1"
-              name="totalPaid"
-              value={formValues.totalPaid}
-              onChange={(e)=>setFormValues({...formValues,totalPaid:e.target.value})}
-              required
-            />
-          </Label>
 
+          <div className='rounded-lg border-gray-300 focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-gray'>
           <Label>
-            <span>Notes</span>
+            <span className='font-medium'>Notes</span>
             <Textarea
-              className="mt-1"
+              className="mt-1 block w-full h-40 px-4 py-2 resize-none border-gray-10 outline-none"
               name="notes"
-              value={formValues.notes}
-              onChange={(e)=>setFormValues({...formValues,notes:e.target.value})}
+            //   value={letterForm.notes}
+              onChange={(e)=>setLetterForm({...letterForm,message:e.target.value})}
               required
             />
           </Label>
-
-         
-
-          <Label>
-            <span>Date</span>
-            <Input
-              type="date"
-              className="mt-1"
-              name="startDate"
-              value={formValues.date}
-              onChange={(e)=>setFormValues({...formValues,date:e.target.value})}
-              required
-            />
-          </Label>
-
-          <Label>
-              
-            <span className="flex">  
-              <FaPlusCircle className='mt-1 mr-1' onClick={()=>setModeModel(true)}/>
-              PaymentMode 
-            </span>
-
-            <Select
-              className="mt-1"
-              name="PaymentModeId"
-              value={formValues.PaymentModeId}
-              onChange={(e)=>setFormValues({...formValues,PaymentModeId:e.target.value})}
-              required
-            >
-              <option>Select a Mode type</option>
-              {mode.map((md,i)=>(
-                <option key={i} value={md.id}>{md.mode}</option>
-              ))}
-              
-              
-            </Select>
-          </Label>
-
-
+          </div>
               
         </div>
         <div className="hidden sm:block">
@@ -458,8 +362,8 @@ const captureProject = ()=>{
           <InfoCard title="Total Projects " value={countsData.projectCount}>
             <RoundIcon
               icon={PeopleIcon}
-              iconColorclassName="text-orange-500 dark:text-orange-100"
-              bgColorclassName="bg-orange-100 dark:bg-orange-500"
+              iconColorClass="text-orange-500 dark:text-orange-100"
+              bgColorClass="bg-orange-100 dark:bg-orange-500"
               className="mr-4"
             />
           </InfoCard>
@@ -467,8 +371,8 @@ const captureProject = ()=>{
           <InfoCard title="Bids Registered" value={countsData.bidCount}>
             <RoundIcon
               icon={MoneyIcon}
-              iconColorclassName="text-green-500 dark:text-green-100"
-              bgColorclassName="bg-green-100 dark:bg-green-500"
+              iconColorClass="text-green-500 dark:text-green-100"
+              bgColorClass="bg-green-100 dark:bg-green-500"
               className="mr-4"
             />
           </InfoCard>
@@ -476,8 +380,8 @@ const captureProject = ()=>{
           <InfoCard title="Active Projects" value={countsData.activeProjects}>
             <RoundIcon
               icon={CartIcon}
-              iconColorclassName="text-blue-500 dark:text-blue-100"
-              bgColorclassName="bg-blue-100 dark:bg-blue-500"
+              iconColorClass="text-blue-500 dark:text-blue-100"
+              bgColorClass="bg-blue-100 dark:bg-blue-500"
               className="mr-4"
             />
           </InfoCard>
@@ -485,8 +389,8 @@ const captureProject = ()=>{
           <InfoCard title="Completed Projects" value={countsData.completedProjects}>
             <RoundIcon
               icon={ChatIcon}
-              iconColorclassName="text-teal-500 dark:text-teal-100"
-              bgColorclassName="bg-teal-100 dark:bg-teal-500"
+              iconColorClass="text-teal-500 dark:text-teal-100"
+              bgColorClass="bg-teal-100 dark:bg-teal-500"
               className="mr-4"
             />
           </InfoCard>
@@ -495,7 +399,7 @@ const captureProject = ()=>{
         <TableContainer>
         {/* Calendar section */}
   
-        <Button className="mb-4" onClick={openModal}>New Invoice</Button>
+        <Button className="mb-4" onClick={openModal}>New Request</Button>
   
         {/* end of calendar section */}
         </TableContainer>
@@ -507,16 +411,16 @@ const captureProject = ()=>{
           <Table>
             <TableHeader>
               <tr>
-                <TableCell>Invoice Date</TableCell>
-                <TableCell>Total Paid</TableCell>
-                <TableCell>Amount Due</TableCell>
-                <TableCell>Total</TableCell>
+                <TableCell>Generated Date</TableCell>
+                <TableCell>To</TableCell>
+                <TableCell>Slip Subject</TableCell>
+                <TableCell>Written By</TableCell>
                 <TableCell>Project</TableCell>
                 <TableCell>Status</TableCell>
                 <TableCell>Actions</TableCell>
               </tr>
             </TableHeader>
-            {invoices?.map((invoice, i) => (
+            {slipData?.map((slip, i) => (
             <TableBody key={i}>
               
                 <TableRow>
@@ -524,8 +428,8 @@ const captureProject = ()=>{
                     <div className="flex items-center text-sm">
                       
                       <div>
-                        <p className="font-semibold">{invoice.date}</p>
-                        <p className="text-xs text-gray-600 dark:text-gray-400">{invoice.date}</p>
+                        <p className="font-semibold">{slip.date}</p>
+                        {/* <p className="text-xs text-gray-600 dark:text-gray-400">{slip.date}</p> */}
                       </div>
                     </div>
                   </TableCell>
@@ -533,8 +437,17 @@ const captureProject = ()=>{
                     <div className="flex items-center text-sm">
                       
                       <div>
-                        <p className="font-semibold">{invoice.totalPaid.toLocaleString()}</p>
-                        {/* <p className='font-semibold'>{invoice.ProjectId}sdf</p> */}
+                        <p className="font-semibold">{slip.to}</p>
+                        {/* <p className="text-xs text-gray-600 dark:text-gray-400">{slip.date}</p> */}
+                      </div>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center text-sm">
+                      
+                      <div>
+                        <p className="font-semibold">{slip.subject.slice(0,5)}</p>
+                        {/* <p className='font-semibold'>{slip.ProjectId}sdf</p> */}
                      
                       </div>
                     </div>
@@ -543,32 +456,29 @@ const captureProject = ()=>{
                     <div className="flex items-center text-sm">
                       
                       <div>
-                        <p className="font-semibold">{invoice.amountDue.toLocaleString()}</p>
-                        {/* <p className='font-semibold'>{invoice.ProjectId}sdf</p> */}
+                        <p className="font-semibold">{slip.createdBy}</p>
+                        {/* <p className='font-semibold'>{slip.ProjectId}sdf</p> */}
                      
                       </div>
                     </div>
                   </TableCell>
                   <TableCell>
-                    <span className="text-sm font-semibold">{invoice.total.toLocaleString()}</span>
-                  </TableCell>
-                  <TableCell>
-                    <span className="text-sm font-semibold">{projects.map((pr)=>pr.id===invoice.ProjectId?pr.name:"")}</span>
+                    <span className="text-sm font-semibold">{projects.map((pr)=>pr.id===slip.ProjectId?pr.name:"")}</span>
                   </TableCell>
                   
                   <TableCell>
-                  <Badge type={invoice.status==='Paid'?"success":"danger"}>{invoice.status}</Badge>
+                  <Badge type={slip.status==='accepted'?"success":"danger"}>{slip.status}</Badge>
                 </TableCell>
                   
                   <TableCell>
                     <div className="flex items-center space-x-4">
-                      <Link to={{pathname:`/app/invoice/${invoice.id}`}}>
+                      <Link to={{pathname:`/app/requests/${slip.id}`}}>
                       <Button layout="link" size="icon" aria-label="Edit">
                         <EditIcon className="w-5 h-5" aria-hidden="true" />
                       </Button>
                       </Link>
                       <Button  style={{color:'red'}} layout="link" size="icon" aria-label="Delete">
-                        <TrashIcon className="w-5 h-5" aria-hidden="true" onClick={()=>openDelete(invoice.id)}/>
+                        <TrashIcon className="w-5 h-5" aria-hidden="true" />
                       </Button>
                     </div>
                   </TableCell>
@@ -600,4 +510,4 @@ const captureProject = ()=>{
 
 
 
-export default InvoiceList
+export default LetterRequest

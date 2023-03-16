@@ -129,17 +129,17 @@ function BidDetail(props) {
       formData.append('bidUserPic',bidFormData.bidUserPic)
       formData.append('ProjectId',bidFormData.ProjectId)
       formData.append('UserId',bidFormData.UserId)
-      console.log(formData);
+      // console.log(formData);
 
        const response = await axios.post(`http://localhost:4000/bids/${id}`,formData,{withCredentials:true}).then((resp)=>{
-        console.log('From resp.data',resp.data);
+        // console.log('From resp.data',resp.data);
         if(resp.data.error){
           setErrorMessage(resp.data.error)
         }else{
             const rfs = resp.data
             setBidData(rfs)
             // setBidFormData(rfs)
-            console.log(resp.data);
+            // console.log(resp.data);
             closeModal()
             // props.history.push(`../../app/bids/${id}`)
             setSuccessMessage("Successfully Updated")
@@ -154,7 +154,7 @@ function BidDetail(props) {
 
 }
         const deleteBid =async(ids)=>{
-          const response = await axios.get(`http://localhost:4000/bids/delete/${ids}`).then((resp)=>{
+          const response = await axios.get(`${url}/bids/delete/${ids}`,{withCredentials:true}).then((resp)=>{
             
             if(resp.data.error){
               setErrorMessage(resp.data.error)
@@ -257,7 +257,7 @@ function BidDetail(props) {
               onChange={(e)=>setBidFormData({...bidFormData,ProjectId:e.target.value})}
               required
             >
-              <option value="" disabled>Select a Project</option>
+              <option value="">Select a Project</option>
               {projects.map((ctr,i)=>(
                 <option key={i} value={ctr.id}>{ctr.name}</option>
               ))}

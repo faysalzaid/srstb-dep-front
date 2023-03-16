@@ -3,7 +3,7 @@ import Dialog from '@mui/material/Dialog';
 import Slide from '@mui/material/Slide';
 import { IconButton, Grid } from '@mui/material';
 import { MdClose, MdCached, MdCancel, MdDateRange } from 'react-icons/md';
-
+import { Input, HelperText, Label, Select, Textarea } from '@windmill/react-ui'
 import { TextField, Dropdown, RichTextInput, DateInput } from 'components/Projects/Inputs/Inputs';
 import { MdPhoneInTalk, MdPerson, MdOutlineMailOutline } from 'react-icons/md';
 import {AiOutlineCheckCircle, AiOutlineMail} from 'react-icons/ai';
@@ -18,6 +18,7 @@ import { useTheme } from "@mui/material/styles";
 import {Button} from '@windmill/react-ui'
 import { url } from 'config/urlConfig';
 import axios from 'axios';
+
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -47,7 +48,7 @@ const AddEmployee = ({open, handleClose, user,setOpenError,setOpenSuccess}) => {
     address: {value: "", error: "", optional: false},
     birthday: {value: new Date(), error: "", optional: false},
     postCode: {value: "", error: "", optional: false},
-    image: {value: "", error: "", optional: false},
+    image: {value: "", error: "", optional: true},
    
 
   });
@@ -165,39 +166,39 @@ const AddEmployee = ({open, handleClose, user,setOpenError,setOpenSuccess}) => {
     nformData.append('image',formData.image.value)
 
     console.log('New form:',nformData);
-    axios.post(`${url}/employees/`,nformData,{withCredentials:true}).then((resp)=>{
-        console.log('resp.data is :',resp.data);
-        if(resp.data.error){
-            const msg = resp.data.error
-            setOpenError({open:true,message:msg})
-            console.log(resp.data.error);
-            handleClose();
-        }else{
-            const userData = resp.data 
-            setFormData({
-                fullName: {value: userData?.name, error: "", optional: false},
-                phone: {value: userData?.phone, error: "", optional: false},
-                status: {value: userData?.status, error: "", optional: false},
-                email: {value: userData?.email, error: "", optional: false},
-                DepartmentId: {value: userData?.DepartmentId, error: "", optional: false},
-                DesignationId: {value: userData?.DesignationId, error: "", optional: false},
-                AreaId: {value: userData?.AreaId, error: "", optional: false},
-                hiredDate: {value: userData?.hiredDate, error: "", optional: false},
-                ssn: {value: userData?.ssn, error: "", optional: false},
-                passportNo: {value: userData?.passportNo, error: "", optional: false},
-                contactPhone: {value: userData?.contactPhone, error: "", optional: false},
-                nationality: {value: userData?.nationality, error: "", optional: false},
-                address: {value: userData?.address, error: "", optional: false},
-                birthday: {value: userData?.birthday, error: "", optional: false},
-                postCode: {value: userData?.postCode, error: "", optional: false},
+    // axios.post(`${url}/employees/`,nformData,{withCredentials:true}).then((resp)=>{
+    //     console.log('resp.data is :',resp.data);
+    //     if(resp.data.error){
+    //         const msg = resp.data.error
+    //         setOpenError({open:true,message:msg})
+    //         console.log(resp.data.error);
+    //         handleClose();
+    //     }else{
+    //         const userData = resp.data 
+    //         setFormData({
+    //             fullName: {value: userData?.name, error: "", optional: false},
+    //             phone: {value: userData?.phone, error: "", optional: false},
+    //             status: {value: userData?.status, error: "", optional: false},
+    //             email: {value: userData?.email, error: "", optional: false},
+    //             DepartmentId: {value: userData?.DepartmentId, error: "", optional: false},
+    //             DesignationId: {value: userData?.DesignationId, error: "", optional: false},
+    //             AreaId: {value: userData?.AreaId, error: "", optional: false},
+    //             hiredDate: {value: userData?.hiredDate, error: "", optional: false},
+    //             ssn: {value: userData?.ssn, error: "", optional: false},
+    //             passportNo: {value: userData?.passportNo, error: "", optional: false},
+    //             contactPhone: {value: userData?.contactPhone, error: "", optional: false},
+    //             nationality: {value: userData?.nationality, error: "", optional: false},
+    //             address: {value: userData?.address, error: "", optional: false},
+    //             birthday: {value: userData?.birthday, error: "", optional: false},
+    //             postCode: {value: userData?.postCode, error: "", optional: false},
                
-              });
-            setOpenSuccess({open:true,message:"Updated Successfully"})
+    //           });
+    //         setOpenSuccess({open:true,message:"Updated Successfully"})
             
             
-            handleClose()
-        }
-    })
+    //         handleClose()
+    //     }
+    // })
     //   copy formData to new FormData object and then bla bla bla bla...
     //   after sumbit.then((bla)=>{bla bla...}) then call handleClose(); and reload user info from parent
       handleClose();
@@ -337,9 +338,7 @@ const AddEmployee = ({open, handleClose, user,setOpenError,setOpenSuccess}) => {
                                                   paddingTop: 0,
                                                   marginTop: 10
                                                 }}
-                                                inputStyle={{
-                                                
-                                                }}
+                                                className="mt-4 "
                                                 
                                                 startIcon={<AiOutlineCheckCircle fontSize={20}/>}
                                             />
@@ -357,9 +356,7 @@ const AddEmployee = ({open, handleClose, user,setOpenError,setOpenSuccess}) => {
                                                   paddingTop: 0,
                                                   marginTop: 10
                                                 }}
-                                                inputStyle={{
-                                                
-                                                }}
+                                                className="mt-4 "
                                                 
                                                 startIcon={<AiOutlineCheckCircle fontSize={20}/>}
                                             />
@@ -378,9 +375,7 @@ const AddEmployee = ({open, handleClose, user,setOpenError,setOpenSuccess}) => {
                                                   paddingTop: 0,
                                                   marginTop: 10
                                                 }}
-                                                inputStyle={{
-                                                
-                                                }}
+                                                className="mt-4 "
                                                 
                                                 startIcon={<AiOutlineCheckCircle fontSize={20}/>}
                                             />
@@ -399,9 +394,7 @@ const AddEmployee = ({open, handleClose, user,setOpenError,setOpenSuccess}) => {
                                                   paddingTop: 0,
                                                   marginTop: 10
                                                 }}
-                                                inputStyle={{
-
-                                                }}
+                                                className="mt-4 "
                                                 
                                                 startIcon={<AiOutlineCheckCircle fontSize={20}/>}
                                             />
@@ -426,12 +419,12 @@ const AddEmployee = ({open, handleClose, user,setOpenError,setOpenSuccess}) => {
                                             />
                                         </Grid>
                                         <Grid item sm={12} lg={6}>
-                                            <input type='file' label="image"
+                                            <Input type='file' label="image"
                                             // formData={formData}
-                                            setFormData={setFormData}
+                                            // setFormData={setFormData}
                                            
                                             
-                                            
+                                            required
                                             onChange={(e)=>setFormData({...formData,image:{value: e.target.files[0], error: "", optional: false}})}/>
                                             
                                             </Grid>

@@ -103,7 +103,7 @@ function CompanyDetail(props) {
 
   useEffect(()=>{
     const companyFetch = async()=>{
-        const response = await axios.get(`${url}/companies/${id}`)
+        const response = await axios.get(`${url}/companies/${id}`,{withCredentials:true})
         if(response.data.error) setFrontErrorMessage(response.data.error)
         setCompanyData(response.data)
         setCompanyFormData({name:response.data.name,location:response.data.location,UserId:response.data.UserId})
@@ -129,7 +129,7 @@ function CompanyDetail(props) {
     if(companyFormData.name==="" || companyFormData.location===""){
       setErrorMessage('Please Provide all data')  
     }else{
-      const response = await axios.post(`${url}/companies/${id}`,companyFormData).then((resp)=>{
+      const response = await axios.post(`${url}/companies/${id}`,companyFormData,{withCredentials:true}).then((resp)=>{
         if(resp.data.error){
           setErrorMessage(resp.data.error)
         }else{
@@ -137,12 +137,13 @@ function CompanyDetail(props) {
           setOpenSuccess({open:true,message:"Successfully Added"})
           closeModal()
         }
+      // console.log(companyFormData);
       })
     }
 
 }
 const deleteCompany =async()=>{
-  const response = await axios.get(`${url}/companies/delete/${id}`).then((resp)=>{
+  const response = await axios.get(`${url}/companies/delete/${id}`,{withCredentials:true}).then((resp)=>{
     
     if(resp.data.error){
       setErrorMessage(resp.data.error)
@@ -213,7 +214,7 @@ const deleteCompany =async()=>{
               onChange={(e)=>setCompanyFormData({...companyFormData,UserId:e.target.value})}
               required
             >
-              <option value="" >Select a Customer type</option>
+              <option  >Select a Customer type</option>
               {users.map((usr,i)=>(
                 <option key={i} value={usr.id}>{usr.name}</option>
               ))}

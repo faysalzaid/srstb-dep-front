@@ -12,7 +12,7 @@ import PageTitle from '../Typography/PageTitle'
 import { ChatIcon, CartIcon, MoneyIcon, PeopleIcon, TrashIcon, EditIcon } from '../../icons'
 import RoundIcon from '../RoundIcon'
 import response from '../../utils/demo/tableData'
-
+import { IoIosEye, IoIosEyeOff } from 'react-icons/io';
 import { FaList } from 'react-icons/fa';
 
 
@@ -55,7 +55,12 @@ const InvoiceDetailPage = () => {
   
     const {id} = useParams()
   
-  
+    const [isShowingPayments, setIsShowingPayments] = useState(false);
+
+    function togglePayments() {
+    setIsShowingPayments(!isShowingPayments);
+  }
+
     // console.log('data from app',authState);
       useEffect(()=>{
 
@@ -67,7 +72,7 @@ const InvoiceDetailPage = () => {
           }
         })
 
-        axios.get(`${url}/invoice/${id}`).then((resp)=>{
+        axios.get(`${url}/invoice/${id}`,{withCredentials:true}).then((resp)=>{
           if(resp.data.error){
 
           }else{
@@ -86,13 +91,10 @@ const InvoiceDetailPage = () => {
   
   
 
-  
-    // pagination setup
 
-    // pagination change control
  
     
-    const [isTableVisible, setIsTableVisible] = useState(false);
+  const [isTableVisible, setIsTableVisible] = useState(false);
 
   const toggleTableVisibility = () => {
     setIsTableVisible((prevState) => !prevState);
@@ -100,54 +102,30 @@ const InvoiceDetailPage = () => {
 
 
    
-// Invoice Data  
-const invoiceList = [
-  {
-    id: 1,
-    totalAmount: 500,
-    date: '2022-05-01',
-    customer: 'ACME Inc.',
-    project: 'Web Development Project',
-    status: 'Paid',
-  },
-  {
-    id: 2,
-    totalAmount: 750,
-    date: '2022-05-15',
-    customer: 'XYZ Corporation',
-    project: 'Mobile App Development',
-    status: 'PartiallyPaid',
-  },
-  {
-    id: 3,
-    totalAmount: 1000,
-    date: '2022-06-01',
-    customer: 'ABC Corp.',
-    project: 'Data Analysis Project',
-    status: 'Overdue',
-  },
-  {
-    id: 4,
-    totalAmount: 250,
-    date: '2022-06-15',
-    customer: '123 Inc.',
-    project: 'Marketing Campaign',
-    status: 'Paid',
-  },
-];
 
-// End of invoice data
-  
-    // on page change, load new sliced data
-    // here you would make another server request for new data
-  
+
 
   
     return (
       <>
-  
-        <PageTitle>Invoice- <Button size="small"><span onClick={()=>isTableVisible?setIsTableVisible(false):setIsTableVisible(true)}>Payments</span></Button></PageTitle>
-  
+
+       
+        <PageTitle >Invoice</PageTitle>
+        <span className='flex'>
+        <Badge onClick={()=>isTableVisible?setIsTableVisible(false):setIsTableVisible(true)} style={{color:'green'}} className="text-2xl ml-2">
+
+        <div  onClick={togglePayments} className="cursor-pointer flex">
+         
+          {isShowingPayments ? (
+            <IoIosEyeOff className="w-6 h-6" /> 
+          ) : (
+            <IoIosEye className="w-6 h-6" />
+          )}
+          <span className='ml-2'>Payments</span>
+        </div>
+        </Badge>
+        </span>
+       
         {/* <CTA /> */}
   
         {/* <!-- Cards --> */}
@@ -156,13 +134,7 @@ const invoiceList = [
         </div>
   
         <TableContainer>
-        {/* Calendar section */}
-  
-        
-        <NewInvoice invoiceData={invoiceData} mode={mode} project={project}/>
-        {/* <NewList /> */}
-  
-        {/* end of calendar section */}
+
         </TableContainer>
   
        
@@ -173,21 +145,20 @@ const invoiceList = [
 
     <div className="dropdown overflow-hidden" >
  
-      {isTableVisible && (
+      {isShowingPayments && (
            <TableContainer className="mb-8">
            <Table>
              <TableHeader>
                <tr>
                  <TableCell>Invoice Id</TableCell>
-                 <TableCell>Total Amount</TableCell>
+                 <TableCell>Amount Received</TableCell>
                  <TableCell>Date</TableCell>
-                 <TableCell>Customer</TableCell>
-                 <TableCell>Project</TableCell>
-                 <TableCell>Status</TableCell>
+                 <TableCell>Invoiced</TableCell>
+                 <TableCell>Created By</TableCell>     
                  <TableCell>Actions</TableCell>
                </tr>
              </TableHeader>
-             {invoiceList.map((bid, i) => (
+             {invoiceData?.payments?.map((pay, i) => (
              <TableBody key={i}>
                
                  <TableRow>
@@ -195,45 +166,36 @@ const invoiceList = [
                      <div className="flex items-center text-sm">
                        
                        <div>
-                         <p className="font-semibold">{bid.id}</p>
-                         <p className="text-xs text-gray-600 dark:text-gray-400">{bid.job}</p>
+                         <p className="font-semibold">{pay.id.slice(0,5)}</p>
+                         <p className="text-xs text-gray-600 dark:text-gray-400">{pay.job}</p>
                        </div>
                      </div>
                    </TableCell>
+            
                    <TableCell>
                      <div className="flex items-center text-sm">
                        
                        <div>
-                         <p className="font-semibold">{bid.totalAmount}</p>
-                         {/* <p className='font-semibold'>{bid.ProjectId}sdf</p> */}
+                         <p className="font-semibold">ETB {pay.amountReceived.toLocaleString()}</p>
+                      
                       
                        </div>
                      </div>
                    </TableCell>
                    <TableCell>
-                     <div className="flex items-center text-sm">
-                       
-                       <div>
-                         <p className="font-semibold">{bid.date}</p>
-                         {/* <p className='font-semibold'>{bid.ProjectId}sdf</p> */}
-                      
-                       </div>
-                     </div>
+                     <span className="text-sm">{pay.date}</span>
                    </TableCell>
                    <TableCell>
-                     <span className="text-sm">{bid.customer}</span>
-                   </TableCell>
-                   <TableCell>
-                     <span className="text-sm">{bid.project}</span>
+                    <Badge type={pay.invoiced?"success":"danger"}>{pay.invoiced?'Yes':'No'}</Badge>
                    </TableCell>
                    
                    <TableCell>
-                   <Badge type={bid.status==='approved'?"success":"danger"}>{bid.status}</Badge>
+                   <Badge >{pay.createdBy}</Badge>
                  </TableCell>
                    
                    <TableCell>
                      <div className="flex items-center space-x-4">
-                       <Link to={{pathname:`/app/invoice/${bid.id}`}}>
+                       <Link to={{pathname:`/app/payment/${pay.id}`}}>
                        <Button layout="link" size="icon" aria-label="Edit">
                          <EditIcon className="w-5 h-5" aria-hidden="true" />
                        </Button>
@@ -249,15 +211,15 @@ const invoiceList = [
                  ))}
            </Table>
            <TableFooter>
-             {/* <Pagination
-               // totalResults={totalResults}
-               // resultsPerPage={resultsPerPage}
-               // onChange={onPageChangeTable2}
-               // label="Table navigation"
-             /> */}
+
            </TableFooter>
+           
          </TableContainer>
+
+         
       )}
+
+        <NewInvoice invoiceData={invoiceData} mode={mode} project={project}/>
     </div>
 
       </>

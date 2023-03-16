@@ -1,104 +1,88 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useState } from 'react';
+import { FaPrint } from 'react-icons/fa';
 import './invoice.css';
-
-
+import {  Badge,Button} from  '@windmill/react-ui'
 function NewInvoice({invoiceData,mode,project}) {
-    useEffect(()=>{
 
-    },[])
+
+const printSectionRef = useRef(null);
+
+const printSection = () => {
+  const printContents = printSectionRef.current.innerHTML;
+//   console.log(printContents);
+  const originalContents = document.body.innerHTML;
+  document.body.innerHTML = printContents;
+  window.print();
+  document.body.innerHTML = originalContents;
+};
+
+
+
+
+
     return (<>
-        <div className="invoice-box">
-                <table cellPadding={0} cellSpacing={0}>
-                    <tbody>
-                    <tr className="top">
-                        <td colSpan={2}>
-                            <table>
-                                <tbody>
-                                <tr>
-                                    <td className="title">
-                                        <h1>{'Provide Company Name'}</h1>
-                                        <button className="print_btn print" onClick={() => { window.print(); }}>Print</button>
-                                    </td>
-                                </tr>
-                                <tr>
+          
+   
+      <div ref={printSectionRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <h1 className="text-3xl font-bold mb-8">Invoice #{invoiceData?.id?.slice(0,5)}</h1><div className=''> <FaPrint onClick={printSection}/></div>
 
-                                    <td>
-                                        Invoice #: {invoiceData?.id?.slice(0,5)}<br />
-                                        Created: {invoiceData.date}<br />
-                                        Due: February 1, 2015
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
+      <hr className="my-8" />
 
-                        </td>
-                    </tr>
-                    <tr className="information">
-                        <td colSpan={2}>
-                            <table>
-                                <tbody>
-                                <tr>
-                                    <td>
-                                        Sparksuite, Inc.<br />
-                                        12345 Sunny Road<br />
-                                        Sunnyville, CA 12345
-                                    </td>
+      <div className="flex justify-between mb-8">
+        <div>
+          <h2 className="text-xl font-bold mb-2">Company Name</h2>
+          <p>123 Main St.</p>
+          <p>Anytown, USA 12345</p>
+        </div>
+        <div>
+          <h2 className="text-xl font-bold mb-2">Representative</h2>
+          <p>John Doe</p>
+          <p>john.doe@example.com</p>
+          <p>(123) 456-7890</p>
+        </div>
+      </div>
 
-                                    <td>
-                                        Acme Corp.<br />
-                                        John Doe<br />
-                                        john@example.com
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </td>
-                    </tr>
-                    <tr className="heading">
-                        <td>Payment Method</td>
+      <hr className="my-8" />
 
-                        <td>Amount</td>
-                    </tr>
+      <div>
+        <h2 className="text-xl font-bold mb-2">Payment Info</h2>
+        <table className="w-full border-collapse">
+          <thead>
+            <tr>
+              <th className="px-4 py-2 border">Date</th>
+              <th className="px-4 py-2 border">Invoiced Amount</th>
+              <th className="px-4 py-2 border">Created By</th>
+             
+            </tr>
+          </thead>
+          <tbody>
+            {invoiceData?.payments?.map((payment, index) => (
+              <tr key={index}>
+                <td className="px-4 py-2 border">{payment.date}</td>
+                <td className="px-4 py-2 border">ETB {payment.amountReceived.toLocaleString()}</td>
+                <td className="px-4 py-2 border">{payment.createdBy}</td>
+             
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
-                    <tr className="details">
-                        <td>{mode.map((md)=>md.id===invoiceData.PaymentModeId?md.mode:"")}</td>
+      <hr className="my-8" />
 
-                        <td>1000</td>
-                    </tr>
-
-                    <tr className="heading">
-                        <td>Project</td>
-
-                        <td>Price</td>
-                    </tr>
-
-                    <tr className="item">
-                        <td>{project.map((pr)=>pr.id===invoiceData.ProjectId?pr.name:"")}</td>
-
-                        <td>$300.00</td>
-                    </tr>
-
-                    <tr className="item">
-                        <td>Hosting (3 months)</td>
-
-                        <td>$75.00</td>
-                    </tr>
-
-                    <tr className="item last">
-                        <td>Domain name (1 year)</td>
-
-                        <td>$10.00</td>
-                    </tr>
-
-                    <tr className="total">
-                        <td></td>
-
-                        <td>Total: $385.00</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
+      <div className="flex justify-between">
+        <div>
+          <h2 className="text-xl font-bold mb-2">Project Name</h2>
+          <p>{project.map((pr)=>pr.id===invoiceData.ProjectId?pr.name:"")}</p>
+        </div>
+        <div>
+          <h2 className="text-xl font-bold mb-2">Price</h2>
+          <p><Badge>Total</Badge>ETB {project.map((pr)=>pr.id===invoiceData?.ProjectId?pr.totalCost.toLocaleString():"")}</p>
+          <p><Badge style={{color:'red'}}>Due Amount</Badge>: ETB {invoiceData?.amountDue?.toLocaleString()}</p>
+        </div>
+      </div>
+    </div>
     
     
     

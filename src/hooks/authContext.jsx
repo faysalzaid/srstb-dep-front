@@ -105,7 +105,7 @@ export const AuthContextProvider = withRouter((props) => {
                 }
                 const decodeAccessToken = jwt_decode(userData.token)
                 // console.log(decodeAccessToken);
-                await axios.post(`${url}/login/refreshToken`, { token: decodeAccessToken ?.refreshToken }, { withCredentials: true }).then((resp) => {
+                await axios.post(`${url}/login/refreshToken`, { withCredentials: true }, { token: decodeAccessToken ?.refreshToken }).then((resp) => {
                     if (resp.data.error) {
                         setAuthState({ id: "", token: "", username: "", email: "", role: "", status: false, refreshToken: "" })
                         props.history.push('/login')

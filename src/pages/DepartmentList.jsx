@@ -47,16 +47,16 @@ function DepartmentList(props) {
 
     
     useEffect(()=>{
-        axios.get(`${url}/departments`).then((resp)=>{
+        axios.get(`${url}/departments`,{withCredentials:true}).then((resp)=>{
             setDepartmentData(resp.data)
         })
     },[])
 
 
 
-    const addDepartment = (e)=>{
+    const addDepartment = async(e)=>{
       e.preventDefault()
-      axios.post(`${url}/departments`,depForm).then((resp)=>{
+      await axios.post(`${url}/departments`,depForm,{withCredentials:true}).then((resp)=>{
         setDepartmentData([...departmentData,resp.data])
         closeModal()
         setSuccessMessage("Successfully registerd")
@@ -66,8 +66,8 @@ function DepartmentList(props) {
       })
     }
 
-    const deleteDepartment = (ids)=>{
-      axios.get(`${url}/departments/delete/${ids}`).then((resp)=>{
+    const deleteDepartment = async(ids)=>{
+      await axios.get(`${url}/departments/delete/${ids}`,{withCredentials:true}).then((resp)=>{
         if(resp.data.error){
             setErrorMessage(resp.data.error)
         }

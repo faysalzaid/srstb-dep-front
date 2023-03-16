@@ -82,16 +82,11 @@ function OverView({project,setProject,companyData,id}) {
                 <p className="font-bold">{project?.endtime}</p>
               </div>
             </li>
+          
             <li>
               <div className="project-title-div">
-                <p className="font-medium">Remaining Budget</p>
-                <p className="font-bold">{project?.remainingCost?.toLocaleString()}</p>
-              </div>
-            </li>
-            <li>
-              <div className="project-title-div">
-                <p className="font-medium">Deadline</p>
-                <p className="font-bold">{project?.endtime}</p>
+                <p className="font-medium">Financial Performance</p>
+                <p className="font-bold">{project?.financialPerformance }</p>
               </div>
             </li>
           
@@ -108,7 +103,7 @@ function OverView({project,setProject,companyData,id}) {
       </div>
       <div className="description-div">
         <span id="description-title" className="text-lg font-bold">Description</span>
-        <p className="text-gray-500">No description for this project</p>
+        <p className="text-gray-500">{project?.description}</p>
       </div>
       <div className="members-div">
         <div className="members-title flex items-center justify-between">

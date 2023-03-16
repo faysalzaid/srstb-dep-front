@@ -91,7 +91,6 @@ const projectPercentileGraph = {
   data: {
       datasets: [{
           data: projects?.map(pr=> pr.physicalPerformance),
-       
           backgroundColor: projects?.map(pr=>pr.color),
           label: 'Percentage',
       }, ],

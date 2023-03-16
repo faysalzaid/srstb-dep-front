@@ -50,7 +50,7 @@ function DepartmentDetail(props) {
 
     useEffect(()=>{
       
-        axios.get(`${url}/departments/${id}`).then((resp)=>{
+        axios.get(`${url}/departments/${id}`,{withCredentials:true}).then((resp)=>{
             if(resp.data.error){
                 setErrorMessage(resp.data.error)
             }
@@ -68,14 +68,14 @@ function DepartmentDetail(props) {
 
     const editDepartment = (e)=>{
       e.preventDefault()
-      axios.post(`${url}/departments/${id}`,depForm).then((resp)=>{
+      axios.post(`${url}/departments/${id}`,depForm,{withCredentials:true}).then((resp)=>{
         if(resp.data.error){
             setErrorMessage(resp.data.error)
         }else{
             // console.log('this is from depform',depForm);
             let newdata = resp.data
             setDepartmentData(newdata)
-            console.log('this is from resp.data',resp.data);
+            // console.log('this is from resp.data',resp.data);
             closeModal()
             setSuccessMessage("Successfully Updated")
             setTimeout(() => {
@@ -88,7 +88,7 @@ function DepartmentDetail(props) {
 
     const deleteDepartment = (e)=>{
         e.preventDefault()
-        axios.get(`${url}/departments/delete/${id}`).then((resp)=>{
+        axios.get(`${url}/departments/delete/${id}`,{withCredentials:true}).then((resp)=>{
           if(resp.data.error){
               setErrorMessage(resp.data.error)
           }

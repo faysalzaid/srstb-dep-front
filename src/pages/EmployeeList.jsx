@@ -26,6 +26,7 @@ import { url } from '../config/urlConfig'
 import EditUser from 'components/Users/EditUser'
 import { useRef } from 'react'
 import AddEmployee from 'components/Users/AddEmployee'
+import {FaCloudUploadAlt} from 'react-icons/fa'
 
 function EmployeeList(props) {
     const [isModalOpen, setIsModalOpen] = useState(false)
@@ -117,11 +118,11 @@ function EmployeeList(props) {
           }
           
       })
-      axios.get(`${url}/departments`).then((resp)=>{
+      axios.get(`${url}/departments`,{withCredentials:true}).then((resp)=>{
         setDepartmentData(resp.data)
       })
 
-      axios.get(`${url}/designations`).then((resp)=>{
+      axios.get(`${url}/designations`,{withCredentials:true}).then((resp)=>{
         setDesignationData(resp.data)
       })
 
@@ -156,7 +157,7 @@ const searchHandler = async(search)=>{
       const file = e.target[0].files[0]
       const formData = new FormData()
       formData.append('file',file)
-      await axios.post(`${url}/employees/upload/file`,formData).then((resp)=>{
+      await axios.post(`${url}/employees/upload/file`,formData,{withCredentials:true}).then((resp)=>{
         console.log(resp.data);
         setEmployeeData([...employeeData,...resp.data])
         setUplModal(false)
@@ -178,35 +179,34 @@ const searchHandler = async(search)=>{
           setErrorMessage("")
         }, 2000);
       }else{
-        const grappedDepartment = await axios.get(`${url}/departments/name/${emplForm.DepartmentId}`)
-        const grappedDesignation = await axios.get(`${url}/designations/name/${emplForm.DesignationId}`)
-        console.log(grappedDepartment.data.id);
+
+        // console.log(grappedDepartment.data.id);
         const formData = new FormData()
         formData.append('name',emplForm.name)
         formData.append('email',emplForm.email)
         formData.append('phone',emplForm.phone)
         formData.append('status',emplForm.status)
         formData.append('image',emplForm.image)
-        formData.append('DepartmentId',grappedDepartment.data.id)
-        formData.append('DesignationId',grappedDesignation.data.id)
+        formData.append('DepartmentId',emplForm.DepartmentId)
+        formData.append('DesignationId',emplForm.DesignationId)
         console.log('data from formdata',formData);
-         axios.post('http://localhost:4000/employees',formData).then((resp)=>{
-          console.log('from server',resp.data);
-          if(resp.data.error){
-            setErrorMessage(resp.data.error)
-            setTimeout(() => {
-              setErrorMessage('')
-            }, 2000);
-          }else{
-              setEmployeeData([...employeeData,resp.data])
-              setEmplForm({name:"",email:"",phone:"",status:"",image:""})
-            closeModal()
-            setSuccessMessage("Successfully added")
-            setTimeout(() => {
-              setSuccessMessage("")
-           }, 2000)
-          }
-        })  
+        //  axios.post(`${url}/employees`,formData,{withCredentials:true}).then((resp)=>{
+        //   console.log('from server',resp.data);
+        //   if(resp.data.error){
+        //     setErrorMessage(resp.data.error)
+        //     setTimeout(() => {
+        //       setErrorMessage('')
+        //     }, 2000);
+        //   }else{
+        //       setEmployeeData([...employeeData,resp.data])
+        //       setEmplForm({name:"",email:"",phone:"",status:"",image:""})
+        //     closeModal()
+        //     setSuccessMessage("Successfully added")
+        //     setTimeout(() => {
+        //       setSuccessMessage("")
+        //    }, 2000)
+        //   }
+        // })  
       }
   
   }
@@ -273,11 +273,13 @@ useEffect(()=>{
             
         </div>
 
+        <div className='flex'>
         <div className='mt-6'>
           <Button onClick={()=>setOpenAdd({open:true})}>Register Employee</Button>
         </div>
-        <div className='mt-5'>
-        <Button onClick={openUploadModal} className="btn-sm">Upload Excel file</Button>
+        <div className='mt-5 ml-4'>
+        <FaCloudUploadAlt onClick={openUploadModal} className="text-5xl"/> 
+        </div>
         </div>
         <Modal isOpen={isModalOpen} onClose={closeModal}>
           <ModalHeader>Insert Employee Info</ModalHeader>
@@ -311,7 +313,7 @@ useEffect(()=>{
           <Select className="mt-1" name="DepartmentId"  onChange={(e)=>setEmplForm({...emplForm,DepartmentId:e.target.value})}>
           <option>Select</option>
           {departmentData.map((dep)=>
-          <option key={dep.id}>{dep.name}</option>
+          <option key={dep.id} value={dep.id}>{dep.name}</option>
           )}
           </Select>
         </Label>
@@ -320,7 +322,7 @@ useEffect(()=>{
           <Select className="mt-1" name="DesignationId"  onChange={(e)=>setEmplForm({...emplForm,DesignationId:e.target.value})}>
           <option>Select</option>
           {designationData.map((des)=>
-          <option key={des.id}>{des.name}</option>
+          <option key={des.id} value={des.id}>{des.name}</option>
           )}
             
           </Select>

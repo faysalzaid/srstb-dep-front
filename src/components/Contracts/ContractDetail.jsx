@@ -174,38 +174,39 @@ const ContractDetail = (props) => {
 
 
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async(e) => {
       e.preventDefault();
-      axios.put(`${url}/contract/${id}`,formValues,{withCredentials:true}).then((resp)=>{
-        if(resp.data.error){
-          setOpenError({open:true,message:`$${resp.data.error}`})
-        }else{
+      console.log(formValues);
+      // await axios.put(`${url}/contract/${id}`,formValues,{withCredentials:true}).then((resp)=>{
+      //   if(resp.data.error){
+      //     setOpenError({open:true,message:`$${resp.data.error}`})
+      //   }else{
           
-          setContracts({ 
-            UserId: resp.data.UserId,
-            ProjectId:resp.data.ProjectId,
-            subject: resp.data.subject,
-            contractValue: resp.data.contractValue,
-            ContractTypeId: resp.data.ContractTypeId,
-            startDate: resp.data.startDate,
-            endDate: resp.data.endDate,
-            status:resp.data.status,
-            createdAt:resp.data.createdAt
-        })
-          setFormValues({
-            UserId: resp.data.userId,
-            ProjectId: resp.data.ProjectId,
-            subject: resp.data.subject,
-            contractValue: resp.data.contractValue,
-            ContractTypeId: resp.data.ContractTypeId,
-            startDate: resp.data.startDate,
-            endDate: resp.data.endDate
-          })
-          setOpenSuccess({open:true,message:"Successfully Updated"})
-          closeModal();
-        }
+      //     setContracts({ 
+      //       UserId: resp.data.UserId,
+      //       ProjectId:resp.data.ProjectId,
+      //       subject: resp.data.subject,
+      //       contractValue: resp.data.contractValue,
+      //       ContractTypeId: resp.data.ContractTypeId,
+      //       startDate: resp.data.startDate,
+      //       endDate: resp.data.endDate,
+      //       status:resp.data.status,
+      //       createdAt:resp.data.createdAt
+      //   })
+      //     setFormValues({
+      //       UserId: resp.data.userId,
+      //       ProjectId: resp.data.ProjectId,
+      //       subject: resp.data.subject,
+      //       contractValue: resp.data.contractValue,
+      //       ContractTypeId: resp.data.ContractTypeId,
+      //       startDate: resp.data.startDate,
+      //       endDate: resp.data.endDate
+      //     })
+      //     setOpenSuccess({open:true,message:"Successfully Updated"})
+      //     closeModal();
+      //   }
 
-      })
+      // })
       // handle form submission here
       // e.g. make an API call to save the form data
      
@@ -404,8 +405,8 @@ const ContractDetail = (props) => {
   
         <TableContainer>
    
-        <div className='mb-4'>
-        <Button onClick={openModal}>Update Contract</Button>
+        <div className='mb-6 ml-4 flex'>
+        <Button className=' ml-4' onClick={openModal}>Update Contract</Button>
         <Button onClick={openDelete} style={{backgroundColor:'red'}} className="ml-4 text-lg text-white-600 hover:text-red-800">
        <RiDeleteBin6Line />
         </Button>

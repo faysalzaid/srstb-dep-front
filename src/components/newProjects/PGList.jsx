@@ -140,7 +140,7 @@ const PgList = () => {
           physicalPerformance:parseInt(formValues.physicalPerformance),
           percentage:parseInt(formValues.percentage)
         }
-        console.log(request);
+        // console.log(request);
         axios.post(`${url}/projects`,request,{withCredentials:true}).then((resp)=>{
             if(resp.data.error){
               setOpenError({open:true,message:`${resp.data.error}`})
@@ -176,7 +176,7 @@ const PgList = () => {
       })
 
 
-      axios.get(`${url}/users`).then((resp)=>{
+      axios.get(`${url}/users`,{withCredentials:true}).then((resp)=>{
         if(resp.data.error){
           
         }else{

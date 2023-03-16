@@ -49,7 +49,7 @@ function DesignationDetail(props) {
 
     
     useEffect(()=>{
-        axios.get(`${url}/designations/${id}`).then((resp)=>{
+        axios.get(`${url}/designations/${id}`,{withCredentials:true}).then((resp)=>{
             // console.log('designations',resp.data);
             setDesignationData(resp.data)
             setDestForm(resp.data)
@@ -57,8 +57,8 @@ function DesignationDetail(props) {
     },[])
 
     useEffect(()=>{
-        axios.get(`${url}/departments`).then((resp)=>{
-            console.log(resp.data);
+        axios.get(`${url}/departments`,{withCredentials:true}).then((resp)=>{
+            // console.log(resp.data);
             setDepartmentData(resp.data)
         })
     },[])
@@ -73,7 +73,7 @@ function DesignationDetail(props) {
             name:desForm.name,
         }
         // console.log('request',request);
-        await axios.post(`${url}/designations/${id}`,request).then((resp)=>{
+        await axios.post(`${url}/designations/${id}`,request,{withCredentials:true}).then((resp)=>{
             setDesignationData(resp.data)
             closeModal()
             setSuccessMessage("Successfully Updated")
@@ -86,7 +86,7 @@ function DesignationDetail(props) {
     }
 
     const deleteDesignation = ()=>{
-      axios.get(`${url}/designations/delete/${id}`).then((resp)=>{
+      axios.get(`${url}/designations/delete/${id}`,{withCredentials:true}).then((resp)=>{
         if(resp.data.error){
             setErrorMessage(resp.data.error)
         }

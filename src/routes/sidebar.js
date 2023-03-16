@@ -80,7 +80,7 @@ routes = [{
         roles: ['admin', 'finance', 'planning', 'engineer']
     },
     {
-        path: '/app/messages',
+        path: '/app/requests',
         icon: 'CardsIcon',
         name: 'Letter Requests',
         roles: ['admin', 'finance', 'planning']
@@ -113,6 +113,12 @@ routes = [{
         path: '/app/contract',
         icon: 'FaFileContract',
         name: 'Contracts',
+        roles: ['admin', 'finance', 'planning']
+    },
+    {
+        path: '/app/reports',
+        icon: 'FaReadme',
+        name: 'Reports',
         roles: ['admin', 'finance', 'planning']
     },
 

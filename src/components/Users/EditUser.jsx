@@ -65,7 +65,7 @@ const EditUser = ({open, handleClose, user,setOpenError,setOpenSuccess}) => {
     if(isMounted){
         const getEmpl = async()=>{
             await axios.get(`${url}/employees/${user?.id}`,{withCredentials:true}).then((resp)=>{
-                console.log('this is rsp data ',resp.data);
+                // console.log('this is rsp data ',resp.data);
                 if(resp.data.error){
                     const err = resp.data.error
                     // setOpenError({open:true,message:err})
@@ -196,9 +196,9 @@ const EditUser = ({open, handleClose, user,setOpenError,setOpenSuccess}) => {
     nformData.append('postCode',formData.postCode.value)
     nformData.append('image',formData.image.value)
 
-    console.log('New form:',nformData);
+    // console.log('New form:',nformData);
     axios.post(`${url}/employees/${user.id}/`,nformData,{withCredentials:true}).then((resp)=>{
-        console.log('resp.data is :',resp.data);
+        // console.log('resp.data is :',resp.data);
         if(resp.data.error){
             const msg = resp.data.error
             setOpenError({open:true,message:msg})
@@ -370,9 +370,7 @@ const EditUser = ({open, handleClose, user,setOpenError,setOpenSuccess}) => {
                                                   paddingTop: 0,
                                                   marginTop: 10
                                                 }}
-                                                inputStyle={{
-                                                
-                                                }}
+                                                className="mt-5 ml-2"
                                                 
                                                 startIcon={<AiOutlineCheckCircle fontSize={20}/>}
                                             />
@@ -390,9 +388,7 @@ const EditUser = ({open, handleClose, user,setOpenError,setOpenSuccess}) => {
                                                   paddingTop: 0,
                                                   marginTop: 10
                                                 }}
-                                                inputStyle={{
-                                                
-                                                }}
+                                                className="mt-5 ml-2"
                                                 
                                                 startIcon={<AiOutlineCheckCircle fontSize={20}/>}
                                             />
@@ -411,9 +407,7 @@ const EditUser = ({open, handleClose, user,setOpenError,setOpenSuccess}) => {
                                                   paddingTop: 0,
                                                   marginTop: 10
                                                 }}
-                                                inputStyle={{
-                                                
-                                                }}
+                                                className="mt-5 ml-2"
                                                 
                                                 startIcon={<AiOutlineCheckCircle fontSize={20}/>}
                                             />
@@ -432,9 +426,7 @@ const EditUser = ({open, handleClose, user,setOpenError,setOpenSuccess}) => {
                                                   paddingTop: 0,
                                                   marginTop: 10
                                                 }}
-                                                inputStyle={{
-
-                                                }}
+                                                className="mt-5 ml-2"
                                                 
                                                 startIcon={<AiOutlineCheckCircle fontSize={20}/>}
                                             />
@@ -461,7 +453,7 @@ const EditUser = ({open, handleClose, user,setOpenError,setOpenSuccess}) => {
                                         <Grid item sm={12} lg={6}>
                                             <input type='file' label="image"
                                             // formData={formData}
-                                            setFormData={setFormData}
+                                            // setFormData={setFormData}
                                            
                                             
                                             

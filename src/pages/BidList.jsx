@@ -68,10 +68,6 @@ function BidList(props) {
               setRejected(resp.data.rejected)
               // console.log(resp.data.processing);
               
-            }).catch((err)=>{
-              if(err.response.status===403 || err.response.status===401){
-                setAuthorization(true)
-              }
             })
             // console.log(response.data);
         
@@ -79,7 +75,8 @@ function BidList(props) {
           if(resp.data.error){
             console.log(resp.data.error);
           }else{
-            setUsers(resp.data)
+            const data = resp.data.filter((usr)=>usr.role==='client')
+            setUsers(data)
           }
         })
         axios.get(`${url}/projects`,{withCredentials:true}).then((resp)=>{
@@ -102,14 +99,10 @@ function BidList(props) {
 
   const addBid =async(e)=>{
     e.preventDefault()
-    console.log('This is from bid data',bidFormData);
+    // console.log('This is from bid data',bidFormData);
     if(bidFormData.fullname==="" || bidFormData.phone===""||bidFormData.license===""||bidFormData.status===""||bidFormData.performa===""||bidFormData.proposal===""||bidFormData.companydoc===""||bidFormData.amount==="",bidFormData.bidUserPic==="",bidFormData.ProjectId==="",bidFormData.UserId===""){
       setErrorMessage('Please Provide all data')
     }else{
-      const projectNameToId = await axios.get(`${url}/projects/name/${bidFormData.ProjectId}`)
-      const userNameToId = await axios.get(`${url}/users/name/${bidFormData.UserId}`,{withCredentials:true})
-      console.log('projectId',projectNameToId.data);
-      console.log('userId',userNameToId.data);
      
       const formData = new FormData()
       formData.append('fullname',bidFormData.fullname)
@@ -120,11 +113,11 @@ function BidList(props) {
       formData.append('proposal',bidFormData.proposal)
       formData.append('companydoc',bidFormData.companydoc)
       formData.append('bidUserPic',bidFormData.bidUserPic)
-      formData.append('amount',bidFormData.amount)
-      formData.append('ProjectId',projectNameToId.data.id)
-      formData.append('UserId',userNameToId.data.id)
-      console.log(formData);
-       const response = await axios.post('http://localhost:4000/bids',formData,{withCredentials:true}).then((resp)=>{
+      formData.append('amount',parseInt(bidFormData.amount))
+      formData.append('ProjectId',bidFormData.ProjectId)
+      formData.append('UserId',bidFormData.UserId)
+      // console.log(formData);
+       const response = await axios.post(`${url}/bids`,formData,{withCredentials:true}).then((resp)=>{
         
         if(resp.data.error){
           setErrorMessage(resp.data.error)
@@ -143,7 +136,7 @@ function BidList(props) {
 
 }
 const deleteBid =async(ids)=>{
-  const response = await axios.get(`http://localhost:4000/bids/delete/${ids}`).then((resp)=>{
+  const response = await axios.get(`http://localhost:4000/bids/delete/${ids}`,{withCredentials:true}).then((resp)=>{
     
     if(resp.data.error){
       setErrorMessage(resp.data.error)
@@ -276,7 +269,7 @@ const searchHandler = async(search)=>{
           <span>Project Name</span>
           <Select className="mt-1" name="ProjectId" value={bidFormData.ProjectId} onChange={(e)=>setBidFormData({...bidFormData,ProjectId:e.target.value})}>
           <option>Select</option>
-          {projects.map((pr)=>{return  <option key={pr.id} value={pr.id}>{pr.name}</option>})}
+          {projects.map((pr)=> <option key={pr.id} value={pr.id}>{pr.name}</option>)}
            
             
           </Select>
@@ -285,7 +278,7 @@ const searchHandler = async(search)=>{
           <span>User</span>
           <Select className="mt-1" name="UserId" value={bidFormData.UserId} onChange={(e)=>setBidFormData({...bidFormData,UserId:e.target.value})}>
           <option>Select</option>
-          {users.map((usr)=>{return  <option key={usr.id}>{usr.name}</option>})}
+          {users.map((usr)=><option key={usr.id} value={usr.id}>{usr.name}</option>)}
            
             
           </Select>

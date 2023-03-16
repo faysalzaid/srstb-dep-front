@@ -71,8 +71,13 @@ const UsersList = lazy(() =>
 const UsersDetail = lazy(() =>
     import ('../pages/UsersDetail'))
 
+const LetterRequests = lazy(() =>
+    import ('../components/LetterRequest/LetterRequest')
+)
 
-
+const LetterRequestsDetail = lazy(() =>
+    import ('../components/LetterRequest/LetterRequestDetail')
+)
 
 const Chat = lazy(() =>
     import ('../components/Chat/Chat'))
@@ -82,6 +87,9 @@ const Projects = lazy(() =>
 
 const Messages = lazy(() =>
     import ('../components/Messages/Messages'))
+
+const PaymentDetail = lazy(() =>
+    import ('../components/payment/PaymentDetail'))
 
 
 /**
@@ -176,9 +184,17 @@ const routes = [{
 
 
     {
-        path: '/messages',
-        component: Messages,
+        path: '/requests',
+        component: LetterRequests,
+        roles: ['admin', 'finance', 'planning', 'engineer']
     },
+
+    {
+        path: '/requests/:id',
+        component: LetterRequestsDetail,
+        roles: ['admin', 'finance']
+    },
+
 
 
     {
@@ -194,6 +210,11 @@ const routes = [{
     {
         path: '/invoice/:id',
         component: InvoiceDetailPage,
+        roles: ['admin', 'finance']
+    },
+    {
+        path: '/payment/:id',
+        component: PaymentDetail,
         roles: ['admin', 'finance']
     },
     {
