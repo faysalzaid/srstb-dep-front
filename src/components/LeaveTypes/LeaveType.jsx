@@ -336,15 +336,15 @@ const LeaveTypeList = () => {
           {leaveType?leaveType.map((row, i) => (
             <Fragment key={i}>
               <TableRow>
-                <TableCell><span className="text-sm font-semibold">{row.type}</span></TableCell>
-                <TableCell><span className="text-sm font-semibold">{row.LeaveRequests.length}</span></TableCell>
+                <TableCell><span className="text-sm font-semibold">{row?.type}</span></TableCell>
+                <TableCell><span className="text-sm font-semibold">{row?.LeaveRequests?.length}</span></TableCell>
                 <TableCell className="flex justify-center space-x-2">
-                  <Link to={`/app/contract/${row.id}`}>
+                  <Link to={`/app/contract/${row?.id}`}>
                   {/* <Button layout="link" size="small">
                     <EditIcon className="h-5 w-5 text-blue-600" />
                   </Button> */}
                   </Link>
-                  <Button layout="link" size="small" onClick={() => openDelete(row.id)}>
+                  <Button layout="link" size="small" onClick={() => openDelete(row?.id)}>
                     <TrashIcon className="h-5 w-5 text-red-600" />
                   </Button>
                 </TableCell>

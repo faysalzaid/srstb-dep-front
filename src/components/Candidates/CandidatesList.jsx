@@ -49,12 +49,12 @@ import axios from 'axios'
 
 const CandidateList = () => {
     const {authState} = useContext(AuthContext)
-    const [LeaveData,setLeaveData] = useState([])
+    const [searchResult,setSearchResult] = useState([])
+    const [searchTerm,setSearchTerm] = useState("")
+    const [fetchedResult,setFetchedResult] = useState([])
     const [countsData,setCountsData] = useState({ projectCount:"",bidCount:"",activeProjects:"",completedProjects:""})
-    const [payrollData,setPayrollData] = useState([])
     const [employeeData,setEmployeeData] = useState([])
     const [departmentData,setDepartmentData] = useState([])
-    const [payrolForm,setPayrolForm] = useState({date:"",EmployeeId:"",DepartmentId:"",basicSalary:"",staffAdvance:"",position:""})
     const [candidateData,setCandidateData] = useState([])
     const [candidateForm,setCandidateForm] = useState({date:"",name:"",
         qualification:"",
@@ -180,6 +180,23 @@ const CandidateList = () => {
       };
 
       
+      useEffect(()=>{
+        setFetchedResult(searchTerm.length<1?candidateData:searchResult)
+      },[candidateData,searchTerm])
+  
+  
+    const searchHandler = async(search)=>{
+      setSearchTerm(search)
+      if(search!==0){
+        const newPayroll = candidateData?.filter((empl)=>{
+          return Object.values(empl).join(" ").toLowerCase().includes(search.toLowerCase())
+        })
+        // console.log(newEmployeeList);
+        setSearchResult(newPayroll)
+      }else{
+        setSearchResult(candidateData)
+      }
+    }
 
 
 
@@ -235,10 +252,21 @@ const CandidateList = () => {
         horizontal="right"
       />
 
-  
-        {/* <CTA /> */}
-        
-        {/* <!-- Cards --> */}
+      {/* Search section */}
+        <div className='mb-5'>
+        <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+        <div className="relative">
+            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                <svg aria-hidden="true" className="w-5 h-5 text-gray-500 dark:text-gray-400" fill="none" strokeWidth="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            </div>
+            <Input type="search" id="default-search" value={searchTerm} onChange={(e)=>searchHandler(e.target.value)} 
+            className="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 
+            dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search Companies, Locations..." required />
+        </div>
+            
+        </div>
+        {/* End of search List */}
+
         <div className="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
           <InfoCard title="Total Projects " value={countsData.projectCount}>
             <RoundIcon
@@ -473,7 +501,7 @@ const CandidateList = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {candidateData?candidateData.map((row, i) => (
+          {fetchedResult?fetchedResult.map((row, i) => (
             <Fragment key={i}>
               <TableRow>
                 <TableCell><span className="text-sm font-semibold">{row.date}</span></TableCell>
