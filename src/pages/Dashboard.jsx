@@ -58,6 +58,9 @@ function Dashboard(props) {
     }).catch((err)=>{
       setAuthorization(true)
     })
+    document.title = "Cellu-Crm | Dashboard";
+
+    // console.log(favicon);
 
 
 },[])

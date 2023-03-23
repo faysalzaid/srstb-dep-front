@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, Route, useLocation, useParams, withRouter } from 'react-router-dom'
 import { DropdownIcon } from '../../icons'
 import * as Icons from '../../icons'
 import { Transition } from '@windmill/react-ui'
@@ -9,12 +9,14 @@ function Icon({ icon, ...props }) {
   return <Icon {...props} />
 }
 
-function SidebarSubmenu({ route }) {
+function SidebarSubmenu({ route },props) {
   const [isDropdownMenuOpen, setIsDropdownMenuOpen] = useState(false)
 
   function handleDropdownMenuClick() {
     setIsDropdownMenuOpen(!isDropdownMenuOpen)
   }
+
+  const location = useLocation() 
 
   return (
     <li className="relative px-6 py-3" key={route.name}>
@@ -43,13 +45,21 @@ function SidebarSubmenu({ route }) {
           aria-label="submenu"
         >
           {route.routes.map((r) => (
+            
             <li
               className="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
               key={r.name}
             >
-              <Link className="w-full" to={r.path}>
+              
+               <div className='flex'>
+              
+              <Icon className="w-5 h-5" aria-hidden="true" icon={r.icon} style={{color:`${r.path===location.pathname?'#642BD9':''}`}}/>
+              {/* {console.log(r)} */}
+              <Link className="w-5 ml-1" to={r.path}>
+                
                 {r.name}
               </Link>
+              </div>
             </li>
           ))}
         </ul>
@@ -58,4 +68,4 @@ function SidebarSubmenu({ route }) {
   )
 }
 
-export default SidebarSubmenu
+export default withRouter(SidebarSubmenu)

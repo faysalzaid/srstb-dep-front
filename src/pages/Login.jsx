@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react'
-import { Link, withRouter } from 'react-router-dom'
+import { Link, useHistory, withRouter } from 'react-router-dom'
 
 import ImageLight from '../assets/img/login-office.jpeg'
 import ImageDark from '../assets/img/login-office-dark.jpeg'
@@ -22,18 +22,19 @@ function Login(props) {
 
 
   // console.log(authState)
+  // const history = useHistory()
  
+  useEffect(()=>{
     if(authState.state){
-      props.history.goBack()
+      if(props.history.length>1){
+        props.history.goBack()
+      }else{
+        props.history.push('/login')
+      }
+      
     }
+  },[])
     const cookie = getCookie('accessToken')
-    // const newCookie = JSON.parse(cookie)
-
-    // useEffect(()=>{
-
-    // },[])
-
-    // console.log('authState is ',authState);
 
   const validation = Yup.object().shape({
     email:Yup.string().email().min(5).required("Email is required"),
@@ -153,12 +154,12 @@ const initialValues ={
             
 
               <p className="mt-4">
-                <Link
+                {/* <Link
                   className="text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline"
                   to="/forgot-password"
                 >
                   Forget Password ?
-                </Link>
+                </Link> */}
               </p>
             </div>
           </main>

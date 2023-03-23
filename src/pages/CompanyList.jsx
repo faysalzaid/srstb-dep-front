@@ -107,6 +107,7 @@ useEffect(()=>{
       setCount(resp.data.count)
     }
   })
+  document.title = "Cellu-Crm | Companies";
 
 },[])
 

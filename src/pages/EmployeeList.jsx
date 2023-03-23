@@ -278,7 +278,7 @@ useEffect(()=>{
           <Button onClick={()=>setOpenAdd({open:true})}>Register Employee</Button>
         </div>
         <div className='mt-5 ml-4'>
-        <FaCloudUploadAlt onClick={openUploadModal} className="text-5xl"/> 
+        <FaCloudUploadAlt onClick={openUploadModal} className="text-5xl" style={{color:'#642BD9'}}/> 
         </div>
         </div>
         <Modal isOpen={isModalOpen} onClose={closeModal}>

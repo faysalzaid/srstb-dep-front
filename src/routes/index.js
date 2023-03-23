@@ -47,8 +47,29 @@ const PgList = lazy(() =>
     import ('../components/newProjects/PGList'))
 
 
+const LeaveTypeList = lazy(() =>
+    import ('../components/LeaveTypes/LeaveType'))
+const LeaveList = lazy(() =>
+    import ('../components/Leaves/LeaveList'))
+
+const PayrollList = lazy(() =>
+    import ('../components/payroll/PayrollList'))
+const payrollDetail = lazy(() =>
+    import ('../components/payroll/PayrollDetail'))
+
+const LeaveDetail = lazy(() =>
+    import ('../components/Leaves/LeaveDetail'))
 
 
+const CandidateList = lazy(() =>
+    import ('../components/Candidates/CandidatesList'))
+
+const CandidateDetail = lazy(() =>
+    import ('../components/Candidates/CandidatesDetail'))
+const ShortListedCandidates = lazy(() =>
+    import ('../components/Candidates/ShortListed'))
+const SelectedCandidates = lazy(() =>
+    import ('../components/Candidates/Selected'))
 const BidsList = lazy(() =>
     import ('../pages/BidList'))
 const BidDetail = lazy(() =>
@@ -239,7 +260,53 @@ const routes = [{
     },
     {
         path: "/auther",
-        component: UnAuthorized
+        component: UnAuthorized,
+        roles: ['admin', 'finance', 'planning', 'engineer']
+    },
+    {
+        path: "/leavetypelist",
+        component: LeaveTypeList,
+        roles: ['admin', 'finance']
+    },
+    {
+        path: "/leavelist",
+        component: LeaveList,
+        roles: ['admin', 'finance']
+    },
+    {
+        path: "/leave/:id",
+        component: LeaveDetail,
+        roles: ['admin', 'finance']
+    },
+    {
+        path: "/payroll",
+        component: PayrollList,
+        roles: ['admin', 'finance']
+    },
+    {
+        path: "/payroll/:id",
+        component: payrollDetail,
+        roles: ['admin', 'finance']
+    },
+    {
+        path: "/candidates",
+        component: CandidateList,
+        roles: ['admin', 'finance']
+    },
+    {
+        path: "/candidates/:id",
+        component: CandidateDetail,
+        roles: ['admin', 'finance']
+    },
+    {
+        path: "/candidate/shortlisted",
+        component: ShortListedCandidates,
+        roles: ['admin', 'finance']
+    },
+    {
+        path: "/candidate/selected",
+        component: SelectedCandidates,
+        roles: ['admin', 'finance']
     }
 ]
 

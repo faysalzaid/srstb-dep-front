@@ -29,7 +29,22 @@ import { ReactComponent as OutlineLogoutIcon } from './outlineLogout.svg'
 import { ReactComponent as EyeIcon } from './eye.svg'
 import { ReactComponent as EyeIconOne } from './eye-1.svg'
 import { FaList } from 'react-icons/fa';
-import { FaFileMedicalAlt, FaGripVertical, FaFileContract, FaFileInvoiceDollar, FaAdjust, FaReadme } from 'react-icons/fa';
+import {
+    FaFileMedicalAlt,
+    FaGripVertical,
+    FaFileContract,
+    FaFileInvoiceDollar,
+    FaAdjust,
+    FaReadme,
+    FaPills,
+    FaHandHoldingMedical,
+    FaMoneyCheckAlt,
+    FaForumbee,
+    FaIoxhost,
+    FaSlideshare,
+    FaHandsHelping
+} from 'react-icons/fa';
+import { BsCapsulePill } from 'react-icons/bs';
 
 export {
     ButtonsIcon,
@@ -68,5 +83,12 @@ export {
     FaGripVertical,
     FaFileInvoiceDollar,
     FaAdjust,
-    FaReadme
+    FaReadme,
+    FaPills,
+    FaHandHoldingMedical,
+    FaMoneyCheckAlt,
+    FaForumbee,
+    FaIoxhost,
+    FaSlideshare,
+    FaHandsHelping
 }
