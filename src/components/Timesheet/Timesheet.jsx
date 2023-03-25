@@ -115,6 +115,11 @@ const Timesheet = () => {
                     setOpenError({open:true,message:"An unknown error occurred"});
                   }
             })
+
+            await axios.get(`${url}/counts`,{withCredentials:true}).then((resp)=>{
+                const data = resp.data
+                setCountsData({ projectCount:data.projectsCount,bidCount:data.countBids,activeProjects:data.activeProjectsCount,completedProjects:data.completedProjects})
+              })
         
 
 
