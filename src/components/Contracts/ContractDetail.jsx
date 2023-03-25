@@ -645,18 +645,18 @@ const ContractDetail = (props) => {
     
 
 {/* Files LIst section */}
-      <div className="ml-6 mr-6 flex flex-col gap-4 mt-4">
-      {filesList.map((file, index) => (
-      
-        <div key={index} className="relative flex justify-between items-center bg-white rounded-md p-4 shadow-md">
-          <div className="flex-1 truncate"><a href={`${file.attach}`} target='_blank'>{file.name.slice(0,5)}</a></div>
-          <button onClick={() => handleFileDelete(file)} className="text-red-500 hover:text-red-600">
-            <RiDeleteBin6Line />
-          </button>
+          <div className="ml-6 mr-6 flex flex-col gap-4 mt-4">
+          {filesList.map((file, index) => (
+          
+            <div key={index} className="relative flex justify-between items-center bg-white rounded-md p-4 shadow-md">
+              <div className="flex-1 truncate"><a href={`${file.attach}`} target='_blank'>{file.name.slice(0,5)}</a></div>
+              <button onClick={() => handleFileDelete(file)} className="text-red-500 hover:text-red-600">
+                <RiDeleteBin6Line />
+              </button>
+            </div>
+          
+          ))}
         </div>
-      
-      ))}
-    </div>
 
   {/* End Files List */}
       {/* Form upload section */}

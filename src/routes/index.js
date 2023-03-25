@@ -84,9 +84,9 @@ const DesignationList = lazy(() =>
 const DesignationDetail = lazy(() =>
     import ('../pages/DesignationDetail'))
 const EmployeeList = lazy(() =>
-    import ('../pages/EmployeeList'))
-const EmployeeDetail = lazy(() =>
-    import ('../pages/EmployeeDetail'))
+        import ('../pages/EmployeeList'))
+    // const EmployeeDetail = lazy(() =>
+    //     import ('../pages/EmployeeDetail'))
 const UsersList = lazy(() =>
     import ('../pages/UsersList'))
 const UsersDetail = lazy(() =>
@@ -112,6 +112,14 @@ const Messages = lazy(() =>
 const PaymentDetail = lazy(() =>
     import ('../components/payment/PaymentDetail'))
 
+const EmployeeDetail = lazy(() =>
+    import ('../components/EmployeeD/EmployeeDetail'))
+
+const Timesheet = lazy(() =>
+    import ('../components/Timesheet/Timesheet'))
+
+const TimesheetDetail = lazy(() =>
+    import ('../components/Timesheet/TimesheetDetail'))
 
 /**
  * ⚠ These are internal routes!
@@ -307,7 +315,16 @@ const routes = [{
         path: "/candidate/selected",
         component: SelectedCandidates,
         roles: ['admin', 'finance']
-    }
+    }, {
+        path: "/timesheet",
+        component: Timesheet,
+        roles: ['admin', 'finance']
+    },
+    {
+        path: "/timesheet/:id",
+        component: TimesheetDetail,
+        roles: ['admin', 'finance']
+    },
 ]
 
 export default routes

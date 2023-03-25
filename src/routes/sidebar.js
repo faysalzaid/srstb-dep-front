@@ -160,6 +160,13 @@ routes = [{
                 roles: ['admin', 'finance']
             },
 
+            {
+                path: '/app/timesheet',
+                name: 'M.timesheet',
+                icon: 'FaUserClock',
+                roles: ['admin', 'finance']
+            },
+
 
         ],
     },

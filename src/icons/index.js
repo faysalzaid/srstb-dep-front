@@ -42,7 +42,8 @@ import {
     FaForumbee,
     FaIoxhost,
     FaSlideshare,
-    FaHandsHelping
+    FaHandsHelping,
+    FaUserClock
 } from 'react-icons/fa';
 import { BsCapsulePill } from 'react-icons/bs';
 
@@ -90,5 +91,6 @@ export {
     FaForumbee,
     FaIoxhost,
     FaSlideshare,
-    FaHandsHelping
+    FaHandsHelping,
+    FaUserClock
 }

@@ -43,20 +43,20 @@ import {
 import { Link, withRouter } from 'react-router-dom'
 import { url } from 'config/urlConfig'
 import axios from 'axios'
+import { FaCloudUploadAlt } from 'react-icons/fa'
+import { date } from 'faker/lib/locales/az'
 
 
 
 
-const LeaveList = () => {
+const Timesheet = () => {
     const {authState} = useContext(AuthContext)
     const [LeaveData,setLeaveData] = useState([])
     const [countsData,setCountsData] = useState({ projectCount:"",bidCount:"",activeProjects:"",completedProjects:""})
-    const [leaveTypeForm,setLeaveTypeForm] = useState({type:""})
     const [leaveFormData,setLeaveFormData] = useState({date:"",numberOfDays:"",startDate:"",endDate:"",comments:"",createdBy:"",status:"",employeeId:"",checkedBy:"",approvedBy:"",LeaveTypeId:""})
-    const [leaveType,setLeaveType] = useState([])
-    const [users, setUsers] = useState([])
-    const [userCheckedBy, setUserCheckedBy] = useState([])
-    const [approvedBy, setApprovedBy] = useState([])
+    const [timesheetForm,setTimesheetForm] = useState({date: new Date().toISOString().substr(0, 10),EmployeeId:"",attachment:""})
+    const [timesheetData,setTimeSheetData] = useState([])
+    const [employeeData,setEmployeeData] = useState([])
   
 
 
@@ -94,21 +94,20 @@ const LeaveList = () => {
 
       useEffect(()=>{
         const getData=async()=>{
-            await axios.get(`${url}/leave`,{withCredentials:true}).then((resp)=>{
+
+
+            await axios.get(`${url}/timesheet`,{withCredentials:true}).then((resp)=>{
                 // console.log(resp.data);
               if(resp.data.error){
                 setOpenError({open:true,message:true})
               }else{
-                setLeaveData(resp.data)
+                setTimeSheetData(resp.data)
               }
             })
           
-            await axios.get(`${url}/users`,{withCredentials:true}).then((resp)=>{
-                
-                  const filteredClients = resp.data.filter((cl)=>cl.role==="client")
-                  setUsers(filteredClients)
-                  setUserCheckedBy(resp.data)
-                  setApprovedBy(resp.data)
+
+            await axios.get(`${url}/employees`,{withCredentials:true}).then((resp)=>{
+                setEmployeeData(resp.data)
               }).catch((error)=>{
                 if (error.response && error.response.data && error.response.data.error) {
                     setOpenError({open:true,message:`${error.response.data.error}`});
@@ -117,21 +116,9 @@ const LeaveList = () => {
                   }
             })
         
-              await axios.get(`${url}/leavetype`,{withCredentials:true}).then((resp)=>{
-                 setLeaveType(resp.data)
-              }).catch((error)=>{
-                if (error.response && error.response.data && error.response.data.error) {
-                    setOpenError({open:true,message:`${error.response.data.error}`});
-                  } else {
-                    setOpenError({open:true,message:"An unknown error occurred"});
-                  }
-            })
 
-          
-            await axios.get(`${url}/counts`,{withCredentials:true}).then((resp)=>{
-              const data = resp.data
-              setCountsData({ projectCount:data.projectsCount,bidCount:data.countBids,activeProjects:data.activeProjectsCount,completedProjects:data.completedProjects})
-            })
+
+
         
         }
 
@@ -143,27 +130,21 @@ const LeaveList = () => {
     
       const handleSubmit = async(e) => {
         e.preventDefault();
-        // console.log(leaveTypeForm);
-        const request ={
-          date:leaveFormData.date,
-          numberOfDays:leaveFormData.numberOfDays,
-          startDate:leaveFormData.startDate,
-          endDate:leaveFormData.endDate,
-          comments:leaveFormData.comments,
-          createdBy:authState.username,
-          status:leaveFormData.status,
-          employeeId:leaveFormData.employeeId,
-          checkedBy:leaveFormData.checkedBy,
-          approvedBy:leaveFormData.approvedBy,
-          LeaveTypeId:leaveFormData.LeaveTypeId
-        }
-        console.log(request);
-      
-        await axios.post(`${url}/leave`,request,{withCredentials:true}).then((resp)=>{
-        //   console.log(resp.data);
-            setLeaveData((prev)=>[...prev,resp.data])
-            setOpenSuccess({open:true,message:"Successfully Added"})
-            closeModal();
+        // console.log(timesheetForm);
+        const formData = new FormData()
+        formData.append('date',timesheetForm.date)
+        formData.append('EmployeeId',timesheetForm.EmployeeId)
+        formData.append('attachment',timesheetForm.attachment)
+        // console.log(formData);
+        await axios.post(`${url}/timesheet`,formData,{withCredentials:true}).then((resp)=>{
+            if(resp.data.error){
+                setOpenError({open:true,message:`${resp.data.error}`})
+            }else{
+                setTimeSheetData((prev)=>[...prev,resp.data])
+                setOpenSuccess({open:true,message:"Successfully Added"})
+                closeModal();
+            }
+          
 
         }).catch((error)=>{
             if (error.response && error.response.data && error.response.data.error) {
@@ -172,8 +153,6 @@ const LeaveList = () => {
                 setOpenError({open:true,message:"An unknown error occurred"});
               }
         })
-        // // handle form submission here
-        // // e.g. make an API call to save the form data
        
       };
 
@@ -202,9 +181,9 @@ const LeaveList = () => {
 
   // Delete row
   const handleDelete = ()=>{
-    axios.delete(`${url}/leave/${isDeleteOpen.id}`,{withCredentials:true}).then((resp)=>{
-        const data = LeaveData.filter((dt)=>dt.id!==isDeleteOpen.id)
-        setLeaveData(data)
+    axios.get(`${url}/timesheet/delete/${isDeleteOpen.id}`,{withCredentials:true}).then((resp)=>{
+        const data = timesheetData.filter((dt)=>dt.id!==isDeleteOpen.id)
+        setTimeSheetData(data)
         setOpenSuccess({open:true,message:"deleted Successfully"})
         closeDelete()
         
@@ -223,7 +202,7 @@ const LeaveList = () => {
     return (
       <>
   
-        <PageTitle>Leaves</PageTitle>
+        <PageTitle>TimeSheets</PageTitle>
         <ErrorAlert
         open={openError.open}
         handleClose={handleCloseError}
@@ -298,51 +277,40 @@ const LeaveList = () => {
 
         {/* End of delete Section */}
 
-        <Button onClick={openModal}>New Leave</Button>
+        <Button onClick={openModal}>New Time Sheet</Button>
   
       
         </TableContainer>
 
         <Modal isOpen={isOpen} onClose={closeModal}>
-      <ModalHeader>Register Leave</ModalHeader>
+      <ModalHeader>Register TimeSheet</ModalHeader>
       <ModalBody>
       <form onSubmit={handleSubmit}>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4">
           
           <Label>
             <span>Date</span>
             <Input
               type="date"
               className="mt-1"
+              value={timesheetForm.date}
               name="date"
-              onChange={(e)=>setLeaveFormData({...leaveFormData,date:e.target.value})}
+              onChange={(e)=>setTimesheetForm({...timesheetForm,date:e.target.value})}
               required
             />
           </Label>
-
-          <Label>
-            <span>Number of Days</span>
-            <Input
-              type="number"
-              className="mt-1"
-              name="numberOfDays"
-              onChange={(e)=>setLeaveFormData({...leaveFormData,numberOfDays:e.target.value})}
-              required
-            />
-          </Label>
-
 
           <Label>
             <span>Employee</span>
             <Select
               className="mt-1"
-              name="ProjectId"
+              name="EmployeeId"
               // value={formValues.ProjectId}
-              onChange={(e)=>setLeaveFormData({...leaveFormData,employeeId:e.target.value})}
+              onChange={(e)=>setTimesheetForm({...timesheetForm,EmployeeId:e.target.value})}
               required
             >
               <option value="" >Select Employee</option>
-              {users.map((pr,i)=>(
+              {employeeData.map((pr,i)=>(
                 <option key={i} value={pr.id}>{pr.name}</option>
               ))}
               
@@ -350,108 +318,29 @@ const LeaveList = () => {
             </Select>
           </Label>
 
-
-          <Label>
-            <span>Checked By</span>
-            <Select
-              className="mt-1"
-              name="checkedBy"
-              // value={formValues.ProjectId}
-              onChange={(e)=>setLeaveFormData({...leaveFormData,checkedBy:e.target.value})}
-              required
-            >
-              <option value="" >Select </option>
-              {users.map((pr,i)=>(
-                <option key={i} value={pr.id}>{pr.name}</option>
-              ))}
-              
-              
-            </Select>
-          </Label>
-
-          <Label>
-            <span>Approved By</span>
-            <Select
-              className="mt-1"
-              name="approvedBy"
-              // value={formValues.ProjectId}
-              onChange={(e)=>setLeaveFormData({...leaveFormData,approvedBy:e.target.value})}
-              required
-            >
-              <option value="" >Select </option>
-              {users.map((pr,i)=>(
-                <option key={i} value={pr.id}>{pr.name}</option>
-              ))}
-            </Select>
-          </Label>
-
-          <Label>
-            <span>Start Date</span>
-            <Input
-              type="date"
-              className="mt-1"
-              name="startDate"
-              onChange={(e)=>setLeaveFormData({...leaveFormData,startDate:e.target.value})}
-              required
-            />
-          </Label>
-
-          <Label>
-            <span>End Date</span>
-            <Input
-              type="date"
-              className="mt-1"
-              name="endDate"
-              onChange={(e)=>setLeaveFormData({...leaveFormData,endDate:e.target.value})}
-              required
-            />
-          </Label>
+          <label htmlFor="file" className="w-full p-4 rounded-lg shadow-lg cursor-pointer text-center bg-gradient-to-r from-purple-400 to-pink-500 text-black hover:from-pink-500 hover:to-purple-400 transition duration-300">
+                <FaCloudUploadAlt className="w-8 h-8 mx-auto mb-2" />
+                <span className="text-lg font-semibold">Upload File</span>
+              </label>
+              <input
+                type="file"
+                id="file"
+                className="hidden"
+                name="attach"
+                onChange={(e)=>setTimesheetForm({...timesheetForm,attachment:e.target.files[0]})}
+              />
 
 
-          <Label>
-            <span>Leave Type</span>
-            <Select
-              className="mt-1"
-              name="approvedBy"
-              // value={formValues.ProjectId}
-              onChange={(e)=>setLeaveFormData({...leaveFormData,LeaveTypeId:e.target.value})}
-              required
-            >
-              <option value="" >Select Leave Type</option>
-              {leaveType.map((pr,i)=>(
-                <option key={i} value={pr.id}>{pr.type}</option>
-              ))}
-            </Select>
-          </Label>
+
+ 
+
+     
 
 
-          <Label>
-            <span>Status</span>
-            <Select
-              className="mt-1"
-              name="approvedBy"
-              // value={formValues.ProjectId}
-              onChange={(e)=>setLeaveFormData({...leaveFormData,status:e.target.value})}
-              required
-            >
-              <option value="" >Status</option>
-                <option>Pending</option>
-                <option>Approved</option>
-                <option>Rejected</option>
-            
-            </Select>
-          </Label>
 
 
-          <Label>
-            <span>Comment</span>
-            <Textarea
-              className="mt-1"
-              name="comments"
-              onChange={(e)=>setLeaveFormData({...leaveFormData,comments:e.target.value})}
-              required
-            />
-          </Label>
+
+
 
               
         </div>
@@ -496,34 +385,21 @@ const LeaveList = () => {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableCell className="font-semibold">Type</TableCell>
-            <TableCell className="font-semibold">No of Days</TableCell>
+            <TableCell className="font-semibold">Date</TableCell>
             <TableCell className="font-semibold">Employee</TableCell>
-            <TableCell className="font-semibold">Start date</TableCell>
-            <TableCell className="font-semibold">End Date</TableCell>
-            <TableCell className="font-semibold">status</TableCell>
-            <TableCell className="font-semibold">Checked By</TableCell>
-            <TableCell className="font-semibold">Approved By</TableCell>
-            <TableCell className="font-semibold">Created By</TableCell>
             <TableCell className="font-semibold text-center">Actions</TableCell>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {LeaveData?LeaveData.map((row, i) => (
+          {timesheetData?timesheetData.map((row, i) => (
             <Fragment key={i}>
               <TableRow>
                 <TableCell><span className="text-sm font-semibold">{row.date}</span></TableCell>
-                <TableCell><span className="text-sm font-semibold">{row.numberOfDays}</span></TableCell>
-                <TableCell><span className="text-sm font-semibold">{users.map((usr)=>usr.id===row.employeeId?usr.name:"")}</span></TableCell>
-                <TableCell><span className="text-sm font-semibold">{row.startDate}</span></TableCell>
-                <TableCell><span className="text-sm font-semibold">{row.endDate}</span></TableCell>
-                <TableCell><span className="text-sm font-semibold">{row.status}</span></TableCell>
-                <TableCell><span className="text-sm font-semibold">{users.map((usr)=>usr.id===row.checkedBy?usr.name:"")}</span></TableCell>
-                <TableCell><span className="text-sm font-semibold">{users.map((usr)=>usr.id===row.approvedBy?usr.name:"")}</span></TableCell>
-                <TableCell><span className="text-sm font-semibold">{row.createdBy}</span></TableCell>
+                <TableCell><span className="text-sm font-semibold">{employeeData.map((usr)=>usr.id===row.EmployeeId?usr.name:"")}</span></TableCell>
+               
 
                 <TableCell className="flex justify-center space-x-2">
-                  <Link to={`/app/leave/${row.id}`}>
+                  <Link to={`/app/timesheet/${row.id}`}>
                   <Button layout="link" size="small">
                     <EditIcon className="h-5 w-5 text-blue-600" />
                   </Button>
@@ -550,4 +426,4 @@ const LeaveList = () => {
 
 
 
-export default LeaveList
+export default Timesheet
