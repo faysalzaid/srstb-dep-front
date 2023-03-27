@@ -37,20 +37,20 @@ routes = [{
         path: '/app/dashboard', // the url
         icon: 'HomeIcon', // the component being exported from icons/index.js
         name: 'Dashboard', // name that appear in Sidebar
-        roles: ['admin', 'finance', 'planning', 'engineer']
+        roles: ['admin', 'finance', 'design', 'client', 'roadquality', 'engineer', 'contractadmin', 'hr']
     },
     {
         path: '/app/companies',
         icon: 'SunIcon',
         name: 'Companies',
-        roles: ['admin', 'finance', 'planning']
+        roles: ['admin', 'finance', 'design', 'engineer', 'hr']
     },
 
     {
         path: '/app/bids',
         icon: 'FormsIcon',
         name: 'Bids',
-        roles: ['admin', 'finance']
+        roles: ['admin', 'finance', 'engineer']
     },
 
     {
@@ -63,7 +63,7 @@ routes = [{
         path: '/app/charts',
         icon: 'ChartsIcon',
         name: 'Charts',
-        roles: ['admin', 'finance', 'planning', 'engineer']
+        roles: ['admin', 'finance', 'design', 'client', 'roadquality', 'engineer', 'contractadmin']
     },
 
 
@@ -71,19 +71,19 @@ routes = [{
         path: '/app/chat',
         icon: 'ChatIcon',
         name: 'Chat',
-        roles: ['admin', 'finance', 'planning', 'engineer']
+        roles: ['admin', 'finance', 'design', 'client', 'roadquality', 'engineer', 'contractadmin', 'hr']
     },
     {
         path: '/app/pglist',
         icon: 'TablesIcon',
         name: 'Projects',
-        roles: ['admin', 'finance', 'planning', 'engineer']
+        roles: ['admin', 'finance', 'design', 'engineer']
     },
     {
         path: '/app/requests',
         icon: 'CardsIcon',
         name: 'Letter Requests',
-        roles: ['admin', 'finance', 'planning']
+        roles: ['admin', 'finance', 'hr']
     },
 
     // {
@@ -108,13 +108,13 @@ routes = [{
         path: '/app/contract',
         icon: 'FaFileContract',
         name: 'Contracts',
-        roles: ['admin', 'finance', 'planning']
+        roles: ['admin', 'finance', 'contractadmin']
     },
     {
         path: '/app/reports',
         icon: 'FaReadme',
         name: 'Reports',
-        roles: ['admin', 'finance', 'planning']
+        roles: ['admin', 'finance', 'roadquality']
     },
 
 
@@ -127,44 +127,44 @@ routes = [{
                 path: '/app/employees',
                 icon: 'MoonIcon',
                 name: 'Employees',
-                roles: ['admin', 'finance']
+                roles: ['admin', 'finance', 'hr']
             },
             {
                 path: '/app/designations',
                 name: 'Designations',
                 icon: 'PagesIcon',
-                roles: ['admin', 'finance']
+                roles: ['admin', 'finance', 'hr']
             },
             {
                 path: '/app/departments',
                 name: 'Departments',
                 icon: 'SearchIcon',
-                roles: ['admin', 'finance']
+                roles: ['admin', 'finance', 'hr']
             },
             {
                 path: '/app/leavetypelist',
                 name: 'LeaveType',
                 icon: 'FaPills',
-                roles: ['admin', 'finance']
+                roles: ['admin', 'finance', 'hr']
             },
             {
                 path: '/app/leavelist',
                 name: 'Leaves',
                 icon: 'FaHandHoldingMedical',
-                roles: ['admin', 'finance']
+                roles: ['admin', 'finance', 'hr']
             },
             {
                 path: '/app/payroll',
                 name: 'Payroll',
                 icon: 'FaMoneyCheckAlt',
-                roles: ['admin', 'finance']
+                roles: ['admin', 'finance', 'hr']
             },
 
             {
                 path: '/app/timesheet',
                 name: 'M.timesheet',
                 icon: 'FaUserClock',
-                roles: ['admin', 'finance']
+                roles: ['admin', 'finance', 'hr']
             },
 
 
@@ -179,23 +179,29 @@ routes = [{
                 path: '/app/candidates',
                 icon: 'FaIoxhost',
                 name: 'Candidates',
-                roles: ['admin', 'finance']
+                roles: ['admin', 'finance', 'hr']
             },
             {
                 path: '/app/candidate/shortlisted',
                 icon: 'FaSlideshare',
                 name: 'ShortListed',
-                roles: ['admin', 'finance']
+                roles: ['admin', 'finance', 'hr']
             },
             {
                 path: '/app/candidate/selected',
                 icon: 'FaHandsHelping',
                 name: 'Selected',
-                roles: ['admin', 'finance']
+                roles: ['admin', 'finance', 'hr']
             },
 
 
         ],
+    },
+    {
+        path: '/app/settings',
+        icon: 'BsFillGearFill',
+        name: 'Settings',
+        roles: ['admin', ]
     },
 ]
 

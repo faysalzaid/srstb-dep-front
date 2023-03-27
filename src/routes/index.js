@@ -134,34 +134,34 @@ const TimesheetDetail = lazy(() =>
 const routes = [{
         path: '/dashboard', // the url
         component: Dashboard, // view rendered
-        roles: ['admin', 'finance', 'planning', 'engineer']
+        roles: ['admin', 'finance', 'design', 'client', 'roadquality', 'engineer', 'contractadmin', 'hr']
     },
     {
         path: '/bids',
         component: BidsList,
-        roles: ['admin', 'finance']
+        roles: ['admin', 'finance', 'engineer']
     },
 
     {
         path: '/bids/:id',
         component: BidDetail,
-        roles: ['admin', 'finance']
+        roles: ['admin', 'finance', 'engineer']
     },
 
     {
         path: '/companies',
         component: Companylist,
-        roles: ['admin', 'finance', 'planning']
+        roles: ['admin', 'finance', 'design', 'engineer', 'hr']
     },
     {
         path: '/companies/:id',
         component: CompanyDetail,
-        roles: ['admin', 'finance', 'planning']
+        roles: ['admin', 'finance', 'design', 'engineer', 'hr']
     },
     {
         path: '/departments/:id',
         component: DepartmentDetail,
-        roles: ['admin', 'finance']
+        roles: ['admin', 'finance', 'hr']
     },
 
     {
@@ -178,32 +178,32 @@ const routes = [{
     {
         path: '/charts',
         component: Charts,
-        roles: ['admin', 'finance', 'planning', 'engineer']
+        roles: ['admin', 'finance', 'design', 'client', 'roadquality', 'engineer', 'contractadmin']
     },
     {
         path: '/designations',
         component: DesignationList,
-        roles: ['admin', 'finance']
+        roles: ['admin', 'finance', 'hr']
     },
     {
         path: '/designations/:id',
         component: DesignationDetail,
-        roles: ['admin', 'finance']
+        roles: ['admin', 'finance', 'hr']
     },
     {
         path: '/departments',
         component: DepartmentList,
-        roles: ['admin', 'finance']
+        roles: ['admin', 'finance', 'hr']
     },
     {
         path: '/employees',
         component: EmployeeList,
-        roles: ['admin', 'finance']
+        roles: ['admin', 'finance', 'hr']
     },
     {
         path: '/employees/:id',
         component: EmployeeDetail,
-        roles: ['admin', 'finance']
+        roles: ['admin', 'finance', 'hr']
     },
 
     {
@@ -215,13 +215,13 @@ const routes = [{
     {
         path: '/requests',
         component: LetterRequests,
-        roles: ['admin', 'finance', 'planning', 'engineer']
+        roles: ['admin', 'finance', 'hr']
     },
 
     {
         path: '/requests/:id',
         component: LetterRequestsDetail,
-        roles: ['admin', 'finance']
+        roles: ['admin', 'finance', 'hr']
     },
 
 
@@ -229,7 +229,7 @@ const routes = [{
     {
         path: '/chat',
         component: Chat,
-        roles: ['admin', 'finance', 'planning', 'engineer']
+        roles: ['admin', 'finance', 'design', 'client', 'roadquality', 'engineer', 'contractadmin', 'hr']
     },
     {
         path: '/invoice',
@@ -249,22 +249,22 @@ const routes = [{
     {
         path: "/contract",
         component: ContractList,
-        roles: ['admin', 'finance', 'planning']
+        roles: ['admin', 'finance', 'contractadmin']
     },
     {
         path: "/contract/:id",
         component: ContractDetail,
-        roles: ['admin', 'finance', 'planning']
+        roles: ['admin', 'finance', 'contractadmin']
     },
     {
         path: "/pglist",
         component: PgList,
-        roles: ['admin', 'finance', 'planning', 'engineer']
+        roles: ['admin', 'finance', 'design', 'engineer']
     },
     {
         path: "/pglist/:id",
         component: PgDetail,
-        roles: ['admin', 'finance', 'planning', 'engineer']
+        roles: ['admin', 'finance', 'design', 'engineer']
     },
     {
         path: "/auther",
@@ -274,56 +274,56 @@ const routes = [{
     {
         path: "/leavetypelist",
         component: LeaveTypeList,
-        roles: ['admin', 'finance']
+        roles: ['admin', 'finance', 'hr']
     },
     {
         path: "/leavelist",
         component: LeaveList,
-        roles: ['admin', 'finance']
+        roles: ['admin', 'finance', 'hr']
     },
     {
         path: "/leave/:id",
         component: LeaveDetail,
-        roles: ['admin', 'finance']
+        roles: ['admin', 'finance', 'hr']
     },
     {
         path: "/payroll",
         component: PayrollList,
-        roles: ['admin', 'finance']
+        roles: ['admin', 'finance', 'hr']
     },
     {
         path: "/payroll/:id",
         component: payrollDetail,
-        roles: ['admin', 'finance']
+        roles: ['admin', 'finance', 'hr']
     },
     {
         path: "/candidates",
         component: CandidateList,
-        roles: ['admin', 'finance']
+        roles: ['admin', 'finance', 'hr']
     },
     {
         path: "/candidates/:id",
         component: CandidateDetail,
-        roles: ['admin', 'finance']
+        roles: ['admin', 'finance', 'hr']
     },
     {
         path: "/candidate/shortlisted",
         component: ShortListedCandidates,
-        roles: ['admin', 'finance']
+        roles: ['admin', 'finance', 'hr']
     },
     {
         path: "/candidate/selected",
         component: SelectedCandidates,
-        roles: ['admin', 'finance']
+        roles: ['admin', 'finance', 'hr']
     }, {
         path: "/timesheet",
         component: Timesheet,
-        roles: ['admin', 'finance']
+        roles: ['admin', 'finance', 'hr']
     },
     {
         path: "/timesheet/:id",
         component: TimesheetDetail,
-        roles: ['admin', 'finance']
+        roles: ['admin', 'finance', 'hr']
     },
 ]
 

@@ -14,6 +14,8 @@ import setCookie from '../hooks/setCookie'
 import getCookie from 'hooks/getCookie'
 import { AuthContext } from '../hooks/authContext'
 
+import { ErrorAlert, SuccessAlert } from "components/Alert";
+
 function Login(props) {
 
   const [frontErrorMessage,setFrontErrorMessage] = useState("")
@@ -21,19 +23,27 @@ function Login(props) {
   const {authState,setAuthState} = useContext(AuthContext)
 
 
-  // console.log(authState)
-  // const history = useHistory()
- 
-  useEffect(()=>{
-    if(authState.state){
-      if(props.history.length>1){
-        props.history.goBack()
-      }else{
-        props.history.push('/login')
-      }
-      
+  const [openSuccess, setOpenSuccess] = useState({ open: false, message: "" });
+
+  const handleCloseSuccess = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
     }
-  },[])
+
+    setOpenSuccess({ open: false, message: "" });
+  };
+
+  const [openError, setOpenError] = useState({ open: false, message: "" });
+
+  const handleCloseError = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpenError({ open: false, message: "" });
+  };
+
+
     const cookie = getCookie('accessToken')
 
   const validation = Yup.object().shape({
@@ -66,17 +76,22 @@ const onSubmit = async(data)=>{
         const stringFied = JSON.stringify(userData?userData:undefined)
           setCookie('accessToken',stringFied)
           setAuthState({id:data.id,username:data.username,email:data.email,role:data.role,state:true,refreshToken:data.refreshToken})
-          setSuccessMessage("Successfully logged in ")
-          setTimeout(() => {
-            setSuccessMessage("")
-            props.history.push('/app/dashboard')
-          }, 1000);
+          setOpenSuccess({open:true,message:"Logged In Successfully"})
+         setTimeout(() => {
+          props.history.push('/app/dashboard')
+         }, 1000);
+          
+        
       }
     })
     
     
   } catch (error) {
-    console.log(error.message);
+    if (error.response && error.response.data && error.response.data.error) {
+      setOpenError({open:true,message:`${error.response.data.error}`});
+    } else {
+      setOpenError({open:true,message:"An unknown error occurred"});
+    }
   }
 
 }
@@ -87,7 +102,22 @@ const initialValues ={
 }
   return (
 
-    
+    <>
+
+<ErrorAlert
+        open={openError.open}
+        handleClose={handleCloseError}
+        message={openError.message}
+        horizontal="right"
+      />
+      <SuccessAlert
+        open={openSuccess.open}
+        handleClose={handleCloseSuccess}
+        message={openSuccess.message}
+        horizontal="right"
+      />
+
+
     <div className="flex items-center min-h-screen p-6 bg-gray-50 dark:bg-gray-900">
       <div className="flex-1 h-full max-w-4xl mx-auto overflow-hidden bg-white rounded-lg shadow-xl dark:bg-gray-800">
         <div className="flex flex-col overflow-y-auto md:flex-row">
@@ -166,6 +196,8 @@ const initialValues ={
         </div>
       </div>
     </div>
+
+    </>
   )
 }
 

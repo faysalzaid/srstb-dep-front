@@ -81,15 +81,15 @@ function EmployeeList(props) {
     }
 
     // const [companyData,setCompanyData] = useState([]) 
-    const [emplForm,setEmplForm] = useState({name:"",email:"",phone:"",status:"",image:"",DepartmentId:"",DesignationId:"", area: "",
+    const [emplForm,setEmplForm] = useState({name:"",email:"",phone:"",status:"",image:"",DepartmentId:"",DesignationId:"", AreaId: "",
           hiredDate: "",
           ssn: "",
           passportNo: "",
           contactPhone: "",
-          nationality: "",
+          nationality: "Ethiopian",
           address: "",
           birthday:"",
-          postCode:""})
+          postCode:"",})
     
     
 
@@ -102,34 +102,44 @@ function EmployeeList(props) {
     const [searchResult,setSearchResult] = useState([])
     const [searchTerm,setSearchTerm] = useState("")
     const [fetchedResult,setFetchedResult] = useState([])
+    const [areaData,setAreaData] = useState([])
 
     
     // const {id} = useParams()
 
     useEffect(()=>{
-      let isMounted = true
-      if(isMounted){
-        axios.get(`${url}/employees/`,{withCredentials:true}).then((resp)=>{
-          // console.log('Employees',resp.data);
-          if(resp.data.error){
-            setErrorMessage(resp.data.error)
-          }else{
-            setEmployeeData(resp.data)
-          }
-          
-      })
-      axios.get(`${url}/departments`,{withCredentials:true}).then((resp)=>{
-        setDepartmentData(resp.data)
-      })
+      const getData =async()=>{
+        let isMounted = true
+        if(isMounted){
+          await axios.get(`${url}/employees/`,{withCredentials:true}).then((resp)=>{
+            // console.log('Employees',resp.data);
+            if(resp.data.error){
+              setErrorMessage(resp.data.error)
+            }else{
+              setEmployeeData(resp.data)
+            }
+            
+        })
+        await axios.get(`${url}/departments`,{withCredentials:true}).then((resp)=>{
+          setDepartmentData(resp.data)
+        })
+  
+        await axios.get(`${url}/designations`,{withCredentials:true}).then((resp)=>{
+          setDesignationData(resp.data)
+        })
 
-      axios.get(`${url}/designations`,{withCredentials:true}).then((resp)=>{
-        setDesignationData(resp.data)
-      })
+        await axios.get(`${url}/area`,{withCredentials:true}).then((resp)=>{
+          setAreaData(resp.data.area)
+        })
+  
+        }
+        return ()=>{
+          isMounted=false
+        }
+      }
 
-      }
-      return ()=>{
-        isMounted=false
-      }
+      getData()
+     
        
     },[])
 
@@ -171,8 +181,6 @@ const searchHandler = async(search)=>{
 
     const addEmployee =async(e)=>{
       e.preventDefault()
-      // console.log('This is from bid data',bidFormData);
-      console.log('This is from emplform data',emplForm);
       if(emplForm.name==="" || emplForm.email===""||emplForm.phone===""||emplForm.status===""||emplForm.image===""||emplForm.DepartmentId===""||emplForm.DesignationId===""){
         setErrorMessage('Please Provide all data')
         setTimeout(() => {
@@ -180,7 +188,7 @@ const searchHandler = async(search)=>{
         }, 2000);
       }else{
 
-        // console.log(grappedDepartment.data.id);
+        
         const formData = new FormData()
         formData.append('name',emplForm.name)
         formData.append('email',emplForm.email)
@@ -188,28 +196,47 @@ const searchHandler = async(search)=>{
         formData.append('status',emplForm.status)
         formData.append('image',emplForm.image)
         formData.append('DepartmentId',emplForm.DepartmentId)
-        formData.append('DesignationId',emplForm.DesignationId)
-        console.log('data from formdata',formData);
-        //  axios.post(`${url}/employees`,formData,{withCredentials:true}).then((resp)=>{
-        //   console.log('from server',resp.data);
-        //   if(resp.data.error){
-        //     setErrorMessage(resp.data.error)
-        //     setTimeout(() => {
-        //       setErrorMessage('')
-        //     }, 2000);
-        //   }else{
-        //       setEmployeeData([...employeeData,resp.data])
-        //       setEmplForm({name:"",email:"",phone:"",status:"",image:""})
-        //     closeModal()
-        //     setSuccessMessage("Successfully added")
-        //     setTimeout(() => {
-        //       setSuccessMessage("")
-        //    }, 2000)
-        //   }
-        // })  
+        formData.append('AreaId',emplForm.AreaId)
+        formData.append('hiredDate',emplForm.hiredDate)
+        formData.append('ssn',emplForm.ssn)
+        formData.append('passportNo',emplForm.passportNo)
+        formData.append('contactPhone',emplForm.contactPhone)
+        formData.append('address',emplForm.address)
+        formData.append('birthday',emplForm.birthday)
+        formData.append('postCode',emplForm.postCode)
+        formData.append('nationality',emplForm.nationality)
+
+         axios.post(`${url}/employees`,formData,{withCredentials:true}).then((resp)=>{
+          // console.log('from server',resp.data);
+          if(resp.data.error){
+            setErrorMessage(resp.data.error)
+            setTimeout(() => {
+              setErrorMessage('')
+            }, 2000);
+          }else{
+              setEmployeeData((prev)=>[...prev,resp.data])
+            closeModal()
+            setOpenSuccess({open:true,message:"Successfully Added"})
+            setTimeout(() => {
+              setSuccessMessage("")
+           }, 2000)
+          }
+        })  
       }
   
   }
+
+
+
+  const [isDeleteOpen,setIsDeleteOpen] = useState({open:false,id:""})
+
+  const closeDelete = ()=>{
+    setIsDeleteOpen(false)
+}
+  const openDelete = (id)=>{
+    setIsDeleteOpen({open:true,id:id})
+}
+
 
 //
 useEffect(()=>{
@@ -225,19 +252,17 @@ useEffect(()=>{
 
 
 
-    const deleteEmployee = (id)=>{
-      axios.get(`${url}/employees/delete/${id}`).then((resp)=>{
+    const deleteEmployee = ()=>{
+      axios.get(`${url}/employees/delete/${isDeleteOpen.id}`).then((resp)=>{
         if(resp.data.error){
             setErrorMessage(resp.data.error)
         }
-        const newEmployee = employeeData.filter((emp)=>emp.id!==id)
+        const newEmployee = employeeData.filter((emp)=>emp.id!==isDeleteOpen.id)
         setEmployeeData(newEmployee)
         closeModal()
         setSuccessMessage("Successfully Deleted")
-        setTimeout(() => {
-          setSuccessMessage("")
-          props.history.push('/app/Employees')
-        }, 1000);
+       setOpenSuccess({open:true,message:"Deleted Successfully"})
+       closeDelete()
       })
     }
 
@@ -245,6 +270,22 @@ useEffect(()=>{
 
     return ( 
        <>
+         {/* Delete Confirm section */}
+         <Modal isOpen={isDeleteOpen.open} onClose={closeDelete}>
+          <ModalHeader>Confirm Action</ModalHeader>
+          <ModalBody>
+            <p>Are you sure you want to perform this action?</p>
+          </ModalBody>
+          <ModalFooter>
+            <button className="px-4 py-2 text-white bg-red-500 rounded-md hover:bg-red-600" onClick={deleteEmployee}>
+              Confirm
+            </button>
+          </ModalFooter>
+      </Modal>
+
+        {/* End of delete Section */}
+
+
       <ErrorAlert
         open={openError.open}
         handleClose={handleCloseError}
@@ -258,9 +299,6 @@ useEffect(()=>{
         horizontal="right"
       />
 
-       <link rel="stylesheet" href="https://unpkg.com/flowbite@1.4.4/dist/flowbite.min.css" />
-       <EditUser setOpenError={setOpenError} setOpenSuccess={setOpenSuccess} open={openEdit.open} handleClose={handleCloseEdit} user={openEdit.props}/>
-       <AddEmployee setOpenError={setOpenError} setOpenSuccess={setOpenSuccess} open={openAdd.open} handleClose={handleCloseAdd} setEmployeeData={setEmployeeData} employeeData={employeeData}/>
        <PageTitle>List of Employees</PageTitle>
         <div>
         <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
@@ -275,7 +313,7 @@ useEffect(()=>{
 
         <div className='flex'>
         <div className='mt-6'>
-          <Button onClick={()=>setOpenAdd({open:true})}>Register Employee</Button>
+          <Button onClick={()=>openModal()}>Register Employee</Button>
         </div>
         <div className='mt-5 ml-4'>
         <FaCloudUploadAlt onClick={openUploadModal} className="text-5xl" style={{color:'#642BD9'}}/> 
@@ -287,6 +325,7 @@ useEffect(()=>{
           <ModalBody>
             
           <form onSubmit={addEmployee} encType="multipart/form-data">
+          <div className="grid grid-cols-2 gap-2">
           <Label>
             <span>Name</span>
               <Input type="text" className="mt-1" name="name" placeholder="Empl Name"  autoComplete='off' onChange={(e)=>setEmplForm({...emplForm,name:e.target.value})}/>
@@ -299,7 +338,7 @@ useEffect(()=>{
             <span>Phone</span>
               <Input type="text" className="mt-1" name="phone" placeholder="Empl Phone"  autoComplete='off' onChange={(e)=>setEmplForm({...emplForm,phone:e.target.value})}/>
           </Label>
-          <Label className="mt-4">
+          <Label className="mt-1">
           <span>Status</span>
           <Select className="mt-1" name="status"  onChange={(e)=>setEmplForm({...emplForm,status:e.target.value})}>
           <option>Select</option>
@@ -308,7 +347,7 @@ useEffect(()=>{
             
           </Select>
         </Label>
-        <Label className="mt-4">
+        <Label className="mt-1">
           <span>Department</span>
           <Select className="mt-1" name="DepartmentId"  onChange={(e)=>setEmplForm({...emplForm,DepartmentId:e.target.value})}>
           <option>Select</option>
@@ -317,7 +356,7 @@ useEffect(()=>{
           )}
           </Select>
         </Label>
-        <Label className="mt-4">
+        <Label className="mt-1">
           <span>Designation</span>
           <Select className="mt-1" name="DesignationId"  onChange={(e)=>setEmplForm({...emplForm,DesignationId:e.target.value})}>
           <option>Select</option>
@@ -327,10 +366,16 @@ useEffect(()=>{
             
           </Select>
         </Label>
-        <Label>
-            <span>Area</span>
-              <Input type="text" className="mt-1" name="area" placeholder="Empl Phone"  autoComplete='off' onChange={(e)=>setEmplForm({...emplForm,area:e.target.value})}/>
-          </Label>
+        <Label className="mt-1">
+          <span>Area</span>
+          <Select className="mt-1" name="AreaId"  onChange={(e)=>setEmplForm({...emplForm,AreaId:e.target.value})}>
+          <option>Select</option>
+          {areaData.map((des)=>
+          <option key={des.id} value={des.id}>{des.name}</option>
+          )}
+            
+          </Select>
+        </Label>
 
           <Label>
             <span>Hired Date</span>
@@ -363,7 +408,11 @@ useEffect(()=>{
 
           <Label>
             <span>BirthDate</span>
-              <Input type="text" className="mt-1" name="birthday" placeholder="Empl birthday"  autoComplete='off' onChange={(e)=>setEmplForm({...emplForm,birthday:e.target.value})}/>
+              <Input type="date" className="mt-1" name="birthday" placeholder="Empl birthday"  autoComplete='off' onChange={(e)=>setEmplForm({...emplForm,birthday:e.target.value})}/>
+          </Label>
+          <Label>
+            <span>PostCode</span>
+              <Input type="text" className="mt-1" name="postCode" placeholder="Empl Postcode"  autoComplete='off' onChange={(e)=>setEmplForm({...emplForm,postCode:e.target.value})}/>
           </Label>
 
         <Label>
@@ -374,9 +423,10 @@ useEffect(()=>{
           </Label>
           
           
-        <Label className="mt-4">
+        <Label className="mt-1">
           <Button type="submit">Save</Button>
         </Label>
+        </div>
           </form>
               
      
@@ -508,7 +558,7 @@ useEffect(()=>{
                         <EditIcon className="w-5 h-5" aria-hidden="true" />
                       </Button>
                
-                      <Button onClick={()=>deleteEmployee(user.id)}  style={{color:'red'}} layout="link" size="icon" aria-label="Delete">
+                      <Button onClick={()=>openDelete(user.id)}  style={{color:'red'}} layout="link" size="icon" aria-label="Delete">
                         <TrashIcon className="w-5 h-5" aria-hidden="true" />
                       </Button>
                     </div>

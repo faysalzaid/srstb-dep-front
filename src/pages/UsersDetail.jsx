@@ -25,9 +25,10 @@ import * as Yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useContext } from "react";
 import { AuthContext } from "../hooks/authContext";
+import useAuth from "hooks/useAuth";
 function UsersDetail(props) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const {authState} = useAuth(AuthContext)
   function openModal() {
     setIsModalOpen(true);
   }
@@ -73,14 +74,12 @@ function UsersDetail(props) {
   }, []);
 
   const updateUser = async (data) => {
-    console.log('data is ',data);
     const formData = new FormData();
     formData.append("name", data.name);
     formData.append("email", data.email);
     formData.append("role", data.role);
     formData.append("password", data.password);
     formData.append("image", userForm.image);
-    console.log("this is the data from formik", formData);
     await axios.post(`${url}/users/${id}`, formData,{withCredentials:true}).then((resp) => {
       // console.log();
       if (resp.data.error) {
@@ -176,7 +175,8 @@ function UsersDetail(props) {
                   type="password"
                 />
               </Label>
-
+              {usersData.role==='admin'?"":<>
+              
               <Label className="mt-4">
                 <span>Role</span>
                 <Field
@@ -184,16 +184,19 @@ function UsersDetail(props) {
                   className="w-full p-2.5 text-gray-500 bg-white border rounded-md shadow-sm outline-none appearance-none focus:border-indigo-600"
                   name="role"
                 >
-             
+               <option>Select</option>
                   <option>admin</option>
                   <option>finance</option>
-                  <option>engineer</option>
-                  <option>employee</option>
-                  <option>bidadminstration</option>
-                  <option>planning</option>
+                  <option>design</option>
+                  <option>roadquality</option>
                   <option>client</option>
+                  <option>engineer</option>
+                  <option>hr</option>
+                  <option>contractadmin</option>
                 </Field>
-              </Label>
+              </Label>  
+              </>}
+            
 
               <Label className="mt-4">
                 <span>Update Image</span>

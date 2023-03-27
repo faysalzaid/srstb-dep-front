@@ -52,11 +52,12 @@ const LeaveList = () => {
     const [LeaveData,setLeaveData] = useState([])
     const [countsData,setCountsData] = useState({ projectCount:"",bidCount:"",activeProjects:"",completedProjects:""})
     const [leaveTypeForm,setLeaveTypeForm] = useState({type:""})
-    const [leaveFormData,setLeaveFormData] = useState({date:"",numberOfDays:"",startDate:"",endDate:"",comments:"",createdBy:"",status:"",employeeId:"",checkedBy:"",approvedBy:"",LeaveTypeId:""})
+    const [leaveFormData,setLeaveFormData] = useState({date:"",numberOfDays:"",startDate:"",endDate:"",comments:"",createdBy:"",status:"",EmployeeId:"",checkedBy:"",approvedBy:"",LeaveTypeId:""})
     const [leaveType,setLeaveType] = useState([])
     const [users, setUsers] = useState([])
     const [userCheckedBy, setUserCheckedBy] = useState([])
     const [approvedBy, setApprovedBy] = useState([])
+    const [employeeData,setEmployeeData] = useState([])
   
 
 
@@ -127,6 +128,16 @@ const LeaveList = () => {
                   }
             })
 
+            await axios.get(`${url}/employees`,{withCredentials:true}).then((resp)=>{
+              setEmployeeData(resp.data)
+           }).catch((error)=>{
+             if (error.response && error.response.data && error.response.data.error) {
+                 setOpenError({open:true,message:`${error.response.data.error}`});
+               } else {
+                 setOpenError({open:true,message:"An unknown error occurred"});
+               }
+         })
+
           
             await axios.get(`${url}/counts`,{withCredentials:true}).then((resp)=>{
               const data = resp.data
@@ -152,7 +163,7 @@ const LeaveList = () => {
           comments:leaveFormData.comments,
           createdBy:authState.username,
           status:leaveFormData.status,
-          employeeId:leaveFormData.employeeId,
+          EmployeeId:leaveFormData.EmployeeId,
           checkedBy:leaveFormData.checkedBy,
           approvedBy:leaveFormData.approvedBy,
           LeaveTypeId:leaveFormData.LeaveTypeId
@@ -338,7 +349,7 @@ const LeaveList = () => {
               className="mt-1"
               name="ProjectId"
               // value={formValues.ProjectId}
-              onChange={(e)=>setLeaveFormData({...leaveFormData,employeeId:e.target.value})}
+              onChange={(e)=>setLeaveFormData({...leaveFormData,EmployeeId:e.target.value})}
               required
             >
               <option value="" >Select Employee</option>
@@ -514,7 +525,7 @@ const LeaveList = () => {
               <TableRow>
                 <TableCell><span className="text-sm font-semibold">{row.date}</span></TableCell>
                 <TableCell><span className="text-sm font-semibold">{row.numberOfDays}</span></TableCell>
-                <TableCell><span className="text-sm font-semibold">{users.map((usr)=>usr.id===row.employeeId?usr.name:"")}</span></TableCell>
+                <TableCell><span className="text-sm font-semibold">{users.map((usr)=>usr.id===row.EmployeeId?usr.name:"")}</span></TableCell>
                 <TableCell><span className="text-sm font-semibold">{row.startDate}</span></TableCell>
                 <TableCell><span className="text-sm font-semibold">{row.endDate}</span></TableCell>
                 <TableCell><span className="text-sm font-semibold">{row.status}</span></TableCell>

@@ -261,11 +261,12 @@ const searchHandler = async(search)=>{
           <ModalBody>
             
           <form onSubmit={addBid} encType="multipart/form-data">
+          <div className="grid grid-cols-2 gap-4">
           <Label>
             <span>Fullname</span>
               <Input type="text" className="mt-1" name="fullname" placeholder="Full Name"  autoComplete='off' onChange={(e)=>setBidFormData({...bidFormData,fullname:e.target.value})}/>
           </Label>
-          <Label className="mt-4">
+          <Label className="mt-1">
           <span>Project Name</span>
           <Select className="mt-1" name="ProjectId" value={bidFormData.ProjectId} onChange={(e)=>setBidFormData({...bidFormData,ProjectId:e.target.value})}>
           <option>Select</option>
@@ -274,7 +275,7 @@ const searchHandler = async(search)=>{
             
           </Select>
         </Label>
-        <Label className="mt-4">
+        <Label className="mt-1">
           <span>User</span>
           <Select className="mt-1" name="UserId" value={bidFormData.UserId} onChange={(e)=>setBidFormData({...bidFormData,UserId:e.target.value})}>
           <option>Select</option>
@@ -298,7 +299,7 @@ const searchHandler = async(search)=>{
               <Input type="file" className="mt-1" name="license" onChange={(e)=>setBidFormData({...bidFormData,license:e.target.files[0]})}/>
           </Label>
 
-          <Label className="mt-4">
+          <Label className="mt-1">
           <span>Status</span>
           <Select className="mt-1" name="status" value={bidFormData.status} onChange={(e)=>setBidFormData({...bidFormData,status:e.target.value})}>
           <option>Select</option>
@@ -328,6 +329,7 @@ const searchHandler = async(search)=>{
         <Label className="mt-4">
           <Button type="submit">Save</Button>
         </Label>
+        </div>
           </form>
               
      

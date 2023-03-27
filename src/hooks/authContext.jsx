@@ -135,9 +135,11 @@ export const AuthContextProvider = withRouter((props) => {
 useEffect(()=>{
     if(userData?.token||userData?.state){
         setAuthState({ id: userData.id, username: userData.username, email: userData.email, role: userData.role, state: userData.state, refreshToken: userData.refreshToken })
+        if(props.history.length>1){
+          props.history.goBack()
+        }
         }else{
-          // const favicon = document.getElementById('favicon')
-          // favicon.href="https://cdn-icons-png.flaticon.com/128/2037/2037358.png"
+          props.history.push('/login')
         }
        
     },[])

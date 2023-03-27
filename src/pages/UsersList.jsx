@@ -25,6 +25,7 @@ import * as Yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useContext } from "react";
 import { AuthContext } from "../hooks/authContext";
+import useAuth from "hooks/useAuth";
 function UsersList(props) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -51,7 +52,7 @@ function UsersList(props) {
   const [searchTerm, setSearchTerm] = useState("");
   const [fetchedResult, setFetchedResult] = useState([]);
   const [showModal, setShowModal] = useState({show:false,id:""});
-
+  const {authState} = useAuth(AuthContext)
   const validation = Yup.object().shape({
     name: Yup.string().min(3).max(15).required(),
     email: Yup.string().email().min(5).required("Email is required"),
@@ -316,10 +317,15 @@ function UsersList(props) {
                   name="role"
                 >
                   <option>Select</option>
-                  <option>admin</option>
-                  <option>manager</option>
+                  {authState.role==='admin'?<option>admin</option>:""}
+                
+                  <option>finance</option>
+                  <option>design</option>
+                  <option>roadquality</option>
                   <option>client</option>
-                  <option>employee</option>
+                  <option>engineer</option>
+                  <option>hr</option>
+                  <option>contractadmin</option>
                 </Field>
               </Label>
               <Label className="mt-4">

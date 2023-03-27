@@ -29,6 +29,7 @@ import { ReactComponent as OutlineLogoutIcon } from './outlineLogout.svg'
 import { ReactComponent as EyeIcon } from './eye.svg'
 import { ReactComponent as EyeIconOne } from './eye-1.svg'
 import { FaList } from 'react-icons/fa';
+import { BsFillGearFill } from 'react-icons/bs'
 import {
     FaFileMedicalAlt,
     FaGripVertical,
@@ -92,5 +93,6 @@ export {
     FaIoxhost,
     FaSlideshare,
     FaHandsHelping,
-    FaUserClock
+    FaUserClock,
+    BsFillGearFill
 }

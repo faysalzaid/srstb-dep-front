@@ -504,6 +504,7 @@ const CandidateList = () => {
           {fetchedResult?fetchedResult.map((row, i) => (
             <Fragment key={i}>
               <TableRow>
+                
                 <TableCell><span className="text-sm font-semibold">{row.date}</span></TableCell>
                 <TableCell><span className="text-sm font-semibold">{row.name}</span></TableCell>
                 <TableCell><span className="text-sm font-semibold">{row.qualification}</span></TableCell>
