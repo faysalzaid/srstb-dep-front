@@ -6,6 +6,7 @@ import axios from 'axios'
 import { useQuery } from '@tanstack/react-query'
 import { ErrorAlert, SuccessAlert } from "components/Alert";
 // import 'bootstrap/dist/css/bootstrap.min.css';
+import TitleChange from 'components/Title/Title'
 import {
   Table,
   TableHeader,
@@ -107,7 +108,7 @@ useEffect(()=>{
       setCount(resp.data.count)
     }
   })
-  document.title = "Cellu-Crm | Companies";
+
 
 },[])
 
@@ -202,6 +203,7 @@ const deleteCompany =async()=>{
 
   return (
     <>
+    <TitleChange name={"Companies | Cellu-Crm"}/>
    
       <PageTitle>List of Companies Registered</PageTitle>
 

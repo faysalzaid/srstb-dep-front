@@ -336,17 +336,6 @@ const Timesheet = () => {
               />
 
 
-
- 
-
-     
-
-
-
-
-
-
-
               
         </div>
         <div className="hidden sm:block">

@@ -45,7 +45,7 @@ import NewInvoice from './SingleInvoice'
 
 
 const InvoiceDetailPage = () => {
-    const {authState} = useContext(AuthContext)
+    const {authState,settings} = useContext(AuthContext)
     const [showPayments, setShowPayments] = useState(false);
     const [invoiceData, setInvoiceData] = useState({})
     const [mode,setMode] = useState([])

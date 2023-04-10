@@ -113,24 +113,29 @@ const PaymentDetail = lazy(() =>
     import ('../components/payment/PaymentDetail'))
 
 const EmployeeDetail = lazy(() =>
-    import ('../components/EmployeeD/EmployeeDetail'))
+    import ('../pages/EmployeeDetail'))
 
 const Timesheet = lazy(() =>
     import ('../components/Timesheet/Timesheet'))
 
+const ProjectReport = lazy(() =>
+    import ('../components/Reports/ProjectReport'))
+
+
 const TimesheetDetail = lazy(() =>
     import ('../components/Timesheet/TimesheetDetail'))
-
-/**
- * ⚠ These are internal routes!
- * They will be rendered inside the app, using the default `containers/Layout`.
- * If you want to add a route to, let's say, a landing page, you should add
- * it to the `App`'s router, exactly like `Login`, `CreateAccount` and other pages
- * are routed.
- *
- * If you're looking for the links rendered in the SidebarContent, go to
- * `routes/sidebar.js`
- */
+const Settings = lazy(() =>
+        import ('../components/Settings/Settings'))
+    /**
+     * ⚠ These are internal routes!
+     * They will be rendered inside the app, using the default `containers/Layout`.
+     * If you want to add a route to, let's say, a landing page, you should add
+     * it to the `App`'s router, exactly like `Login`, `CreateAccount` and other pages
+     * are routed.
+     *
+     * If you're looking for the links rendered in the SidebarContent, go to
+     * `routes/sidebar.js`
+     */
 const routes = [{
         path: '/dashboard', // the url
         component: Dashboard, // view rendered
@@ -324,6 +329,16 @@ const routes = [{
         path: "/timesheet/:id",
         component: TimesheetDetail,
         roles: ['admin', 'finance', 'hr']
+    },
+    {
+        path: "/settings",
+        component: Settings,
+        roles: ['admin']
+    }, ,
+    {
+        path: "/reports/projects",
+        component: ProjectReport,
+        roles: ['admin']
     },
 ]
 

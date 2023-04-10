@@ -70,7 +70,6 @@ const CandidateList = () => {
 
     // Notifications
     const [openSuccess, setOpenSuccess] = useState({ open: false, message: "" });
-
     const handleCloseSuccess = (event, reason) => {
       if (reason === "clickaway") {
         return;
@@ -78,14 +77,11 @@ const CandidateList = () => {
   
       setOpenSuccess({ open: false, message: "" });
     };
-  
     const [openError, setOpenError] = useState({ open: false, message: "" });
-  
     const handleCloseError = (event, reason) => {
       if (reason === "clickaway") {
         return;
       }
-  
       setOpenError({ open: false, message: "" });
     };
 

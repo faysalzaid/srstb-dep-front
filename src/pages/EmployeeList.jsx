@@ -117,19 +117,28 @@ function EmployeeList(props) {
               setErrorMessage(resp.data.error)
             }else{
               setEmployeeData(resp.data)
+              // setIma
             }
             
+        }).catch((error)=>{
+          setOpenError({open:true,message:`${error.response.data.error}`})
         })
         await axios.get(`${url}/departments`,{withCredentials:true}).then((resp)=>{
           setDepartmentData(resp.data)
+        }).catch((error)=>{
+          setOpenError({open:true,message:`${error.response.data.error}`})
         })
   
         await axios.get(`${url}/designations`,{withCredentials:true}).then((resp)=>{
           setDesignationData(resp.data)
+        }).catch((error)=>{
+          setOpenError({open:true,message:`${error.response.data.error}`})
         })
 
         await axios.get(`${url}/area`,{withCredentials:true}).then((resp)=>{
           setAreaData(resp.data.area)
+        }).catch((error)=>{
+          setOpenError({open:true,message:`${error.response.data.error}`})
         })
   
         }
@@ -168,13 +177,16 @@ const searchHandler = async(search)=>{
       const formData = new FormData()
       formData.append('file',file)
       await axios.post(`${url}/employees/upload/file`,formData,{withCredentials:true}).then((resp)=>{
+        if(resp.data.error){
+          setOpenError({open:true,message:`${resp.data.error}`})
+        }
         console.log(resp.data);
         setEmployeeData([...employeeData,...resp.data])
         setUplModal(false)
-        setSuccessMessage('successfully uploaded')
-        setTimeout(() => {
-          setSuccessMessage("")
-       },2000)
+        setOpenSuccess({open:true,message:"Successfully Uploaded"})
+      }).catch((error)=>{
+        console.log(error);
+        setOpenError({open:true,message:`${error.response.data.message}`})
       })
 
     }
@@ -209,18 +221,15 @@ const searchHandler = async(search)=>{
          axios.post(`${url}/employees`,formData,{withCredentials:true}).then((resp)=>{
           // console.log('from server',resp.data);
           if(resp.data.error){
-            setErrorMessage(resp.data.error)
-            setTimeout(() => {
-              setErrorMessage('')
-            }, 2000);
+            setOpenError({open:true,message:`${resp.data.error}`})
+            
           }else{
               setEmployeeData((prev)=>[...prev,resp.data])
             closeModal()
             setOpenSuccess({open:true,message:"Successfully Added"})
-            setTimeout(() => {
-              setSuccessMessage("")
-           }, 2000)
           }
+        }).catch((error)=>{
+          setOpenError({open:true,message:`${error.response.data.error}`})
         })  
       }
   
@@ -357,7 +366,7 @@ useEffect(()=>{
           </Select>
         </Label>
         <Label className="mt-1">
-          <span>Designation</span>
+          <span>Position</span>
           <Select className="mt-1" name="DesignationId"  onChange={(e)=>setEmplForm({...emplForm,DesignationId:e.target.value})}>
           <option>Select</option>
           {designationData.map((des)=>
@@ -523,6 +532,7 @@ useEffect(()=>{
               <TableCell>Employee</TableCell>
               <TableCell>Name</TableCell>
               <TableCell>Phone</TableCell>
+              <TableCell>Designation</TableCell>
               <TableCell>Status</TableCell>
               <TableCell>Action</TableCell>
              
@@ -547,17 +557,19 @@ useEffect(()=>{
                   <span className="text-sm">{user.phone}</span>
                 </TableCell>
                 <TableCell>
+                  <span className="text-sm">{designationData.map((des)=>des.id===user.DesignationId?des.name:"")}</span>
+                </TableCell>
+                <TableCell>
                   <Badge type={user.status}>{user.status}</Badge>
                 </TableCell>
                 <TableCell>
                     <div className="flex items-center space-x-4">
-                      
+                      <Link to={`/app/employees/${user.id}`}>
                       <Button
-                      onClick={()=> setOpenEdit({open: true, props: user})}
                       layout="link" size="icon" aria-label="Edit">
                         <EditIcon className="w-5 h-5" aria-hidden="true" />
                       </Button>
-               
+                      </Link>
                       <Button onClick={()=>openDelete(user.id)}  style={{color:'red'}} layout="link" size="icon" aria-label="Delete">
                         <TrashIcon className="w-5 h-5" aria-hidden="true" />
                       </Button>

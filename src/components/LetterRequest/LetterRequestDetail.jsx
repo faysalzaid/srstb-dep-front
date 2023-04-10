@@ -415,41 +415,43 @@ function printSection() {
         {/* end of calendar section */}
         </TableContainer>
   
-        
-<div ref={printSectionRef} className="max-w-7xl mx-auto bg-white shadow-md rounded-lg overflow-hidden">
-  <div className="px-6 py-4">
-    <h2 className="text-2xl font-bold mb-4">Request Paper Details</h2>
-    <div className="flex mb-4">
-      <div className="w-1/2 mr-4">
-        <h3 className="text-lg font-bold mb-2">To:</h3>
-        <p className="text-gray-800 leading-normal">John Doe (johndoe@example.com)</p>
-      </div>
-      <div className="w-1/2">
-        <h3 className="text-lg font-bold mb-2">Date Created:</h3>
-        <p className="text-gray-800 leading-normal">March 13, 2023</p>
-      </div>
+     
+        <div class="bg-white rounded-lg shadow-lg p-6 max-w-md mx-auto">
+  <div class="mb-4">
+    <label for="to" class="block text-gray-700 font-bold mb-2">To:</label>
+    <input type="text" id="to" name="to" class="w-full px-3 py-2 border border-gray-400 rounded" placeholder="Enter recipient's email address" />
+  </div>
+  <div class="mb-4">
+    <label for="subject" class="block text-gray-700 font-bold mb-2">Subject:</label>
+    <input type="text" id="subject" name="subject" class="w-full px-3 py-2 border border-gray-400 rounded" placeholder="Enter email subject" />
+  </div>
+  <div class="mb-4">
+    <label for="message" class="block text-gray-700 font-bold mb-2">Message:</label>
+    <textarea id="message" name="message" class="w-full px-3 py-2 border border-gray-400 rounded" placeholder="Enter message"></textarea>
+  </div>
+  <div class="mb-4 flex justify-between">
+    <div>
+      <label for="date" class="block text-gray-700 font-bold mb-2">Date:</label>
+      <input type="date" id="date" name="date" class="px-3 py-2 border border-gray-400 rounded" />
     </div>
-    <div className="flex mb-4">
-      <div className="w-1/2 mr-4">
-        <h3 className="text-lg font-bold mb-2">Subject:</h3>
-        <p className="text-gray-800 leading-normal">Slip Paper Test</p>
-      </div>
-      <div className="w-1/2">
-        <h3 className="text-lg font-bold mb-2">Project:</h3>
-        <p className="text-gray-800 leading-normal">Project A</p>
-      </div>
-    </div>
-    <div className="mb-4">
-      <h3 className="text-lg font-bold mb-2">Message:</h3>
-      <p className="text-gray-800 leading-normal">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc sollicitudin, magna a hendrerit laoreet, ipsum est accumsan justo, ut dictum elit orci eu tellus. Pellentesque eu lorem non elit blandit rutrum. Donec et sapien non velit pretium bibendum. Integer eget enim vel odio malesuada tincidunt vitae vitae augue.</p>
-    </div>
-    <div className="mb-4">
-      <h3 className="text-lg font-bold mb-2">Created By:</h3>
-      <p className="text-gray-800 leading-normal">Jane Doe (janedoe@example.com)</p>
+    <div>
+      <label for="written-by" class="block text-gray-700 font-bold mb-2">Written by:</label>
+      <input type="text" id="written-by" name="written-by" class="w-full px-3 py-2 border border-gray-400 rounded" placeholder="Enter your name" />
     </div>
   </div>
+  <div class="mb-4">
+    <label for="project" class="block text-gray-700 font-bold mb-2">Project:</label>
+    <select id="project" name="project" class="w-full px-3 py-2 border border-gray-400 rounded">
+      <option value="">Select a project</option>
+      <option value="project-1">Project 1</option>
+      <option value="project-2">Project 2</option>
+      <option value="project-3">Project 3</option>
+    </select>
+  </div>
+  <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+    Send Request
+  </button>
 </div>
-
 
        
 

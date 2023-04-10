@@ -15,12 +15,13 @@ import getCookie from 'hooks/getCookie'
 import { AuthContext } from '../hooks/authContext'
 
 import { ErrorAlert, SuccessAlert } from "components/Alert";
+import TitleChange from 'components/Title/Title'
 
 function Login(props) {
 
   const [frontErrorMessage,setFrontErrorMessage] = useState("")
   const [successMessage,setSuccessMessage] = useState("")
-  const {authState,setAuthState} = useContext(AuthContext)
+  const {authState,setAuthState,settings} = useContext(AuthContext)
 
 
   const [openSuccess, setOpenSuccess] = useState({ open: false, message: "" });
@@ -103,7 +104,7 @@ const initialValues ={
   return (
 
     <>
-
+<TitleChange name={`Login | ${settings.name}`}/>
 <ErrorAlert
         open={openError.open}
         handleClose={handleCloseError}
@@ -125,13 +126,13 @@ const initialValues ={
             <img
               aria-hidden="true"
               className="object-cover w-full h-full dark:hidden"
-              src={ImageLight}
+              src={settings.loginlogo}
               alt="Office"
             />
             <img
               aria-hidden="true"
               className="hidden object-cover w-full h-full dark:block"
-              src={ImageDark}
+              src={settings.loginlogo}
               alt="Office"
             />
           </div>
@@ -162,12 +163,12 @@ const initialValues ={
            
               <Label className="mt-4">
                 <span>Email</span>
-                <Field name="email" className="block w-full text-sm focus:outline-none dark:text-gray-300 form-input leading-5 focus:border-purple-400 dark:border-gray-600 focus:shadow-outline-purple dark:focus:border-gray-600 dark:focus:shadow-outline-gray dark:bg-gray-700 mt-1" type="email" placeholder='YourEmal@gmail.com' />
+                <Field name="email" className="block w-full text-sm focus:outline-none dark:text-gray-300 form-input leading-5 focus:border-purple-400 dark:border-gray-600 focus:shadow-outline-purple dark:focus:border-gray-600 dark:focus:shadow-outline-gray dark:bg-gray-700 mt-1" type="email" autoComplete="off" placeholder='YourEmal@gmail.com' />
                 <ErrorMessage className="text-red-500 text-xs italic" name='email' component='p'/>
               </Label>
               <Label className="mt-4">
                 <span>Password</span>
-                <Field name="password" className="block w-full text-sm focus:outline-none dark:text-gray-300 form-input leading-5 focus:border-purple-400 dark:border-gray-600 focus:shadow-outline-purple dark:focus:border-gray-600 dark:focus:shadow-outline-gray dark:bg-gray-700 mt-1" type="password" placeholder="******************" />
+                <Field name="password" className="block w-full text-sm focus:outline-none dark:text-gray-300 form-input leading-5 focus:border-purple-400 dark:border-gray-600 focus:shadow-outline-purple dark:focus:border-gray-600 dark:focus:shadow-outline-gray dark:bg-gray-700 mt-1" type="password" autocomplete="off" placeholder="******************" />
                 <ErrorMessage className="text-red-500 text-xs italic" name='password' component='p'/>
               </Label>
 

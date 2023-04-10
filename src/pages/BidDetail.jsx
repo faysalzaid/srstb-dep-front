@@ -5,7 +5,10 @@ import SectionTitle from '../components/Typography/SectionTitle'
 import InfoCard from '../components/Cards/InfoCard'
 import RoundIcon from '../components/RoundIcon'
 import { ChatIcon, CartIcon, MoneyIcon, PeopleIcon } from '../icons'
+import {FaBullseye,FaDownload,FaCloudUploadAlt} from 'react-icons/fa'
+import { ErrorAlert, SuccessAlert } from "components/Alert";
 import axios from 'axios'
+import { MdArrowForward } from "react-icons/md";
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import {
   Table,
@@ -26,6 +29,7 @@ import { Input, HelperText, Label, Select, Textarea } from '@windmill/react-ui'
 import { useContext } from 'react'
 import { AuthContext } from '../hooks/authContext'
 import { bidUrl, url } from 'config/urlConfig'
+import { RiDeleteBin6Line } from 'react-icons/ri'
 
 function BidDetail(props) {
     const {id} = useParams()
@@ -42,8 +46,14 @@ function BidDetail(props) {
     const [companyData,setCompanyData] = useState([]) 
     const [bidsData,setBidData] = useState({})
     const [errorMessage,setErrorMessage] = useState('')
-    const [bidFormData,setBidFormData] = useState({fullname:"",phone:"",license:"",status:"",performa:"",proposal:"",companydoc:"",amount:"",bidUserPic:"",ProjectId:"",UserId:""})
-    const [frontErrorMessage,setFrontErrorMessage] = useState("")
+    const [bidFormData,setBidFormData] = useState({
+        fullname:"",phone:"",license:"",status:"",performa:"",
+        proposal:"",companydoc:"",amount:"",
+        bidUserPic:"",ProjectId:"",UserId:"",
+        score:"",description:"",evaluationFile:"",evaluationStatus:""
+  
+  })
+
     const [successMessage,setSuccessMessage] = useState("")
     const [projects,setProjects] = useState([])
     const [ users,setUsers] = useState([])
@@ -62,7 +72,23 @@ function BidDetail(props) {
               // console.log('from the main response',resp.data);
 
               setBidData(resp.data)
-              setBidFormData({fullname:resp.data.fullname,phone:resp.data.phone,license:resp.data.license,status:resp.data.status,performa:resp.data.performa,proposal:resp.data.proposal,companydoc:resp.data.companydoc,amount:resp.data.amount,bidUserPic:resp.data.bidUserPic,ProjectId:resp.data.ProjectId,UserId:resp.data.UserId})
+              setBidFormData({fullname:resp.data.fullname,
+                phone:resp.data.phone,
+                license:resp.data.license,
+                status:resp.data.status,
+                performa:resp.data.performa,
+                proposal:resp.data.proposal,
+                companydoc:resp.data.companydoc,
+                amount:resp.data.amount,
+                bidUserPic:resp.data.bidUserPic,
+                ProjectId:resp.data.ProjectId,
+                UserId:resp.data.UserId,
+                score:resp.data.score,
+                description:resp.data.description,
+                evaluationStatus:resp.data.evaluationStatus,
+                evaluationFile:resp.data.evaluationFile
+              
+              })
             //   console.log('from bidformdata',bidFormData);
               
             }).catch((err)=>{
@@ -99,24 +125,6 @@ function BidDetail(props) {
     if(bidFormData.fullname==="" || bidFormData.phone===""||bidFormData.license===""||bidFormData.status===""||bidFormData.performa===""||bidFormData.proposal===""||bidFormData.companydoc===""||bidFormData.amount===""||bidFormData.bidUserPic===""||bidFormData.ProjectId===""||bidFormData.UserId===""){
       setErrorMessage('Please Provide all data')
     }else{
-
-      const PrId = bidFormData.ProjectId
-      const UsrId = bidFormData.UserId
-      let newPrId;
-      let newUsrId;
-      // if(PrId!=bidsData.ProjectId){
-      //   const projectNameToId = await axios.get(`${url}/projects/name/${PrId}`)
-      //   newPrId = projectNameToId.data.id
-      // } else{
-      //   newPrId = bidFormData.ProjectId
-      // }
-      // if(UsrId!=bidsData.UserId){
-      //   const userNameToId = await axios.get(`${url}/users/name/${UsrId}`,{withCredentials:true})
-      //   newUsrId = userNameToId.data.id
-      //   console.log('the new id is ',newUsrId);
-      // }else{
-      //   newUsrId = bidFormData.UserId
-      // }
       const formData = new FormData()
       formData.append('fullname',bidFormData.fullname)
       formData.append('phone',bidFormData.phone)
@@ -129,23 +137,20 @@ function BidDetail(props) {
       formData.append('bidUserPic',bidFormData.bidUserPic)
       formData.append('ProjectId',bidFormData.ProjectId)
       formData.append('UserId',bidFormData.UserId)
+      formData.append('score',bidFormData.score)
+      formData.append('description',bidFormData.description)
       // console.log(formData);
 
        const response = await axios.post(`http://localhost:4000/bids/${id}`,formData,{withCredentials:true}).then((resp)=>{
         // console.log('From resp.data',resp.data);
         if(resp.data.error){
-          setErrorMessage(resp.data.error)
+          setOpenError({open:true,message:`${resp.data.error}`});
         }else{
             const rfs = resp.data
             setBidData(rfs)
-            // setBidFormData(rfs)
-            // console.log(resp.data);
             closeModal()
-            // props.history.push(`../../app/bids/${id}`)
-            setSuccessMessage("Successfully Updated")
-            setTimeout(() => {
-            setSuccessMessage("")
-         }, 2000)
+            setOpenSuccess({open:true,message:`Successfully Updated`});
+            
         }
       }).catch((err)=>{
         console.log(err);
@@ -153,89 +158,211 @@ function BidDetail(props) {
     }
 
 }
-        const deleteBid =async(ids)=>{
-          const response = await axios.get(`${url}/bids/delete/${ids}`,{withCredentials:true}).then((resp)=>{
+        const deleteBid =async()=>{
+          const response = await axios.get(`${url}/bids/delete/${id}`,{withCredentials:true}).then((resp)=>{
             
             if(resp.data.error){
-              setErrorMessage(resp.data.error)
+              setOpenError({open:true,message:`${resp.data.error}`});
             }else{
               setBidData("")  
               setShowModal({show:false,id:""})
-              setSuccessMessage("Successfully deleted")
+              setOpenSuccess({open:true,message:`Successfully Deleted`});
+              closeDelete()
               setTimeout(() => {
-                props.history.push('/app/bids')
-              }, 2000);
+                props.history.goBack()
+              }, 1000);
 
               // props.history.push('/app/companies')
             }
           })
         }
 
+        const [openSuccess, setOpenSuccess] = useState({ open: false, message: "" });
+        const handleCloseSuccess = (event, reason) => {
+          if (reason === "clickaway") {
+            return;
+          }
+
+          setOpenSuccess({ open: false, message: "" });
+        };
+        const [openError, setOpenError] = useState({ open: false, message: "" });
+        const handleCloseError = (event, reason) => {
+          if (reason === "clickaway") {
+            return;
+          }
+          setOpenError({ open: false, message: "" });
+        };
+
+
+
+
+        const [isDeleteOpen,setIsDeleteOpen] = useState({open:false,id:""})
+
+        const closeDelete = ()=>{
+          setIsDeleteOpen({open:false,id:""})
+        }
+        const openDelete = (id)=>{
+          setIsDeleteOpen({open:true,id:id})
+
+        }
+
+
+
+      const [evModel,setEvModal] = useState(false)
+        function openEvModel() {
+          setEvModal(true)
+        }
+
+        function closeEvModal() {
+          setEvModal(false)
+        }
+
+
+        const onEvaluate =async(e)=>{
+          e.preventDefault()
+          if(bidFormData.evaluationFile===null){
+            setOpenError({open:true,message:"Evaluation File is required"})
+            return
+          }
+          const formData = new FormData()
+          formData.append('score',bidFormData.score)
+          formData.append('evaluationFile',bidFormData.evaluationFile)
+          formData.append('evaluationStatus',bidFormData.evaluationStatus)
+          console.log(formData);
+          await axios.post(`${url}/bids/evaluate/${id}`,formData,{withCredentials:true}).then((resp)=>{
+            if(resp.data.error){
+              setOpenError({open:true,message:`${resp.data.error}`})
+            }else{
+              setBidData(resp.data)
+              setBidFormData({fullname:resp.data.fullname,
+                phone:resp.data.phone,
+                license:resp.data.license,
+                status:resp.data.status,
+                performa:resp.data.performa,
+                proposal:resp.data.proposal,
+                companydoc:resp.data.companydoc,
+                amount:resp.data.amount,
+                bidUserPic:resp.data.bidUserPic,
+                ProjectId:resp.data.ProjectId,
+                UserId:resp.data.UserId,
+                score:resp.data.score,
+                description:resp.data.description,
+                evaluationStatus:resp.data.evaluationStatus,
+                evaluationFile:resp.data.evaluationFile
+              
+              })
+              setOpenSuccess({open:true,message:'Successfully Evaluated'})
+              closeEvModal()
+            }
+          }).catch((error)=>{
+            if (error.response && error.response.data && error.response.data.error) {
+                console.log(error.response.data.error);
+                setOpenError({open:true,message:`${error.response.data.error}`})
+              } else {
+               setOpenError({open:true,message:"An Error Occured"})
+              }
+        })
+        }
+
+
+
     return ( 
       
         <>
+      <ErrorAlert
+        open={openError.open}
+        handleClose={handleCloseError}
+        message={openError.message}
+        horizontal="right"
+      />
+      <SuccessAlert
+        open={openSuccess.open}
+        handleClose={handleCloseSuccess}
+        message={openSuccess.message}
+        horizontal="right"
+      />
+
+
         <link rel="stylesheet" href="https://unpkg.com/flowbite@1.4.4/dist/flowbite.min.css" />
         <PageTitle>Bid From {bidsData.fullname}</PageTitle>
 
-                  {/* Delete MOdal section  */}
-      {showModal.show ? (
-        <>
-          <div
-            className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
-          >
-            <div className="relative w-auto my-6 mx-auto max-w-3xl">
-              {/*content*/}
-              <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
-                {/*header*/}
-                <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
-                  <h3 className="text-3xl font-semibold">
-                    Delete Confirm
-                  </h3>
-                  <button
-                    className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
-                    onClick={() => setShowModal(false)}
-                  >
-                    <span className="bg-transparent text-black opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none">
-                      ×
-                    </span>
-                  </button>
-                </div>
-                {/*body*/}
-                <div className="relative p-6 flex-auto">
-                  <p className="my-4 text-slate-500 text-lg leading-relaxed">
-                   Are You sure you want to Delete This
-                  </p>
-                </div>
-                {/*footer*/}
-                <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
-                  <button
-                    className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                    type="button"
-                    onClick={() => setShowModal({show:false,id:""})}
-                  >
-                    Close
-                  </button>
-                  <button
-                    className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                    type="button"
-                    onClick={() => deleteBid(showModal.id)}
-                    style={{backgroundColor:'darkred'}}
-                  >
-                    Continue Deleting
-                  </button>
-                </div>
-              </div>
-            </div>
+                 {/* Delete MOdal section  */}
+        <Modal isOpen={isDeleteOpen.open} onClose={closeDelete}>
+          <ModalHeader>Confirm Action</ModalHeader>
+          <ModalBody>
+            <p>Are you sure you want to perform this action?</p>
+          </ModalBody>
+          <ModalFooter>
+            <button className="px-4 py-2 text-white bg-red-500 rounded-md hover:bg-red-600" onClick={deleteBid}>
+              Confirm
+            </button>
+          </ModalFooter>
+      </Modal>
+
+          {/* End of Delete Modal Section */}
+     
+{/* Evalutation Modal */}
+<Modal isOpen={evModel} onClose={closeEvModal}>
+          <ModalHeader>Evaluate</ModalHeader>
+          <ModalBody>
+          <form onSubmit={onEvaluate} encType="multipart/form-data">
+          <div className="grid grid-cols-1 gap-4">
+        
+          <Label className="mt-4">
+          <span>Evaluation Status</span>
+          <Select className="mt-1" name="status" value={bidFormData.evaluationStatus} onChange={(e)=>setBidFormData({...bidFormData,evaluationStatus:e.target.value})}>
+          <option>Select</option>
+            <option>YES</option>
+            <option>NO</option>
+            
+          </Select>
+        </Label>
+          <Label>
+            <span>Score</span>
+              <Input type="number" className="mt-1" name="score" value={bidFormData.score}  autoComplete='off' onChange={(e)=>setBidFormData({...bidFormData,score:e.target.value})}/>
+          </Label>
+
+
+          <label htmlFor="file" className="w-full p-4 rounded-lg shadow-lg cursor-pointer text-center bg-gradient-to-r from-purple-400 to-pink-500 text-black hover:from-pink-500 hover:to-purple-400 transition duration-300">
+                <FaCloudUploadAlt className="w-8 h-8 mx-auto mb-2" />
+                <span className="text-lg font-semibold">Evaluation File</span>
+              </label>
+              <input
+                
+                type="file"
+                id="file"
+                className="hidden"
+                name="evaluationFile"
+                onChange={(e)=>setBidFormData({...bidFormData,evaluationFile:e.target.files[0]})}
+              />
+              <Button  type="submit" className="ml-auto px-4 py-2 text-white bg-purple-600 rounded-md hover:bg-purple-600">
+              Evaluate
+            </Button>
           </div>
-          <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
-        </>
-      ) : null}
-      {/* End of Delete Modal Section */}
+      
+          </form>
+          </ModalBody>
+          <ModalFooter>
+           
+          </ModalFooter>
+      </Modal>
+
+            {/* End of Evaluation Modal */}
 
 
         
-        <div>
+        <div className=''>
           <Button onClick={openModal}>Edit Bid</Button>
+          {bidsData.evaluationStatus==='YES'?
+                <button className="mt-2 bg-green-500 text-white font-bold py-2 px-4 rounded-xl h-8 flex items-center" onClick={()=>openEvModel()}>
+                <span>Bid is Evaluated</span>
+                <MdArrowForward className="ml-1" size={20} />
+              </button>
+            :<button className="mt-2 bg-red-500 text-white font-bold py-2 px-4 rounded-xl h-8 flex items-center" onClick={()=>openEvModel()}>
+            <span>Evaluate Bid</span>
+            <MdArrowForward className="ml-1" size={20} />
+          </button>}
+
         </div>
         <Modal isOpen={isModalOpen} onClose={closeModal}>
           <ModalHeader>Insert Client Info</ModalHeader>
@@ -243,6 +370,7 @@ function BidDetail(props) {
           <ModalBody>
             
           <form onSubmit={editBid} encType="multipart/form-data">
+          <div className="grid grid-cols-2 gap-4">
           <Label>
             <span>Fullname</span>
               <Input type="text" className="mt-1" name="fullname" placeholder="Full Name" value={bidFormData.fullname} autoComplete='off' onChange={(e)=>setBidFormData({...bidFormData,fullname:e.target.value})}/>
@@ -280,6 +408,10 @@ function BidDetail(props) {
               <Input type="number" className="mt-1" name="amount" value={bidFormData.amount}  autoComplete='off' onChange={(e)=>setBidFormData({...bidFormData,amount:e.target.value})}/>
           </Label>
           <Label>
+            <span>Score</span>
+              <Input type="number" className="mt-1" name="score" value={bidFormData.score}  autoComplete='off' onChange={(e)=>setBidFormData({...bidFormData,score:e.target.value})}/>
+          </Label>
+          <Label>
             <span>License</span>
               <Input type="file" className="mt-1" name="license"   onChange={(e)=>setBidFormData({...bidFormData,license:e.target.files[0]})}/>
           </Label>
@@ -310,9 +442,14 @@ function BidDetail(props) {
             <span>Bid Owner Pic</span>
               <Input type="file" className="mt-1" name="bidUserPic" onChange={(e)=>setBidFormData({...bidFormData,bidUserPic:e.target.files[0]})}/>
           </Label>
+          <Label>
+            <span>Description</span>
+              <Textarea type="text" className="mt-1" name="description" value={bidFormData.description}  autoComplete='off' onChange={(e)=>setBidFormData({...bidFormData,description:e.target.value})}/>
+          </Label><br />
         <Label className="mt-4">
           <Button type="submit">Save</Button>
         </Label>
+        </div>
           </form>
               
      
@@ -406,7 +543,7 @@ function BidDetail(props) {
                   <TableCell>
                     <div className="flex items-center space-x-4">
                       
-                      <Button onClick={()=>setShowModal({show:true,id:bidsData.id})}  style={{color:'red'}} layout="link" size="icon" aria-label="Delete">
+                      <Button onClick={()=>setIsDeleteOpen({open:true})}  style={{color:'red'}} layout="link" size="icon" aria-label="Delete">
                         <TrashIcon className="w-5 h-5" aria-hidden="true" />
                       </Button>
                     </div>
@@ -415,65 +552,91 @@ function BidDetail(props) {
             
             </TableBody>
           </Table>
-          <InfoCard>
-          <div className="p-10 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 gap-5">
-          <div className="sm:flex sm:items-center px-6 py-4">
-            <a href={`${bidsData.license}`} target="_blank">
-                <div className="mt-4 mb-4">
-                    <button className="text-purple-500 hover:text-white hover:bg-purple-500 border border-purple-500 text-xs font-semibold rounded-full px-4 py-1 leading-normal">license</button>
-                </div>
-                <img className="block mx-auto sm:mx-0 sm:flex-shrink-0 h-16 sm:h-24" src={`${bidsData.license}`} alt="Not found Img"/>
-                
-            </a>
-                <div className="mt-4 sm:mt-0 sm:ml-4 text-center sm:text-left">
-                </div>
-            </div>
-
-            <div className="sm:flex sm:items-center px-6 py-4">
-            <a href={`${bidsData.performa}`} target="_blank">
-                <div className="mt-4 mb-4">
-                    <button className="text-purple-500 hover:text-white hover:bg-purple-500 border border-purple-500 text-xs font-semibold rounded-full px-4 py-1 leading-normal">Performa</button>
-                </div>
-                <img className="block mx-auto sm:mx-0 sm:flex-shrink-0 h-16 sm:h-24" src={`${bidsData.performa}`} alt="Not found Img"/>
-            </a>
-                <div className="mt-4 sm:mt-0 sm:ml-4 text-center sm:text-left">
-                </div>
-            </div>
-
-            <div className="sm:flex sm:items-center px-6 py-4">
-            <a href={`${bidsData.proposal}`} target="_blank">
-                <div className="mt-4 mb-4">
-                    <button className="text-purple-500 hover:text-white hover:bg-purple-500 border border-purple-500 text-xs font-semibold rounded-full px-4 py-1 leading-normal">Proposal</button>
-                </div>
-                <img className="block mx-auto sm:mx-0 sm:flex-shrink-0 h-16 sm:h-24" src={`${bidsData.proposal}`} alt="Not found Img"/>
-            </a>
-                <div className="mt-4 sm:mt-0 sm:ml-4 text-center sm:text-left">
-                </div>
-            </div>
-
-
-            <div className="sm:flex sm:items-center px-6 py-4">
-            <a href={`${bidsData.companydoc}`} target="_blank">
-                <div className="mt-4 mb-4">
-                    <button className="text-purple-500 hover:text-white hover:bg-purple-500 border border-purple-500 text-xs font-semibold rounded-full px-4 py-1 leading-normal">Company Docs</button>
-                </div>
-                <img className="block mx-auto sm:mx-0 sm:flex-shrink-0 h-16 sm:h-24" src={`${bidsData.companydoc}`} alt="Not found Img"/>
-            </a>
-                <div className="mt-4 sm:mt-0 sm:ml-4 text-center sm:text-left">
-                </div>
-            </div>
-            </div>
-          
-        </InfoCard>
           <TableFooter>
-            {/* <Pagination
-              // totalResults={totalResults}
-              // resultsPerPage={resultsPerPage}
-              // onChange={onPageChangeTable2}
-              // label="Table navigation"
-            /> */}
           </TableFooter>
         </TableContainer>
+
+          {/* Files section */}
+          <div className=" flex flex-col gap-4 mt-0">
+            <div className="relative flex justify-between items-center bg-white rounded-md p-4 shadow-md">
+              <div className="flex-1 truncate"><a href={`${bidsData.license}`} target='_blank'>License</a></div>
+              <button  className="text-red-500 hover:text-red-600">
+              <a href={`${bidsData.license}`} target='_blank'>
+                <FaDownload />
+                </a>
+                
+              </button>
+            </div>
+        </div>
+
+        <div className=" flex flex-col gap-4 mt-2">
+            <div className="relative flex justify-between items-center bg-white rounded-md p-4 shadow-md">
+              <div className="flex-1 truncate"><a href={`${bidsData.performa}`} target='_blank'>Performa</a></div>
+              <button  className="text-red-500 hover:text-red-600">
+              <a href={`${bidsData.performa}`} target='_blank'>
+                <FaDownload />
+                </a>
+                
+              </button>
+            </div>
+        </div>
+
+        <div className=" flex flex-col gap-4 mt-2">
+            <div className="relative flex justify-between items-center bg-white rounded-md p-4 shadow-md">
+              <div className="flex-1 truncate"><a href={`${bidsData.proposal}`} target='_blank'>Proposal</a></div>
+              <button  className="text-red-500 hover:text-red-600">
+              <a href={`${bidsData.proposal}`} target='_blank'>
+                <FaDownload />
+                </a>
+                
+              </button>
+            </div>
+        </div>
+
+        <div className=" flex flex-col gap-4 mt-2">
+            <div className="relative flex justify-between items-center bg-white rounded-md p-4 shadow-md">
+              <div className="flex-1 truncate"><a href={`${bidsData.companydoc}`} target='_blank'>Company Doc</a></div>
+              <button  className="text-red-500 hover:text-red-600">
+              <a href={`${bidsData.companydoc}`} target='_blank'>
+                <FaDownload />
+                </a>
+                
+              </button>
+            </div>
+        </div>
+ {/* End of files section */}
+
+{/* Evaluation section */}
+
+            <div className="bg-white-200 items-center justify-center">
+              <div className="bg-white rounded-md shadow-lg p-6">
+                <h2 className="text-lg font-semibold mb-4">Evaluation Details</h2>
+                <div className="mb-4">
+                  <p className="text-sm font-medium text-gray-600">Evaluation File:</p>
+                  <p className="text-sm font-semibold"><a href={`${bidsData.evaluationFile}`} target='_blank'>
+                     <FaDownload className='mt-2'/>
+                  </a>
+                </p>
+                </div>
+                <div className="mb-4">
+                  <p className="text-sm font-medium text-gray-600">Evaluation Status:</p>
+                  {bidsData.evaluationStatus==='YES'?
+                 <p className="text-sm font-semibold text-green-600">Evaluated</p>:  
+                 <p className="text-sm font-semibold text-red-600">Not Evaluated</p>
+                 }
+            
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-gray-600">Score:</p>
+                  <p className="text-2xl font-semibold text-blue-600">{bidsData.score}%</p>
+                </div>
+              </div>
+            </div>
+{/* End of evaluation section */}
+
+
+       
+
       </>
      );
 }

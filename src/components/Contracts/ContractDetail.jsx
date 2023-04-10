@@ -52,7 +52,7 @@ import axios from 'axios'
 
 
 const ContractDetail = (props) => {
-    const {authState} = useContext(AuthContext)
+    const {authState,settings} = useContext(AuthContext)
     const hiddenFileInput = React.useRef(null);
     const [contracts, setContracts] = useState({ 
       UserId: "",
@@ -292,7 +292,7 @@ const ContractDetail = (props) => {
 
 
 
-    const companyLogoUrl="https://cdn.logojoy.com/wp-content/uploads/2018/05/01104813/1268-768x591.png"
+
 
 
   
@@ -576,8 +576,8 @@ const ContractDetail = (props) => {
     <div class="bg-white shadow-md rounded-md overflow-hidden">
       <div class="px-6 py-8">
         <div class="flex justify-between items-center">
-          <div class="flex items-center">
-            <img src="https://www.logodesign.net/logo/line-art-house-roof-and-buildings-4485ld.png" alt="Company Logo" class="h-8 w-8 mr-2" />
+          <div class=" items-center">
+            <img src={settings.logo}alt="Company Logo" class="h-12 w-18 mr-2" />
             <h2 class="text-lg font-medium text-gray-900">{contracts.subject}</h2>
           </div>
           <div class="text-right">

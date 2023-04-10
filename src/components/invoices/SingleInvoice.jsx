@@ -1,15 +1,18 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import { useState } from 'react';
 import { FaPrint } from 'react-icons/fa';
 import './invoice.css';
 import {  Badge,Button} from  '@windmill/react-ui'
+import useAuth from 'hooks/useAuth';
+import { AuthContext } from 'hooks/authContext';
 function NewInvoice({invoiceData,mode,project}) {
 
 
 const printSectionRef = useRef(null);
-
+const {settings,authState} = useAuth(AuthContext)
 const printSection = () => {
   const printContents = printSectionRef.current.innerHTML;
+ 
 //   console.log(printContents);
   const originalContents = document.body.innerHTML;
   document.body.innerHTML = printContents;
@@ -31,9 +34,9 @@ const printSection = () => {
 
       <div className="flex justify-between mb-8">
         <div>
-          <h2 className="text-xl font-bold mb-2">Company Name</h2>
-          <p>123 Main St.</p>
-          <p>Anytown, USA 12345</p>
+          <h2 className="text-xl font-bold mb-2">{settings.name}</h2>
+          <p>{settings.address1}.</p>
+          <p>{settings.address2}</p>
         </div>
         <div>
           <h2 className="text-xl font-bold mb-2">Representative</h2>

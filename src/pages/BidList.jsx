@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom'
 import PageTitle from '../components/Typography/PageTitle'
 import SectionTitle from '../components/Typography/SectionTitle'
 import axios from 'axios'
-
+import TitleChange from 'components/Title/Title'
+import { ErrorAlert, SuccessAlert } from "components/Alert";
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import {
   Table,
@@ -27,10 +28,11 @@ import RoundIcon from '../components/RoundIcon'
 import { AuthContext } from '../hooks/authContext'
 import { url,bidUrl } from 'config/urlConfig'
 import UnAuthorized from 'components/UnAuthorized/UnAuthorized'
+import useAuth from 'hooks/useAuth'
 
 function BidList(props) {
     const [isModalOpen, setIsModalOpen] = useState(false)
-
+    const {settings} = useAuth(AuthContext)
     function openModal() {
       setIsModalOpen(true)
     }
@@ -42,7 +44,13 @@ function BidList(props) {
     const [companyData,setCompanyData] = useState([]) 
     const [bidsData,setBidData] = useState([])
     const [errorMessage,setErrorMessage] = useState('')
-    const [bidFormData,setBidFormData] = useState({fullname:"",phone:"",license:"",status:"",performa:"",proposal:"",companydoc:"",amount:"",bidUserPic:"",ProjectId:"",UserId:""})
+    const [bidFormData,setBidFormData] = useState({fullname:"",
+    phone:"",license:"",status:"processing",performa:"",
+    proposal:"",companydoc:"",amount:"",
+    bidUserPic:"",ProjectId:"",UserId:"",
+    score:0,description:""
+  
+  })
     const [authorization,setAuthorization] = useState(false)
     const [successMessage,setSuccessMessage] = useState("")
     const [projects,setProjects] = useState([])
@@ -58,36 +66,39 @@ function BidList(props) {
     let [rejected,setRejected] = useState(0);
     
     useEffect(()=>{
-
-             axios.get(`${url}/bids`,{withCredentials:true}).then((resp)=>{
-              if(resp.data.error) setErrorMessage(resp.data.error);
-              setBidData(resp.data.bid)
-              setBidCount(resp.data.count)
-              setProcessing(resp.data.processing)
-              setApproved(resp.data.approved)
-              setRejected(resp.data.rejected)
-              // console.log(resp.data.processing);
-              
-            })
-            // console.log(response.data);
-        
-        axios.get(`${url}/users`,{withCredentials:true}).then((resp)=>{
-          if(resp.data.error){
-            console.log(resp.data.error);
-          }else{
-            const data = resp.data.filter((usr)=>usr.role==='client')
-            setUsers(data)
-          }
-        })
-        axios.get(`${url}/projects`,{withCredentials:true}).then((resp)=>{
-          if(resp.data.error){
-            setErrorMessage(resp.data.error)
-          }else{
-
-            setProjects(resp.data.projects)}
-            // console.log(resp.data.projects);
+      const getDatas = async()=>{
+        await axios.get(`${url}/bids`,{withCredentials:true}).then((resp)=>{
+          if(resp.data.error) setOpenError({open:true,message:`${resp.data.error}`});;
+          setBidData(resp.data.bid)
+          setBidCount(resp.data.count)
+          setProcessing(resp.data.processing)
+          setApproved(resp.data.approved)
+          setRejected(resp.data.rejected)
+          // console.log(resp.data.processing);
           
         })
+        // console.log(response.data);
+    
+    await axios.get(`${url}/users`,{withCredentials:true}).then((resp)=>{
+      if(resp.data.error){
+        setOpenError({open:true,message:`${resp.data.error}`});
+      }else{
+        const data = resp.data.filter((usr)=>usr.role==='client')
+        setUsers(data)
+      }
+    })
+    await axios.get(`${url}/projects`,{withCredentials:true}).then((resp)=>{
+      if(resp.data.error){
+        setOpenError({open:true,message:`${resp.data.error}`});
+      }else{
+        setProjects(resp.data.projects)}
+        // console.log(resp.data.projects);
+      
+    })
+
+      }
+
+      getDatas()     
  
       },[])
       
@@ -101,7 +112,7 @@ function BidList(props) {
     e.preventDefault()
     // console.log('This is from bid data',bidFormData);
     if(bidFormData.fullname==="" || bidFormData.phone===""||bidFormData.license===""||bidFormData.status===""||bidFormData.performa===""||bidFormData.proposal===""||bidFormData.companydoc===""||bidFormData.amount==="",bidFormData.bidUserPic==="",bidFormData.ProjectId==="",bidFormData.UserId===""){
-      setErrorMessage('Please Provide all data')
+      setOpenError({open:true,message:`All Fields are required`});
     }else{
      
       const formData = new FormData()
@@ -116,45 +127,54 @@ function BidList(props) {
       formData.append('amount',parseInt(bidFormData.amount))
       formData.append('ProjectId',bidFormData.ProjectId)
       formData.append('UserId',bidFormData.UserId)
+      formData.append('score',bidFormData.score)
+      formData.append('description',bidFormData.description)
       // console.log(formData);
        const response = await axios.post(`${url}/bids`,formData,{withCredentials:true}).then((resp)=>{
         
         if(resp.data.error){
-          setErrorMessage(resp.data.error)
+          setOpenError({open:true,message:`${resp.data.error}`});
         }else{
             setBidData([...bidsData,resp.data])
-            setBidFormData({fullname:"",phone:"",license:"",status:"",performa:"",proposal:"",companydoc:"",amount:"",bidUserPic:"",ProjectId:"",UserId:""})
+            setBidFormData({fullname:"",phone:"",license:"",status:"",performa:"",
+            proposal:"",companydoc:"",
+            amount:"",bidUserPic:"",ProjectId:"",UserId:"",
+            score:"",description:""
+          })
           closeModal()
-          setSuccessMessage("Successfully added")
-          setTimeout(() => {
-            setSuccessMessage("")
-         }, 2000)
+          setOpenSuccess({open:true,message:"Added Successfully"})
+         
         }
-      }).catch((err)=>{
-      })
+      }).catch((error)=>{
+        if (error.response && error.response.data && error.response.data.error) {
+            setOpenError({open:true,message:`${error.response.data.error}`});
+          } else {
+            setOpenError({open:true,message:"An unknown error occurred"});
+          }
+    })
     }
 
 }
-const deleteBid =async(ids)=>{
-  const response = await axios.get(`http://localhost:4000/bids/delete/${ids}`,{withCredentials:true}).then((resp)=>{
+const deleteBid =async()=>{
+  const response = await axios.get(`http://localhost:4000/bids/delete/${isDeleteOpen.id}`,{withCredentials:true}).then((resp)=>{
     
     if(resp.data.error){
-      setErrorMessage(resp.data.error)
+      setOpenError({open:true,message:`${resp.data.error}`});
     }else{
-      const newBid = bidsData.filter((d)=>d.id!==ids)
+      const newBid = bidsData.filter((d)=>d.id!==isDeleteOpen.id)
       setBidData(newBid)
-      setSuccessMessage("Successfully deleted")
+      setOpenSuccess({open:true,message:"Deleted Successfully"})
       setShowModal({show:false,id:""})
-      setTimeout(() => {
-        setSuccessMessage('')
-        props.history.push('/app/bids')
-      }, 2000);
+      closeDelete()
 
-      // props.history.push('/app/companies')
     }
-  }).catch((err)=>{
-
-  })
+  }).catch((error)=>{
+    if (error.response && error.response.data && error.response.data.error) {
+        setOpenError({open:true,message:`${error.response.data.error}`});
+      } else {
+        setOpenError({open:true,message:"An unknown error occurred"});
+      }
+})
 }
 
 
@@ -172,71 +192,76 @@ const searchHandler = async(search)=>{
 }
 
 
+const [openSuccess, setOpenSuccess] = useState({ open: false, message: "" });
+const handleCloseSuccess = (event, reason) => {
+  if (reason === "clickaway") {
+    return;
+  }
+
+  setOpenSuccess({ open: false, message: "" });
+};
+const [openError, setOpenError] = useState({ open: false, message: "" });
+const handleCloseError = (event, reason) => {
+  if (reason === "clickaway") {
+    return;
+  }
+  setOpenError({ open: false, message: "" });
+};
+
+
+
+const [isDeleteOpen,setIsDeleteOpen] = useState({open:false,id:""})
+
+const closeDelete = ()=>{
+  setIsDeleteOpen({open:false,id:""})
+}
+const openDelete = (id)=>{
+  setIsDeleteOpen({open:true,id:id})
+
+}
+
+
+
 
 
 
     return ( 
         <>
-      
+      <ErrorAlert
+        open={openError.open}
+        handleClose={handleCloseError}
+        message={openError.message}
+        horizontal="right"
+      />
+      <SuccessAlert
+        open={openSuccess.open}
+        handleClose={handleCloseSuccess}
+        message={openSuccess.message}
+        horizontal="right"
+      />
+
+
+        <TitleChange name={`Bids | ${settings.name}`} />
          <>
          <link rel="stylesheet" href="https://unpkg.com/flowbite@1.4.4/dist/flowbite.min.css" />
         <PageTitle>List of Bids Registered</PageTitle>
        
           {/* Delete MOdal section  */}
-      {showModal.show ? (
-        <>
-          <div
-            className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
-          >
-            <div className="relative w-auto my-6 mx-auto max-w-3xl">
-              {/*content*/}
-              <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
-                {/*header*/}
-                <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
-                  <h3 className="text-3xl font-semibold">
-                    Delete Confirm
-                  </h3>
-                  <button
-                    className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
-                    onClick={() => setShowModal(false)}
-                  >
-                    <span className="bg-transparent text-black opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none">
-                      ×
-                    </span>
-                  </button>
-                </div>
-                {/*body*/}
-                <div className="relative p-6 flex-auto">
-                  <p className="my-4 text-slate-500 text-lg leading-relaxed">
-                   Are You sure you want to Delete This
-                  </p>
-                </div>
-                {/*footer*/}
-                <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
-                  <button
-                    className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                    type="button"
-                    onClick={() => setShowModal(false)}
-                  >
-                    Close
-                  </button>
-                  <button
-                    className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                    type="button"
-                    onClick={() => deleteBid(showModal.id)}
-                    style={{backgroundColor:'darkred'}}
-                  >
-                    Continue Deleting
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
-        </>
-      ) : null}
-      {/* End of Delete Modal Section */}
+          <Modal isOpen={isDeleteOpen.open} onClose={closeDelete}>
+          <ModalHeader>Confirm Action</ModalHeader>
+          <ModalBody>
+            <p>Are you sure you want to perform this action?</p>
+          </ModalBody>
+          <ModalFooter>
+            <button className="px-4 py-2 text-white bg-red-500 rounded-md hover:bg-red-600" onClick={deleteBid}>
+              Confirm
+            </button>
+          </ModalFooter>
+      </Modal>
 
+          {/* End of Delete Modal Section */}
+
+          
                 {/* Search section */}
       <div className='mb-5'>
         <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
@@ -264,39 +289,37 @@ const searchHandler = async(search)=>{
           <div className="grid grid-cols-2 gap-4">
           <Label>
             <span>Fullname</span>
-              <Input type="text" className="mt-1" name="fullname" placeholder="Full Name"  autoComplete='off' onChange={(e)=>setBidFormData({...bidFormData,fullname:e.target.value})}/>
+              <Input type="text" className="mt-1" name="fullname" placeholder="Full Name"  autoComplete='off' onChange={(e)=>setBidFormData({...bidFormData,fullname:e.target.value})} required/>
           </Label>
           <Label className="mt-1">
           <span>Project Name</span>
-          <Select className="mt-1" name="ProjectId" value={bidFormData.ProjectId} onChange={(e)=>setBidFormData({...bidFormData,ProjectId:e.target.value})}>
+          <Select className="mt-1" name="ProjectId" value={bidFormData.ProjectId} onChange={(e)=>setBidFormData({...bidFormData,ProjectId:e.target.value})} required>
           <option>Select</option>
           {projects.map((pr)=> <option key={pr.id} value={pr.id}>{pr.name}</option>)}
-           
-            
           </Select>
         </Label>
         <Label className="mt-1">
           <span>User</span>
-          <Select className="mt-1" name="UserId" value={bidFormData.UserId} onChange={(e)=>setBidFormData({...bidFormData,UserId:e.target.value})}>
+          <Select className="mt-1" name="UserId" value={bidFormData.UserId} onChange={(e)=>setBidFormData({...bidFormData,UserId:e.target.value})} required>
           <option>Select</option>
           {users.map((usr)=><option key={usr.id} value={usr.id}>{usr.name}</option>)}
            
-            
           </Select>
         </Label>
          
           <Label>
             <span>Phone</span>
-              <Input type="text" className="mt-1" name="phone" placeholder="Phone"  autoComplete='off' onChange={(e)=>setBidFormData({...bidFormData,phone:e.target.value})}/>
+              <Input type="text" className="mt-1" name="phone" placeholder="Phone"  autoComplete='off' onChange={(e)=>setBidFormData({...bidFormData,phone:e.target.value})} required/>
           </Label>
           
           <Label>
             <span>Amount</span>
-              <Input type="number" className="mt-1" name="amount"  autoComplete='off' onChange={(e)=>setBidFormData({...bidFormData,amount:e.target.value})}/>
+              <Input type="number" className="mt-1" name="amount"  autoComplete='off' onChange={(e)=>setBidFormData({...bidFormData,amount:e.target.value})} required/>
           </Label>
+          
           <Label>
             <span>License</span>
-              <Input type="file" className="mt-1" name="license" onChange={(e)=>setBidFormData({...bidFormData,license:e.target.files[0]})}/>
+              <Input type="file" className="mt-1" name="license" onChange={(e)=>setBidFormData({...bidFormData,license:e.target.files[0]})} required/>
           </Label>
 
           <Label className="mt-1">
@@ -311,21 +334,24 @@ const searchHandler = async(search)=>{
         </Label>
         <Label>
             <span>Performa</span>
-              <Input type="file" className="mt-1" name="performa" onChange={(e)=>setBidFormData({...bidFormData,performa:e.target.files[0]})}/>
+              <Input type="file" className="mt-1" name="performa" onChange={(e)=>setBidFormData({...bidFormData,performa:e.target.files[0]})} required/>
           </Label>
           <Label>
             <span>Proposal</span>
-              <Input type="file" className="mt-1" name="proposal"  onChange={(e)=>setBidFormData({...bidFormData,proposal:e.target.files[0]})}/>
+              <Input type="file" className="mt-1" name="proposal"  onChange={(e)=>setBidFormData({...bidFormData,proposal:e.target.files[0]})} required/>
           </Label>
           <Label>
             <span>CompanyDoc</span>
-              <Input type="file" className="mt-1" name="companydoc" onChange={(e)=>setBidFormData({...bidFormData,companydoc:e.target.files[0]})}/>
+              <Input type="file" className="mt-1" name="companydoc" onChange={(e)=>setBidFormData({...bidFormData,companydoc:e.target.files[0]})} required/>
           </Label>
           <Label>
             <span>Bid Owner Pic</span>
-              <Input type="file" className="mt-1" name="bidUserPic" onChange={(e)=>setBidFormData({...bidFormData,bidUserPic:e.target.files[0]})}/>
+              <Input type="file" className="mt-1" name="bidUserPic" onChange={(e)=>setBidFormData({...bidFormData,bidUserPic:e.target.files[0]})} required/>
           </Label>
-
+          <Label>
+            <span>Description</span>
+              <Textarea type="text" className="mt-1" name="description" placeholder="Desc"  autoComplete='off' onChange={(e)=>setBidFormData({...bidFormData,description:e.target.value})}/>
+          </Label><br />
         <Label className="mt-4">
           <Button type="submit">Save</Button>
         </Label>
@@ -470,7 +496,7 @@ const searchHandler = async(search)=>{
                         <EditIcon className="w-5 h-5" aria-hidden="true" />
                       </Button>
                       </Link>
-                      <Button onClick={()=>setShowModal({show:true,id:bid.id})} style={{color:'red'}} layout="link" size="icon" aria-label="Delete">
+                      <Button onClick={()=>openDelete(bid.id)} style={{color:'red'}} layout="link" size="icon" aria-label="Delete">
                         <TrashIcon className="w-5 h-5" aria-hidden="true" />
                       </Button>
                     </div>

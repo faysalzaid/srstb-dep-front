@@ -26,7 +26,7 @@ export const AuthContextProvider = withRouter((props) => {
     }
     
 
-
+    const [settings,setSettings] = useState({logo:"", name:"", loginlogo:"", address1:"", address2:""})
     const [authState, setAuthState] = useState({
         id: "",
         token: "",
@@ -128,6 +128,9 @@ export const AuthContextProvider = withRouter((props) => {
 
                     }
                 })
+
+
+
             }
 
 
@@ -141,40 +144,30 @@ useEffect(()=>{
         }else{
           props.history.push('/login')
         }
+
+        const getSettings = async()=>{
+
+          await axios.get(`${url}/settings`).then((resp)=>{
+            const data = resp.data[0]
+            // console.log(resp.data[0]);
+            setSettings({id:data.id,logo:data.logo, name:data.name, loginlogo:data.loginlogo, address1:data.address1, address2:data.address2})
+        }).catch((error)=>{
+          if (error.response && error.response.data && error.response.data.error) {
+              console.log(error.response.data.error);
+            } else {
+              console.log(error.response.data.error);
+            }
+      })
+        }
+
+        getSettings()
        
     },[])
 
-    // useEffect(() => {
-    //         const graphAuth = async() => {
-    //             const cookie = getCookie('accessToken')
-    //             if (!cookie || cookie === undefined) {
-    //                 props.history.push('/login')
-    //                 console.log('runned');
-    //             }
-    //             const decodeAccessToken = jwt_decode(cookie)
-    //             let user = {}
-    //             axios.post(`${url}/login/refreshToken`, { token: decodeAccessToken ?.refreshToken }, { withCredentials: true }).then((resp) => {
-    //                 if (resp.data.error) {
-    //                     setAuthState({ id: "", token: "", username: "", email: "", role: "", status: false, refreshToken: "" })
-    //                     props.history.push('/login')
-    //                 } else {
-    //                     const data = resp?.data
-    //                     setCookie('accessToken', data.token)
-    //                     setAuthState({ id: data ?.id, username: data?.username, email: data ?.email, role: data ?.role, state: true, refreshToken: data ?.refreshToken })
 
-    //                 }
-    //             })
-    //         }
-    //         graphAuth()
-
-    //         console.log('auth goes here');
-
-
-    //     }, [])
-        // console.log('authcalled');
-
-    return ( <AuthContext.Provider value = {
-            { authState, setAuthState } } > { props.children }
-             </AuthContext.Provider>
+    return (
+      <AuthContext.Provider value = {{ authState, setAuthState,settings,setSettings } } > 
+            { props.children }
+      </AuthContext.Provider>
     )
 })

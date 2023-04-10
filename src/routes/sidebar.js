@@ -111,10 +111,15 @@ routes = [{
         roles: ['admin', 'finance', 'contractadmin']
     },
     {
-        path: '/app/reports',
-        icon: 'FaReadme',
         name: 'Reports',
-        roles: ['admin', 'finance', 'roadquality']
+        icon: 'FaReadme',
+        roles: ['admin', 'finance', 'roadquality'],
+        routes: [{
+            path: '/app/reports/projects',
+            icon: 'FaRoute',
+            name: 'Projects',
+            roles: ['admin', 'finance', 'hr']
+        }, ]
     },
 
 

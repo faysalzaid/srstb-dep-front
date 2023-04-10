@@ -15,7 +15,7 @@ function Icon({ icon, ...props }) {
 
 
 function SidebarContent() {
-  const {authState} = useAuth()
+  const {authState,settings} = useAuth()
   const [newRoleRoutes,setNewRoleRoutes] = useState([])
   useEffect(()=>{
     const newRoute = routes
@@ -41,7 +41,7 @@ function SidebarContent() {
   return (
     <div className="py-4 text-gray-500 dark:text-gray-400">
       <a className="ml-6 text-lg font-bold text-gray-800 dark:text-gray-200" href="#">
-        CELLU-PMS
+        {settings.name}
       </a>
       <ul className="mt-6">
         {newRoleRoutes.map((route) =>

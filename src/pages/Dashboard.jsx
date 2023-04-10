@@ -12,6 +12,7 @@ import { ChatIcon, CartIcon, MoneyIcon, PeopleIcon } from '../icons'
 import RoundIcon from '../components/RoundIcon'
 import response from '../utils/demo/tableData'
 import UnAuthorized from 'components/UnAuthorized/UnAuthorized'
+import TitleChange from 'components/Title/Title'
 
 import {
   TableBody,
@@ -37,7 +38,7 @@ import { url } from 'config/urlConfig'
 import axios from 'axios'
 
 function Dashboard(props) {
-  const {authState} = useContext(AuthContext)
+  const {authState,settings} = useContext(AuthContext)
 
   const [page, setPage] = useState(1)
   const [data, setData] = useState([])
@@ -49,17 +50,19 @@ function Dashboard(props) {
 
   // console.log('data from app',authState);
     useEffect(()=>{
-    axios.get(`${url}/projects`,{withCredentials:true}).then((resp)=>{
-      if(resp.data.error){
-        console.log(resp.data.error);
+      const getData = async()=>{
+        await axios.get(`${url}/projects`,{withCredentials:true}).then((resp)=>{
+          if(resp.data.error){
+            console.log(resp.data.error);
+          }
+        setProject(resp.data.projects)
+    
+        }).catch((err)=>{
+          setAuthorization(true)
+        })
       }
-    setProject(resp.data.projects)
-
-    }).catch((err)=>{
-      setAuthorization(true)
-    })
-    document.title = "Cellu-Crm | Dashboard";
-
+   
+      getData()
     // console.log(favicon);
 
 
@@ -117,6 +120,7 @@ const projectPercentileGraph = {
 
   return (
     <>
+        <TitleChange name={`Dashboard | ${settings.name}`}/>
         {authorization?<UnAuthorized/>:<>
       <PageTitle>Dashboard welcome  {authState.username}</PageTitle>
 

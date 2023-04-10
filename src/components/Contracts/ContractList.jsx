@@ -157,7 +157,13 @@ const ContractList = () => {
             closeModal();
           }
 
-        })
+        }).catch((error)=>{
+          if (error.response && error.response.data && error.response.data.error) {
+              setOpenError({open:true,message:`${error.response.data.error}`});
+            } else {
+              setOpenError({open:true,message:"An unknown error occurred"});
+            }
+      })
         // handle form submission here
         // e.g. make an API call to save the form data
        
@@ -187,16 +193,6 @@ const ContractList = () => {
 
 
 
-  const handleEdit = (index) => {
-    // Implement your own edit logic here
-    console.log(`Edit row ${index}`);
-  };
-
-  const handleFile = (e) => {
-    // if (e.target.files.length) {
-    //   setPreview(URL.createObjectURL(e.target.files[0]));
-    // }
-  }
 
 
 

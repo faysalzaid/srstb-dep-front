@@ -26,6 +26,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useContext } from "react";
 import { AuthContext } from "../hooks/authContext";
 import useAuth from "hooks/useAuth";
+import TitleChange from "components/Title/Title";
 function UsersList(props) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -52,7 +53,7 @@ function UsersList(props) {
   const [searchTerm, setSearchTerm] = useState("");
   const [fetchedResult, setFetchedResult] = useState([]);
   const [showModal, setShowModal] = useState({show:false,id:""});
-  const {authState} = useAuth(AuthContext)
+  const {authState,settings} = useAuth(AuthContext)
   const validation = Yup.object().shape({
     name: Yup.string().min(3).max(15).required(),
     email: Yup.string().email().min(5).required("Email is required"),
@@ -151,6 +152,7 @@ function UsersList(props) {
 
   return (
     <>
+    <TitleChange name={`Users | ${settings.name}`} />
       <link
         rel="stylesheet"
         href="https://unpkg.com/flowbite@1.4.4/dist/flowbite.min.css"
