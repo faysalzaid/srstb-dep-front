@@ -43,12 +43,13 @@ import {
 import { Link, withRouter } from 'react-router-dom'
 import { url } from 'config/urlConfig'
 import axios from 'axios'
+import TitleChange from 'components/Title/Title'
 
 
 
 
 const ContractList = () => {
-    const {authState} = useContext(AuthContext)
+    const {authState,settings} = useContext(AuthContext)
     const [contracTypes, setContractTypes] = useState([]);
     const [users, setUsers] = useState([])
     const [data, setData] = useState([])
@@ -171,25 +172,6 @@ const ContractList = () => {
 
       
 
-  
-    // console.log('data from app',authState);
-
-  
-  
-
-
-
-  // useEffect(()=>{
-
-  // },[])
-    // pagination setup
-
-  
-    // pagination change control
-
-  
-// Invoice Data  
-
 
 
 
@@ -233,7 +215,7 @@ const ContractList = () => {
   
     return (
       <>
-  
+        <TitleChange name={`Contracts | ${settings.name}`} />
         <PageTitle>Contracts</PageTitle>
         <ErrorAlert
         open={openError.open}

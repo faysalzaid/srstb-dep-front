@@ -31,12 +31,13 @@ import { Input, HelperText, Label, Select, Textarea } from '@windmill/react-ui'
 import { Link, useHistory, withRouter } from 'react-router-dom'
 import { url } from 'config/urlConfig'
 import axios from 'axios'
+import TitleChange from 'components/Title/Title';
 
 
 
 
 const Settings = () => {
-    const {authState,setSettings} = useContext(AuthContext)
+    const {authState,setSettings,settings} = useContext(AuthContext)
     const [countsData,setCountsData] = useState({ projectCount:"",bidCount:"",activeProjects:"",completedProjects:""})
     const [settingsData,setSettingsData] = useState({ logo:"", name:"", loginlogo:"", address1:"", address2:"" })
     const [logoPreview, setLogoPreview] = useState(null);
@@ -196,7 +197,7 @@ const Settings = () => {
   
     return (
       <>
-  
+        <TitleChange name={`Settings | ${settings.name}`} />
         <PageTitle>Settings</PageTitle>
         <ErrorAlert
         open={openError.open}
@@ -225,7 +226,7 @@ const Settings = () => {
         >
           General Settings
         </Link>
-        <Link
+        {/* <Link
           to="/settings/account"
           className="px-4 py-2 mt-2 text-sm font-semibold text-gray-400 rounded-lg hover:bg-purple-700 hover:text-white"
         >
@@ -254,7 +255,7 @@ const Settings = () => {
           className="px-4 py-2 mt-2 text-sm font-semibold text-gray-400 rounded-lg hover:bg-purple-700 hover:text-white"
         >
           Notifications
-        </Link>
+        </Link> */}
       </div>
     </div>
 

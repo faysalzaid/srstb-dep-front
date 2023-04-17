@@ -7,6 +7,8 @@ import { A1, A2, A3, A4, A5, A6, A7, A8, A9 } from "../../files";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import { IoSearch } from "react-icons/io5";
+
+
 import {
   IoIosArrowDropleftCircle,
   IoIosArrowDroprightCircle,
@@ -14,8 +16,12 @@ import {
 
 import ChatUIList from "./ChatUI";
 import * as constants from "constants.js";
+import TitleChange from "components/Title/Title";
+import useAuth from "hooks/useAuth";
+import { AuthContext } from "hooks/authContext";
 
 const ChatUI = () => {
+  const {authState,settings} = useAuth(AuthContext)
   const [sideBar, setSideBar] = useState(true);
   const [selected, setSelected] = useState({});
   const [search, setSearch] = useState("");
@@ -66,6 +72,7 @@ const ChatUI = () => {
   }, [selectedUser.id]);
   return (
     <>
+    <TitleChange name={`Chats | ${settings.name}`} />
       {sm && (
         <motion.div
           initial={{

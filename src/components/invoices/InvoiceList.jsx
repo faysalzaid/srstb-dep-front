@@ -43,12 +43,13 @@ import axios from 'axios'
 import NewInvoice from './SingleInvoice'
 import { useRef } from 'react'
 import useAuth from 'hooks/useAuth'
+import TitleChange from 'components/Title/Title'
 
 
 
 
 const InvoiceList = () => {
-    const {authState} = useAuth()
+    const {authState,settings} = useAuth()
     const [users, setUsers] = useState([])
     const [mode,setMode] = useState([])
     const [invoices, setInvoices] = useState([])
@@ -230,7 +231,7 @@ const captureProject = ()=>{
   
     return (
       <>
-  
+        <TitleChange name={`Invoices | ${settings.name}`} />
         <PageTitle>Invoices</PageTitle>
         {/* Notifications */}
         <ErrorAlert

@@ -87,14 +87,14 @@ export const AuthContextProvider = withRouter((props) => {
     try {
       const cookie = getCookie('accessToken');
       if (!cookie || cookie === undefined) {
-        history.push('/login');
+       history.push('/login');
         console.log('runned');
       }
       const decodeAccessToken = jwt_decode(userData.token);
       const resp = await axios.post(`${url}/login/refreshToken`, { withCredentials: true }, { token: decodeAccessToken ?.refreshToken });
       if (resp.data.error) {
         setAuthState({ id: "", token: "", username: "", email: "", role: "", status: false, refreshToken: "" });
-        history.push('/login');
+       history.push('/login');
       } else {
         const data = resp?.data;
         const userData ={
@@ -120,19 +120,20 @@ export const AuthContextProvider = withRouter((props) => {
     }
   };
   
-
+// console.log(history.length);
 
 useEffect(()=>{
-    if(userData?.token||userData?.state){
-        setAuthState({ id: userData.id, username: userData.username, email: userData.email, role: userData.role, state: userData.state, refreshToken: userData.refreshToken })
-        if(history.length>1){
-          history.goBack()
-        }
-        }else{
-          history.push('/login')
-        }
 
-        const getSettings = async()=>{
+        const getData = async()=>{
+          if(userData?.token||userData?.state){
+            setAuthState({ id: userData.id, username: userData.username, email: userData.email, role: userData.role, state: userData.state, refreshToken: userData.refreshToken })
+            if(history.length>1){
+              history.goBack()
+               console.log('runned',history);
+            }
+            }else{
+              history.push('/login')
+            }
 
           await axios.get(`${url}/settings`).then((resp)=>{
             const data = resp.data[0]
@@ -146,8 +147,8 @@ useEffect(()=>{
             }
       })
         }
-
-        getSettings()
+       
+        getData()
        
     },[])
 

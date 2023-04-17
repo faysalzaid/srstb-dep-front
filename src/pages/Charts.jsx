@@ -4,7 +4,7 @@ import ChartCard from '../components/Chart/ChartCard'
 import { Doughnut, Line, Bar } from 'react-chartjs-2'
 import ChartLegend from '../components/Chart/ChartLegend'
 import PageTitle from '../components/Typography/PageTitle'
-
+import TitleChange from 'components/Title/Title'
 
 
 import {
@@ -18,10 +18,12 @@ import {
 import axios from 'axios'
 import { url } from 'config/urlConfig'
 import { useState } from 'react'
+import useAuth from 'hooks/useAuth'
+import { AuthContext } from 'hooks/authContext'
 
 function Charts() {
 
-
+const {authState,settings} = useAuth(AuthContext)
 const [projects,setProject] = useState([])
 
 
@@ -108,7 +110,7 @@ const projectPercentileGraph = {
 
   return (
     <>
-
+      <TitleChange name={`Charts | ${settings.name}`} />
       <PageTitle><p style={{fontSize:15}}>Projects Percentage Completion</p></PageTitle>
 
       <div className="grid gap-6 mb-8 md:grid-cols-2">

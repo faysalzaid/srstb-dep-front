@@ -45,12 +45,13 @@ import { url } from 'config/urlConfig'
 import axios from 'axios'
 import { FaCloudUploadAlt } from 'react-icons/fa'
 import { date } from 'faker/lib/locales/az'
+import TitleChange from 'components/Title/Title'
 
 
 
 
 const Timesheet = () => {
-    const {authState} = useContext(AuthContext)
+    const {authState,settings} = useContext(AuthContext)
     const [LeaveData,setLeaveData] = useState([])
     const [countsData,setCountsData] = useState({ projectCount:"",bidCount:"",activeProjects:"",completedProjects:""})
     const [leaveFormData,setLeaveFormData] = useState({date:"",numberOfDays:"",startDate:"",endDate:"",comments:"",createdBy:"",status:"",employeeId:"",checkedBy:"",approvedBy:"",LeaveTypeId:""})
@@ -206,7 +207,7 @@ const Timesheet = () => {
   
     return (
       <>
-  
+        <TitleChange name={`Timesheets | ${settings.name}`} />
         <PageTitle>TimeSheets</PageTitle>
         <ErrorAlert
         open={openError.open}

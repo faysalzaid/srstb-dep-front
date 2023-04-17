@@ -43,12 +43,13 @@ import {
 import { Link, withRouter } from 'react-router-dom'
 import { url } from 'config/urlConfig'
 import axios from 'axios'
+import TitleChange from 'components/Title/Title'
 
 
 
 
 const SelectedCandidates = () => {
-    const {authState} = useContext(AuthContext)
+    const {authState,settings} = useContext(AuthContext)
     const [LeaveData,setLeaveData] = useState([])
     const [countsData,setCountsData] = useState({ projectCount:"",bidCount:"",activeProjects:"",completedProjects:""})
     const [payrollData,setPayrollData] = useState([])
@@ -202,7 +203,7 @@ const SelectedCandidates = () => {
   
     return (
       <>
-  
+        <TitleChange name={`Selected | ${settings.name}`} />
         <PageTitle>Selected Candidates</PageTitle>
         <ErrorAlert
         open={openError.open}

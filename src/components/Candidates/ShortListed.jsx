@@ -43,12 +43,13 @@ import {
 import { Link, withRouter } from 'react-router-dom'
 import { url } from 'config/urlConfig'
 import axios from 'axios'
+import TitleChange from 'components/Title/Title'
 
 
 
 
 const ShortListedCandidates = () => {
-    const {authState} = useContext(AuthContext)
+    const {authState,settings} = useContext(AuthContext)
     const [LeaveData,setLeaveData] = useState([])
     const [countsData,setCountsData] = useState({ projectCount:"",bidCount:"",activeProjects:"",completedProjects:""})
     const [payrollData,setPayrollData] = useState([])
@@ -204,7 +205,7 @@ const ShortListedCandidates = () => {
   
     return (
       <>
-  
+        <TitleChange name={`ShortListed | ${settings.name}`} />
         <PageTitle>ShortListed Candidates</PageTitle>
         <ErrorAlert
         open={openError.open}

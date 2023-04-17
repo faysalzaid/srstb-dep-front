@@ -6,6 +6,7 @@ import { ErrorAlert, SuccessAlert } from "components/Alert";
 import { SelectorIcon } from '@heroicons/react/solid'
 import { FaCheckCircle, FaChevronDown, FaEdit, FaFilePdf, FaPlusCircle, FaRegMoneyBillAlt } from 'react-icons/fa'
 // import 'bootstrap/dist/css/bootstrap.min.css';
+
 import {  
   Badge,
   Button
@@ -17,10 +18,13 @@ import { url } from '../../config/urlConfig'
 import { AiFillDelete } from 'react-icons/ai';
 import { FiChevronDown, FiChevronsUp, FiChevronUp } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
+import { AuthContext } from 'hooks/authContext';
+import useAuth from 'hooks/useAuth';
+import TitleChange from 'components/Title/Title';
 
 
 function ReportsComponent(props) {
-
+    const {settings} = useAuth(AuthContext)
     const [budgets,setBudgets] = useState([])
     const [isExpanded, setIsExpanded] = useState(false);
     const [foundProject,setFoundProject] = useState([])
@@ -81,10 +85,8 @@ function ReportsComponent(props) {
        <>
       <section  className="mt-4 contracts-section p-4 bg-white rounded-md shadow-md"> 
        <PageTitle>Generate Reports</PageTitle>
-    
-       
 
-
+       <TitleChange name={`Reports | ${settings.name}`} />
   
         <SectionTitle></SectionTitle>
 

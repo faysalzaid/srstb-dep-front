@@ -15,6 +15,7 @@ import response from '../../utils/demo/tableData'
 import { PlusCircleIcon } from "@heroicons/react/outline";
 import { ErrorAlert, SuccessAlert } from "components/Alert";  
 
+
 import {
   TableBody,
   TableContainer, 
@@ -40,12 +41,13 @@ import {
 import { Link, withRouter } from 'react-router-dom'
 import { url } from 'config/urlConfig'
 import axios from 'axios'
+import TitleChange from 'components/Title/Title'
 
 
 
 
 const PgList = () => {
-    const {authState} = useContext(AuthContext)
+    const {authState,settings} = useContext(AuthContext)
     const [users, setUsers] = useState(null);
     const [companies, setCompanies] = useState([])
     const [projectForm, setProjectForm] = useState({})
@@ -229,8 +231,8 @@ const PgList = () => {
     return (
       <>
       
-  
-        <PageTitle>Contracts</PageTitle>
+      <TitleChange name={`Projects | ${settings.name}`} />
+        <PageTitle>Projects</PageTitle>
         <ErrorAlert
         open={openError.open}
         handleClose={handleCloseError}

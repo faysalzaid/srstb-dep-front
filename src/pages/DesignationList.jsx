@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import PageTitle from '../components/Typography/PageTitle'
 import SectionTitle from '../components/Typography/SectionTitle'
 import axios from 'axios'
+
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import {
   SearchIcon,
@@ -24,6 +25,8 @@ import { Input, HelperText, Label, Select, Textarea } from '@windmill/react-ui'
 import { url } from '../config/urlConfig'
 import { useContext } from 'react'
 import { AuthContext } from '../hooks/authContext'
+import TitleChange from 'components/Title/Title'
+import useAuth from 'hooks/useAuth'
 
 function DesignationList(props) {
     const [isModalOpen, setIsModalOpen] = useState(false)
@@ -44,7 +47,7 @@ function DesignationList(props) {
     const [departmentData,setDepartmentData] = useState([])
     
 
-    const {authState} = useContext(AuthContext)
+    const {authState,settings} = useAuth(AuthContext)
 
     
 
@@ -106,6 +109,7 @@ function DesignationList(props) {
 
 
         <PageTitle>List of Designations</PageTitle>
+        <TitleChange name={`Designations | ${settings.name}`} />
         <div>
         <form>   
         <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>

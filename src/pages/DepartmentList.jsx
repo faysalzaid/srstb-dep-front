@@ -23,6 +23,7 @@ import { Input, HelperText, Label, Select, Textarea } from '@windmill/react-ui'
 import { url } from '../config/urlConfig'
 import { useContext } from 'react'
 import { AuthContext } from '../hooks/authContext'
+import TitleChange from 'components/Title/Title'
 
 function DepartmentList(props) {
     const [isModalOpen, setIsModalOpen] = useState(false)
@@ -43,7 +44,7 @@ function DepartmentList(props) {
     
 
 
-    const {authState} = useContext(AuthContext)
+    const {authState,settings} = useContext(AuthContext)
 
     
     useEffect(()=>{
@@ -87,7 +88,7 @@ function DepartmentList(props) {
     return ( 
         <>
         <PageTitle>List of Departments</PageTitle>
-        <p></p>
+        <TitleChange name={`Departments | ${settings.name}`} />
         <div>
           <Button onClick={openModal}>Register Department</Button>
         </div>

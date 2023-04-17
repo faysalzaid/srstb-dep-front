@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import PageTitle from "../components/Typography/PageTitle";
 import SectionTitle from "../components/Typography/SectionTitle";
 import axios from "axios";
+import { ErrorAlert, SuccessAlert } from "components/Alert"; 
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import {
   Table,
@@ -83,17 +84,12 @@ function UsersDetail(props) {
     await axios.post(`${url}/users/${id}`, formData,{withCredentials:true}).then((resp) => {
       // console.log();
       if (resp.data.error) {
-        setErrorMessage(resp.data.error);
-        setTimeout(() => {
-          setErrorMessage("");
-        }, 2000);
+        setOpenError({open:true,message:`${resp.data.error}`})
       } else {
         setUsersData(resp.data);
         closeModal();
-        setSuccessMessage("Successfully Updated");
-        setTimeout(() => {
-          setSuccessMessage("");
-        }, 2000);
+        setOpenSuccess({open:true,message:"Successfully Updated"})
+     
       }
     });
   };
@@ -101,20 +97,52 @@ function UsersDetail(props) {
   const deleteUser = () => {
     axios.get(`${url}/users/delete/${id}`,{withCredentials:true}).then((resp) => {
       if (resp.data.error) {
-        setErrorMessage(resp.data.error);
+        setOpenError({open:true,message:`${resp.data.error}`})
       }
       setUsersData({});
       closeModal();
-      setSuccessMessage("Successfully Deleted");
+      setOpenSuccess({open:true,message:"Successfully Deleted"})
       setTimeout(() => {
-        setSuccessMessage("");
-        props.history.push("/app/users");
+        props.history.goBack()
       }, 1000);
     });
   };
 
+  const [openSuccess, setOpenSuccess] = useState({ open: false, message: "" });
+
+  const handleCloseSuccess = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+  
+    setOpenSuccess({ open: false, message: "" });
+  };
+  
+  const [openError, setOpenError] = useState({ open: false, message: "" });
+  
+  const handleCloseError = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+  
+    setOpenError({ open: false, message: "" });
+  };
+  
+
   return (
     <>
+     <ErrorAlert
+        open={openError.open}
+        handleClose={handleCloseError}
+        message={openError.message}
+        horizontal="right"
+      />
+      <SuccessAlert
+        open={openSuccess.open}
+        handleClose={handleCloseSuccess}
+        message={openSuccess.message}
+        horizontal="right"
+      />
       <link
         rel="stylesheet"
         href="https://unpkg.com/flowbite@1.4.4/dist/flowbite.min.css"

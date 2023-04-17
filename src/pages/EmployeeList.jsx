@@ -5,6 +5,7 @@ import SectionTitle from '../components/Typography/SectionTitle'
 import axios from 'axios'
 import { ErrorAlert, SuccessAlert } from "components/Alert";
 
+
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import {
   Table,
@@ -27,8 +28,12 @@ import EditUser from 'components/Users/EditUser'
 import { useRef } from 'react'
 import AddEmployee from 'components/Users/AddEmployee'
 import {FaCloudUploadAlt} from 'react-icons/fa'
+import TitleChange from 'components/Title/Title'
+import { AuthContext } from 'hooks/authContext'
+import useAuth from 'hooks/useAuth'
 
 function EmployeeList(props) {
+    const {settings} = useAuth(AuthContext)
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [openEdit, setOpenEdit] = useState({open: false, props:{}});
     const [openAdd,setOpenAdd] = useState({open:false,props:{}})
@@ -279,6 +284,7 @@ useEffect(()=>{
 
     return ( 
        <>
+       <TitleChange name={`Employees | ${settings.name}`} />
          {/* Delete Confirm section */}
          <Modal isOpen={isDeleteOpen.open} onClose={closeDelete}>
           <ModalHeader>Confirm Action</ModalHeader>

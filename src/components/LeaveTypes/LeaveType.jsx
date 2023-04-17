@@ -43,12 +43,13 @@ import {
 import { Link, withRouter } from 'react-router-dom'
 import { url } from 'config/urlConfig'
 import axios from 'axios'
+import TitleChange from 'components/Title/Title'
 
 
 
 
 const LeaveTypeList = () => {
-    const {authState} = useContext(AuthContext)
+    const {authState,settings} = useContext(AuthContext)
     const [contracts,setContracts] = useState([])
     const [countsData,setCountsData] = useState({ projectCount:"",bidCount:"",activeProjects:"",completedProjects:""})
     const [leaveTypeForm,setLeaveTypeForm] = useState({type:""})
@@ -187,7 +188,7 @@ const LeaveTypeList = () => {
   
     return (
       <>
-  
+        <TitleChange name={`Leave Types | ${settings.name}`} />
         <PageTitle>Leave Types</PageTitle>
         <ErrorAlert
         open={openError.open}

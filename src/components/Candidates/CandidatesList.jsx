@@ -43,12 +43,13 @@ import {
 import { Link, withRouter } from 'react-router-dom'
 import { url } from 'config/urlConfig'
 import axios from 'axios'
+import TitleChange from 'components/Title/Title'
 
 
 
 
 const CandidateList = () => {
-    const {authState} = useContext(AuthContext)
+    const {authState,settings} = useContext(AuthContext)
     const [searchResult,setSearchResult] = useState([])
     const [searchTerm,setSearchTerm] = useState("")
     const [fetchedResult,setFetchedResult] = useState([])
@@ -233,7 +234,7 @@ const CandidateList = () => {
   
     return (
       <>
-  
+        <TitleChange name={`Charts | ${settings.name}`} />
         <PageTitle>Candidates</PageTitle>
         <ErrorAlert
         open={openError.open}
