@@ -482,7 +482,7 @@ const openDelete = (id)=>{
                     <span className="text-sm">{bid.phone}</span>
                   </TableCell>
                   <TableCell>
-                    <span className="text-sm">{bid.amount.toLocaleString()} ETB</span>
+                    <span className="text-sm">{bid?.amount?.toLocaleString()} ETB</span>
                   </TableCell>
                   
                   <TableCell>

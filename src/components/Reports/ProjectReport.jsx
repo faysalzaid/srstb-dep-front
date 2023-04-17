@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect, useContext, useRef } from 'react'
 import PageTitle from '../Typography/PageTitle'
 import SectionTitle from '../Typography/SectionTitle'
 import axios from 'axios'
@@ -62,6 +62,21 @@ function ReportsComponent(props) {
       getProjects() 
     },[])
 
+
+    const printSectionRef = useRef(null);
+
+    const printSection = () => {
+      const printContents = printSectionRef.current.innerHTML;
+    //   console.log(printContents);
+      const originalContents = document.body.innerHTML;
+      document.body.innerHTML = printContents;
+      window.print();
+
+    };
+    
+
+
+
     return ( 
        <>
       <section  className="mt-4 contracts-section p-4 bg-white rounded-md shadow-md"> 
@@ -100,13 +115,14 @@ function ReportsComponent(props) {
 
             <div className='flex'>
             <PageTitle >Report </PageTitle>
-            <FaFilePdf className='mt-8 ml-6'/>
+            <FaFilePdf className='mt-8 ml-6' onClick={printSection}/>
             </div>
 
 
 {/* Render section */}
 {/* First Table */}
-<div className="flex flex-col ">
+<div ref={printSectionRef}>
+<div className="flex flex-col" >
               <div className="-my-2 overflow-x-auto sm:-mx-9 lg:-mx-8">
                 <div className="py-2 sm:px-9 lg:px-8">
                   <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
@@ -154,9 +170,9 @@ function ReportsComponent(props) {
                       
                           <>
                             <tr >
-                              <Link to={`/app/pglist/${foundProject.id}`}>
-                              <td className="px-6 py-4 whitespace-nowrap">{foundProject?.name}</td>
-                              </Link>
+                              
+                              <td className="px-6 py-4 whitespace-nowrap"><Link to={`/app/pglist/${foundProject.id}`}>{foundProject?.name}</Link></td>
+                           
                               <td className="px-6 py-4 whitespace-nowrap">{foundProject?.utilizedCost?.toLocaleString()}</td>
                               <td className="px-6 py-4 whitespace-nowrap">{foundProject?.place}</td>
                               <td className=" px-6 py-4 whitespace-nowrap" style={{color:'green'}}>{foundProject.starttime}</td>
@@ -311,6 +327,7 @@ function ReportsComponent(props) {
                   </div>
 
 {/* End of second table */}
+</div>
 
 
 

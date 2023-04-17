@@ -109,7 +109,8 @@ function BidDetail(props) {
           if(resp.data.error){
             console.log(resp.data.error);
           }else{
-            setUsers(resp.data)
+            const data = resp.data.filter((usr)=>usr.role==='client')
+            setUsers(data)
           }
         })
 

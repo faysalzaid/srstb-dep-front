@@ -84,6 +84,7 @@ const [selectedBid,setSelectedBid] = useState([])
 
   useEffect(()=>{
     axios.get(`${url}/bids`,{withCredentials:true}).then((resp)=>{
+     
       setSelectedBid(resp.data.bid)
       // console.log(resp.data.bid);
     })

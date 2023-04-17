@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext,createContext } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams,useHistory,useLocation } from 'react-router-dom'
 import PageTitle from '../components/Typography/PageTitle'
 
 import axios from 'axios'
@@ -18,6 +18,11 @@ import TitleChange from 'components/Title/Title';
 import { AuthContext } from 'hooks/authContext';
 import useAuth from 'hooks/useAuth';
 import { FaTrashAlt } from 'react-icons/fa';
+import { JobOfferSection } from 'components/EmplUploads/JobOffer';
+import { AgreementSection } from 'components/EmplUploads/Agreement';
+import { MedicalAllowanceSection } from 'components/EmplUploads/MedicalAllowance';
+import { TimesheetSection } from 'components/EmplUploads/TimesheetsSection';
+import { AppraisalSection } from 'components/EmplUploads/Appraisals';
 
 
 
@@ -29,11 +34,14 @@ import { FaTrashAlt } from 'react-icons/fa';
 
 function EmployeeDetail(props) {
     const [isModalOpen, setIsModalOpen] = useState(false)
-
-
-
     const [openSuccess, setOpenSuccess] = useState({ open: false, message: "" })
     const [openError, setOpenError] = useState({ open: false, message: "" });
+    const [offerFile,setOfferFile] = useState({file:"",status:false,id:""})
+    const [appraisalFile,setAppraisalFile] = useState({files:[],status:false,})
+    const [medicalFile,setMedicalFile] = useState({files:[],status:false})
+    const [agreementFile,setAgreementFile] = useState({file:"",status:false,id:""})
+    const [generalSettings,setGeneralSettings] = useState({status:true})
+    const [timesheet,setTimesheet] = useState({status:false,id:""})
     const {settings} = useAuth()
   
 
@@ -55,8 +63,6 @@ function EmployeeDetail(props) {
       setOpenError({ open: false, message: "" });
     };
 
-
-
   
     function closeModal() {
       setIsModalOpen(false)
@@ -67,9 +73,6 @@ function EmployeeDetail(props) {
 
 
     const [imagePreview, setImagePreview] = useState(null);
-
-    // const [companyData,setCompanyData] = useState([]) 
-    const date = new Date()
     const [emplForm,setEmplForm] = useState({name:"",email:"",phone:"",status:"",image:"",DepartmentId:"",DesignationId:"", AreaId: "",
           hiredDate:"",
           ssn: "",
@@ -102,6 +105,11 @@ function EmployeeDetail(props) {
               setEmployeeData(resp.data)
               setEmplForm(resp.data)
               setImagePreview(resp.data.image)
+              setOfferFile({...offerFile,file:resp.data?.job_offer?.file,id:resp.data?.job_offer?.id})
+              setAgreementFile({...agreementFile,file:resp.data?.agreement?.file,id:resp.data?.agreement?.id})
+              setAppraisalFile({...appraisalFile,files:resp.data?.appraisals})
+              setMedicalFile({...medicalFile,files:resp.data?.medical_allowances})
+              // console.log(medicalFile.files);
             }
             
         })
@@ -212,7 +220,118 @@ function EmployeeDetail(props) {
       })
     }
 
+    
 
+
+
+    const openGeneralSettings =()=>{
+      setAppraisalFile({...appraisalFile,status:false})
+      setAgreementFile({...agreementFile,status:false})
+      setMedicalFile({...medicalFile,status:false})
+      setOfferFile({...offerFile,status:false})
+      setGeneralSettings({status:true})
+      setTimesheet({...timesheet,status:false})
+    }
+
+    const openAppraisal =()=>{
+      setAppraisalFile({...appraisalFile,status:true})
+      setAgreementFile({...agreementFile,status:false})
+      setMedicalFile({...medicalFile,status:false})
+      setOfferFile({...offerFile,status:false})
+      setGeneralSettings({status:false})
+      setTimesheet({status:false})
+    }
+    const openTimesheet =()=>{
+      setAppraisalFile({...appraisalFile,status:false})
+      setAgreementFile({...agreementFile,status:false})
+      setMedicalFile({...medicalFile,status:false})
+      setOfferFile({...offerFile,status:false})
+      setGeneralSettings({status:false})
+      setTimesheet({status:true})
+    }
+
+    const openAgreement =()=>{
+      setAppraisalFile({...appraisalFile,status:false})
+      setAgreementFile({...agreementFile,status:true})
+      setMedicalFile({...medicalFile,status:false})
+      setOfferFile({...offerFile,status:false})
+      setGeneralSettings({status:false})
+      setTimesheet({status:false})
+    }
+    const openMedical =()=>{
+      setAppraisalFile({...appraisalFile,status:false})
+      setAgreementFile({...agreementFile,status:false})
+      setMedicalFile({...medicalFile,status:true})
+      setOfferFile({...offerFile,status:false})
+      setGeneralSettings({status:false})
+      setTimesheet({status:false})
+    }
+
+    const openOffer =()=>{
+      setAppraisalFile({...appraisalFile,status:false})
+      setAgreementFile({...agreementFile,status:false})
+      setMedicalFile({...medicalFile,status:false})
+      setOfferFile({...offerFile,status:true})
+      setGeneralSettings({status:false})
+      setTimesheet({status:false})
+    }
+// DeleteSections
+    const handleOfferDelete =async()=>{
+      axios.delete(`${url}/joboffer/${offerFile.id}`,{withCredentials:true}).then((resp)=>{
+        if(resp.data.error){
+          setOpenError({open:true,message:`${resp.data.error}`})
+        }else{
+          setOfferFile({...offerFile,file:""})
+          setOpenSuccess({open:true,message:"Successfully Deleted"})
+        }
+      }).catch((error)=>{
+        setOpenError({open:true,message:`${error.response.data.error}`})
+      })
+    }
+
+    const handleAgreementDelete = async()=>{
+      axios.delete(`${url}/agreement/${agreementFile.id}`,{withCredentials:true}).then((resp)=>{
+        if(resp.data.error){
+          setOpenError({open:true,message:`${resp.data.error}`})
+        }else{
+          setAgreementFile({...agreementFile,file:""})
+          setOpenSuccess({open:true,message:"Successfully Deleted"})
+        }
+      }).catch((error)=>{
+        setOpenError({open:true,message:`${error.response.data.error}`})
+      })
+    }
+
+
+    const handleMedicalDelete = async(mid)=>{
+      axios.delete(`${url}/medical/${mid}`,{withCredentials:true}).then((resp)=>{
+        if(resp.data.error){
+          setOpenError({open:true,message:`${resp.data.error}`})
+        }else{
+          const data = medicalFile.files.filter((id)=>id.id!==mid)
+          setMedicalFile({...medicalFile,files:data})
+          setOpenSuccess({open:true,message:"Successfully Deleted"})
+        }
+      }).catch((error)=>{
+        setOpenError({open:true,message:`${error.response.data.error}`})
+      })
+    }
+
+    const handleAppraisalDelete = async(mid)=>{
+      axios.delete(`${url}/appraisal/${mid}`,{withCredentials:true}).then((resp)=>{
+        if(resp.data.error){
+          setOpenError({open:true,message:`${resp.data.error}`})
+        }else{
+          const data = appraisalFile.files.filter((id)=>id.id!==mid)
+          setAppraisalFile({...appraisalFile,files:data})
+          setOpenSuccess({open:true,message:"Successfully Deleted"})
+        }
+      }).catch((error)=>{
+        setOpenError({open:true,message:`${error.response.data.error}`})
+      })
+    }
+
+// EndofDeleteSections
 
     return ( 
        <>
@@ -246,7 +365,7 @@ function EmployeeDetail(props) {
         horizontal="right"
       />
 
-       <PageTitle>Employee Detail</PageTitle>
+       <PageTitle>Employee | {employeeData.name}</PageTitle>
 
 
 
@@ -288,19 +407,80 @@ function EmployeeDetail(props) {
             </Card>
           )}
 
+            <div className="bg-white-800 text-gray-100 flex flex-col">
+              
+              <div className="flex flex-col flex-grow pt-5 pb-4 overflow-y-auto">
+                <span
+                
+                  className={generalSettings.status?"px-4 py-2 mt-2 text-sm font-semibold text-white-400 rounded-lg bg-purple-700 hover:bg-purple-700 hover:text-white":"px-4 py-2 mt-2 text-sm font-semibold text-gray-700 rounded-lg hover:bg-purple-700 hover:text-white"}
+                  // style={{ backgroundColor: "rgb(126, 58, 242)",color:'white' }}
+                  onClick={openGeneralSettings}
+                >
+                  General Settings
+                </span>
+                <span
+                onClick={openOffer}
+                 className={offerFile.status?"px-4 py-2 mt-2 text-sm font-semibold text-white-400 rounded-lg bg-purple-700 hover:bg-purple-700 hover:text-white":"px-4 py-2 mt-2 text-sm font-semibold text-gray-700 rounded-lg hover:bg-purple-700 hover:text-white"}
+                >
+                  Job Offer Letter
+                  
+                </span>
+                <span
+                 onClick={openMedical}
+                 className={medicalFile.status?"px-4 py-2 mt-2 text-sm font-semibold text-white-400 rounded-lg bg-purple-700 hover:bg-purple-700 hover:text-white":"px-4 py-2 mt-2 text-sm font-semibold text-gray-700 rounded-lg hover:bg-purple-700 hover:text-white"}
+                >
+                  Medical Allowance
+                </span>
+                <span
+                 onClick={openTimesheet}
+                 className={timesheet.status?"px-4 py-2 mt-2 text-sm font-semibold text-white-400 rounded-lg bg-purple-700 hover:bg-purple-700 hover:text-white":"px-4 py-2 mt-2 text-sm font-semibold text-gray-700 rounded-lg hover:bg-purple-700 hover:text-white"}
+                >
+                  Timesheet
+                </span>
+                <span
+                  onClick={openAppraisal}
+                 className={appraisalFile.status?"px-4 py-2 mt-2 text-sm font-semibold text-white-400 rounded-lg bg-purple-700 hover:bg-purple-700 hover:text-white":"px-4 py-2 mt-2 text-sm font-semibold text-gray-700 rounded-lg hover:bg-purple-700 hover:text-white"}
+                >
+                  Appraisals
+                </span>
+                <span
+                  onClick={openAgreement}
+                 className={agreementFile.status?"px-4 py-2 mt-2 text-sm font-semibold text-white-400 rounded-lg bg-purple-700 hover:bg-purple-700 hover:text-white":"px-4 py-2 mt-2 text-sm font-semibold text-gray-700 rounded-lg hover:bg-purple-700 hover:text-white"}
+                >
+                  Agreement Letter
+                </span>
+              </div>
+            </div>
+
     </div>
 
-      <div className="flex-grow ml-6">
+
+
+
+
+            {/* Empform */}
+
+
+            {/*  */}
+
+            {/* SideMenu */}
+             
+    {/* EndOFSideMenu */}
+
+
+
+
+      <div className="flex-grow ml-2">
       <div className="mb-6">
         <div className='flex'>
-        <h2 className="text-2xl font-bold mb-6 mt-3">Employee</h2>
+      
         <FaTrashAlt className='mt-4 ml-auto text-3xl ml-2 text-red-600' onClick={openDelete}/>
         </div>
       
-      <Card className='w-full'>
+      {generalSettings.status&&<Card className='w-full'>
       <CardBody>
       <form onSubmit={addEmployee} encType="multipart/form-data">
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 gap-2">
           <Label>
             <span>Name</span>
               <Input type="text" className="mt-1" name="name" placeholder="Empl Name"  autoComplete='off' value={emplForm.name} onChange={(e)=>setEmplForm({...emplForm,name:e.target.value})}/>
@@ -400,19 +580,37 @@ function EmployeeDetail(props) {
           </form>
               
           </CardBody>
-          </Card>
+          </Card>}
+          {/* Job offer section */}
+          {offerFile.status&&<JobOfferSection offerFile={offerFile} setOfferFile={setOfferFile} handleOfferDelete={handleOfferDelete} setOpenError={setOpenError} setOpenSuccess={setOpenSuccess} id={id}/>}
+          {/* End of job offer section */}
+          {/* Agreement Section */}
+          {agreementFile.status&&<AgreementSection setAgreementFile={setAgreementFile} agreementFile={agreementFile} handleAgreementDelete={handleAgreementDelete} setOpenError={setOpenError} setOpenSuccess={setOpenSuccess} id={id}/>}
+          {/* End of Agreement Section */}
+          {/* Medical Section */}
+          {medicalFile.status&&<MedicalAllowanceSection setMedicalFile={setMedicalFile} medicalFile={medicalFile} setOpenError={setOpenError} setOpenSuccess={setOpenSuccess} id={id} handleMedicalDelete={handleMedicalDelete}/>}
+          {/* End of medical section */}
+          {/* M.timesheet Section */}
+          {timesheet.status&&<TimesheetSection mtimesheet={employeeData.Monthlytimesheets}/>}
+          {/* End of M.timesheet Section */}
+          {/* Appraisal section */}
+          {appraisalFile.status&&<AppraisalSection appraisalFile={appraisalFile} setAppraisalFile={setAppraisalFile} setOpenError={setOpenError} setOpenSuccess={setOpenSuccess} id={id} handleAppraisalDelete={handleAppraisalDelete}/>}
+          {/* end of appraisal section */}
           </div>
 
 
-
-
-
-
-
         </div>
-    </div>
         
-          {/* End of data section */}
+    </div>
+      {/* End of data section */}
+
+   
+
+    
+        
+        
+
+         
 
 
 

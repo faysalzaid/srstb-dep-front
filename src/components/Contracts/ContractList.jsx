@@ -150,7 +150,7 @@ const ContractList = () => {
         axios.post(`${url}/contract`,formValues,{withCredentials:true}).then((resp)=>{
           console.log(resp.data);
           if(resp.data.error){
-            setOpenError({open:true,message:`$${resp.data.error}`})
+            setOpenError({open:true,message:`${resp.data.error}`})
           }else{
             setContracts([...contracts,resp.data])
             setOpenSuccess({open:true,message:"Successfully Added"})

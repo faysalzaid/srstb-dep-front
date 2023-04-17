@@ -171,7 +171,7 @@ const PaymentDetail = (props) => {
     
 
       
-
+// console.log(paymentData);
 
 
 
@@ -318,14 +318,14 @@ const PaymentDetail = (props) => {
 <div className="border-b-2 border-gray-300 py-4">
   <h3 className="text-xl font-bold mb-2">Payment Details</h3>
   <div className="flex justify-between items-center mb-4">
-    <p className="text-gray-500">Payment Date:</p>
-    <p className="font-bold">{paymentData?.date}</p>
+    <p className="text-gray-700">Payment Date | {paymentData?.date}</p>
+    <p className="font-bold"></p>
   </div>
-  <div className="flex justify-between items-center mb-4">
-    <p className="text-gray-500">Payment Mode:</p>
+  {/* <div className="flex justify-between items-center mb-4">
+    <p className="text-gray-700">Payment Mode | {paymentData?.mode}</p>
     <p className="font-bold"></p>
     
-  </div>
+  </div> */}
   <div className="bg-green-500 text-white text-center py-4 px-6 rounded-lg">
     <p className="text-2xl font-bold">Total Amount Received</p>
     <p className="text-4xl font-bold">ETB {paymentData?.amountReceived?.toLocaleString()}</p>
@@ -336,13 +336,13 @@ const PaymentDetail = (props) => {
 <div className="py-4">
   <h3 className="text-xl font-bold mb-2">Project Details</h3>
   <div className="flex justify-between items-center mb-4">
-    <p className="text-gray-500">Project Name:</p>
+    <p className="text-gray-700">Project Name:</p>
     <p className="font-bold">Example Project</p>
   </div>
-  <div className="flex justify-between items-center">
+  {/* <div className="flex justify-between items-center">
     <p className="text-gray-500">Client Name:</p>
     <p className="font-bold">John Doe</p>
-  </div>
+  </div> */}
 </div>
 
 </div>

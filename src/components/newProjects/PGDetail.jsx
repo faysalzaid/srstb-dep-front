@@ -126,7 +126,8 @@ const handleCloseError = (event, reason) => {
           setProject(resp.data)
           setBudgets(resp.data.yearlyBudgets)
           // console.log(resp.data.Invoice.length);
-          setBids(resp.data.Bids)
+          const data = resp.data.Bids.filter((bd)=>bd.evaluationStatus==='YES')
+          setBids(data)
           setFormValues({
             CompanyId: resp.data.CompanyId,
             name: resp.data.name,

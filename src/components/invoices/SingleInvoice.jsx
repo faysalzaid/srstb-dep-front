@@ -39,10 +39,7 @@ const printSection = () => {
           <p>{settings.address2}</p>
         </div>
         <div>
-          <h2 className="text-xl font-bold mb-2">Representative</h2>
-          <p>John Doe</p>
-          <p>john.doe@example.com</p>
-          <p>(123) 456-7890</p>
+         {/* any data */}
         </div>
       </div>
 

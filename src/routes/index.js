@@ -338,7 +338,7 @@ const routes = [{
     {
         path: "/reports/projects",
         component: ProjectReport,
-        roles: ['admin']
+        roles: ['admin', 'roadquality']
     },
 ]
 

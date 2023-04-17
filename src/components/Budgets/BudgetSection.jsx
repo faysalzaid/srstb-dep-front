@@ -87,6 +87,8 @@ const handleUtilization = async(event)=>{
 
     }else{
       setOpenSuccess({open:true,message:"Successfully Added"})
+      // console.log('this is resp.data',resp.data);
+      setBudgets(resp.data)
       onUtilizedClose()
     }
   })
@@ -131,13 +133,15 @@ const handleUtilization = async(event)=>{
       budgetId:isPaymentOpen.budgetId,
       invoiced:1,
       budgetTrackId:isPaymentOpen.budgetTrackId,
-      createdBy:authState.username
+      createdBy:authState.username,
+      ProjectId:id
     }   
     // console.log(request);
     await axios.post(`${url}/payment`,request,{withCredentials:true}).then((resp)=>{
       if(resp.data.error){
         setOpenError({open:true,message:`${resp.data.error}`})
       }else{
+        setBudgets(resp.data)
         setOpenSuccess({open:true,message:"Invoiced Payment Successfully"})
         onPaymentClose()
       }
@@ -145,6 +149,26 @@ const handleUtilization = async(event)=>{
     })
    
     
+  }
+
+  const budgetTrackDelete = async(btrackid)=>{
+    // e.preventDefault()
+    // console.log(btrackid);
+    const request = {
+      InvoiceId:invoiceIds,
+      ProjectId:id,
+
+    }
+    await axios.post(`${url}/budget/budgettrackDelete/${btrackid}`,request,{withCredentials:true}).then((resp)=>{
+      if(resp.data.error){
+        setOpenError({open:true,message:`${resp.data.error}`})
+      }else{
+        setBudgets(resp.data)
+        setOpenSuccess({open:true,message:"Successfully Deleted The Installment"})
+      }
+    }).catch((error)=>{
+      setOpenError({open:true,message:`${error}`})
+    })
   }
 
   const onClose = ()=>{
@@ -413,7 +437,7 @@ const handleUtilization = async(event)=>{
                       <td className="px-6 py-4 whitespace-nowrap">ETB {row.utilizedBudget.toLocaleString()}</td>
                       <td className="px-6 py-4 whitespace-nowrap">ETB {row.remainingBudget.toLocaleString()}</td>
                       {row.remainingBudget===0?
-                      <td className="px-6 py-4 whitespace-nowrap"><Badge type="blue">Fully Paid</Badge> </td>
+                      <td className="px-6 py-4 whitespace-nowrap"><Badge type="success">Fully Paid</Badge> </td>
                       :<td className="px-6 py-4 whitespace-nowrap"><Badge type="danger">Partially </Badge></td>}
                       <td className=" px-6 py-4 whitespace-nowrap" style={{color:'green'}}><FaRegMoneyBillAlt className='ml-3' onClick={()=>setIsUtilized({open:true,id:row.id,year:row.year,allocatedBudget:row.allocatedBudget,utilizedBudget:row.utilizedBudget})}/></td>
                       <td className=" px-6 py-4 whitespace-nowrap" style={{color:"blue"}}><FaEdit className='ml-3'/></td>
@@ -462,7 +486,7 @@ const handleUtilization = async(event)=>{
                                {detail.invoiced===0?
                                 <td className="px-6 py-4 whitespace-nowrap"><Badge type="danger"><FaPlusCircle onClick={()=>setIsPaymentOpen({open:true,paid:detail.utilized,budgetTrackId:detail.id})} className='mt-1 mr-1'/>Invoice </Badge> </td>
                                 :<td className="px-6 py-4 whitespace-nowrap"><Badge><FaCheckCircle className='mt-1 mr-1'/>Invoiced </Badge></td>}
-                               <td style={{color:'red'}} className="mr-6 px-6"><AiFillDelete /></td>
+                               <td style={{color:'red'}} className="mr-6 px-6"><AiFillDelete onClick={()=>budgetTrackDelete(detail.id)}/></td>
                              </tr>
                            ))}
                          </tbody>

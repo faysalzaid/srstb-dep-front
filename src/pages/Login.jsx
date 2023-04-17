@@ -21,7 +21,7 @@ function Login(props) {
 
   const [frontErrorMessage,setFrontErrorMessage] = useState("")
   const [successMessage,setSuccessMessage] = useState("")
-  const {authState,setAuthState,settings} = useContext(AuthContext)
+  const {setAuthState,settings} = useContext(AuthContext)
 
 
   const [openSuccess, setOpenSuccess] = useState({ open: false, message: "" });
@@ -57,7 +57,7 @@ const onSubmit = async(data)=>{
   try {
     await axios.post(`${url}/login`,data).then((response)=>{
       if(response.data.error){
-          setFrontErrorMessage(response.data.error)
+          setOpenError({open:true,message:`${response.data.error}`})  
           setTimeout(() => {
             setFrontErrorMessage("")
           }, 2000);
