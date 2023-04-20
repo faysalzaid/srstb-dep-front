@@ -101,7 +101,8 @@ const handleCloseError = (event, reason) => {
       utilizedCost:0,
       totalCost:0,
       physicalPerformance:0,
-      percentage:0
+      percentage:0,
+      distance:0
     });
 
 
@@ -141,7 +142,8 @@ const handleCloseError = (event, reason) => {
             utilizedCost:resp.data.utilizedCost,
             totalCost:resp.data.totalCost,
             physicalPerformance:resp.data.physicalPerformance,
-            percentage:resp.data.percentage
+            percentage:resp.data.percentage,
+            distance:resp.data.distance
           })
        
       
@@ -296,13 +298,14 @@ navWrapper.classList.remove('active')
       description: formValues.description,
       starttime: formValues.starttime,
       endtime: formValues.endtime,
-      year: formValues.year,
-      utilizedCost:parseInt(formValues.utilizedCost),
-      totalCost:parseInt(formValues.totalCost),
-      physicalPerformance:parseInt(formValues.physicalPerformance),
-      percentage:parseInt(formValues.percentage)
+      year: formValues.year,  
+      utilizedCost:parseFloat(formValues.utilizedCost),
+      totalCost:parseFloat(formValues.totalCost),
+      physicalPerformance:parseFloat(formValues.physicalPerformance),
+      percentage:parseFloat(formValues.percentage),
+      distance:parseFloat(formValues.distance)
     }
-    // console.log(request);
+    console.log(formValues.totalCost.toLocaleString('en-US',{maximumFractionDigits:2}));
 
     axios.post(`${url}/projects/${id}`,request,{withCredentials:true}).then((resp)=>{
         if(resp.data.error){
@@ -451,6 +454,16 @@ navWrapper.classList.remove('active')
               name="place"
               value={formValues.place}
               onChange={(e)=>setFormValues({...formValues,place:e.target.value})}
+              required
+            />
+          </Label>
+          <Label>
+            <span>Distance(KM)</span>
+            <Input
+              className="mt-1"
+              name="distance"
+              value={formValues.distance}
+              onChange={(e)=>setFormValues({...formValues,distance:e.target.value})}
               required
             />
           </Label>

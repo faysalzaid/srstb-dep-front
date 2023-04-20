@@ -114,7 +114,8 @@ const PgList = () => {
         utilizedCost:0,
         totalCost:0,
         physicalPerformance:0,
-        percentage:0
+        percentage:0,
+        distance:0
       });
 
       const handleChange = e => {
@@ -137,12 +138,14 @@ const PgList = () => {
           starttime: formValues.starttime,
           endtime: formValues.endtime,
           year: formValues.year,
-          utilizedCost:parseInt(formValues.utilizedCost),
-          totalCost:parseInt(formValues.totalCost),
-          physicalPerformance:parseInt(formValues.physicalPerformance),
-          percentage:parseInt(formValues.percentage)
+          utilizedCost:parseFloat(formValues.utilizedCost),
+          totalCost:parseFloat(formValues.totalCost),
+          physicalPerformance:parseFloat(formValues.physicalPerformance),
+          percentage:parseFloat(formValues.percentage),
+          distance:parseFloat(formValues.distance)
+
         }
-        // console.log(request);
+        console.log(request);
         axios.post(`${url}/projects`,request,{withCredentials:true}).then((resp)=>{
             if(resp.data.error){
               setOpenError({open:true,message:`${resp.data.error}`})
@@ -169,6 +172,7 @@ const PgList = () => {
           console.log(resp.data.error);
         }
       setProject(resp.data.projects)
+      console.log(resp.data);
   
       })
 
@@ -363,6 +367,16 @@ const PgList = () => {
               required
             />
           </Label>
+          <Label>
+            <span>Distance(KM)</span>
+            <Input
+              className="mt-1"
+              name="distance"
+              value={formValues.distance}
+              onChange={(e)=>setFormValues({...formValues,distance:e.target.value})}  
+              required
+            />
+          </Label>
 
           <Label>
             <span>Consultant</span>
@@ -503,11 +517,12 @@ const PgList = () => {
           <TableHeader>
             <TableRow>
               <TableCell>Project Name</TableCell>
+              <TableCell>Contractor</TableCell>
               <TableCell>Start Date</TableCell>
               <TableCell>End Date</TableCell>
               <TableCell>Total Cost</TableCell>
               <TableCell>Utilized Cost</TableCell>
-              <TableCell>Financial Performance</TableCell>
+              <TableCell>Fin.Performance</TableCell>
               <TableCell>Status</TableCell>
               <TableCell>Edit / Delete</TableCell>
             </TableRow>
@@ -523,16 +538,23 @@ const PgList = () => {
                   </div>
                 </TableCell>
                 <TableCell>
+                  <div className="flex items-center text-sm">
+                    <div>
+                      <p className="font-semibold">{companies.map((cp)=>cp.id===project.CompanyId?cp.name:"")}</p>
+                    </div>
+                  </div>
+                </TableCell>
+                <TableCell>
                   <span className="text-sm">{project.starttime}</span>
                 </TableCell>
                 <TableCell>
                   <span className="text-sm">{project.endtime}</span>
                 </TableCell>
                 <TableCell>
-                  <span className="text-sm">{project.totalCost.toLocaleString()}</span>
+                  <span className="text-sm">ETB {(parseFloat(project.totalCost).toLocaleString('en-Us',{maximumFractionDigits:2}))}</span>
                 </TableCell>
                 <TableCell>
-                  <span className="text-sm">{project.utilizedCost.toLocaleString()}</span>
+                  <span className="text-sm">ETB {project.utilizedCost.toLocaleString('en-Us',{maximumFractionDigits:2})}</span>
                 </TableCell>
              
                 <TableCell>

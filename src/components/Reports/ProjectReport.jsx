@@ -187,7 +187,7 @@ function ReportsComponent(props) {
                             
                             <td className=" px-6 py-4 whitespace-nowrap" style={{color:'blue'}}>{foundProject.physicalPerformance}%</td>
                               <td className=" px-6 py-4 whitespace-nowrap" style={{color:'blue'}}>{foundProject.financialPerformance}%</td>
-                              <td className=" px-6 py-4 whitespace-nowrap" style={{color:"blue"}}><FaEdit className='ml-3'/></td>
+                              <td className=" px-6 py-4 whitespace-nowrap" style={{color:"blue"}}><Link to={`/app/pglist/${foundProject.id}`}><FaEdit className='ml-3'/></Link></td>
                               
                             </tr>
                         

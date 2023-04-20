@@ -55,7 +55,7 @@ function OverView({project,setProject,companyData,id}) {
             <li>
               <div className="project-title-div">
                 <p className="font-medium">Total Rate</p>
-                <p className="font-bold">{project?.totalCost?.toLocaleString()}</p>
+                <p className="font-bold">ETB {parseFloat(project?.totalCost)?.toLocaleString({minimumFractionDigits:2})}</p>
               </div>
             </li>
             <li>
