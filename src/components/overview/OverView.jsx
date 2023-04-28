@@ -130,15 +130,15 @@ function OverView({project,setProject,companyData,id}) {
           <div className="expenses-div-container">
               <div className="expenses-div">
                   <p id="total-expenses">INVOICE</p>
-                  <p className="expenses-cost">ETB{invoiceData?.total.toLocaleString()}</p>
+                  <p className="expenses-cost">ETB {parseFloat(invoiceData?.total).toLocaleString()}</p>
               </div>
               <div className="expenses-div">
                   <p id="billabe-expenses">PAID</p>
-                  <p className="expenses-cost">ETB{invoiceData?.totalPaid.toLocaleString()}</p>
+                  <p className="expenses-cost">ETB {parseFloat(invoiceData?.totalPaid).toLocaleString()}</p>
               </div>
               <div className="expenses-div">
                   <p id="billed-expenses">REMAINING</p>
-                  <p className="expenses-cost">ETB{invoiceData?.amountDue.toLocaleString()}</p>
+                  <p className="expenses-cost">ETB {parseFloat(invoiceData?.amountDue).toLocaleString()}</p>
               </div>
               <div className="expenses-div">
                   <p id="unbilled-expenses">VIEW</p>

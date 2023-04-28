@@ -544,14 +544,14 @@ const captureProject = ()=>{
                     <div className="flex items-center text-sm">
                       
                       <div>
-                        <p className="font-semibold">{invoice.amountDue.toLocaleString()}</p>
+                        <p className="font-semibold">{parseFloat(invoice.amountDue).toLocaleString({maximumFractionDigits:2})} ETB</p>
                         {/* <p className='font-semibold'>{invoice.ProjectId}sdf</p> */}
                      
                       </div>
                     </div>
                   </TableCell>
                   <TableCell>
-                    <span className="text-sm font-semibold">{invoice.total.toLocaleString()}</span>
+                    <span className="text-sm font-semibold">{parseFloat(invoice.total).toLocaleString()}</span>
                   </TableCell>
                   <TableCell>
                     <span className="text-sm font-semibold">{projects.map((pr)=>pr.id===invoice.ProjectId?pr.name:"")}</span>

@@ -60,7 +60,7 @@ const printSection = () => {
             {invoiceData?.payments?.map((payment, index) => (
               <tr key={index}>
                 <td className="px-4 py-2 border">{payment.date}</td>
-                <td className="px-4 py-2 border">ETB {payment.amountReceived.toLocaleString()}</td>
+                <td className="px-4 py-2 border">ETB {parseFloat(payment.amountReceived).toLocaleString()}</td>
                 <td className="px-4 py-2 border">{payment.createdBy}</td>
              
               </tr>
@@ -78,8 +78,8 @@ const printSection = () => {
         </div>
         <div>
           <h2 className="text-xl font-bold mb-2">Price</h2>
-          <p><Badge>Total</Badge>ETB {project.map((pr)=>pr.id===invoiceData?.ProjectId?pr.totalCost.toLocaleString():"")}</p>
-          <p><Badge style={{color:'red'}}>Due Amount</Badge>: ETB {invoiceData?.amountDue?.toLocaleString()}</p>
+          <p className='font-bold'><Badge>Total</Badge>ETB {project.map((pr)=>pr.id===invoiceData?.ProjectId?parseFloat(pr.totalCost).toLocaleString():"")}</p>
+          <p className='font-bold'><Badge style={{color:'red'}}>Due Amount</Badge>: ETB {parseFloat(invoiceData?.amountDue)?.toLocaleString()}</p>
         </div>
       </div>
     </div>

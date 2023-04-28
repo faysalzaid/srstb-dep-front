@@ -176,7 +176,7 @@ const InvoiceDetailPage = () => {
                      <div className="flex items-center text-sm">
                        
                        <div>
-                         <p className="font-semibold">ETB {pay.amountReceived.toLocaleString()}</p>
+                         <p className="font-semibold">ETB {parseFloat(pay.amountReceived).toLocaleString()}</p>
                       
                       
                        </div>

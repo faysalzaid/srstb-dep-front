@@ -554,11 +554,11 @@ const PgList = () => {
                   <span className="text-sm">ETB {(parseFloat(project.totalCost).toLocaleString('en-Us',{maximumFractionDigits:2}))}</span>
                 </TableCell>
                 <TableCell>
-                  <span className="text-sm">ETB {project.utilizedCost.toLocaleString('en-Us',{maximumFractionDigits:2})}</span>
+                  <span className="text-sm">ETB {parseFloat(project.utilizedCost).toLocaleString('en-Us',{maximumFractionDigits:2})}</span>
                 </TableCell>
              
                 <TableCell>
-                  <Badge type="danger">{project.financialPerformance}</Badge>
+                  <Badge type="danger">{parseFloat(project.financialPerformance).toLocaleString({maximumFractionDigits:2})}</Badge>
                 </TableCell>
                 <TableCell>
                   <Badge type="primary">{project.status}</Badge>

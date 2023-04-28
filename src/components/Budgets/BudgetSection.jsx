@@ -69,14 +69,14 @@ const deleteBudget =async()=>{
 
 const handleUtilization = async(event)=>{
   event.preventDefault()
-  const newCalc = parseInt(isUtilized.utilizedBudget) + parseInt(budgettrackForm.utilized)
+  const newCalc = parseFloat(isUtilized.utilizedBudget) + parseFloat(budgettrackForm.utilized)
   const request ={
     year:isUtilized.year,
-    allocatedBudget:parseInt(isUtilized.allocatedBudget),
+    allocatedBudget:parseFloat(isUtilized.allocatedBudget),
     utilizedBudget:newCalc,
     ProjectId:id,
     date:budgettrackForm.date,
-    utilized:parseInt(budgettrackForm.utilized),
+    utilized:parseFloat(budgettrackForm.utilized),
     createdBy:authState.username
   }
   // console.log(request,isUtilized.id);
@@ -105,8 +105,8 @@ const handleUtilization = async(event)=>{
     
     const request ={
       year:budgetForm.year,
-      allocatedBudget:parseInt(budgetForm.allocatedBudget),
-      utilizedBudget:parseInt(budgetForm.utilizedBudget),
+      allocatedBudget:parseFloat(budgetForm.allocatedBudget),
+      utilizedBudget:parseFloat(budgetForm.utilizedBudget),
       ProjectId:id
     }
 
@@ -433,9 +433,9 @@ const handleUtilization = async(event)=>{
                   <>
                     <tr >
                       <td className="px-6 py-4 whitespace-nowrap">{row.year}</td>
-                      <td className="px-6 py-4 whitespace-nowrap">ETB {row.allocatedBudget.toLocaleString()}</td>
-                      <td className="px-6 py-4 whitespace-nowrap">ETB {row.utilizedBudget.toLocaleString()}</td>
-                      <td className="px-6 py-4 whitespace-nowrap">ETB {row.remainingBudget.toLocaleString()}</td>
+                      <td className="px-6 py-4 whitespace-nowrap">ETB {parseFloat(row.allocatedBudget).toLocaleString({maximumFractionDigits:2})}</td>
+                      <td className="px-6 py-4 whitespace-nowrap">ETB {parseFloat(row.utilizedBudget).toLocaleString({maximumFractionDigits:2})}</td>
+                      <td className="px-6 py-4 whitespace-nowrap">ETB {parseFloat(row.remainingBudget).toLocaleString({maximumFractionDigits:2})}</td>
                       {row.remainingBudget===0?
                       <td className="px-6 py-4 whitespace-nowrap"><Badge type="success">Fully Paid</Badge> </td>
                       :<td className="px-6 py-4 whitespace-nowrap"><Badge type="danger">Partially </Badge></td>}
@@ -480,7 +480,7 @@ const handleUtilization = async(event)=>{
                            {row.bugetTracks?.map((detail, index) => (
                              <tr key={index}>
                                <td className="px-6 py-4 whitespace-nowrap">{detail.date}</td>
-                               <td className="px-6 py-4 whitespace-nowrap">ETB {detail.utilized.toLocaleString()}</td>
+                               <td className="px-6 py-4 whitespace-nowrap">ETB {parseFloat(detail?.utilized)?.toLocaleString()}</td>
                                <td className="px-6 py-4 whitespace-nowrap">{detail.createdBy}</td>
                              
                                {detail.invoiced===0?

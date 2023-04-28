@@ -305,7 +305,7 @@ navWrapper.classList.remove('active')
       percentage:parseFloat(formValues.percentage),
       distance:parseFloat(formValues.distance)
     }
-    console.log(formValues.totalCost.toLocaleString('en-US',{maximumFractionDigits:2}));
+    // console.log(formValues.totalCost.toLocaleString('en-US',{maximumFractionDigits:2}));
 
     axios.post(`${url}/projects/${id}`,request,{withCredentials:true}).then((resp)=>{
         if(resp.data.error){
