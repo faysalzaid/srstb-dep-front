@@ -101,54 +101,61 @@ const ContractList = () => {
 
 
       useEffect(()=>{
+        const getData = async()=>{
 
-        axios.get(`${url}/contract`).then((resp)=>{
-          if(resp.data.error){
-            setOpenError({open:true,message:true})
-          }else{
-            setContracts(resp.data)
-          }
-        })
-        axios.get(`${url}/projects`,{withCredentials:true}).then((resp)=>{
-          if(resp.data.error){
-            console.log(resp.data.error);
-          }
-        setProject(resp.data.projects)
+
+          await axios.get(`${url}/contract`).then((resp)=>{
+            if(resp.data.error){
+              setOpenError({open:true,message:true})
+            }else{
+              setContracts(resp.data)
+            }
+          })
+          await axios.get(`${url}/projects`,{withCredentials:true}).then((resp)=>{
+            if(resp.data.error){
+              console.log(resp.data.error);
+            }
+          setProject(resp.data.projects)
+      
+          })
     
-        })
-  
-        axios.get(`${url}/users`,{withCredentials:true}).then((resp)=>{
-          if(resp.data.error){
-  
-          }else{
-            const filteredClients = resp.data.filter((cl)=>cl.role==="client")
-            setUsers(filteredClients)
-          }
-        })
-  
-  
-        axios.get(`${url}/contracttype`,{withCredentials:true}).then((resp)=>{
-          if(resp.data.error){
-  
-          }else{
-            setContractTypes(resp.data)
-          }
-        })
-  
-        axios.get(`${url}/counts`,{withCredentials:true}).then((resp)=>{
-          const data = resp.data
-          setCountsData({ projectCount:data.projectsCount,bidCount:data.countBids,activeProjects:data.activeProjectsCount,completedProjects:data.completedProjects})
-        })
+          await axios.get(`${url}/users`,{withCredentials:true}).then((resp)=>{
+            if(resp.data.error){
     
+            }else{
+              const filteredClients = resp.data.filter((cl)=>cl.role==="client")
+              setUsers(filteredClients)
+            }
+          })
+    
+    
+          await axios.get(`${url}/contracttype`,{withCredentials:true}).then((resp)=>{
+            if(resp.data.error){
+    
+            }else{
+              setContractTypes(resp.data)
+            }
+          })
+    
+          await axios.get(`${url}/counts`,{withCredentials:true}).then((resp)=>{
+            const data = resp.data
+            setCountsData({ projectCount:data.projectsCount,bidCount:data.countBids,activeProjects:data.activeProjectsCount,completedProjects:data.completedProjects})
+          })
+    
+          
+        }
+
+        getData()
+       
     
     },[])
 
       
     
-      const handleSubmit = (e) => {
+      const handleSubmit = async(e) => {
         e.preventDefault();
         console.log(formValues);
-        axios.post(`${url}/contract`,formValues,{withCredentials:true}).then((resp)=>{
+        await axios.post(`${url}/contract`,formValues,{withCredentials:true}).then((resp)=>{
           console.log(resp.data);
           if(resp.data.error){
             setOpenError({open:true,message:`${resp.data.error}`})
@@ -190,8 +197,8 @@ const ContractList = () => {
 
 
   // Delete row
-  const handleDelete = ()=>{
-    axios.delete(`${url}/contract/${isDeleteOpen.id}`).then((resp)=>{
+  const handleDelete = async()=>{
+    await axios.delete(`${url}/contract/${isDeleteOpen.id}`).then((resp)=>{
       if(resp.data.error){
         setOpenError({open:true,message:`${resp.data.error}`})
       }else{

@@ -34,7 +34,8 @@ export const AuthContextProvider = withRouter((props) => {
         username: "",
         email: "",
         role: "",
-        status: false,
+        image:"",
+        state: false,
         refreshToken: ""
     })
 
@@ -87,14 +88,15 @@ export const AuthContextProvider = withRouter((props) => {
     try {
       const cookie = getCookie('accessToken');
       if (!cookie || cookie === undefined) {
-       history.push('/login');
+        history.push('/login');
         console.log('runned');
       }
       const decodeAccessToken = jwt_decode(userData.token);
       const resp = await axios.post(`${url}/login/refreshToken`, { withCredentials: true }, { token: decodeAccessToken ?.refreshToken });
       if (resp.data.error) {
-        setAuthState({ id: "", token: "", username: "", email: "", role: "", status: false, refreshToken: "" });
-       history.push('/login');
+        setAuthState({ id: "", token: "", username: "", email: "",image:"", role: "", state: false, refreshToken: "" });
+        history.push('/login');
+        console.log('/grapauth');
       } else {
         const data = resp?.data;
         const userData ={
@@ -102,6 +104,7 @@ export const AuthContextProvider = withRouter((props) => {
           token: data.token,
           username: data.username,
           email: data.email,
+          image:data.image,
           role: data.role,
           state: true,
           refreshToken: data.refreshToken
@@ -109,7 +112,7 @@ export const AuthContextProvider = withRouter((props) => {
         };
         const stringFied = JSON.stringify(userData);
         setCookie('accessToken',stringFied);
-        setAuthState({ id: data ?.id, username: data?.username, email: data ?.email, role: data ?.role, state: true, refreshToken: data ?.refreshToken });
+        setAuthState({ id: data?.id, username: data?.username,email: data?.email,image:data?.image,role:data?.role,state:true,refreshToken:data?.refreshToken });
       }
     } catch (error) {
       console.error(error);
@@ -125,27 +128,29 @@ export const AuthContextProvider = withRouter((props) => {
 useEffect(()=>{
 
         const getData = async()=>{
-          if(userData?.token||userData?.state){
-            setAuthState({ id: userData.id, username: userData.username, email: userData.email, role: userData.role, state: userData.state, refreshToken: userData.refreshToken })
-            if(history.length>1){
-              history.goBack()
-               console.log('runned',history);
-            }
-            }else{
-              history.push('/login')
-            }
-
           await axios.get(`${url}/settings`).then((resp)=>{
             const data = resp.data[0]
             // console.log(resp.data[0]);
-            setSettings({id:data.id,logo:data.logo, name:data.name, loginlogo:data.loginlogo, address1:data.address1, address2:data.address2})
+            setSettings({id:data.id,logo:data.logo,name:data.name,loginlogo:data.loginlogo,address1:data.address1, address2:data.address2})
         }).catch((error)=>{
-          if (error.response && error.response.data && error.response.data.error) {
-              console.log(error.response.data.error);
-            } else {
-              console.log(error.response.data.error);
-            }
+          console.log(error);
       })
+
+          if(userData?.state!==true){
+            history.push('/login')
+            }else{
+              setAuthState({ id:userData.id,username:userData.username, email:userData.email,image:userData.image, role:userData.role,state:true,refreshToken:userData.refreshToken })
+              if(props.history.length>0){
+                  console.log(props.history);
+                  if(history.location.pathname==='/login'){
+                    history.goBack()
+                  }
+                 
+                 console.log('runned',userData.state);
+              }
+            }
+
+
         }
        
         getData()

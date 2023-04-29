@@ -63,15 +63,20 @@ function UsersDetail(props) {
   };
 
   useEffect(() => {
-    axios.get(`${url}/users/${id}`,{withCredentials:true}).then((resp) => {
-      if(resp.data.error){
-        setUsersData({})
-        console.log(resp.data.error);
-      }else{
+    const getData = async()=>{
+      await axios.get(`${url}/users/${id}`,{withCredentials:true}).then((resp) => {
+        if(resp.data.error){
+          setUsersData({})
+          console.log(resp.data.error);
+        }else{
+  
+          setUsersData(resp.data);
+        }
+      });
+    }
 
-        setUsersData(resp.data);
-      }
-    });
+    getData()
+    
   }, []);
 
   const updateUser = async (data) => {
@@ -94,8 +99,8 @@ function UsersDetail(props) {
     });
   };
 
-  const deleteUser = () => {
-    axios.get(`${url}/users/delete/${id}`,{withCredentials:true}).then((resp) => {
+  const deleteUser = async() => {
+    await axios.get(`${url}/users/delete/${id}`,{withCredentials:true}).then((resp) => {
       if (resp.data.error) {
         setOpenError({open:true,message:`${resp.data.error}`})
       }

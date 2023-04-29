@@ -73,7 +73,10 @@ function EmployeeDetail(props) {
 
 
     const [imagePreview, setImagePreview] = useState(null);
-    const [emplForm,setEmplForm] = useState({name:"",email:"",phone:"",status:"",image:"",DepartmentId:"",DesignationId:"", AreaId: "",
+    const [emplForm,setEmplForm] = useState({
+          name:"",email:"",phone:"",
+          status:"",image:"",DepartmentId:"",
+          DesignationId:"", AreaId: "",
           hiredDate:"",
           ssn: "",
           passportNo: "",
@@ -81,7 +84,8 @@ function EmployeeDetail(props) {
           nationality: "Ethiopian",
           address: "",
           birthday:"",
-          postCode:"",})
+          postCode:"",
+        })
     
     
 
@@ -102,8 +106,21 @@ function EmployeeDetail(props) {
             if(resp.data.error){
               setOpenError({open:true, message:`${resp.data.error}`})
             }else{
+              console.log(resp.data);
               setEmployeeData(resp.data)
-              setEmplForm(resp.data)
+              setEmplForm({
+                name:resp.data.name,email:resp.data.email,phone:resp.data.phone,
+                status:resp.data.status,image:resp.data.image,DepartmentId:resp.data.DepartmentId,
+                DesignationId:resp.data.DesignationId, AreaId: resp.data.AreaId,
+                hiredDate:resp.data.hiredDate,
+                ssn: resp.data.ssn,
+                passportNo: resp.data.passportNo,
+                contactPhone: resp.data.contactPhone,
+                nationality: "Ethiopian",
+                address: resp.data.address,
+                birthday:resp.data.birthday,
+                postCode:resp.data.postCode,
+              })
               setImagePreview(resp.data.image)
               setOfferFile({...offerFile,file:resp.data?.job_offer?.file,id:resp.data?.job_offer?.id})
               setAgreementFile({...agreementFile,file:resp.data?.agreement?.file,id:resp.data?.agreement?.id})
@@ -149,7 +166,7 @@ function EmployeeDetail(props) {
     const addEmployee =async(e)=>{
       e.preventDefault()
       if(emplForm.name==="" || emplForm.email===""||emplForm.phone===""||emplForm.status===""||emplForm.image===""||emplForm.DepartmentId===null||emplForm.DesignationId===null||emplForm.AreaId===null){
-        setOpenError({open:true,message:"Please provide Dep,Des,Area and others  "})
+        setOpenError({open:true,message:"Please provide Department,Des...,Area...."})
       }else{
 
         
@@ -171,7 +188,7 @@ function EmployeeDetail(props) {
         formData.append('postCode',emplForm.postCode)
         formData.append('nationality',emplForm.nationality)
         console.log(formData);
-         axios.post(`${url}/employees/${id}`,formData,{withCredentials:true}).then((resp)=>{
+         await axios.post(`${url}/employees/${id}`,formData,{withCredentials:true}).then((resp)=>{
           // console.log('from server',resp.data);
           if(resp.data.error){
             setOpenError({open:true, message:`${resp.data.error}`})
@@ -204,8 +221,8 @@ function EmployeeDetail(props) {
 
 
 
-    const deleteEmployee = ()=>{
-      axios.get(`${url}/employees/delete/${id}`).then((resp)=>{
+    const deleteEmployee = async()=>{
+      await axios.get(`${url}/employees/delete/${id}`).then((resp)=>{
         if(resp.data.error){
           setOpenError({open:true, message:`${resp.data.error}`})
         }
@@ -277,7 +294,7 @@ function EmployeeDetail(props) {
     }
 // DeleteSections
     const handleOfferDelete =async()=>{
-      axios.delete(`${url}/joboffer/${offerFile.id}`,{withCredentials:true}).then((resp)=>{
+      await axios.delete(`${url}/joboffer/${offerFile.id}`,{withCredentials:true}).then((resp)=>{
         if(resp.data.error){
           setOpenError({open:true,message:`${resp.data.error}`})
         }else{
@@ -290,7 +307,7 @@ function EmployeeDetail(props) {
     }
 
     const handleAgreementDelete = async()=>{
-      axios.delete(`${url}/agreement/${agreementFile.id}`,{withCredentials:true}).then((resp)=>{
+      await axios.delete(`${url}/agreement/${agreementFile.id}`,{withCredentials:true}).then((resp)=>{
         if(resp.data.error){
           setOpenError({open:true,message:`${resp.data.error}`})
         }else{
@@ -304,7 +321,7 @@ function EmployeeDetail(props) {
 
 
     const handleMedicalDelete = async(mid)=>{
-      axios.delete(`${url}/medical/${mid}`,{withCredentials:true}).then((resp)=>{
+      await axios.delete(`${url}/medical/${mid}`,{withCredentials:true}).then((resp)=>{
         if(resp.data.error){
           setOpenError({open:true,message:`${resp.data.error}`})
         }else{
@@ -318,7 +335,7 @@ function EmployeeDetail(props) {
     }
 
     const handleAppraisalDelete = async(mid)=>{
-      axios.delete(`${url}/appraisal/${mid}`,{withCredentials:true}).then((resp)=>{
+      await axios.delete(`${url}/appraisal/${mid}`,{withCredentials:true}).then((resp)=>{
         if(resp.data.error){
           setOpenError({open:true,message:`${resp.data.error}`})
         }else{
@@ -504,7 +521,7 @@ function EmployeeDetail(props) {
         </Label>
         <Label className="mt-1">
           <span>Department</span>
-          <Select className="mt-1" name="DepartmentId"  value={emplForm.DepartmentId} onChange={(e)=>setEmplForm({...emplForm,DepartmentId:e.target.value})} required>
+          <Select className="mt-1" name="DepartmentId"  value={emplForm.DepartmentId?emplForm.DepartmentId:""} onChange={(e)=>setEmplForm({...emplForm,DepartmentId:e.target.value})} required>
           <option>Select</option>
           {departmentData.map((dep)=>
           <option key={dep.id} value={dep.id}>{dep.name}</option>
@@ -513,7 +530,7 @@ function EmployeeDetail(props) {
         </Label>
         <Label className="mt-1">
           <span>Designation</span>
-          <Select className="mt-1" name="DesignationId"  value={emplForm.DesignationId} onChange={(e)=>setEmplForm({...emplForm,DesignationId:e.target.value})} required>
+          <Select className="mt-1" name="DesignationId"  value={emplForm.DesignationId?emplForm.DesignationId:""} onChange={(e)=>setEmplForm({...emplForm,DesignationId:e.target.value})} required>
           <option>Select</option>
           {designationData.map((des)=>
           <option key={des.id} value={des.id}>{des.name}</option>
@@ -523,7 +540,7 @@ function EmployeeDetail(props) {
         </Label>
         <Label className="mt-1">
           <span>Area</span>
-          <Select  className="mt-1" name="AreaId"  value={emplForm.AreaId} onChange={(e)=>setEmplForm({...emplForm,AreaId:e.target.value})} required>
+          <Select  className="mt-1" name="AreaId"  value={emplForm.AreaId?emplForm.AreaId:""} onChange={(e)=>setEmplForm({...emplForm,AreaId:e.target.value})} required>
           <option>Select</option>
           {areaData.map((des)=>
           <option key={des.id} value={des.id}>{des.name}</option>

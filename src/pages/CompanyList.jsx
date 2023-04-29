@@ -89,25 +89,29 @@ function CompanyList(props) {
     //ENDOF COMPANY DATA
 
 useEffect(()=>{
+  const getData = async()=>{
+    await axios.get(`${url}/users`,{withCredentials:true}).then((resp)=>{
+      if(resp.data.error){
+  
+      }else{
+        const data = resp.data.filter((usr)=>usr.role=="client")
+        setUsers(data)
+  
+      }
+    })
+  
+    await axios.get(`${url}/companies`,{withCredentials:true}).then((resp)=>{
+      if(resp.data.error){
+  
+      }else{
+        setCompanyData(resp.data.company)
+        setCount(resp.data.count)
+      }
+    })
+  }
+  
 
-  axios.get(`${url}/users`,{withCredentials:true}).then((resp)=>{
-    if(resp.data.error){
-
-    }else{
-      const data = resp.data.filter((usr)=>usr.role=="client")
-      setUsers(data)
-
-    }
-  })
-
-  axios.get(`${url}/companies`,{withCredentials:true}).then((resp)=>{
-    if(resp.data.error){
-
-    }else{
-      setCompanyData(resp.data.company)
-      setCount(resp.data.count)
-    }
-  })
+  getData()
 
 
 },[])

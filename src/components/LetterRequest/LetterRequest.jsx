@@ -117,42 +117,50 @@ const LetterRequest = () => {
 
     // USE EFFECT 
       useEffect(()=>{
-      axios.get(`${url}/projects`,{withCredentials:true}).then((resp)=>{
-        if(resp.data.error){
-          console.log(resp.data.error);
-        }else{
-          setProject(resp.data.projects)
+
+        const getData = async()=>{
+
+          await axios.get(`${url}/projects`,{withCredentials:true}).then((resp)=>{
+            if(resp.data.error){
+              console.log(resp.data.error);
+            }else{
+              setProject(resp.data.projects)
+            }
+          })
+          await axios.get(`${url}/invoice`,{withCredentials:true}).then((resp)=>{
+              if(resp.data.error){
+    
+              }else{
+                setInvoices(resp.data)
+              }
+          })
+    
+          await axios.get(`${url}/users`,{withCredentials:true}).then((resp)=>{
+            if(resp.data.error){
+            }else{
+              // const filteredClients = resp.data.filter((cl)=>cl.role==="client")
+              setUsers(resp.data)
+            }
+          })
+          await axios.get(`${url}/counts`,{withCredentials:true}).then((resp)=>{
+            const data = resp.data
+            setCountsData({ projectCount:data.projectsCount,bidCount:data.countBids,activeProjects:data.activeProjectsCount,completedProjects:data.completedProjects})
+          })
+    
+          await axios.get(`${url}/paymentmode`,{withCredentials:true}).then((resp)=>{
+           setMode(resp.data)
+          })
+    
+          await axios.get(`${url}/slip`,{withCredentials:true}).then((resp)=>{
+            setSlipData(resp.data.slip)
+           })
+    
+      
+
         }
-      })
-      axios.get(`${url}/invoice`,{withCredentials:true}).then((resp)=>{
-          if(resp.data.error){
 
-          }else{
-            setInvoices(resp.data)
-          }
-      })
-
-      axios.get(`${url}/users`,{withCredentials:true}).then((resp)=>{
-        if(resp.data.error){
-        }else{
-          // const filteredClients = resp.data.filter((cl)=>cl.role==="client")
-          setUsers(resp.data)
-        }
-      })
-      axios.get(`${url}/counts`,{withCredentials:true}).then((resp)=>{
-        const data = resp.data
-        setCountsData({ projectCount:data.projectsCount,bidCount:data.countBids,activeProjects:data.activeProjectsCount,completedProjects:data.completedProjects})
-      })
-
-      axios.get(`${url}/paymentmode`,{withCredentials:true}).then((resp)=>{
-       setMode(resp.data)
-      })
-
-      axios.get(`${url}/slip`,{withCredentials:true}).then((resp)=>{
-        setSlipData(resp.data.slip)
-       })
-
-  
+        getData()
+     
   
   },[])
 

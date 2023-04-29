@@ -109,16 +109,17 @@ function CompanyDetail(props) {
         setCompanyFormData({name:response.data.name,location:response.data.location,UserId:response.data.UserId})
         // console.log(response.data);
         // console.log('this is from params',id);
+        await axios.get(`${url}/users`,{withCredentials:true}).then((resp)=>{
+          if(resp.data.error){
+    
+          }else{
+            const data = resp.data.filter((usr)=>usr.role=="client")
+            setUsers(data)
+          }
+        })
     }
 
-    axios.get(`${url}/users`,{withCredentials:true}).then((resp)=>{
-      if(resp.data.error){
-
-      }else{
-        const data = resp.data.filter((usr)=>usr.role=="client")
-        setUsers(data)
-      }
-    })
+    
     companyFetch()
   },[])
 

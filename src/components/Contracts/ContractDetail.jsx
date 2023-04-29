@@ -86,8 +86,9 @@ const ContractDetail = (props) => {
 
 
     useEffect(()=>{
+      const getData = async()=>{
 
-      axios.get(`${url}/contract/${id}`).then((resp)=>{
+        await axios.get(`${url}/contract/${id}`).then((resp)=>{
           if(resp.data.error){
 
             setOpenError({open:true,message:`${resp.data.error}`})
@@ -118,7 +119,7 @@ const ContractDetail = (props) => {
       })
 
 
-      axios.get(`${url}/projects`,{withCredentials:true}).then((resp)=>{
+      await axios.get(`${url}/projects`,{withCredentials:true}).then((resp)=>{
         if(resp.data.error){
           setOpenError({open:true,message:`$${resp.data.error}`})
         }
@@ -127,7 +128,7 @@ const ContractDetail = (props) => {
       })
 
 
-      axios.get(`${url}/users`,{withCredentials:true}).then((resp)=>{
+      await axios.get(`${url}/users`,{withCredentials:true}).then((resp)=>{
         if(resp.data.error){
           setOpenError({open:true,message:`$${resp.data.error}`})
         }else{
@@ -138,7 +139,7 @@ const ContractDetail = (props) => {
       })
 
 
-      axios.get(`${url}/contracttype`,{withCredentials:true}).then((resp)=>{
+      await axios.get(`${url}/contracttype`,{withCredentials:true}).then((resp)=>{
         if(resp.data.error){
           setOpenError({open:true,message:`$${resp.data.error}`})
         }else{
@@ -148,14 +149,14 @@ const ContractDetail = (props) => {
 
 
 
-      axios.get(`${url}/counts`,{withCredentials:true}).then((resp)=>{
+      await axios.get(`${url}/counts`,{withCredentials:true}).then((resp)=>{
         const data = resp.data
         setCountsData({ projectCount:data.projectsCount,bidCount:data.countBids,activeProjects:data.activeProjectsCount,completedProjects:data.completedProjects})
       })
   
 
 
-      axios.get(`${url}/attachment`).then((resp)=>{
+      await axios.get(`${url}/attachment`).then((resp)=>{
         if(resp.data.error){
           setOpenError({open:true,message:`$${resp.data.error}`})
         }else{
@@ -165,6 +166,10 @@ const ContractDetail = (props) => {
           setFilesList(data)
         }
       })
+
+      }
+
+      getData()
   
   },[])
   
@@ -306,9 +311,9 @@ const ContractDetail = (props) => {
   };
 
   // Delete row
-  const handleFileDelete = (dfile) => {
+  const handleFileDelete = async(dfile) => {
     // Implement your own delete logic here
-    axios.delete(`${url}/attachment/${dfile.id}`).then((resp)=>{
+    await axios.delete(`${url}/attachment/${dfile.id}`).then((resp)=>{
       if(resp.data.error){
         setOpenError({open:true,message:`${resp.data.error}`})
       }else{
@@ -320,8 +325,8 @@ const ContractDetail = (props) => {
   };
 
 
-  const handleDelete = ()=>{
-    axios.delete(`${url}/contract/${id}`).then((resp)=>{
+  const handleDelete = async()=>{
+    await axios.delete(`${url}/contract/${id}`).then((resp)=>{
       if(resp.data.error){
         setOpenError({open:true,message:`${resp.data.error}`})
       }else{

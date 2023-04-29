@@ -213,8 +213,8 @@ const LeaveList = () => {
 
 
   // Delete row
-  const handleDelete = ()=>{
-    axios.delete(`${url}/leave/${isDeleteOpen.id}`,{withCredentials:true}).then((resp)=>{
+  const handleDelete = async()=>{
+    await axios.delete(`${url}/leave/${isDeleteOpen.id}`,{withCredentials:true}).then((resp)=>{
         const data = LeaveData.filter((dt)=>dt.id!==isDeleteOpen.id)
         setLeaveData(data)
         setOpenSuccess({open:true,message:"deleted Successfully"})

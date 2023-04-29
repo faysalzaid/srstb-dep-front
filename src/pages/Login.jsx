@@ -21,7 +21,7 @@ function Login(props) {
 
   const [frontErrorMessage,setFrontErrorMessage] = useState("")
   const [successMessage,setSuccessMessage] = useState("")
-  const {setAuthState,settings} = useContext(AuthContext)
+  const {authState,setAuthState,settings} = useContext(AuthContext)
 
 
   const [openSuccess, setOpenSuccess] = useState({ open: false, message: "" });
@@ -68,6 +68,7 @@ const onSubmit = async(data)=>{
           token: data.token,
           username:data.username,
           email: data.email,
+          image:data.image,
           email:data.email,
           role:data.role,
           state:true,
@@ -76,7 +77,7 @@ const onSubmit = async(data)=>{
         }
         const stringFied = JSON.stringify(userData?userData:undefined)
           setCookie('accessToken',stringFied)
-          setAuthState({id:data.id,username:data.username,email:data.email,role:data.role,state:true,refreshToken:data.refreshToken})
+          setAuthState({id:data.id,username:data.username,email:data.email,image:data.image,role:data.role,state:true,refreshToken:data.refreshToken})
           setOpenSuccess({open:true,message:"Logged In Successfully"})
          setTimeout(() => {
           props.history.push('/app/dashboard')

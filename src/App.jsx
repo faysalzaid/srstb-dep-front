@@ -43,13 +43,13 @@ function App(props) {
 
 
 
-useEffect(()=>{
-  if(!authState.state){
-    props.history.push('/login')
-  }
+// useEffect(()=>{
+//   if(!authState.state){
+//     props.history.push('/login')
+//   }
 
 
-},[])
+// },[])
 
 
 

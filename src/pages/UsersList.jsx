@@ -67,17 +67,22 @@ function UsersList(props) {
   };
 
   useEffect(() => {
-    axios.get(`${url}/users`,{withCredentials: true}).then((resp) => {
-      if(resp.data.error){
-        setUsersData([])
-        console.log(resp.data.error);
-        setErrorMessage(resp.data.error)
-      }else{
-       
-        setUsersData(resp.data);
+    const getData =async()=>{
+      await axios.get(`${url}/users`,{withCredentials: true}).then((resp) => {
+        if(resp.data.error){
+          setUsersData([])
+          console.log(resp.data.error);
+          setErrorMessage(resp.data.error)
+        }else{
+         
+          setUsersData(resp.data);
+  
+        }
+      });
+    }
 
-      }
-    });
+    getData()
+    
   }, []);
 
   const addUser = async (data) => {
@@ -109,8 +114,8 @@ function UsersList(props) {
     });
   };
 
-  const deleteUser = (ids) => {
-    axios.get(`${url}/users/delete/${ids}`).then((resp) => {
+  const deleteUser = async(ids) => {
+    await axios.get(`${url}/users/delete/${ids}`).then((resp) => {
       if (resp.data.error) {
         setOpenError({open:true,message:`${resp.data.error}`})
       }

@@ -195,8 +195,8 @@ const LeaveDetail = (props) => {
 
 
   // Delete row
-  const handleDelete = ()=>{
-    axios.delete(`${url}/leave/${id}`,{withCredentials:true}).then((resp)=>{
+  const handleDelete = async()=>{
+    await axios.delete(`${url}/leave/${id}`,{withCredentials:true}).then((resp)=>{
         setOpenSuccess({open:true,message:"deleted Successfully"})
         closeDelete()
         setTimeout(() => {

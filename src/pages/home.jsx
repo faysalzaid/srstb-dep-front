@@ -24,15 +24,18 @@ function HomePage(props) {
   let [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
-    axios.get(`${url}/`).then((resp) => {
-      if (resp.data.error) {
-        errorMessage.current = resp.data.error;
-        // console.log(resp.data.error);
-      } else {
-        setPrData(resp.data);
-        console.log(resp.data);
-      }
-    });
+    const getData = async()=>{
+      await axios.get(`${url}/`).then((resp) => {
+        if (resp.data.error) {
+          errorMessage.current = resp.data.error;
+          // console.log(resp.data.error);
+        } else {
+          setPrData(resp.data);
+          console.log(resp.data);
+        }
+      });
+    }
+   getData()
   }, []);
 
   const validation = Yup.object().shape({

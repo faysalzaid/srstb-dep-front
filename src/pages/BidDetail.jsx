@@ -94,25 +94,27 @@ function BidDetail(props) {
             }).catch((err)=>{
               console.log(err.response);
             })
+
+            await axios.get(`${url}/projects`,{withCredentials:true}).then((resp)=>{
+              if(resp.data.error){
+                setErrorMessage(resp.data.error)
+              }else{
+    
+                setProjects(resp.data.projects)}
+              
+            })
+    
+            await axios.get(`${url}/users`,{withCredentials:true}).then((resp)=>{
+              if(resp.data.error){
+                console.log(resp.data.error);
+              }else{
+                const data = resp.data.filter((usr)=>usr.role==='client')
+                setUsers(data)
+              }
+            })
             // console.log(response.data);
         }
-        axios.get(`${url}/projects`,{withCredentials:true}).then((resp)=>{
-          if(resp.data.error){
-            setErrorMessage(resp.data.error)
-          }else{
-
-            setProjects(resp.data.projects)}
-          
-        })
-
-        axios.get(`${url}/users`,{withCredentials:true}).then((resp)=>{
-          if(resp.data.error){
-            console.log(resp.data.error);
-          }else{
-            const data = resp.data.filter((usr)=>usr.role==='client')
-            setUsers(data)
-          }
-        })
+      
 
 
         bidsFetch()

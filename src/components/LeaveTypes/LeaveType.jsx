@@ -92,7 +92,8 @@ const LeaveTypeList = () => {
 
       useEffect(()=>{
 
-        axios.get(`${url}/leavetype`,{withCredentials:true}).then((resp)=>{
+        const getData = async()=>{
+          await axios.get(`${url}/leavetype`,{withCredentials:true}).then((resp)=>{
             // console.log(resp.data);
           if(resp.data.error){
             setOpenError({open:true,message:true})
@@ -105,20 +106,22 @@ const LeaveTypeList = () => {
       
   
       
-        axios.get(`${url}/counts`,{withCredentials:true}).then((resp)=>{
+        await axios.get(`${url}/counts`,{withCredentials:true}).then((resp)=>{
           const data = resp.data
           setCountsData({ projectCount:data.projectsCount,bidCount:data.countBids,activeProjects:data.activeProjectsCount,completedProjects:data.completedProjects})
         })
+        }
+       
     
-    
+    getData()
     },[])
 
       
     
-      const handleSubmit = (e) => {
+      const handleSubmit =async(e) => {
         e.preventDefault();
         // console.log(leaveTypeForm);
-        axios.post(`${url}/leavetype`,leaveTypeForm,{withCredentials:true}).then((resp)=>{
+       await axios.post(`${url}/leavetype`,leaveTypeForm,{withCredentials:true}).then((resp)=>{
         //   console.log(resp.data);
             setLeaveType((prev)=>[...prev,resp.data])
             setOpenSuccess({open:true,message:"Successfully Added"})
@@ -160,8 +163,8 @@ const LeaveTypeList = () => {
 
 
   // Delete row
-  const handleDelete = ()=>{
-    axios.delete(`${url}/leavetype/${isDeleteOpen.id}`,{withCredentials:true}).then((resp)=>{
+  const handleDelete =async ()=>{
+   await axios.delete(`${url}/leavetype/${isDeleteOpen.id}`,{withCredentials:true}).then((resp)=>{
         const data = leaveType.filter((dt)=>dt.id!==isDeleteOpen.id)
         setLeaveType(data)
         setOpenSuccess({open:true,message:"deleted Successfully"})

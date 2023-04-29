@@ -53,7 +53,7 @@ const handleCloseError = (event, reason) => {
 
 
 const deleteBudget =async()=>{
-  axios.get(`${url}/budget/delete/${isDeleteOpen.id}`).then((resp)=>{
+  await axios.get(`${url}/budget/delete/${isDeleteOpen.id}`).then((resp)=>{
     if(resp.data.error){
       setOpenError({open:true,message:"Error Occured"})
     }else{

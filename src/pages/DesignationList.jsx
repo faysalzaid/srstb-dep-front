@@ -52,14 +52,17 @@ function DesignationList(props) {
     
 
     useEffect(()=>{
-        axios.get(`${url}/designations`,{withCredentials:true}).then((resp)=>{
+      const getData = async()=>{
+        await axios.get(`${url}/designations`,{withCredentials:true}).then((resp)=>{
          
-            setDesignationData(resp.data)
-        })
-        axios.get(`${url}/departments`,{withCredentials:true}).then((resp)=>{
-       
-          setDepartmentData(resp.data)
+          setDesignationData(resp.data)
       })
+      await axios.get(`${url}/departments`,{withCredentials:true}).then((resp)=>{
+     
+        setDepartmentData(resp.data)
+    })
+      }
+        
 
     },[])
 
@@ -85,8 +88,8 @@ function DesignationList(props) {
 
     }
 
-    const deleteDesignation = (ids)=>{
-      axios.get(`${url}/departments/delete/${ids}`,{withCredentials:true}).then((resp)=>{
+    const deleteDesignation = async(ids)=>{
+      await axios.get(`${url}/departments/delete/${ids}`,{withCredentials:true}).then((resp)=>{
         if(resp.data.error){
             setErrorMessage(resp.data.error)
         }

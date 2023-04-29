@@ -49,26 +49,31 @@ function DepartmentDetail(props) {
     
 
     useEffect(()=>{
+      const getData =async()=>{
+        await axios.get(`${url}/departments/${id}`,{withCredentials:true}).then((resp)=>{
+          if(resp.data.error){
+              setErrorMessage(resp.data.error)
+          }
+          
+          setDepartmentData(resp.data)
+          setDepForm(resp.data)
+          
+          // console.log(departmentData);
+      }).catch((err)=>{
+          setErrorMessage(err.message)
+      })
+      }
+
+      getData()
       
-        axios.get(`${url}/departments/${id}`,{withCredentials:true}).then((resp)=>{
-            if(resp.data.error){
-                setErrorMessage(resp.data.error)
-            }
-            
-            setDepartmentData(resp.data)
-            setDepForm(resp.data)
-            
-            // console.log(departmentData);
-        }).catch((err)=>{
-            setErrorMessage(err.message)
-        })
+        
     },[])
 
 
 
-    const editDepartment = (e)=>{
+    const editDepartment = async(e)=>{
       e.preventDefault()
-      axios.post(`${url}/departments/${id}`,depForm,{withCredentials:true}).then((resp)=>{
+      await axios.post(`${url}/departments/${id}`,depForm,{withCredentials:true}).then((resp)=>{
         if(resp.data.error){
             setErrorMessage(resp.data.error)
         }else{
@@ -86,9 +91,9 @@ function DepartmentDetail(props) {
       })
     }
 
-    const deleteDepartment = (e)=>{
+    const deleteDepartment = async(e)=>{
         e.preventDefault()
-        axios.get(`${url}/departments/delete/${id}`,{withCredentials:true}).then((resp)=>{
+        await axios.get(`${url}/departments/delete/${id}`,{withCredentials:true}).then((resp)=>{
           if(resp.data.error){
               setErrorMessage(resp.data.error)
           }

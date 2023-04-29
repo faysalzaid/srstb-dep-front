@@ -223,7 +223,7 @@ const searchHandler = async(search)=>{
         formData.append('postCode',emplForm.postCode)
         formData.append('nationality',emplForm.nationality)
 
-         axios.post(`${url}/employees`,formData,{withCredentials:true}).then((resp)=>{
+         await axios.post(`${url}/employees`,formData,{withCredentials:true}).then((resp)=>{
           // console.log('from server',resp.data);
           if(resp.data.error){
             setOpenError({open:true,message:`${resp.data.error}`})
@@ -266,8 +266,8 @@ useEffect(()=>{
 
 
 
-    const deleteEmployee = ()=>{
-      axios.get(`${url}/employees/delete/${isDeleteOpen.id}`).then((resp)=>{
+    const deleteEmployee = async()=>{
+      await axios.get(`${url}/employees/delete/${isDeleteOpen.id}`).then((resp)=>{
         if(resp.data.error){
             setErrorMessage(resp.data.error)
         }

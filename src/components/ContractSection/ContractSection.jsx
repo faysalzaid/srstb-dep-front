@@ -9,16 +9,19 @@ import { url } from 'config/urlConfig';
 function ContractSection({project,id}) {
   const [contracts,setContracts] = useState([])
 useEffect(()=>{
-  axios.get(`${url}/contract`,{withCredentials:true}).then((resp)=>{
-    if(resp.data.error){
-
-    }else{
-      // console.log(resp.data);
-      const data = resp.data.filter((dt)=>dt.ProjectId===id)
-      setContracts(data)
-     
-    }
-  })
+  const getData = async()=>{
+    await axios.get(`${url}/contract`,{withCredentials:true}).then((resp)=>{
+      if(resp.data.error){
+  
+      }else{
+        // console.log(resp.data);
+        const data = resp.data.filter((dt)=>dt.ProjectId===id)
+        setContracts(data)
+       
+      }
+    })
+  }
+  getData()
 },[id])
 
   return (

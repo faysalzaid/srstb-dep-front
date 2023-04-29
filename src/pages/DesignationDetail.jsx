@@ -49,19 +49,22 @@ function DesignationDetail(props) {
 
     
     useEffect(()=>{
-        axios.get(`${url}/designations/${id}`,{withCredentials:true}).then((resp)=>{
-            // console.log('designations',resp.data);
-            setDesignationData(resp.data)
-            setDestForm(resp.data)
-        })
+      const getData =async()=>{
+        await axios.get(`${url}/departments`,{withCredentials:true}).then((resp)=>{
+          // console.log(resp.data);
+          setDepartmentData(resp.data)
+      })
+
+        await axios.get(`${url}/designations/${id}`,{withCredentials:true}).then((resp)=>{
+        // console.log('designations',resp.data);
+        setDesignationData(resp.data)
+        setDestForm(resp.data)
+        
+    })
+      }
+        getData()
     },[])
 
-    useEffect(()=>{
-        axios.get(`${url}/departments`,{withCredentials:true}).then((resp)=>{
-            // console.log(resp.data);
-            setDepartmentData(resp.data)
-        })
-    },[])
 
 
     const updateDesignation = async(e)=>{
@@ -85,8 +88,8 @@ function DesignationDetail(props) {
 
     }
 
-    const deleteDesignation = ()=>{
-      axios.get(`${url}/designations/delete/${id}`,{withCredentials:true}).then((resp)=>{
+    const deleteDesignation = async()=>{
+      await axios.get(`${url}/designations/delete/${id}`,{withCredentials:true}).then((resp)=>{
         if(resp.data.error){
             setErrorMessage(resp.data.error)
         }

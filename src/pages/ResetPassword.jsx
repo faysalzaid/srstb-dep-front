@@ -48,11 +48,7 @@ const {id,token} = useParams()
 
   },[])
 
-  useEffect(()=>{
-    if(authState.state===true){
-      props.history.push('/app/dashboard')
-    }
-  },[])
+
 // console.log(`the id is ${id}. and the token is ${token}`);
   const handleResetPassword = async(e)=>{
     e.preventDefault()

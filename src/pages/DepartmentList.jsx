@@ -48,9 +48,13 @@ function DepartmentList(props) {
 
     
     useEffect(()=>{
-        axios.get(`${url}/departments`,{withCredentials:true}).then((resp)=>{
-            setDepartmentData(resp.data)
-        })
+      const getData = async()=>{
+        await axios.get(`${url}/departments`,{withCredentials:true}).then((resp)=>{
+          setDepartmentData(resp.data)
+      })
+      }
+      getData()
+        
     },[])
 
 

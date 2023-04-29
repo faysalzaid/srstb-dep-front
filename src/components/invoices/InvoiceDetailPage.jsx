@@ -63,28 +63,31 @@ const InvoiceDetailPage = () => {
 
     // console.log('data from app',authState);
       useEffect(()=>{
+        const getData = async()=>{
+          await axios.get(`${url}/projects`,{withCredentials:true}).then((resp)=>{
+            if(resp.data.error){
+              console.log(resp.data.error);
+            }else{
+              setProject(resp.data.projects)
+            }
+          })
+  
+          await axios.get(`${url}/invoice/${id}`,{withCredentials:true}).then((resp)=>{
+            if(resp.data.error){
+  
+            }else{
+              setInvoiceData(resp.data)
+          
+            }
+          })
+  
+  
+        await axios.get(`${url}/paymentmode`,{withCredentials:true}).then((resp)=>{
+          setMode(resp.data)
+         })
+        }
 
-        axios.get(`${url}/projects`,{withCredentials:true}).then((resp)=>{
-          if(resp.data.error){
-            console.log(resp.data.error);
-          }else{
-            setProject(resp.data.projects)
-          }
-        })
-
-        axios.get(`${url}/invoice/${id}`,{withCredentials:true}).then((resp)=>{
-          if(resp.data.error){
-
-          }else{
-            setInvoiceData(resp.data)
-        
-          }
-        })
-
-
-      axios.get(`${url}/paymentmode`,{withCredentials:true}).then((resp)=>{
-        setMode(resp.data)
-       })
+       getData()
 
 
       },[])

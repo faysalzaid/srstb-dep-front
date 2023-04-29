@@ -70,10 +70,15 @@ function Dashboard(props) {
 
 
 useEffect(()=>{
-  axios.get(`${url}/counts`,{withCredentials:true}).then((resp)=>{
-    const data = resp.data
-    setCountsData({ projectCount:data.projectsCount,bidCount:data.countBids,activeProjects:data.activeProjectsCount,completedProjects:data.completedProjects})
-  })
+  const getCounts = async()=>{
+    await axios.get(`${url}/counts`,{withCredentials:true}).then((resp)=>{
+      const data = resp.data
+      setCountsData({ projectCount:data.projectsCount,bidCount:data.countBids,activeProjects:data.activeProjectsCount,completedProjects:data.completedProjects})
+    })
+  }
+
+  getCounts()
+  
 },[])
 
   // pagination setup
