@@ -167,40 +167,43 @@ const PgList = () => {
   
     // console.log('data from app',authState);
       useEffect(()=>{
-      axios.get(`${url}/projects`,{withCredentials:true}).then((resp)=>{
-        if(resp.data.error){
-          console.log(resp.data.error);
-        }
-      setProject(resp.data.projects)
-      console.log(resp.data);
-  
-      })
-
-      axios.get(`${url}/counts`,{withCredentials:true}).then((resp)=>{
-        const data = resp.data
-        setCountsData({ projectCount:data.projectsCount,bidCount:data.countBids,activeProjects:data.activeProjectsCount,completedProjects:data.completedProjects})
-      })
-
-
-      axios.get(`${url}/users`,{withCredentials:true}).then((resp)=>{
-        if(resp.data.error){
-          
-        }else{
-          const data = resp.data.filter((usr)=>usr.role=="client")
-          setUsers(data)
+        const getData =async()=>{
+          await axios.get(`${url}/projects`,{withCredentials:true}).then((resp)=>{
+            if(resp.data.error){
+              console.log(resp.data.error);
+            }
+          setProject(resp.data.projects)
+          console.log(resp.data);
+      
+          })
     
+          await axios.get(`${url}/counts`,{withCredentials:true}).then((resp)=>{
+            const data = resp.data
+            setCountsData({ projectCount:data.projectsCount,bidCount:data.countBids,activeProjects:data.activeProjectsCount,completedProjects:data.completedProjects})
+          })
+    
+    
+          await axios.get(`${url}/users`,{withCredentials:true}).then((resp)=>{
+            if(resp.data.error){
+              
+            }else{
+              const data = resp.data.filter((usr)=>usr.role=="client")
+              setUsers(data)
+        
+            }
+          })
+    
+          await axios.get(`${url}/companies`,{withCredentials:true}).then((resp)=>{
+            if(resp.data.error){
+              
+            }else{
+              setCompanies(resp.data.company)
+              
+              
+            }
+          })
         }
-      })
-
-      axios.get(`${url}/companies`,{withCredentials:true}).then((resp)=>{
-        if(resp.data.error){
-          
-        }else{
-          setCompanies(resp.data.company)
-          
-          
-        }
-      })
+      getData()
   
   },[])
   

@@ -55,40 +55,46 @@ const [selectedBid,setSelectedBid] = useState([])
 
 
   useEffect(()=>{
-    axios.get(`${url}/projects/${id}`,{withCredentials:true}).then((resp)=>{
-      const data = resp.data
-      setFormData(
-        {
-          name: {value: data.name, error: "", optional: false},
-          description: {value: data.description, error: "", optional: false},
-          descriptionError: {value: "", error: "", optional: false},
-          status:  {value: data.status, error: "", optional: false},
-          starttime:  {value:data.starttime, error: "", optional: false},
-          endtime:  {value: data.endtime, error: "", optional: false},
-          percentage:{value:data.percentage,error:"",optional:false},
-          year:{value:data.year,error:"",option:false},
-          totalCost:{value:parseFloat(data.totalCost).toLocaleString()??0,error:"",option:false},
-          utilizedCost:{value:parseFloat(data.utilizedCost).toLocaleString()??0,error:"",option:false},
-          remainingCost:{value:parseFloat(data.remainingCost).toLocaleString()??0,error:"",option:false},
-          physicalPerformance:{value:data.physicalPerformance??0,error:"",option:false},
-          financialPerformance:{value:data.financialPerformance??0,error:"",option:false},
-          BidId:{value:data.BidId,error:"",option:false},
-          
-        }
-      );
-      setProjectData(resp.data)
 
+    const getData = async()=>{
+      await axios.get(`${url}/projects/${id}`,{withCredentials:true}).then((resp)=>{
+        const data = resp.data
+        setFormData(
+          {
+            name: {value: data.name, error: "", optional: false},
+            description: {value: data.description, error: "", optional: false},
+            descriptionError: {value: "", error: "", optional: false},
+            status:  {value: data.status, error: "", optional: false},
+            starttime:  {value:data.starttime, error: "", optional: false},
+            endtime:  {value: data.endtime, error: "", optional: false},
+            percentage:{value:data.percentage,error:"",optional:false},
+            year:{value:data.year,error:"",option:false},
+            totalCost:{value:parseFloat(data.totalCost).toLocaleString()??0,error:"",option:false},
+            utilizedCost:{value:parseFloat(data.utilizedCost).toLocaleString()??0,error:"",option:false},
+            remainingCost:{value:parseFloat(data.remainingCost).toLocaleString()??0,error:"",option:false},
+            physicalPerformance:{value:data.physicalPerformance??0,error:"",option:false},
+            financialPerformance:{value:data.financialPerformance??0,error:"",option:false},
+            BidId:{value:data.BidId,error:"",option:false},
+            
+          }
+        );
+        setProjectData(resp.data)
+  
+     
+      })
+  
+      await axios.get(`${url}/bids`,{withCredentials:true}).then((resp)=>{
+       
+        setSelectedBid(resp.data.bid)
+        // console.log(resp.data.bid);
+      })
+  
+    }
    
-    })
+
   },[id])
 
-  useEffect(()=>{
-    axios.get(`${url}/bids`,{withCredentials:true}).then((resp)=>{
-     
-      setSelectedBid(resp.data.bid)
-      // console.log(resp.data.bid);
-    })
-  },[])
+
 
   const [loading, setLoading] = useState(false);
   const statuses = [
@@ -157,7 +163,7 @@ const [selectedBid,setSelectedBid] = useState([])
 
       }
       console.log(request);
-      axios.post(`${url}/projects/${id}`,request,{withCredentials:true}).then((resp)=>{
+      await axios.post(`${url}/projects/${id}`,request,{withCredentials:true}).then((resp)=>{
         console.log('respdata',resp.data)
         if(!resp.data.error){
 

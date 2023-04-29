@@ -23,10 +23,10 @@ const ProjectUI = ({pr, setProfile,openDetail,setProjects,projects,setOpenSucces
       setAnchorEl(event.currentTarget);  
   };
 
-  const handleClose = (id) => {
+  const handleClose = async(id) => {
 
     if(id!==undefined){
-      axios.get(`${url}/projects/delete/${id}`,{withCredentials:true}).then((resp)=>{
+      await axios.get(`${url}/projects/delete/${id}`,{withCredentials:true}).then((resp)=>{
         let newPr = projects.filter((pr)=>pr.id!=id)
         setProjects(newPr)
         setOpenSuccess((prev)=>({open:true,message:'successfully Deleted'}))

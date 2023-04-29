@@ -3,6 +3,7 @@ import {useParams} from 'react-router-dom'
 import PageTitle from '../../components/Typography/PageTitle'
 import SectionTitle from '../../components/Typography/SectionTitle'
 import axios from 'axios'
+import getCookie from 'hooks/getCookie'
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import {
   Table,
@@ -27,6 +28,7 @@ import { AuthContext } from '../../hooks/authContext'
 import { url } from 'config/urlConfig'
 import { ErrorAlert, SuccessAlert } from "components/Alert";
 import useAuth from 'hooks/useAuth'
+import setCookie from 'hooks/setCookie'
 
 // make a copy of the data, for the second table
 
@@ -38,8 +40,8 @@ import useAuth from 'hooks/useAuth'
 
 function ProfilePage(props) {
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const {settings,authState,setAuthState} = useAuth(AuthContext)
-//   console.log(authState);
+  const {settings,authState,setAuthState} = useContext(AuthContext)
+  // console.log(authState);
   function openModal() {
     setIsModalOpen(true)
   }
@@ -63,6 +65,7 @@ function ProfilePage(props) {
     setIsDeleteOpen({open:true,id:id})
 }
 
+    const cookie = getCookie('accessToken');
 
 
 
@@ -76,9 +79,17 @@ function ProfilePage(props) {
     const [frontErrorMessage,setFrontErrorMessage] = useState('')
     const [showModal, setShowModal] = useState({show:false,id:""});
     const [users,setUsers] = useState([])
+    const [usersForm,setUsersForm] = useState({
+      id:authState.id,
+      name:authState.username,
+      email:authState.email,
+      image:authState.image,
+      role:authState.role,
+      password:""
+    })
 
     //ENDOF COMPANY DATA
-
+    let parseToken = JSON.parse(cookie)
     const [openSuccess, setOpenSuccess] = useState({ open: false, message: "" });
 
     const handleCloseSuccess = (event, reason) => {
@@ -111,37 +122,75 @@ function ProfilePage(props) {
         setCompanyFormData({name:response.data.name,location:response.data.location,UserId:response.data.UserId})
         // console.log(response.data);
         // console.log('this is from params',id);
+        await axios.get(`${url}/users`,{withCredentials:true}).then((resp)=>{
+          if(resp.data.error){
+    
+          }else{
+            const data = resp.data.filter((usr)=>usr.role=="client")
+            setUsers(data)
+          }
+        })
     }
 
-    axios.get(`${url}/users`,{withCredentials:true}).then((resp)=>{
-      if(resp.data.error){
-
-      }else{
-        const data = resp.data.filter((usr)=>usr.role=="client")
-        setUsers(data)
-      }
-    })
+  
     companyFetch()
+    
+    // console.log(parseToken.token);
   },[])
 
 
-  const updateCompany =async(e)=>{
+  const updateProfile =async(e)=>{
     e.preventDefault()
-    // console.log(e.data);
-    if(companyFormData.name==="" || companyFormData.location===""){
-      setErrorMessage('Please Provide all data')  
-    }else{
-      const response = await axios.post(`${url}/companies/${id}`,companyFormData,{withCredentials:true}).then((resp)=>{
+    const formData = new FormData();
+    formData.append("name", usersForm.name);
+    formData.append("email", usersForm.email);
+    formData.append("role", usersForm.role);
+    formData.append("password", usersForm.password);
+    formData.append("image",usersForm.image)
+    console.log(usersForm);
+    const response = await axios.post(`${url}/users/${authState.id}`,formData,{withCredentials:true}).then((resp)=>{
         if(resp.data.error){
-          setErrorMessage(resp.data.error)
+          setOpenError({open:true,message:`${resp.data.error}`})
         }else{
-          setCompanyData(resp.data)
+          // console.log(parseToken?.token);
+          // console.log(resp.data);
+          const newData = {
+          id: resp.data.id,
+          token: parseToken?.token,
+          username: resp.data.name,
+          email: resp.data.email,
+          image:resp.data.image,
+          role: resp.data.role,
+          state: true,
+          refreshToken: resp.data.refreshToken
+          }
+          const newCookie = JSON.stringify(newData)
+          setCookie('accessToken',newCookie)
+          setAuthState({ 
+            id:resp.data.id,
+            username:resp.data.name, 
+            email:resp.data.email,
+            image:resp.data.image, 
+            role:resp.data.role,
+            state:true,
+            refreshToken:resp.data.refreshToken 
+          })
+          setUsersForm({ 
+            id:resp.data.id,
+            name:resp.data.name,
+            image:resp.data.image,
+            email:resp.data.email,
+            role:resp.data.role,
+            password:""
+          })
+        
+          // console.log('passed the authstate');
           setOpenSuccess({open:true,message:"Successfully Added"})
           closeModal()
         }
       // console.log(companyFormData);
       })
-    }
+    
 
 }
 const deleteCompany =async()=>{
@@ -191,38 +240,46 @@ const deleteCompany =async()=>{
      
 
       <div>
-        <Button onClick={openModal} style={{backgroundColor:'green'}}>Update Data</Button>
+        <Button onClick={openModal} className="ml-1">Update Data</Button>
       </div>
       <Modal isOpen={isModalOpen} onClose={closeModal}>
-        <ModalHeader>Update Company Info</ModalHeader>
+        <ModalHeader>Update Profile Info</ModalHeader>
         <span style={{color:'red'}}>{errorMessage}</span>
         <ModalBody>
           
-        <form onSubmit={e=>{updateCompany(e)}}>
+        <form onSubmit={e=>{updateProfile(e)}} encType="multipart/form-data">
         <Label>
-          <span>Name</span>
-            <Input type="text" className="mt-1" name="name" placeholder="Company Name" value={companyFormData.name} autoComplete='off' onChange={e=>setCompanyFormData({...companyFormData, name:e.target.value})}/>
+          <span>Username</span>
+            <Input type="text" className="mt-1" name="name" placeholder="Company Name" value={usersForm.name} autoComplete='off' onChange={e=>setUsersForm({...usersForm, name:e.target.value})}/>
         </Label>
         <Label>
-          <span>Location</span>
-          <Input type="text" className="mt-1" name="location" placeholder="Jijiga"  value={companyFormData.location} onChange={e=>setCompanyFormData({...companyFormData,location:e.target.value})}/>
+          <span>email</span>
+          <Input type="text" className="mt-1" name="email" placeholder="Jijiga"  value={usersForm.email} onChange={e=>setUsersForm({...usersForm,email:e.target.value})}/>
         </Label>
+
+       
+        <Label className="mt-4">
+                <span>Update Image</span>
+                <input
+                  type="file"
+                  name="image"
+                  onChange={(e) =>
+                    setUsersForm({ ...usersForm, image:e.target.files[0] })
+                  }
+                  className="block w-full text-sm focus:outline-none dark:text-gray-300 form-input leading-5 focus:border-purple-400 dark:border-gray-600 focus:shadow-outline-purple dark:focus:border-gray-600 dark:focus:shadow-outline-gray dark:bg-gray-700 mt-1"
+                />
+              </Label>
+
         <Label>
-            <span>Customer</span>
-            <Select
-              className="mt-1"
-              name="contractType"
-              value={companyFormData.UserId}
-              onChange={(e)=>setCompanyFormData({...companyFormData,UserId:e.target.value})}
-              required
-            >
-              <option >Select a Customer type</option>
-              {users.map((usr,i)=>(
-                <option key={i} value={usr.id}>{usr.name}</option>
-              ))}
-              
-            </Select>
-          </Label>
+          <span>
+                  Password{" "}
+                  <small style={{ color: "red" }}>
+                    (write new password if you want to update it )
+                  </small>
+                </span>
+          <Input type="text" className="mt-1" name="password"  value={usersForm.password} onChange={e=>setUsersForm({...usersForm,password:e.target.value})}/>
+        </Label>
+       
 
         <Button className="mt-4" type="submit">Save</Button>
         </form>
@@ -261,14 +318,14 @@ const deleteCompany =async()=>{
 
                 {/* Profile Detail */}
 
-<div className="bg-gray-50  flex flex-col justify-center py-12 sm:px-9 lg:px-8">
+<div className="bg-gray-50 flex flex-col justify-center py-12 sm:px-9 lg:px-9">
   <div className="w-full">
     <div className="bg-white shadow-md rounded-md overflow-hidden">
       <div className="px-6 py-8">
         <div className="flex justify-between items-center">
           <div className=" items-center">
             <img src={authState.image} alt="Company Logo" style={{width:200}} className=" mr-2" />
-            <h2 className="text-lg font-medium text-gray-900">{'contracts.subject'}</h2>
+            <h2 className="text-lg font-medium text-gray-900">Profile Info</h2>
           </div>
          
         </div>
@@ -286,7 +343,7 @@ const deleteCompany =async()=>{
           </div>
         </div>
         <div className="mt-6">
-          <h3 className="text-md font-medium text-gray-900">Project Information</h3>
+          <h3 className="text-md font-medium text-gray-900">Role Information</h3>
           <div className="mt-2">
             <div className="flex">
               <p className="text-sm font-medium text-gray-500">Role Info:</p>
@@ -295,20 +352,10 @@ const deleteCompany =async()=>{
          
           </div>
         </div>
-        <div className="mt-6">
-          <h3 className="text-md font-medium text-gray-900"> Status</h3>
-          <div className="mt-2">
-            
-            <div className="flex mt-2">
-              <p className="text-sm font-medium text-gray-500">Status:</p>
-              <p className="ml-2 text-sm font-medium text-gray-900"><span className='text-teal-500 dark:text-teal-100'>{authState.status}</span></p>
               </div>
-              </div>
-              </div>
-              </div>
-              </div>
-              </div>
-              </div>
+            </div>
+          </div>
+        </div>
               
 
 

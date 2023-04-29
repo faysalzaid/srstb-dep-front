@@ -10,8 +10,8 @@ const Charts = lazy(() =>
 const Page404 = lazy(() =>
     import ('../pages/404'))
 
-// const ProfilePage = lazy(() =>
-//     import ('../components/Profile/Profile'))
+const ProfilePage = lazy(() =>
+    import ('../components/Profile/Profile'))
 
 
 const Companylist = lazy(() =>
@@ -335,11 +335,11 @@ const routes = [{
         roles: ['admin', 'roadquality']
     },
 
-    // {
-    //     path: "/profile",
-    //     component: ProfilePage,
-    //     roles: ['admin', 'roadquality']
-    // },
+    {
+        path: "/profile",
+        component: ProfilePage,
+        roles: ['admin', 'roadquality']
+    },
 ]
 
 export default routes

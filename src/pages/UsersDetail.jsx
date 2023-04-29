@@ -86,6 +86,7 @@ function UsersDetail(props) {
     formData.append("role", data.role);
     formData.append("password", data.password);
     formData.append("image", userForm.image);
+    console.log(data.password);
     await axios.post(`${url}/users/${id}`, formData,{withCredentials:true}).then((resp) => {
       // console.log();
       if (resp.data.error) {

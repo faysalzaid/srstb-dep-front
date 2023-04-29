@@ -44,8 +44,8 @@ const Projects = () => {
 
   let startProjects  = [];
 
-  const loadProjects = () => {
-     const resp = axios.get(`${url}/projects`,{withCredentials: true}).then((dt)=>{
+  const loadProjects =async() => {
+     const resp = await axios.get(`${url}/projects`,{withCredentials: true}).then((dt)=>{
       let prjs = [];
       dt?.data?.projects.map((pr)=>{
           let p = {};

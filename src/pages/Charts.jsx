@@ -29,14 +29,17 @@ const [projects,setProject] = useState([])
 
 
 useEffect(()=>{
-axios.get(`${url}/projects`,{withCredentials:true}).then((resp)=>{
-  if(resp.data.error){
-    console.log(resp.data.error);
+  const getData =async()=>{
+    await axios.get(`${url}/projects`,{withCredentials:true}).then((resp)=>{
+      if(resp.data.error){
+        console.log(resp.data.error);
+      }
+    setProject(resp.data.projects)
+    
+    
+    })
   }
-setProject(resp.data.projects)
 
-
-})
 
 
 },[])

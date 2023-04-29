@@ -102,7 +102,7 @@ export const AuthContextProvider = withRouter((props) => {
         const userData ={
           id: data.id,
           token: data.token,
-          username: data.username,
+          username: data.name,
           email: data.email,
           image:data.image,
           role: data.role,
@@ -112,7 +112,7 @@ export const AuthContextProvider = withRouter((props) => {
         };
         const stringFied = JSON.stringify(userData);
         setCookie('accessToken',stringFied);
-        setAuthState({ id: data?.id, username: data?.username,email: data?.email,image:data?.image,role:data?.role,state:true,refreshToken:data?.refreshToken });
+        setAuthState({ id: data?.id, username: data?.name,email: data?.email,image:data?.image,role:data?.role,state:true,refreshToken:data?.refreshToken });
       }
     } catch (error) {
       console.error(error);
@@ -141,7 +141,7 @@ useEffect(()=>{
             }else{
               setAuthState({ id:userData.id,username:userData.username, email:userData.email,image:userData.image, role:userData.role,state:true,refreshToken:userData.refreshToken })
               if(props.history.length>0){
-                  console.log(props.history);
+                  // console.log(props.history);
                   if(history.location.pathname==='/login'){
                     history.goBack()
                   }

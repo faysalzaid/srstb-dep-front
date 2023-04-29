@@ -81,7 +81,7 @@ let bidsData = Bid.Bids
     setOpen({show: false, id: 0});
   };
 
-  const selectBid = (id) => {
+  const selectBid = async(id) => {
      let bds = bidsData;
      bds = bidsData.map((bd)=>bd.id===id ? bd.fullname:"");
      setSelectedWinner(bds);
@@ -101,9 +101,9 @@ let bidsData = Bid.Bids
         BidId:id,
         engineer:Bid.engineer
     }
-    console.log(request);
+    // console.log(request);
 
-    axios.post(`${url}/projects/${Bid.id}`,request,{withCredentials:true}).then((resp)=>{
+    await axios.post(`${url}/projects/${Bid.id}`,request,{withCredentials:true}).then((resp)=>{
       
         // setProject(resp.data)
         let data = resp.data

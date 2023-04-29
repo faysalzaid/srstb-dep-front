@@ -155,9 +155,26 @@ function Header(props) {
           
           </li>
           {/* <!-- Profile menu --> */}
-          <li className="relative">
+          <li className="relative flex">
+          <Link to={'/app/profile'}>
             <button
               className="rounded-full focus:shadow-outline-purple focus:outline-none text-xs px-0 py-2"
+              // onClick={handleProfileClick}
+              aria-label=""
+              // aria-hidden="true"
+              aria-haspopup="true"
+            >
+              <Avatar
+                className="align-middle"
+                src={authState.image}
+                alt=""
+                aria-hidden="true"
+              />
+            </button>
+            </Link>
+
+            <button
+              className="ml-4 rounded-full focus:shadow-outline-purple focus:outline-none text-xs px-0 py-2"
               onClick={handleProfileClick}
               aria-label=""
               // aria-hidden="true"
@@ -168,32 +185,13 @@ function Header(props) {
                 aria-hidden="true"
                 onClick={handleLogout}
               />
+
+              
             </button>
-            <Dropdown
-              align="right"
-              isOpen={isProfileMenuOpen}
-              onClose={() => setIsProfileMenuOpen(false)}
-            >
-              <DropdownItem tag="a" href="#">
-                <OutlinePersonIcon
-                  className="w-4 h-4 mr-3"
-                  aria-hidden="true"
-                />
-                <span>Profile</span>
-              </DropdownItem>
-              <DropdownItem tag="a" href="#">
-                <OutlineCogIcon className="w-4 h-4 mr-3" aria-hidden="true" />
-                <span>Settings</span>
-              </DropdownItem>
-              <DropdownItem onClick={handleLogout}>
-                <OutlineLogoutIcon
-                  className="w-4 h-4 mr-3"
-                  aria-hidden="true"
-                />
-                <span>Log out</span>
-              </DropdownItem>
-            </Dropdown>
+
+            
           </li>
+          
         </ul>
       </div>
     </header>

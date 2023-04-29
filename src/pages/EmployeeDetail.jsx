@@ -187,7 +187,7 @@ function EmployeeDetail(props) {
         formData.append('birthday',emplForm.birthday)
         formData.append('postCode',emplForm.postCode)
         formData.append('nationality',emplForm.nationality)
-        console.log(formData);
+        // console.log(formData);
          await axios.post(`${url}/employees/${id}`,formData,{withCredentials:true}).then((resp)=>{
           // console.log('from server',resp.data);
           if(resp.data.error){

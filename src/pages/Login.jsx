@@ -66,7 +66,7 @@ const onSubmit = async(data)=>{
         const userData ={
           id:data.id,
           token: data.token,
-          username:data.username,
+          username:data.name,
           email: data.email,
           image:data.image,
           email:data.email,
@@ -75,9 +75,9 @@ const onSubmit = async(data)=>{
           refreshToken:data.refreshToken
           // Add other properties as needed
         }
-        const stringFied = JSON.stringify(userData?userData:undefined)
+          const stringFied = JSON.stringify(userData?userData:undefined)
           setCookie('accessToken',stringFied)
-          setAuthState({id:data.id,username:data.username,email:data.email,image:data.image,role:data.role,state:true,refreshToken:data.refreshToken})
+          setAuthState({id:data.id,username:data.name,email:data.email,image:data.image,role:data.role,state:true,refreshToken:data.refreshToken})
           setOpenSuccess({open:true,message:"Logged In Successfully"})
          setTimeout(() => {
           props.history.push('/app/dashboard')

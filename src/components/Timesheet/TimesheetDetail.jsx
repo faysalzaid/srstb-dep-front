@@ -185,8 +185,8 @@ const TimesheetDetail = (props) => {
 
 
   // Delete row
-  const handleDelete = ()=>{
-    axios.get(`${url}/timesheet/delete/${id}`,{withCredentials:true}).then((resp)=>{
+  const handleDelete = async()=>{
+   await axios.get(`${url}/timesheet/delete/${id}`,{withCredentials:true}).then((resp)=>{
         const data = LeaveData.filter((dt)=>dt.id!==isDeleteOpen.id)
         setLeaveData(data)
         setOpenSuccess({open:true,message:"deleted Successfully"})

@@ -31,7 +31,7 @@ function ForgotPassword(props) {
       email:email.email
     }
     console.log('the request',request);
-    axios.post(`${url}/users/try/forgotpassword`,request).then((resp)=>{
+    await axios.post(`${url}/users/try/forgotpassword`,request).then((resp)=>{
       // console.log('The main resp',resp.data);
       if(resp.data.error){
         console.log(resp.data);

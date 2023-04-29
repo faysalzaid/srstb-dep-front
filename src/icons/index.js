@@ -45,7 +45,7 @@ import {
     FaSlideshare,
     FaHandsHelping,
     FaUserClock,
-    FaRoute
+    FaRoute,FaUserTie
 } from 'react-icons/fa';
 import { BsCapsulePill } from 'react-icons/bs';
 
@@ -96,5 +96,6 @@ export {
     FaHandsHelping,
     FaUserClock,
     BsFillGearFill,
-    FaRoute
+    FaRoute,
+    FaUserTie
 }

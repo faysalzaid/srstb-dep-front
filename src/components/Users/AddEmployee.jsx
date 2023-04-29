@@ -59,47 +59,55 @@ const AddEmployee = ({open, handleClose, user,setOpenError,setOpenSuccess}) => {
   
   useEffect(()=>{
 
-    const myAbortController = new AbortController();
+    const getData = async()=>{
+
+        const myAbortController = new AbortController();
 
 
-    let isMounted = true
-    if(isMounted){
+        let isMounted = true
+        if(isMounted){
+            
+            
         
+            await axios.get(`${url}/departments`,{withCredentials:true}).then((resp)=>{
+                if(!resp?.data.error){
+                    setDdata(resp?.data)
+                }else{
+                    setDdata([])
+                }
+            })
         
-    
-        axios.get(`${url}/departments`,{withCredentials:true}).then((resp)=>{
-            if(!resp?.data.error){
-                setDdata(resp?.data)
-            }else{
-                setDdata([])
-            }
-        })
-    
-        axios.get(`${url}/designations`,{withCredentials:true}).then((resp)=>{
-            if(!resp.data.error){
-                setDesData(resp?.data)
-            }else{
-                setDesData([])
-            }
-    
+            await axios.get(`${url}/designations`,{withCredentials:true}).then((resp)=>{
+                if(!resp.data.error){
+                    setDesData(resp?.data)
+                }else{
+                    setDesData([])
+                }
         
-        })
-        axios.get(`${url}/area`,{withCredentials:true}).then((resp)=>{
-            if(!resp.data.error){
-                setAreaData(resp?.data.area)
-            }else{
-                setAreaData([])
-            }
-        })
+            
+            })
+            await axios.get(`${url}/area`,{withCredentials:true}).then((resp)=>{
+                if(!resp.data.error){
+                    setAreaData(resp?.data.area)
+                }else{
+                    setAreaData([])
+                }
+            })
+    
+            
+        }
+    
+    
+        return ()=>{
+            // myAbortController.abort()
+            isMounted=false
+        }
+       
 
-        
     }
 
+    getData()
 
-    return ()=>{
-        // myAbortController.abort()
-        isMounted=false
-    }
    
 
  

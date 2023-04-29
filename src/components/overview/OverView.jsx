@@ -14,15 +14,18 @@ function OverView({project,setProject,companyData,id}) {
   const [invoiceData, setInvoiceData] = useState({total:"",totalPaid:"",amountDue:"",id:""});
 
   useEffect(()=>{
-    axios.get(`${url}/invoice`,{withCredentials:true}).then((resp)=>{
-      if(resp.data.error){
-
-      }else{
-        const data = resp.data.filter((inv)=>inv.ProjectId===id)
-        setInvoiceData(data[0])
-       
-      }
-    })
+    const getData = async()=>{
+      await axios.get(`${url}/invoice`,{withCredentials:true}).then((resp)=>{
+        if(resp.data.error){
+  
+        }else{
+          const data = resp.data.filter((inv)=>inv.ProjectId===id)
+          setInvoiceData(data[0])
+         
+        }
+      })
+    }
+    
   },[])
 
 

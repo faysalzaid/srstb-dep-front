@@ -52,13 +52,18 @@ const [users,setUsers ]= useState([])
     
   });
   React.useEffect(()=>{
-    axios.get(`${url}/users`,{withCredentials:true}).then((resp)=>{
-      if(resp.data.error){
+    const getData = async()=>{
+      await axios.get(`${url}/users`,{withCredentials:true}).then((resp)=>{
+        if(resp.data.error){
+  
+        }else{
+          setUsers(resp.data)
+        }
+      })
+    }
 
-      }else{
-        setUsers(resp.data)
-      }
-    })
+    getData()
+   
   },[])
   const [loading, setLoading] = useState(false);
   const userNames=users.map((usr)=>({id:usr.id,name:usr.name}))

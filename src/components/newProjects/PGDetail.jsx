@@ -285,7 +285,7 @@ navWrapper.classList.remove('active')
 
 
 
-  const handleEdit = (e) => {
+  const handleEdit = async(e) => {
     
     e.preventDefault()
     // Implement your own edit logic here
@@ -307,7 +307,7 @@ navWrapper.classList.remove('active')
     }
     // console.log(formValues.totalCost.toLocaleString('en-US',{maximumFractionDigits:2}));
 
-    axios.post(`${url}/projects/${id}`,request,{withCredentials:true}).then((resp)=>{
+    await axios.post(`${url}/projects/${id}`,request,{withCredentials:true}).then((resp)=>{
         if(resp.data.error){
           setOpenError({open:true,message:`${resp.data.error}`})
         }else{
