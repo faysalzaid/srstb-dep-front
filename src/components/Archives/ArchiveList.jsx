@@ -14,7 +14,7 @@ import RoundIcon from '../RoundIcon'
 import response from '../../utils/demo/tableData'
 import { PlusCircleIcon } from "@heroicons/react/outline";
 import { DocumentAddIcon } from '@heroicons/react/outline';
-
+import { BsFillFileEarmarkArrowDownFill } from "react-icons/bs";
 import { ErrorAlert, SuccessAlert } from "components/Alert";
 
 
@@ -44,27 +44,29 @@ import { Link, withRouter } from 'react-router-dom'
 import { url } from 'config/urlConfig'
 import axios from 'axios'
 import TitleChange from 'components/Title/Title'
+import { FilledInput } from '@mui/material'
+import { FaArchive, FaChevronDown, FaFile, FaFileArchive, FaRegFileArchive, FaTrash } from 'react-icons/fa'
 
 
 
 
-const CandidateList = () => {
+const ArchivesList = () => {
     const {authState,settings} = useContext(AuthContext)
     const [searchResult,setSearchResult] = useState([])
     const [searchTerm,setSearchTerm] = useState("")
     const [fetchedResult,setFetchedResult] = useState([])
     const [countsData,setCountsData] = useState({ projectCount:"",bidCount:"",activeProjects:"",completedProjects:""})
-    const [employeeData,setEmployeeData] = useState([])
     const [departmentData,setDepartmentData] = useState([])
-    const [candidateData,setCandidateData] = useState([])
-    const [candidateForm,setCandidateForm] = useState({date:"",name:"",
-        qualification:"",
-        yearsOfExperience:"",
-        organizationWorkedBefore:"",
-        address:"",
-        location:"",
-        vacancy:"",
-        status:""
+    const [archiveData,setArchiveData] = useState([])
+    const [depFilter,setDepFilter] = useState(0)
+    const [dateFilter,setDateFilter] = useState(0)
+    const [ allData,setAllData ]=  useState([])
+    const [holdData,setHoldData] = useState([])
+    const [archiveForm,setArchiveForm] = useState({
+        date:"",
+        filename:"",
+        DepartmentId:"",
+        fileUrl:""
 
     })
 
@@ -99,8 +101,14 @@ const CandidateList = () => {
 
       useEffect(()=>{
         const getData=async()=>{
-            await axios.get(`${url}/candidates`,{withCredentials:true}).then((resp)=>{
-                setCandidateData(resp.data)
+            await axios.get(`${url}/archive`,{withCredentials:true}).then((resp)=>{
+              if(resp.data.error){
+                setOpenError({open:true,message:`${resp.data.error}`})
+              }else{
+                setArchiveData(resp.data)
+                setHoldData(resp.data)
+                setAllData(resp.data)
+              }
              
             }).catch((error)=>{
                 if (error.response && error.response.data && error.response.data.error) {
@@ -110,15 +118,6 @@ const CandidateList = () => {
                   }
             })
           
-            await axios.get(`${url}/employees`,{withCredentials:true}).then((resp)=>{
-                  setEmployeeData(resp.data)
-              }).catch((error)=>{
-                if (error.response && error.response.data && error.response.data.error) {
-                    setOpenError({open:true,message:`${error.response.data.error}`});
-                  } else {
-                    setOpenError({open:true,message:"An unknown error occurred"});
-                  }
-            })
             await axios.get(`${url}/departments`,{withCredentials:true}).then((resp)=>{
                 setDepartmentData(resp.data)
             }).catch((error)=>{
@@ -153,14 +152,19 @@ const CandidateList = () => {
     
       const handleSubmit = async(e) => {
         e.preventDefault();
+       console.log(archiveForm);
+       const formData = new FormData()
+       formData.append('filename',archiveForm.filename)
+       formData.append('fileUrl',archiveForm.fileUrl)
+       formData.append('date',archiveForm.date)
+       formData.append('DepartmentId',archiveForm.DepartmentId)
        
-
-        await axios.post(`${url}/candidates`,candidateForm,{withCredentials:true}).then((resp)=>{
+        await axios.post(`${url}/archive`,formData,{withCredentials:true}).then((resp)=>{
           if(resp.data.error){
             setOpenError({open:true,message:`${resp.data.error}`})
           }else{
             // console.log(resp.data);
-            setCandidateData((prev)=>[...prev,resp.data])
+            setArchiveData((prev)=>[...prev,resp.data])
             setOpenSuccess({open:true,message:"Successfully Added"})
             closeModal();   
           }
@@ -178,20 +182,20 @@ const CandidateList = () => {
 
       
       useEffect(()=>{
-        setFetchedResult(searchTerm.length<1?candidateData:searchResult)
-      },[candidateData,searchTerm])
+        setFetchedResult(searchTerm.length<1?archiveData:searchResult)
+      },[archiveData,searchTerm])
   
   
     const searchHandler = async(search)=>{
       setSearchTerm(search)
       if(search!==0){
-        const newPayroll = candidateData?.filter((empl)=>{
+        const newPayroll = archiveData?.filter((empl)=>{
           return Object.values(empl).join(" ").toLowerCase().includes(search.toLowerCase())
         })
         // console.log(newEmployeeList);
         setSearchResult(newPayroll)
       }else{
-        setSearchResult(candidateData)
+        setSearchResult(archiveData)
       }
     }
 
@@ -214,11 +218,16 @@ const CandidateList = () => {
 
   // Delete row
   const handleDelete = async()=>{
-    await axios.delete(`${url}/candidates/${isDeleteOpen.id}`,{withCredentials:true}).then((resp)=>{
-        const data = candidateData.filter((dt)=>dt.id!==isDeleteOpen.id)
-        setCandidateData(data)
+    await axios.delete(`${url}/archive/${isDeleteOpen.id}`,{withCredentials:true}).then((resp)=>{
+      if(resp.data.error){  
+        setOpenError({open:true,message:`${resp.data.error}`})
+      }else{
+        const data = archiveData.filter((dt)=>dt.id!==isDeleteOpen.id)
+        setArchiveData(data)
         setOpenSuccess({open:true,message:"deleted Successfully"})
         closeDelete()
+
+      }
         
     }).catch((error)=>{
         if (error.response && error.response.data && error.response.data.error) {
@@ -231,11 +240,38 @@ const CandidateList = () => {
 
 
 
+  const filterByDep = async()=>{
+    if(depFilter==0){
+      // console.log(depFilter);
+      setArchiveData(allData)
+    }else{
+      // console.log('else part',depFilter);
+      let newData = holdData.filter((ar)=>ar.DepartmentId===depFilter)
+      setArchiveData(newData)
+    }
+  }
+
+
+  const filterByDate = async()=>{
+    if(depFilter===0){
+      // console.log('dep is 0');
+      let newData = holdData.filter((ar)=>ar.date===dateFilter)
+      setArchiveData(newData)
+    }else{
+      let newData = archiveData.filter((ar)=>ar.date===dateFilter)
+      setArchiveData(newData)
+    }
+
+
+  }
+
+
+
   
     return (
       <>
-        <TitleChange name={`Candidates | ${settings.name}`} />
-        <PageTitle>Candidates</PageTitle>
+        <TitleChange name={`Archives | ${settings.name}`} />
+        <PageTitle>Archives</PageTitle>
         <ErrorAlert
         open={openError.open}
         handleClose={handleCloseError}
@@ -249,6 +285,22 @@ const CandidateList = () => {
         horizontal="right"
       />
 
+
+
+ {/* Delete Confirm section */}
+        <Modal isOpen={isDeleteOpen.open} onClose={closeDelete}>
+                  <ModalHeader>Confirm Action</ModalHeader>
+                  <ModalBody>
+                    <p>Are you sure you want to perform this action?</p>
+                  </ModalBody>
+                  <ModalFooter>
+                    <button className="px-4 py-2 text-white bg-red-500 rounded-md hover:bg-red-600" onClick={handleDelete}>
+                      Confirm
+                    </button>
+                  </ModalFooter>
+              </Modal>
+        {/* End of delete Section */}
+      
       {/* Search section */}
         <div className='mb-5'>
         <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
@@ -320,16 +372,43 @@ const CandidateList = () => {
       </Modal>
 
         {/* End of delete Section */}
-
-        <Button onClick={openModal}>New Candidate</Button>
+        
+        <Button className="items-center" size="small" onClick={openModal}>New File</Button>
   
+
+          {/* Data section */}
+          <h2 className="text-lg font-medium m-2">Filter</h2>
+       <div className="flex relative inline-flex">
+        <select onChange={(e)=>setDepFilter(e.target.value)} className="flex-2 mt-1 w-48 h-10 pl-3 pr-8 bg-white border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+          <option value={0}>All Departments</option>
+          {departmentData?.map((pr)=> <option value={pr.id} key={pr.id}>{pr.name}</option>)}
+         
+        </select>
+        <div className="absolute inset-y-0 right-0 flex items-center px-2">
+          <FaChevronDown className="text-gray-400" />
+        </div>
+      </div>
+      <Button size="small" onClick={()=>filterByDep()} className="ml-3 mr-2 text-white py-2 px-4 rounded-md shadow-sm  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" disabled={depFilter===0?true:false}>
+        Generate
+      </Button>
+
+      <div className=" flex relative inline-flex">
+        <input type='date' onChange={(e)=>setDateFilter(e.target.value)} className="flex-2 mt-1 w-48 h-10 pl-3 pr-8 bg-white border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
+        <div className="absolute inset-y-0 right-0 flex items-center px-2">
+        </div>
+      </div>
+      <Button size="small" onClick={()=>filterByDate()} className="ml-3 text-white py-2 px-4 rounded-md shadow-sm  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" disabled={dateFilter===0?true:false}>
+        Generate
+      </Button>
       
+          {/* End of data section */}
+
         </TableContainer>
 
         <Modal isOpen={isOpen} onClose={closeModal}>
-      <ModalHeader>Register Candidate</ModalHeader>
+      <ModalHeader>Register File</ModalHeader>
       <ModalBody>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} encType="multipart/form-data">
         <div className="grid grid-cols-2 gap-4">
           
           <Label>
@@ -338,109 +417,47 @@ const CandidateList = () => {
               type="date"
               className="mt-1"
               name="date"
-              onChange={(e)=>setCandidateForm({...candidateForm,date:e.target.value})}
+              onChange={(e)=>setArchiveForm({...archiveForm,date:e.target.value})}
               required
             />
           </Label>
 
           <Label>
-            <span>Full Name</span>
+            <span>File Name</span>
             <Input
             //   type="number"
               className="mt-1"
               name="name"
-              onChange={(e)=>setCandidateForm({...candidateForm,name:e.target.value})}
+              onChange={(e)=>setArchiveForm({...archiveForm,filename:e.target.value})}
               required
             />
           </Label>
 
 
           <Label>
-            <span>status</span>
+            <span>Department</span>
             <Select
               className="mt-1"
               name="status"
               // value={formValues.ProjectId}
-              onChange={(e)=>setCandidateForm({...candidateForm,status:e.target.value})}
+              onChange={(e)=>setArchiveForm({...archiveForm,DepartmentId:e.target.value})}
               required
             >
-              <option value="" >Status</option>
-          
-                <option>pending</option>
-                <option>shortlisted</option>
-                <option>selected</option>
-                <option>rejected</option>
+              <option value="" >Choose Department</option>
+                {departmentData.map((dep)=> <option key={dep.id} value={dep.id}>{dep.name}</option>)}
+               
+              
               
             </Select>
           </Label>
 
-
           <Label>
-            <span>Qualification</span>
-            <Input
-            // type="number"
-              className="mt-1"
-              name="qualification"
-              onChange={(e)=>setCandidateForm({...candidateForm,qualification:e.target.value})}
-              required
-            />
+            <span>File</span>
+              <Input type="file" className="mt-1" name="performa" onChange={(e)=>setArchiveForm({...archiveForm,fileUrl:e.target.files[0]})} required/>
           </Label>
 
-          <Label>
-            <span>Years Of Experience</span>
-            <Input
-            type="number"
-              className="mt-1"
-              name="yearsOfExperience"
-              onChange={(e)=>setCandidateForm({...candidateForm,yearsOfExperience:e.target.value})}
-              required
-            />
-          </Label>
-
-          <Label>
-            <span>Organization Worked Before</span>
-            <Input
-            // type="number"
-              className="mt-1"
-              name="organizationWorkedBefore"
-              onChange={(e)=>setCandidateForm({...candidateForm,organizationWorkedBefore:e.target.value})}
-              required
-            />
-          </Label>
-
-          <Label>
-            <span>Adress</span>
-            <Input
-            // type="number"
-              className="mt-1"
-              name="address"
-              onChange={(e)=>setCandidateForm({...candidateForm,address:e.target.value})}
-              required
-            />
-          </Label>
-
-          <Label>
-            <span>Location</span>
-            <Input
-            // type="number"
-              className="mt-1"
-              name="location"
-              onChange={(e)=>setCandidateForm({...candidateForm,location:e.target.value})}
-              required
-            />
-          </Label>
-
-          <Label>
-            <span>Vacancy</span>
-            <Input
-            // type="number"
-              className="mt-1"
-              name="vacancy"
-              onChange={(e)=>setCandidateForm({...candidateForm,vacancy:e.target.value})}
-              required
-            />
-          </Label>
-
+       
+  
 
 
         </div>
@@ -449,8 +466,8 @@ const CandidateList = () => {
         <Button className="mt-6" type="submit">Submit</Button>
         </div>
            <div className=" mt-2 block  sm:hidden">
-            <Button block size="large">
-              Accept
+            <Button block size="large" type="submit">
+              Submit
             </Button>
           </div>
       
@@ -477,56 +494,34 @@ const CandidateList = () => {
     </Modal>
 
 
+    <div className="bg-gray-50 grid grid-cols-3 gap-4 mt-4">
+
   
-        
+  {fetchedResult.map((ar)=>
+  
+  <div className="flex flex-col items-left" key={ar.id}>
+    <div className="p-4 rounded-lg" style={{background:`${ar.bcolor}`,opacity:0.6}}>
+      <i className="ri-file-line text-3xl" style={{color:`${ar.color}`}}>
+        <BsFillFileEarmarkArrowDownFill/>
+      </i>
+      <FaTrash className='ml-auto text-red-900 text-xl mt-2' onClick={()=>openDelete(ar.id)}/>
+      
+    </div>
+    <p className="m-2 text-sm font-medium text-gray-900" >{ar.filename}</p>
+  </div>
+  
+  )}
+
+    <div className='inline-block align-baseline '>
+    {archiveData.length==0&&<h2 className='font-bold'>No Archive Data</h2>}
+    </div>
 
 
-        <TableContainer className="bg-white rounded-lg shadow-lg">
-      <Table>
-        <TableHeader>
-          <TableRow>
-          <TableCell className="font-semibold">Date</TableCell>
-            <TableCell className="font-semibold">Full Name</TableCell>
-            <TableCell className="font-semibold">Qualification</TableCell>
-            <TableCell className="font-semibold">Experience(Years)</TableCell>
-            <TableCell className="font-semibold">Worked Before</TableCell>
-            <TableCell className="font-semibold">Address</TableCell>
-            <TableCell className="font-semibold">Location</TableCell>
-            <TableCell className="font-semibold">Vacancy</TableCell>
-            <TableCell className="font-semibold">Status</TableCell>
-            <TableCell className="font-semibold text-center">Actions</TableCell>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {fetchedResult?fetchedResult.map((row, i) => (
-            <Fragment key={i}>
-              <TableRow>
-                
-                <TableCell><span className="text-sm font-semibold">{row.date}</span></TableCell>
-                <TableCell><span className="text-sm font-semibold">{row.name}</span></TableCell>
-                <TableCell><span className="text-sm font-semibold">{row.qualification}</span></TableCell>
-                <TableCell><span className="text-sm font-semibold">{row.yearsOfExperience}</span></TableCell>
-                <TableCell><span className="text-sm font-semibold">{row.organizationWorkedBefore}</span></TableCell>
-                <TableCell><span className="text-sm font-semibold">{row.address}</span></TableCell>
-                <TableCell><span className="text-sm font-semibold">{row.location}</span></TableCell>
-                <TableCell><span className="text-sm font-semibold">{row.vacancy}</span></TableCell>
-                <TableCell><span className="text-sm font-semibold">{row.status}</span></TableCell>
-                <TableCell className="flex justify-center space-x-2">
-                  <Link to={`/app/candidates/${row.id}`}>
-                  <Button layout="link" size="small">
-                    <EditIcon className="h-5 w-5 text-blue-600" />
-                  </Button>
-                  </Link>
-                  <Button layout="link" size="small" onClick={() => openDelete(row.id)}>
-                    <TrashIcon className="h-5 w-5 text-red-600" />
-                  </Button>
-                </TableCell>
-              </TableRow>
-            </Fragment>
-          )):""}
-        </TableBody>
-      </Table>
-    </TableContainer>
+ 
+</div>
+
+
+
 
       </>
     )
@@ -539,4 +534,4 @@ const CandidateList = () => {
 
 
 
-export default CandidateList
+export default ArchivesList

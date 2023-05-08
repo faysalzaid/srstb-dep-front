@@ -25,6 +25,8 @@ function OverView({project,setProject,companyData,id}) {
         }
       })
     }
+
+    getData()
     
   },[])
 

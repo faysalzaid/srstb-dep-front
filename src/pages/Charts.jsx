@@ -35,11 +35,14 @@ useEffect(()=>{
         console.log(resp.data.error);
       }
     setProject(resp.data.projects)
+    console.log(resp.data.projects);
     
     
     })
   }
 
+
+  getData()
 
 
 },[])
@@ -50,7 +53,7 @@ useEffect(()=>{
 const projectFinancialUtilized = {
   data: {
       datasets: [{
-          data: projects?.map(pr=> pr.financialPerformance),
+          data: projects?.map(pr=>parseFloat(pr.financialPerformance)),
           /**
            * These colors come from Tailwind CSS palette
            * https://tailwindcss.com/docs/customizing-colors/#default-color-palette
@@ -77,7 +80,7 @@ const numFor = Intl.NumberFormat('en-US');
 const projectUtilizedCostGraph = {
   data: {
       datasets: [{
-          data: projects?.map(pr=>pr.utilizedCost),
+          data: projects?.map(pr=>parseFloat(pr.utilizedCost)),
           backgroundColor: projects?.map(pr=>pr.color),
           label: 'utilizedCost',
       }, ],

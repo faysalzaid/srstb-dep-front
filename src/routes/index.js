@@ -120,6 +120,10 @@ const TimesheetDetail = lazy(() =>
     import ('../components/Timesheet/TimesheetDetail'))
 const Settings = lazy(() =>
         import ('../components/Settings/Settings'))
+
+const ArchiveList = lazy(()=>
+    import('../components/Archives/ArchiveList')
+)
     /**
      * ⚠ These are internal routes!
      * They will be rendered inside the app, using the default `containers/Layout`.
@@ -258,12 +262,12 @@ const routes = [{
     {
         path: "/pglist",
         component: PgList,
-        roles: ['admin', 'finance', 'design', 'engineer']
+        roles: ['admin', 'finance', 'design', 'engineer','planning']
     },
     {
         path: "/pglist/:id",
         component: PgDetail,
-        roles: ['admin', 'finance', 'design', 'engineer']
+        roles: ['admin', 'finance', 'design', 'engineer','planning']
     },
     {
         path: "/auther",
@@ -338,6 +342,12 @@ const routes = [{
     {
         path: "/profile",
         component: ProfilePage,
+        roles: ['admin', 'roadquality']
+    },
+
+    {
+        path: "/archives",
+        component: ArchiveList,
         roles: ['admin', 'roadquality']
     },
 ]

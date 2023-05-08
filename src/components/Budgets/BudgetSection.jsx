@@ -100,6 +100,18 @@ const handleUtilization = async(event)=>{
 
 
 
+  const budgetApprove = async(bid)=>{
+    await axios.post(`${url}/budget/approve/${bid}`,{withCredentials:true}).then((resp)=>{
+      if(resp.data.error){
+        setOpenError({open:true,message:`${resp.data.error}`})
+      }else{
+        const data = resp.data.filter((bd)=>bd.ProjectId==id)
+        setBudgets(data)
+        setOpenSuccess({open:true,message:"Operation Success"})
+      }
+    })
+  }
+
   async function handleSubmit(event) {
     event.preventDefault();
     
@@ -221,7 +233,7 @@ const handleUtilization = async(event)=>{
     <>
 
 
-    <section  className="contracts-section p-4 bg-white rounded-md shadow-md">
+    <section  className="contracts-section p-4  rounded-md shadow-md">
 
     <ErrorAlert
         open={openError.open}
@@ -306,6 +318,7 @@ const handleUtilization = async(event)=>{
             className="mt-2 form-input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-500 focus:ring-opacity-50"
             type='number'
             name="utilized"
+            step={'0.01'}
             onChange={(e)=>setBudgetTrackForm({...budgettrackForm,utilized:e.target.value})}
             placeholder="Utilizing"
             required
@@ -352,6 +365,7 @@ const handleUtilization = async(event)=>{
             type="number"
             className="form-input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-500 focus:ring-opacity-50"
             name="allocatedBudget"
+            step="0.01"
             onChange={(e)=>setBudgetForm({...budgetForm,allocatedBudget:e.target.value})}
             required
             />
@@ -420,6 +434,9 @@ const handleUtilization = async(event)=>{
                     Delete
                   </th>
                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Approve
+                  </th>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Expand
                   </th>
                   <th scope="col" className="relative px-6 py-3">
@@ -431,17 +448,20 @@ const handleUtilization = async(event)=>{
               <tbody className="bg-white divide-y divide-gray-200" key={rowIndex}>
                
                   <>
-                    <tr >
+                    <tr>
                       <td className="px-6 py-4 whitespace-nowrap">{row.year}</td>
                       <td className="px-6 py-4 whitespace-nowrap">ETB {parseFloat(row.allocatedBudget).toLocaleString({maximumFractionDigits:2})}</td>
                       <td className="px-6 py-4 whitespace-nowrap">ETB {parseFloat(row.utilizedBudget).toLocaleString({maximumFractionDigits:2})}</td>
                       <td className="px-6 py-4 whitespace-nowrap">ETB {parseFloat(row.remainingBudget).toLocaleString({maximumFractionDigits:2})}</td>
-                      {row.remainingBudget===0?
-                      <td className="px-6 py-4 whitespace-nowrap"><Badge type="success">Fully Paid</Badge> </td>
+                      {parseFloat(row.remainingBudget)===0?
+                      <td className="px-6 py-4 whitespace-nowrap"><Badge type="success">FullyPaid</Badge> </td>
                       :<td className="px-6 py-4 whitespace-nowrap"><Badge type="danger">Partially </Badge></td>}
-                      <td className=" px-6 py-4 whitespace-nowrap" style={{color:'green'}}><FaRegMoneyBillAlt className='ml-3' onClick={()=>setIsUtilized({open:true,id:row.id,year:row.year,allocatedBudget:row.allocatedBudget,utilizedBudget:row.utilizedBudget})}/></td>
+                      <td className=" px-6 py-4 whitespace-nowrap" style={{color:'green'}}>{row.approved?<FaRegMoneyBillAlt className='ml-3' onClick={()=>setIsUtilized({open:true,id:row.id,year:row.year,allocatedBudget:row.allocatedBudget,utilizedBudget:row.utilizedBudget})}/>:<Badge type="danger">UnApproved</Badge>}</td>
                       <td className=" px-6 py-4 whitespace-nowrap" style={{color:"blue"}}><FaEdit className='ml-3'/></td>
                       <td className=" px-6 py-4 whitespace-nowrap" style={{color:'red'}}><AiFillDelete className='ml-4' onClick={()=>setIsDeleteOpen({open:true,id:row.id})}/></td>
+                      {authState.role==='finance'|| authState.role==='admin'?
+                      <td className='px-6  py-4 whitespace-nowrap'><Button size="small" style={{background:row.approved?'green':"red"}} onClick={()=>budgetApprove(row.id)}>{row.approved?"Approved":"Approve"}</Button></td>
+                      :<td className='px-6  py-4 whitespace-nowrap'><Badge type="danger">UnAuthorized</Badge></td>}
                       <td className=" px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <button
                           className="text-indigo-600 hover:text-indigo-900 focus:outline-none"

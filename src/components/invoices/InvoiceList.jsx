@@ -56,7 +56,7 @@ const InvoiceList = () => {
     const [projects,setProject] = useState([])
     const [modeModel,setModeModel] = useState(false)
     const [countsData,setCountsData] = useState({ projectCount:"",bidCount:"",activeProjects:"",completedProjects:""})
-    const [formValues,setFormValues] = useState({date:"",notes:"",totalPaid:"",total:0,UserId:"",ProjectId:"",PaymentModeId:""})
+    const [formValues,setFormValues] = useState({date:"",notes:"",totalPaid:"",total:0,UserId:"",ProjectId:"",PaymentModeId:"",sequential:""})
     const [isDeleteOpen,setIsDeleteOpen] = useState({open:false,id:""})
     const modeInput = useRef()
     let amountRef = useRef()
@@ -135,7 +135,8 @@ const InvoiceList = () => {
             if(resp.data.error){
               console.log(resp.data.error);
             }else{
-              setProject(resp.data.projects)
+              const data = resp.data.projects.filter((pr)=>pr.approved)
+              setProject(data)
             }
           })
           await axios.get(`${url}/invoice`,{withCredentials:true}).then((resp)=>{
@@ -192,7 +193,8 @@ const handleSubmit = async(e)=>{
     total:formValues.total,
     totalPaid:formValues.totalPaid,
     notes:formValues.notes,
-    PaymentModeId:formValues.PaymentModeId
+    PaymentModeId:formValues.PaymentModeId,
+    sequential:formValues.sequential
   }
   await axios.post(`${url}/invoice`,request,{withCredentials:true}).then((resp)=>{
     // console.log(resp.data);
@@ -423,6 +425,24 @@ const captureProject = ()=>{
             </Select>
           </Label>
 
+          <Label>
+            <span>Sequential</span>
+            <Select
+              className="mt-1"
+              name="sequential"
+              // value={formValues.ProjectId}
+              onChange={(e)=>setFormValues({...formValues,sequential:e.target.value})}
+              required
+            >
+              <option disabled>Select Voucher</option>
+              <option>Payment voucher</option>
+              <option>Receipt Voucher</option>
+              <option>Journal Voucher</option>
+              
+            </Select>
+          </Label>
+
+
 
               
         </div>
@@ -540,7 +560,7 @@ const captureProject = ()=>{
                     <div className="flex items-center text-sm">
                       
                       <div>
-                        <p className="font-semibold">{invoice.totalPaid.toLocaleString()}</p>
+                        <p className="font-semibold">{parseFloat(invoice.totalPaid).toLocaleString()}</p>
                         {/* <p className='font-semibold'>{invoice.ProjectId}sdf</p> */}
                      
                       </div>
@@ -560,7 +580,7 @@ const captureProject = ()=>{
                     <span className="text-sm font-semibold">{parseFloat(invoice.total).toLocaleString()}</span>
                   </TableCell>
                   <TableCell>
-                    <span className="text-sm font-semibold">{projects.map((pr)=>pr.id===invoice.ProjectId?pr.name:"")}</span>
+                    <span className="text-sm font-semibold">{projects.map((pr)=>pr.id==invoice.ProjectId?pr.name:"")}</span>
                   </TableCell>
                   
                   <TableCell>

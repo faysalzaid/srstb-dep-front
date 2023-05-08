@@ -115,7 +115,8 @@ const ContractList = () => {
             if(resp.data.error){
               console.log(resp.data.error);
             }
-          setProject(resp.data.projects)
+          const data = resp.data.projects.filter((pr)=>pr.approved)  
+          setProject(data)
       
           })
     

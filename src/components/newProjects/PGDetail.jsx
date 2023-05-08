@@ -39,6 +39,8 @@ import { FadeLoader } from 'react-spinners'
 import OverView from 'components/overview/OverView'
 import BudgetList from 'components/Budgets/BudgetSection'
 import BidSection from 'components/Bids/BidsSection'
+import { useContext } from 'react'
+import { AuthContext } from 'hooks/authContext'
 
 
 
@@ -57,7 +59,7 @@ const PgDetail = () => {
     const [showBudget,setShowBudget] = useState(false)
     const [showBid,setShowBid] = useState(false)
     const [isOpen,setIsOpen] = useState(false)
-
+    const {authState} = useContext(AuthContext)
 // Alert logic and initialization
 const [openSuccess, setOpenSuccess] = useState({ open: false, message: "" });
 
@@ -193,6 +195,22 @@ const handleCloseError = (event, reason) => {
   
     // pagination change control
 
+
+
+
+    // Project APproval
+
+    const projectApproval =async()=>{
+      await axios.post(`${url}/projects/approve/${id}`).then((resp)=>{
+        if(resp.data.error){
+          setOpenError({open:true,message:`${resp.data.error}`})
+        }else{
+          setProject(resp.data)
+          setOpenSuccess({open:true,message:"Operation Success"})
+        }
+      })
+    }
+    // End of Project Approval
   
 // Invoice Data  
 function handleActiveLink() {
@@ -389,9 +407,15 @@ navWrapper.classList.remove('active')
         <div className='flex mb-2'>
         <Button className="ml-0" onClick={openModal}>Update Project</Button>
         {project?.Invoice?.ProjectId===project.id?
-        <Badge className='ml-2 mt-2'> <AiFillAlert  className='ml-2 mt-1'/>This Project is invoiced</Badge>
-        :<Link to={'/app/invoice'}> <Badge className='ml-2 mt-2' type="danger"> <AiOutlineAlert  className='ml-2 mt-1'/>Invoice This Project</Badge></Link>
+        <Badge className='ml-2 mt-2'> <AiFillAlert  className='ml-2 mt-1'/>This Project is invoiced</Badge> 
+        :<Link to={'/app/invoice'}> <Badge className='ml-2 mt-2' type="danger"> <AiOutlineAlert  className='ml-2 mt-1'/>This Project is Not Invoiced</Badge></Link>
         }
+        </div>
+        <div className=''>
+        <Badge type={project.approved?"success":"danger"}>{project.approved?"Approved By Planning":"Didn't Get Approved By Planning"}</Badge>
+        {authState.role==='planning' || authState.role==='admin'?
+        <Button onClick={projectApproval} size="small" className="ml-4" style={{background:project.approved?'green':'red'}} >{project.approved?"UnApprove":"Approve"}</Button>
+        :""}
         </div>
   
         {/* end of calendar section */}

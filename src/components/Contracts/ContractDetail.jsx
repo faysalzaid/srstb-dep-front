@@ -90,7 +90,7 @@ const ContractDetail = (props) => {
 
         await axios.get(`${url}/contract/${id}`).then((resp)=>{
           if(resp.data.error){
-
+            console.log(resp.data);
             setOpenError({open:true,message:`${resp.data.error}`})
             
           }else{
@@ -124,6 +124,7 @@ const ContractDetail = (props) => {
           setOpenError({open:true,message:`$${resp.data.error}`})
         }
       setProject(resp.data.projects)
+      console.log(resp.data.projects);
   
       })
 
@@ -182,36 +183,36 @@ const ContractDetail = (props) => {
     const handleSubmit = async(e) => {
       e.preventDefault();
       console.log(formValues);
-      // await axios.put(`${url}/contract/${id}`,formValues,{withCredentials:true}).then((resp)=>{
-      //   if(resp.data.error){
-      //     setOpenError({open:true,message:`$${resp.data.error}`})
-      //   }else{
+      await axios.put(`${url}/contract/${id}`,formValues,{withCredentials:true}).then((resp)=>{
+        if(resp.data.error){
+          setOpenError({open:true,message:`$${resp.data.error}`})
+        }else{
           
-      //     setContracts({ 
-      //       UserId: resp.data.UserId,
-      //       ProjectId:resp.data.ProjectId,
-      //       subject: resp.data.subject,
-      //       contractValue: resp.data.contractValue,
-      //       ContractTypeId: resp.data.ContractTypeId,
-      //       startDate: resp.data.startDate,
-      //       endDate: resp.data.endDate,
-      //       status:resp.data.status,
-      //       createdAt:resp.data.createdAt
-      //   })
-      //     setFormValues({
-      //       UserId: resp.data.userId,
-      //       ProjectId: resp.data.ProjectId,
-      //       subject: resp.data.subject,
-      //       contractValue: resp.data.contractValue,
-      //       ContractTypeId: resp.data.ContractTypeId,
-      //       startDate: resp.data.startDate,
-      //       endDate: resp.data.endDate
-      //     })
-      //     setOpenSuccess({open:true,message:"Successfully Updated"})
-      //     closeModal();
-      //   }
+          setContracts({ 
+            UserId: resp.data.UserId,
+            ProjectId:resp.data.ProjectId,
+            subject: resp.data.subject,
+            contractValue: resp.data.contractValue,
+            ContractTypeId: resp.data.ContractTypeId,
+            startDate: resp.data.startDate,
+            endDate: resp.data.endDate,
+            status:resp.data.status,
+            createdAt:resp.data.createdAt
+        })
+          setFormValues({
+            UserId: resp.data.userId,
+            ProjectId: resp.data.ProjectId,
+            subject: resp.data.subject,
+            contractValue: resp.data.contractValue,
+            ContractTypeId: resp.data.ContractTypeId,
+            startDate: resp.data.startDate,
+            endDate: resp.data.endDate
+          })
+          setOpenSuccess({open:true,message:"Successfully Updated"})
+          closeModal();
+        }
 
-      // })
+      })
       // handle form submission here
       // e.g. make an API call to save the form data
      
@@ -576,61 +577,61 @@ const ContractDetail = (props) => {
   
 
   {/* Contract INformation */}
-  <div class="bg-gray-50  flex flex-col justify-center py-12 sm:px-9 lg:px-8">
-  <div class="w-full">
-    <div class="bg-white shadow-md rounded-md overflow-hidden">
-      <div class="px-6 py-8">
-        <div class="flex justify-between items-center">
-          <div class=" items-center">
-            <img src={settings.logo}alt="Company Logo" class="h-12 w-18 mr-2" />
-            <h2 class="text-lg font-medium text-gray-900">{contracts.subject}</h2>
+  <div className="bg-gray-50  flex flex-col justify-center py-12 sm:px-9 lg:px-8">
+  <div className="w-full">
+    <div className="bg-white shadow-md rounded-md overflow-hidden">
+      <div className="px-6 py-8">
+        <div className="flex justify-between items-center">
+          <div className=" items-center">
+            <img src={settings.logo}alt="Company Logo" className="h-12 w-18 mr-2" />
+            <h2 className="text-lg font-medium text-gray-900">{contracts.subject}</h2>
           </div>
-          <div class="text-right">
-            <p class="text-sm font-medium text-gray-500">Contract #1234</p>
-            <p class="text-sm font-medium text-gray-500">Signed: {contracts.startDate}</p>
-          </div>
-        </div>
-        <div class="mt-6">
-          <h3 class="text-md font-medium text-gray-900">Customer Information</h3>
-          <div class="mt-2">
-            <div class="flex">
-              <p class="text-sm font-medium text-gray-500">Name:</p>
-              <p class="ml-2 text-sm font-medium text-gray-900">{users.map((usr)=>usr.id===contracts.UserId?usr.name:'')}</p>
-            </div>
-            <div class="flex mt-2">
-              <p class="text-sm font-medium text-gray-500">Email:</p>
-              <p class="ml-2 text-sm font-medium text-gray-900">{users.map((usr)=>usr.id===contracts.UserId?usr.email:'')}</p>
-            </div>
+          <div className="text-right">
+            <p className="text-sm font-medium text-gray-500">Contract #1234</p>
+            <p className="text-sm font-medium text-gray-500">Signed: {contracts.startDate}</p>
           </div>
         </div>
-        <div class="mt-6">
-          <h3 class="text-md font-medium text-gray-900">Project Information</h3>
-          <div class="mt-2">
-            <div class="flex">
-              <p class="text-sm font-medium text-gray-500">Project:</p>
-              <p class="ml-2 text-sm font-medium text-gray-900">{projects.map((pr)=>pr.id===contracts.ProjectId?pr.name:'')}</p>
+        <div className="mt-6">
+          <h3 className="text-md font-medium text-gray-900">Customer Information</h3>
+          <div className="mt-2">
+            <div className="flex">
+              <p className="text-sm font-medium text-gray-500">Name:</p>
+              <p className="ml-2 text-sm font-medium text-gray-900">{users.map((usr)=>usr.id===contracts.UserId?usr.name:'')}</p>
             </div>
-            <div class="flex mt-2">
-              <p class="text-sm font-medium text-gray-500">Contract Value:</p>
-              <p class="ml-2 text-sm font-medium text-gray-900">ETB {contracts.contractValue.toLocaleString()}</p>
-            </div>
-            <div class="flex mt-2">
-              <p class="text-sm font-medium text-gray-500">Start Date:</p>
-              <p class="ml-2 text-sm font-medium text-gray-900">{contracts.startDate}</p>
-            </div>
-            <div class="flex mt-2">
-              <p class="text-sm font-medium text-gray-500">End Date:</p>
-              <p class="ml-2 text-sm font-medium text-gray-900">{contracts.endDate}</p>
+            <div className="flex mt-2">
+              <p className="text-sm font-medium text-gray-500">Email:</p>
+              <p className="ml-2 text-sm font-medium text-gray-900">{users.map((usr)=>usr.id===contracts.UserId?usr.email:'')}</p>
             </div>
           </div>
         </div>
-        <div class="mt-6">
-          <h3 class="text-md font-medium text-gray-900">Contract Status</h3>
-          <div class="mt-2">
+        <div className="mt-6">
+          <h3 className="text-md font-medium text-gray-900">Project Information</h3>
+          <div className="mt-2">
+            <div className="flex">
+              <p className="text-sm font-medium text-gray-500">Project:</p>
+              <p className="ml-2 text-sm font-medium text-gray-900">{projects.map((pr)=>pr.id==contracts.ProjectId?pr.name:'')}</p>
+            </div>
+            <div className="flex mt-2">
+              <p className="text-sm font-medium text-gray-500">Contract Value:</p>
+              <p className="ml-2 text-sm font-medium text-gray-900">ETB {contracts.contractValue.toLocaleString()}</p>
+            </div>
+            <div className="flex mt-2">
+              <p className="text-sm font-medium text-gray-500">Start Date:</p>
+              <p className="ml-2 text-sm font-medium text-gray-900">{contracts.startDate}</p>
+            </div>
+            <div className="flex mt-2">
+              <p className="text-sm font-medium text-gray-500">End Date:</p>
+              <p className="ml-2 text-sm font-medium text-gray-900">{contracts.endDate}</p>
+            </div>
+          </div>
+        </div>
+        <div className="mt-6">
+          <h3 className="text-md font-medium text-gray-900">Contract Status</h3>
+          <div className="mt-2">
             
-            <div class="flex mt-2">
-              <p class="text-sm font-medium text-gray-500">Status:</p>
-              <p class="ml-2 text-sm font-medium text-gray-900"><span className='text-teal-500 dark:text-teal-100'>{contracts.status}</span></p>
+            <div className="flex mt-2">
+              <p className="text-sm font-medium text-gray-500">Status:</p>
+              <p className="ml-2 text-sm font-medium text-gray-900"><span className='text-teal-500 dark:text-teal-100'>{contracts.status}</span></p>
               </div>
               </div>
               </div>

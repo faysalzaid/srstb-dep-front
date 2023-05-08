@@ -80,6 +80,12 @@ routes = [{
         roles: ['admin', 'finance', 'design', 'engineer']
     },
     {
+        path: '/app/archives',
+        icon: 'FaRegFileArchive',
+        name: 'Archives',
+        roles: ['admin', 'finance', 'design', 'engineer']
+    },
+    {
         path: '/app/requests',
         icon: 'CardsIcon',
         name: 'Letter Requests',

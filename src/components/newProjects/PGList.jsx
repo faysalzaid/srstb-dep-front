@@ -523,10 +523,10 @@ const PgList = () => {
               <TableCell>Contractor</TableCell>
               <TableCell>Start Date</TableCell>
               <TableCell>End Date</TableCell>
-              <TableCell>Total Cost</TableCell>
-              <TableCell>Utilized Cost</TableCell>
-              <TableCell>Fin.Performance</TableCell>
-              <TableCell>Status</TableCell>
+              <TableCell>T.Cost</TableCell>
+              <TableCell>Utiliz.Cost</TableCell>
+              <TableCell>Approved</TableCell>
+            
               <TableCell>Edit / Delete</TableCell>
             </TableRow>
           </TableHeader>
@@ -561,11 +561,9 @@ const PgList = () => {
                 </TableCell>
              
                 <TableCell>
-                  <Badge type="danger">{parseFloat(project.financialPerformance).toLocaleString({maximumFractionDigits:2})}</Badge>
+                  <Badge type={project.approved?"success":"danger"}>{project.approved?"Approved":"Un Approved"}</Badge>
                 </TableCell>
-                <TableCell>
-                  <Badge type="primary">{project.status}</Badge>
-                </TableCell>
+             
                 <TableCell>
                   <div className="flex items-center space-x-4">
                     <Link to={`/app/pglist/${project.id}`}>

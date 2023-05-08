@@ -227,6 +227,7 @@ function UsersDetail(props) {
                   <option>engineer</option>
                   <option>hr</option>
                   <option>contractadmin</option>
+                  <option>planning</option>
                 </Field>
               </Label>  
               </>}

@@ -5,10 +5,21 @@ import axios from 'axios'
 import { ErrorAlert, SuccessAlert } from "components/Alert";
 import { SelectorIcon } from '@heroicons/react/solid'
 import { FaCheckCircle, FaChevronDown, FaEdit, FaFilePdf, FaPlusCircle, FaRegMoneyBillAlt } from 'react-icons/fa'
+
+
 // import 'bootstrap/dist/css/bootstrap.min.css';
 
 import {  
+  TableBody,
+  TableContainer, 
+  Table,
+  TableHeader,
+  TableCell,
+  TableRow,
+  TableFooter,
+  Avatar,
   Badge,
+  Pagination,
   Button
 } from '@windmill/react-ui'
 
@@ -27,27 +38,28 @@ function ReportsComponent(props) {
     const {settings} = useAuth(AuthContext)
     const [budgets,setBudgets] = useState([])
     const [isExpanded, setIsExpanded] = useState(false);
+    const [isExpandedAll, setIsExpandedAll] = useState({open:false,id:""});
     const [foundProject,setFoundProject] = useState([])
-
+    const [allProjects,setAllProjects] = useState([])
+    const [projectId,setProjectId] = useState(0)
+    const [projectData,setProjectData] = useState([])
+    const [getAllprojects,setGetAllProjects] = useState([])
     const [openSuccess, setOpenSuccess] = useState({ open: false, message: "" })
     const [openError, setOpenError] = useState({ open: false, message: "" });
   
 
     const getTheProject = async()=>{
-      await axios.get(`${url}/projects/${projectId}`,{withCredentials:true}).then((resp)=>{
-        if(resp.data.error){
-
-        }else{
-          setFoundProject(resp.data)
-          // console.log(resp.data);
-        }
-      })
+      if(projectId==0){
+        setProjectData(allProjects)
+      }else{
+        const data = allProjects.filter((pr)=>pr.id==projectId)
+        setProjectData(data)
+      }
+      // projectData.filte
     }
 
 
     // const [companyData,setCompanyData] = useState([]) 
-    const [projectId,setProjectId] = useState(0)
-    const [projectData,setProjectData] = useState([])
  
 
     useEffect(()=>{
@@ -56,8 +68,12 @@ function ReportsComponent(props) {
           if(resp.data.error) {
             
           }else{
+            // this is our main one we are looping in the data page
             setProjectData(resp.data.projects)
-            // console.log(resp.data.projects);
+            // this is the backup one to loop it evertime
+            setAllProjects(resp.data.projects)
+            // setfounp is the one we are looping through
+            setFoundProject(resp.data.projects)
           }
         }).catch((error)=>{
           console.log(error);
@@ -65,6 +81,21 @@ function ReportsComponent(props) {
       }
       getProjects() 
     },[])
+
+
+
+
+  const [isDeleteOpen,setIsDeleteOpen] = useState({open:false,id:""})
+
+  const closeDelete = ()=>{
+    setIsDeleteOpen(false)
+}
+  const openDelete = (id)=>{
+    setIsDeleteOpen({open:true,id})
+}
+
+
+
 
 
     const printSectionRef = useRef(null);
@@ -75,6 +106,7 @@ function ReportsComponent(props) {
       const originalContents = document.body.innerHTML;
       document.body.innerHTML = printContents;
       window.print();
+      document.body.innerHTML = originalContents;
 
     };
     
@@ -83,7 +115,7 @@ function ReportsComponent(props) {
 
     return ( 
        <>
-      <section  className="mt-4 contracts-section p-4 bg-white rounded-md shadow-md"> 
+      <section  className="w-4/2 mt-4 contracts-section p-4 rounded-md shadow-md"> 
        <PageTitle>Generate Reports</PageTitle>
 
        <TitleChange name={`Reports | ${settings.name}`} />
@@ -94,9 +126,9 @@ function ReportsComponent(props) {
           {/* Data section */}
           <h2 className="text-lg font-medium mb-2">Generate</h2>
       <div className="flex relative inline-flex">
-        <select onChange={(e)=>setProjectId(e.target.value)} className="flex-2 mt-1 w-48 h-10 pl-3 pr-8 bg-white border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-          <option>All Projects</option>
-          {projectData?.map((pr)=> <option value={pr.id} key={pr.id}>{pr.name}</option>)}
+        <select onChange={(e)=>setProjectId(e.target.value)} className="flex-2 mt-1 w-48 h-10 pl-3 pr-8  border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+          <option value={0}>All Projects</option>
+          {foundProject?.map((pr)=> <option value={pr.id} key={pr.id}>{pr.name}</option>)}
          
         </select>
         <div className="absolute inset-y-0 right-0 flex items-center px-2">
@@ -121,215 +153,139 @@ function ReportsComponent(props) {
             </div>
 
 
-{/* Render section */}
-{/* First Table */}
-<div ref={printSectionRef}>
-<div className="flex flex-col" >
-              <div className="-my-2 overflow-x-auto sm:-mx-9 lg:-mx-8">
-                <div className="py-2 sm:px-9 lg:px-8">
-                  <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                    
-                    <table className="min-w-full divide-y divide-gray-200">
-                      <thead className="bg-gray-50">
-                        <tr>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            ProjectName
-                          </th>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Utilized Cost
-                          </th>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Place
-                          </th>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Start Time
-                          </th>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            End Time
-                          </th>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Total Cost
-                          </th>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            status
-                          </th>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Phy.Performance
-                          </th>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Fin.Performance
-                          </th>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Show
-                          </th>
-                          <th scope="col" className="relative px-6 py-3">
-                            <span className="sr-only">View details</span>
-                          </th>
-                        </tr>
-                      </thead>
+{/* All Projects Section */}
+
+
+
+        <div>
+          <div className="mt-4">
+            <Table>
+              <TableHeader >
+                <TableRow>
+                  <TableCell className="font-semibold">
+                    Name
+                  </TableCell>
+                  <TableCell className="font-semibold">
+                    Status
+                  </TableCell>
+                  
+                  <TableCell className="font-semibold">
+                    Start Time
+                  </TableCell>
+                  <TableCell className="font-semibold">
+                    End Time
+                  </TableCell>
+                  <TableCell className="font-semibold">
+                    Percentage
+                  </TableCell>
+                  <TableCell className="font-semibold">
+                    Consultant
+                  </TableCell>
+                  <TableCell className="font-semibold">
+                    TotalCost
+                  </TableCell>
+                  <TableCell className="font-semibold">
+                    Utilized Cost
+                  </TableCell>
+                  <TableCell className="font-semibold">
+                    Edit
+                  </TableCell>
+                  <TableCell className="font-semibold">
+                    Delete
+                  </TableCell>
+                  <TableCell className="font-semibold">
+                    Expand
+                  </TableCell>
+                  <TableCell className="font-semibold">
+                    <span className="sr-only">View details</span>
+                  </TableCell>
+                </TableRow>
+              </TableHeader>
+              {projectData?.map((row, rowIndex) => (
+              <TableBody key={rowIndex}>
+               
+                  <>
+                    <TableRow >
+                      <TableCell className="font-bold text-sm">{row.name}</TableCell>
+                      <TableCell className="font-bold text-sm">{row.status}</TableCell>
                      
-                      <tbody className="bg-white divide-y divide-gray-200">
-                      
-                          <>
-                            <tr >
-                              
-                              <td className="px-6 py-4 whitespace-nowrap"><Link to={`/app/pglist/${foundProject.id}`}>{foundProject?.name}</Link></td>
-                           
-                              <td className="px-6 py-4 whitespace-nowrap">{foundProject?.utilizedCost?.toLocaleString()}</td>
-                              <td className="px-6 py-4 whitespace-nowrap">{foundProject?.place}</td>
-                              <td className=" px-6 py-4 whitespace-nowrap" style={{color:'green'}}>{foundProject.starttime}</td>
-                              <td className=" px-6 py-4 whitespace-nowrap" style={{color:'red'}}>{foundProject.endtime}</td>
-                              <td className="px-6 py-4 whitespace-nowrap">ETB {foundProject?.totalCost?.toLocaleString()}</td>
-                              {foundProject?.status==='completed'?
-                              <td className="px-6 py-4 whitespace-nowrap"><Badge type="green">{foundProject?.status}</Badge> </td>
-                              :<td className="px-6 py-4 whitespace-nowrap"><Badge type="danger">{foundProject?.status} </Badge></td>
-                              }
+                      <TableCell className="font-bold text-sm">{row.starttime}</TableCell>
+                      <TableCell className="font-bold text-sm">{row.endtime}</TableCell>
+                      <TableCell className="font-bold text-sm">{row.physicalPerformance} %</TableCell>
+                      <TableCell className="font-bold text-sm">{row.consultant}</TableCell>
+                      <TableCell className="font-bold text-sm">{parseFloat(row.totalCost).toLocaleString({maximumFractionDigits:2})}</TableCell>
+                      <TableCell className="font-bold text-sm">{parseFloat(row.utilizedCost).toLocaleString({maximumFractionDigits:2})}</TableCell>
+                      <TableCell className="font-bold text-sm" style={{color:"blue"}}><Link to={`/app/projects/${row.id}`}><FaEdit className='ml-3'/></Link></TableCell>
+                      <TableCell className="font-bold text-sm" style={{color:'red'}}><AiFillDelete className='ml-4'  onClick={()=>setIsDeleteOpen({open:true,id:row.id})}/></TableCell>
+                      <TableCell className=" px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <button
+                          className="text-indigo-600 hover:text-indigo-900 focus:outline-none"
+                          onClick={() => setIsExpanded({open:!(isExpanded.open),id:row.id})}
+                        >
+                          {isExpandedAll.open && isExpandedAll.id==row.id ? <FiChevronUp /> : <FiChevronDown />}
+                        </button>
+                      </TableCell>
+                    </TableRow>
+                     {isExpanded.open&&isExpanded.id==row.id&&( 
+                   <TableRow>
+                   <TableCell colSpan="11" className="px-6 py-4 whitespace-nowrap">
+                     <div className="overflow-x-auto">
+                       <Table className="min-w-full divide-y divide-gray-200">
+                         <TableHeader>
+                           <TableRow>
+                             <TableCell>
+                               Year
+                             </TableCell>
+                             <TableCell>
+                               Alo.Budget
+                             </TableCell>
+                             <TableCell>
+                               Uti.Budget
+                             </TableCell>
+                              <TableCell>
+                               Rem.Budget
+                             </TableCell>
                             
-                            <td className=" px-6 py-4 whitespace-nowrap" style={{color:'blue'}}>{foundProject.physicalPerformance}%</td>
-                              <td className=" px-6 py-4 whitespace-nowrap" style={{color:'blue'}}>{foundProject.financialPerformance}%</td>
-                              <td className=" px-6 py-4 whitespace-nowrap" style={{color:"blue"}}><Link to={`/app/pglist/${foundProject.id}`}><FaEdit className='ml-3'/></Link></td>
-                              
-                            </tr>
+                             <TableCell>
+                               Edit
+                             </TableCell>
+                             <TableCell>
+                               Expand
+                             </TableCell>
+                          
+                            
+                           </TableRow>
+                         </TableHeader>
+                         <TableBody>
+                           {row.yearlyBudgets?.map((row, index) => (
+                             <TableRow key={index}>
+                               <TableCell>{row.year}</TableCell>
+                               <TableCell>ETB {parseFloat(row.allocatedBudget)?.toLocaleString({maximumFractionDigits:2})}</TableCell>
+                               <TableCell>ETB {parseFloat(row.utilizedBudget)?.toLocaleString({maximumFractionDigits:2})}</TableCell>
+                               <TableCell>ETB {parseFloat(row.remainingBudget)?.toLocaleString({maximumFractionDigits:2})}</TableCell>
                         
-                          </>
-                        
-                              </tbody>
-                        
-                              </table>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
+                               <TableCell style={{color:'red'}} className="mr-6 px-6"><Link to={`/app/budgetLines/${row.id}`}><FaEdit/></Link></TableCell>
+                             </TableRow>
+                           ))}
+                         </TableBody>
+                       </Table>
+                     </div>
+                   </TableCell>
+                 </TableRow>
 
-{/* End of second table */}
-
-
-{/* Second table */}
-            <div className="flex flex-col ">
-              <div className="-my-2 overflow-x-auto sm:-mx-9 lg:-mx-8">
-                <div className="py-2 sm:px-9 lg:px-8">
-                  <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                    
-                    <table className="min-w-full divide-y divide-gray-200">
-                      <thead className="bg-gray-50">
-                        <tr>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Year
-                          </th>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Allocated Budget
-                          </th>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Utilized Budget
-                          </th>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Remaining Budget
-                          </th>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Invoice
-                          </th>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Utilize
-                          </th>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Edit
-                          </th>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Delete
-                          </th>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Expand
-                          </th>
-                          <th scope="col" className="relative px-6 py-3">
-                            <span className="sr-only">View details</span>
-                          </th>
-                        </tr>
-                      </thead>
-                      {foundProject?.yearlyBudgets?.map((row, rowIndex) => (
-                      <tbody className="bg-white divide-y divide-gray-200" key={rowIndex}>
-                      
-                          <>
-                            <tr >
-                              <td className="px-6 py-4 whitespace-nowrap">{row.year}</td>
-                              <td className="px-6 py-4 whitespace-nowrap">ETB {row.allocatedBudget.toLocaleString()}</td>
-                              <td className="px-6 py-4 whitespace-nowrap">ETB {row.utilizedBudget.toLocaleString()}</td>
-                              <td className="px-6 py-4 whitespace-nowrap">ETB {row.remainingBudget.toLocaleString()}</td>
-                              {row.remainingBudget===0?
-                              <td className="px-6 py-4 whitespace-nowrap"><Badge type="blue">Fully Paid</Badge> </td>
-                              :<td className="px-6 py-4 whitespace-nowrap"><Badge type="danger">Partially </Badge></td>}
-                              <td className=" px-6 py-4 whitespace-nowrap" style={{color:'green'}}><FaRegMoneyBillAlt className='ml-3' /></td>
-                              <td className=" px-6 py-4 whitespace-nowrap" style={{color:"blue"}}><FaEdit className='ml-3'/></td>
-                              <td className=" px-6 py-4 whitespace-nowrap" style={{color:'red'}}></td>
-                              <td className=" px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <button
-                                  className="text-indigo-600 hover:text-indigo-900 focus:outline-none"
-                                  onClick={() => setIsExpanded(!isExpanded)}
-                                >
-                                  {isExpanded ? <FiChevronUp /> : <FiChevronDown />}
-                                </button>
-                              </td>
-                            </tr>
-                            {isExpanded&&( 
-                          <tr>
-                          <td colSpan="5" className="px-6 py-4 whitespace-nowrap">
-                            <div className="overflow-x-auto">
-                              <table className="min-w-full divide-y divide-gray-200">
-                                <thead>
-                                  <tr>
-                                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                      Date
-                                    </th>
-                                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                      Utilized
-                                    </th>
-                                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                      Created By
-                                    </th>
-                                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Add To Payment
-                                    </th>
-                                    <th scope="col" className="px-1 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                      Delete
-                                    </th>
-                                    
-                                  </tr>
-                                </thead>
-                                <tbody className="bg-white divide-y divide-gray-200">
-                                  {row.bugetTracks?.map((detail, index) => (
-                                    <tr key={index}>
-                                      <td className="px-6 py-4 whitespace-nowrap">{detail.date}</td>
-                                      <td className="px-6 py-4 whitespace-nowrap">ETB {detail.utilized.toLocaleString()}</td>
-                                      <td className="px-6 py-4 whitespace-nowrap">{detail.createdBy}</td>
-                                    
-                                      {detail.invoiced===0?
-                                        <td className="px-6 py-4 whitespace-nowrap"><Badge type="danger">Invoice </Badge> </td>
-                                        :<td className="px-6 py-4 whitespace-nowrap"><Badge><FaCheckCircle className='mt-1 mr-1'/>Invoiced </Badge></td>}
-                                      <td style={{color:'red'}} className="mr-6 px-6"><AiFillDelete /></td>
-                                    </tr>
-                                  ))}
-                                </tbody>
-                              </table>
+                )}
+                 
+                  </>
+              
+       </TableBody> 
+       ))} 
+                 </Table>
+              </div>
+          </div> 
 
 
-                              
-                            </div>
-                          </td>
-                        </tr>
+      {/* End of All Projects Section */}
 
-                        )}
-                        
-                          </>
-                        
-                              </tbody>
-                              ))}
-                              </table>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-
-{/* End of second table */}
-</div>
 
 
 
