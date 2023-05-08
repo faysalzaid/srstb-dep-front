@@ -29,8 +29,8 @@ const Bar_Chart2 = () => {
         <Tooltip />
         <Legend />
         <CartesianGrid strokeDasharray="3 3" className=" bg-orange-400" />
-        {/* <Bar dataKey="Last_Year" fill="#9761f5cd" /> */}
-        <Bar dataKey="now" fill="rgb(251 146 60)" />
+        <Bar dataKey="Last_Year" fill="#9761f5cd" />
+        {/* <Bar dataKey="now" fill="#9761f5cd" /> */}
       </BarChart>
     </ResponsiveContainer>
   );
