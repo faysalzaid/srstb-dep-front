@@ -26,6 +26,7 @@ import { useContext } from 'react'
 import { AuthContext } from '../hooks/authContext'
 import { url } from 'config/urlConfig'
 import { ErrorAlert, SuccessAlert } from "components/Alert";
+import TitleChange from 'components/Title/Title'
 
 // make a copy of the data, for the second table
 
@@ -37,7 +38,7 @@ import { ErrorAlert, SuccessAlert } from "components/Alert";
 
 function CompanyDetail(props) {
   const [isModalOpen, setIsModalOpen] = useState(false)
-
+  const {authState,settings} = useContext(AuthContext)
   function openModal() {
     setIsModalOpen(true)
   }
@@ -159,6 +160,7 @@ const deleteCompany =async()=>{
   return (
     <>
       <PageTitle>{companyData.name} page</PageTitle>
+      <TitleChange name={`Company Detail | ${settings.name}`}/>
         {/* Notification Section */}
         <ErrorAlert
         open={openError.open}
@@ -188,10 +190,11 @@ const deleteCompany =async()=>{
 
         {/* End of delete Section */}
      
-
+        {authState.role==="admin" || authState.role==="hr" || authState.role==="manager" ?
       <div>
-        <Button onClick={openModal} style={{backgroundColor:'green'}}>Update Data</Button>
+        <Button onClick={openModal} size="small">Update Data</Button>
       </div>
+      :<p>Read Only</p>}
       <Modal isOpen={isModalOpen} onClose={closeModal}>
         <ModalHeader>Update Company Info</ModalHeader>
         <span style={{color:'red'}}>{errorMessage}</span>

@@ -30,6 +30,7 @@ import { useContext } from 'react'
 import { AuthContext } from '../hooks/authContext'
 import { bidUrl, url } from 'config/urlConfig'
 import { RiDeleteBin6Line } from 'react-icons/ri'
+import TitleChange from 'components/Title/Title'
 
 function BidDetail(props) {
     const {id} = useParams()
@@ -58,7 +59,7 @@ function BidDetail(props) {
     const [projects,setProjects] = useState([])
     const [ users,setUsers] = useState([])
     const [showModal, setShowModal] = useState({show:false,id:""});
-    const {authState} = useContext(AuthContext)
+    const {authState,settings} = useContext(AuthContext)
 
     
 
@@ -288,6 +289,7 @@ function BidDetail(props) {
 
         <link rel="stylesheet" href="https://unpkg.com/flowbite@1.4.4/dist/flowbite.min.css" />
         <PageTitle>Bid From {bidsData.fullname}</PageTitle>
+        <TitleChange name={`Bid Detail |${settings.name}`}/>
 
                  {/* Delete MOdal section  */}
         <Modal isOpen={isDeleteOpen.open} onClose={closeDelete}>
@@ -353,9 +355,11 @@ function BidDetail(props) {
             {/* End of Evaluation Modal */}
 
 
-        
+            {authState.role==="admin"||authState.role==="engineer"||authState.role==="manager" ?
         <div className=''>
+        
           <Button onClick={openModal}>Edit Bid</Button>
+         
           {bidsData.evaluationStatus==='YES'?
                 <button className="mt-2 bg-green-500 text-white font-bold py-2 px-4 rounded-xl h-8 flex items-center" onClick={()=>openEvModel()}>
                 <span>Bid is Evaluated</span>
@@ -367,6 +371,7 @@ function BidDetail(props) {
           </button>}
 
         </div>
+         :<p>Read Only</p>}
         <Modal isOpen={isModalOpen} onClose={closeModal}>
           <ModalHeader>Insert Client Info</ModalHeader>
           <span style={{color:'red'}}>{errorMessage}</span>

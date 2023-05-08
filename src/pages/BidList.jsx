@@ -124,7 +124,7 @@ function BidList(props) {
       formData.append('proposal',bidFormData.proposal)
       formData.append('companydoc',bidFormData.companydoc)
       formData.append('bidUserPic',bidFormData.bidUserPic)
-      formData.append('amount',parseInt(bidFormData.amount))
+      formData.append('amount',parseFloat(bidFormData.amount))
       formData.append('ProjectId',bidFormData.ProjectId)
       formData.append('UserId',bidFormData.UserId)
       formData.append('score',bidFormData.score)
@@ -156,7 +156,7 @@ function BidList(props) {
 
 }
 const deleteBid =async()=>{
-  const response = await axios.get(`http://localhost:4000/bids/delete/${isDeleteOpen.id}`,{withCredentials:true}).then((resp)=>{
+  const response = await axios.get(`${url}/bids/delete/${isDeleteOpen.id}`,{withCredentials:true}).then((resp)=>{
     
     if(resp.data.error){
       setOpenError({open:true,message:`${resp.data.error}`});
@@ -278,8 +278,11 @@ const openDelete = (id)=>{
         {/* End of search List */}
         
         <div>
-          <Button onClick={openModal}>Add new Bid</Button>
+        {authState.role==="admin"||authState.role==="engineer"||authState.role==="manager" ?
+          <Button size="small" onClick={openModal}>Add new Bid</Button>
+          :<p>Read Only</p>}
         </div>
+       
         <Modal isOpen={isModalOpen} onClose={closeModal}>
           <ModalHeader>Insert BidInfo Info</ModalHeader>
           <span style={{color:'red'}}>{errorMessage}</span>
@@ -314,7 +317,7 @@ const openDelete = (id)=>{
           
           <Label>
             <span>Amount</span>
-              <Input type="number" className="mt-1" name="amount"  autoComplete='off' onChange={(e)=>setBidFormData({...bidFormData,amount:e.target.value})} required/>
+              <Input type="number" step="0.01" className="mt-1" name="amount"  autoComplete='off' onChange={(e)=>setBidFormData({...bidFormData,amount:e.target.value})} required/>
           </Label>
           
           <Label>

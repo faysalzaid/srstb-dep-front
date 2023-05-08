@@ -85,7 +85,9 @@ function CompanyList(props) {
     const [searchTerm,setSearchTerm] = useState("")
     const [fetchedResult,setFetchedResult] = useState([])
     const [count,setCount] = useState(0)
+    const {authState,settings} = useContext(AuthContext)
 
+  
     //ENDOF COMPANY DATA
 
 useEffect(()=>{
@@ -207,7 +209,7 @@ const deleteCompany =async()=>{
 
   return (
     <>
-    <TitleChange name={"Companies | Cellu-Crm"}/>
+    <TitleChange name={`Companies | ${settings.name}`}/>
    
       <PageTitle>List of Companies Registered</PageTitle>
 
@@ -270,7 +272,9 @@ const deleteCompany =async()=>{
 
 
       <div>
-        <Button onClick={openModal}>Add Company</Button>
+        {authState.role==="admin" || authState.role==="hr" || authState.role==="manager" ?
+        <Button size="small" onClick={openModal}>Add Company</Button>
+        :"Read Only"}
       </div>
       <Modal isOpen={isModalOpen} onClose={closeModal}>
         <ModalHeader>Insert Company Info</ModalHeader>

@@ -101,7 +101,7 @@ function UsersList(props) {
     formData.append("password", data.password);
     formData.append("image", userForm.image);
 
-    // console.log("this is the data from form", formData);
+
     await axios.post(`${url}/users`, formData,{withCredentials:true}).then((resp) => {
       if (resp.data.error) {
         console.log("error: ", resp.data.error);
@@ -287,9 +287,11 @@ const handleCloseError = (event, reason) => {
       {/* End of search List */}
 
       <p></p>
+      {authState.role==='admin'||authState.role==="manager"||authState.role==="hr" ?
       <div>
-        <Button onClick={openModal}>Register User</Button>
+        <Button size="small" onClick={openModal}>Register User</Button>
       </div>
+      :<p>Read Only</p>}
       <Modal isOpen={isModalOpen} onClose={closeModal}>
         <ModalHeader>Insert Client Info</ModalHeader>
         <span style={{ color: "red" }}>{errorMessage}</span>
@@ -351,16 +353,17 @@ const handleCloseError = (event, reason) => {
                   name="role"
                 >
                   <option>Select</option>
-                  {authState.role==='admin'?<option>admin</option>:""}
-                
-                  <option>finance</option>
-                  <option>design</option>
-                  <option>roadquality</option>
-                  <option>client</option>
-                  <option>engineer</option>
-                  <option>hr</option>
-                  <option>contractadmin</option>
-                  <option>planning</option>
+                  {authState.role==='admin'?
+                  <option value="admin">Admin</option>
+                  :""}
+                  {authState.role==="admin" || authState.role==="manager"? <option value="manager">Manager</option> :""}
+                  <option value="finance">Finance</option>
+                  <option value="design">Design</option>
+                  <option value="roadquality">Road Quality</option>
+                  <option value="client">Client</option>
+                  <option value="engineer">Engineer</option>
+                  <option value="contractadmin">Contract Admin</option>
+                  <option value="planning">Planning</option>
                 </Field>
               </Label>
               <Label className="mt-4">

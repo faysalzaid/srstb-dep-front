@@ -619,15 +619,14 @@ navWrapper.classList.remove('active')
       </ModalFooter>
     </Modal>
 
-    <nav className='nav-one'>
+    <nav className='nav-one bg-white shadow-md mt-6 rounded-t-md dark:bg-gray-700'>
       <div className='nav-list-wrapper'>
         <ul className='nav-list-ul'>
-            <li className='nav-link active' onClick={()=>{handleOverview(); hideNav()}}><CgMenuGridR/>Overview</li>
-            <li className='nav-link' onClick={()=>{handleTask(); hideNav()}}><BiCheckCircle/> Reports</li>
-            <li className='nav-link' onClick={()=>{handleBids(); hideNav()}}><VscFiles />Bids</li>
-            <li className='nav-link' onClick={()=>{handleBudgets(); hideNav()}}><GrTextAlignLeft />Budgets</li>
-            <li className='nav-link' onClick={()=>{handleContracts(); hideNav()}}><AiFillFile />Contracts</li>
-            <li className='nav-link' onClick={()=>{handleTask(); hideNav()}}><BiCheckCircle/> Comments</li>
+            <li className='nav-link active dark:text-gray-300' onClick={()=>{handleOverview(); hideNav()}}><CgMenuGridR/>Overview</li>
+            {/* <li className='nav-link' onClick={()=>{handleTask(); hideNav()}}><BiCheckCircle/> Reports</li> */}
+            <li className='nav-link dark:text-gray-300' onClick={()=>{handleBids(); hideNav()}}><VscFiles />Bids</li>
+            <li className='nav-link dark:text-gray-300' onClick={()=>{handleBudgets(); hideNav()}}><GrTextAlignLeft />Budgets</li>
+            <li className='nav-link dark:text-gray-300' onClick={()=>{handleContracts(); hideNav()}}><AiFillFile />Contracts</li>
 
         </ul>
       </div>

@@ -119,11 +119,11 @@ const ProjectReport = lazy(() =>
 const TimesheetDetail = lazy(() =>
     import ('../components/Timesheet/TimesheetDetail'))
 const Settings = lazy(() =>
-        import ('../components/Settings/Settings'))
+    import ('../components/Settings/Settings'))
 
-const ArchiveList = lazy(()=>
-    import('../components/Archives/ArchiveList')
-)
+const ArchiveList = lazy(() =>
+        import ('../components/Archives/ArchiveList')
+    )
     /**
      * ⚠ These are internal routes!
      * They will be rendered inside the app, using the default `containers/Layout`.
@@ -137,29 +137,29 @@ const ArchiveList = lazy(()=>
 const routes = [{
         path: '/dashboard', // the url
         component: Dashboard, // view rendered
-        roles: ['admin', 'finance', 'design', 'client', 'roadquality', 'engineer', 'contractadmin', 'hr']
+        roles: ['admin', 'manager', 'finance', 'design', 'client', 'roadquality', 'engineer', 'contractadmin', 'hr']
     },
     {
         path: '/bids',
         component: BidsList,
-        roles: ['admin', 'finance', 'engineer']
+        roles: ['admin', 'finance', 'engineer', 'manager']
     },
 
     {
         path: '/bids/:id',
         component: BidDetail,
-        roles: ['admin', 'finance', 'engineer']
+        roles: ['admin', 'finance', 'engineer', 'manager']
     },
 
     {
         path: '/companies',
         component: Companylist,
-        roles: ['admin', 'finance', 'design', 'engineer', 'hr']
+        roles: ['admin', 'finance', 'design', 'engineer', 'hr', 'manager']
     },
     {
         path: '/companies/:id',
         component: CompanyDetail,
-        roles: ['admin', 'finance', 'design', 'engineer', 'hr']
+        roles: ['admin', 'finance', 'design', 'engineer', 'hr', 'manager']
     },
     {
         path: '/departments/:id',
@@ -170,12 +170,12 @@ const routes = [{
     {
         path: '/users',
         component: UsersList,
-        roles: ['admin', 'finance']
+        roles: ['admin', 'finance', 'manager', 'hr']
     },
     {
         path: '/users/:id',
         component: UsersDetail,
-        roles: ['admin', 'finance']
+        roles: ['admin', 'finance', 'manager', 'hr']
     },
 
     {
@@ -262,12 +262,12 @@ const routes = [{
     {
         path: "/pglist",
         component: PgList,
-        roles: ['admin', 'finance', 'design', 'engineer','planning']
+        roles: ['admin', 'finance', 'design', 'engineer', 'planning']
     },
     {
         path: "/pglist/:id",
         component: PgDetail,
-        roles: ['admin', 'finance', 'design', 'engineer','planning']
+        roles: ['admin', 'finance', 'design', 'engineer', 'planning']
     },
     {
         path: "/auther",

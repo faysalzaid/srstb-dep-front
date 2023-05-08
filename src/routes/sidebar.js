@@ -37,27 +37,27 @@ routes = [{
         path: '/app/dashboard', // the url
         icon: 'HomeIcon', // the component being exported from icons/index.js
         name: 'Dashboard', // name that appear in Sidebar
-        roles: ['admin', 'finance', 'design', 'client', 'roadquality', 'engineer', 'contractadmin', 'hr']
+        roles: ['admin', 'finance', 'design', 'client', 'roadquality', 'engineer', 'contractadmin', 'hr', 'manager']
     },
     {
         path: '/app/companies',
         icon: 'SunIcon',
         name: 'Companies',
-        roles: ['admin', 'finance', 'design', 'engineer', 'hr']
+        roles: ['admin', 'finance', 'design', 'client', 'roadquality', 'engineer', 'contractadmin', 'hr', 'manager']
     },
 
     {
         path: '/app/bids',
         icon: 'FormsIcon',
         name: 'Bids',
-        roles: ['admin', 'finance', 'engineer']
+        roles: ['admin', 'finance', 'engineer', 'manager']
     },
 
     {
         path: '/app/users',
         icon: 'PeopleIcon',
         name: 'Users',
-        roles: ['admin', 'finance']
+        roles: ['admin', 'finance', 'manager', 'hr']
     },
     {
         path: '/app/charts',
