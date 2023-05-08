@@ -52,9 +52,10 @@ export const AuthContextProvider = withRouter((props) => {
       if (decodedToken.exp * 1000 < currentDate.getTime()) {
         if (!refreshingToken) {
           refreshingToken = true;
-          console.log('calling graph auth function:::::::::::::::');
-          await graphAuth();
+          console.log('calling graph auth function:::::');
+          await graphAuth(config);
           refreshingToken = false;
+          // return newConfig;
         }
       }
       return config;
@@ -63,20 +64,12 @@ export const AuthContextProvider = withRouter((props) => {
       return Promise.reject(error);
     }
   );
-  
-
-
-
-  
-
-
 // End of jwt Response Interceptor
 
 
   jwtAxios.get(`${url}`)
   let isRefreshingTokenAuth = false;
-
-  const graphAuth = async() => {
+  const graphAuth = async(config) => {
     // If token is already being refreshed, exit early to avoid infinite loop
     if (isRefreshingTokenAuth) {
       return;
@@ -89,40 +82,34 @@ export const AuthContextProvider = withRouter((props) => {
       const cookie = getCookie('accessToken');
       if (!cookie || cookie === undefined) {
         history.push('/login');
-        console.log('runned');
+        // console.log('runned');
       }
       const decodeAccessToken = jwt_decode(userData.token);
-      const resp = await axios.post(`${url}/login/refreshToken`, { withCredentials: true }, { token: decodeAccessToken ?.refreshToken });
-      if (resp.data.error) {
-        setAuthState({ id: "", token: "", username: "", email: "",image:"", role: "", state: false, refreshToken: "" });
-        history.push('/login');
-        console.log('/grapauth');
-      } else {
-        const data = resp?.data;
-        const userData ={
-          id: data.id,
-          token: data.token,
-          username: data.name,
-          email: data.email,
-          image:data.image,
-          role: data.role,
-          state: true,
-          refreshToken: data.refreshToken
-          // Add other properties as needed
-        };
-        const stringFied = JSON.stringify(userData);
-        setCookie('accessToken',stringFied);
-        setAuthState({ id: data?.id, username: data?.name,email: data?.email,image:data?.image,role:data?.role,state:true,refreshToken:data?.refreshToken });
-      }
+      // console.log(decodeAccessToken?.id);
+      const resp = await jwtAxios.post(`${url}/login/refreshToken`, { id: decodeAccessToken?.id,refreshToken:decodeAccessToken?.refreshToken });
+      // console.log(resp.data);
+      const data = resp?.data;
+      const usersData ={
+        id: data.id,
+        token: data.token,
+        username: data.name,
+        email: data.email,
+        image:data.image,
+        role: data.role,
+        state: true,
+        refreshToken: data.refreshToken
+        // Add other properties as needed
+      };
+      const stringFied = JSON.stringify(usersData);
+      setCookie('accessToken',stringFied);
+      // userData=userData
+      setAuthState({ id: data?.id, username: data?.name,email: data?.email,image:data?.image,role:data?.role,state:true,refreshToken:data?.refreshToken });
+      config.headers.Authorization = `Bearer ${data.token}`; // update the headers with the new token
     } catch (error) {
       console.error(error);
-      // Handle error here
-    } finally {
-      // Reset flag to indicate that token refresh is complete
-      isRefreshingTokenAuth = false;
+      // setAuthState({ id: "", token: "", username: "", email: "",image:"", role: "", state: false, refreshToken: "" });
     }
-  };
-  
+  }
 // console.log(history.length);
 
 useEffect(()=>{

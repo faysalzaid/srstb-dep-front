@@ -623,10 +623,11 @@ navWrapper.classList.remove('active')
       <div className='nav-list-wrapper'>
         <ul className='nav-list-ul'>
             <li className='nav-link active' onClick={()=>{handleOverview(); hideNav()}}><CgMenuGridR/>Overview</li>
-            {/* <li className='nav-link' onClick={()=>{handleTask(); hideNav()}}><BiCheckCircle/> Reports</li> */}
+            <li className='nav-link' onClick={()=>{handleTask(); hideNav()}}><BiCheckCircle/> Reports</li>
             <li className='nav-link' onClick={()=>{handleBids(); hideNav()}}><VscFiles />Bids</li>
             <li className='nav-link' onClick={()=>{handleBudgets(); hideNav()}}><GrTextAlignLeft />Budgets</li>
             <li className='nav-link' onClick={()=>{handleContracts(); hideNav()}}><AiFillFile />Contracts</li>
+            <li className='nav-link' onClick={()=>{handleTask(); hideNav()}}><BiCheckCircle/> Comments</li>
 
         </ul>
       </div>

@@ -115,7 +115,7 @@ function ReportsComponent(props) {
 
     return ( 
        <>
-      <section  className="w-4/2 mt-4 contracts-section p-4 rounded-md shadow-md"> 
+      <section  className=" contracts-section p-4 rounded-md shadow-md"> 
        <PageTitle>Generate Reports</PageTitle>
 
        <TitleChange name={`Reports | ${settings.name}`} />
@@ -158,7 +158,7 @@ function ReportsComponent(props) {
 
 
         <div>
-          <div className="mt-4">
+          <div className="" ref={printSectionRef}>
             <Table>
               <TableHeader >
                 <TableRow>
