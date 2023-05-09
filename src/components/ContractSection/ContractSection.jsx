@@ -1,31 +1,47 @@
-import React, { useEffect, useState } from 'react';
-import { Table, TableHeader, TableBody, TableRow, TableCell,Button,Badge,TableContainer  } from '@windmill/react-ui';
-import { ChatIcon, CartIcon, MoneyIcon, PeopleIcon, TrashIcon, EditIcon } from '../../icons'
-import { AiFillEye } from 'react-icons/ai';
-import {FaRegEdit} from 'react-icons/fa'
-import {Link} from 'react-router-dom'
-import axios from 'axios';
-import { url } from 'config/urlConfig';
-function ContractSection({project,id}) {
-  const [contracts,setContracts] = useState([])
-useEffect(()=>{
-  const getData = async()=>{
-    await axios.get(`${url}/contract`,{withCredentials:true}).then((resp)=>{
-      if(resp.data.error){
-  
-      }else{
-        // console.log(resp.data);
-        const data = resp.data.filter((dt)=>dt.ProjectId===id)
-        setContracts(data)
-       
-      }
-    })
-  }
-  getData()
-},[id])
+import React, { useEffect, useState } from "react";
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableCell,
+  Button,
+  Badge,
+  TableContainer,
+} from "@windmill/react-ui";
+import {
+  ChatIcon,
+  CartIcon,
+  MoneyIcon,
+  PeopleIcon,
+  TrashIcon,
+  EditIcon,
+} from "../../icons";
+import { AiFillEye } from "react-icons/ai";
+import { FaRegEdit } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import axios from "axios";
+import { url } from "config/urlConfig";
+function ContractSection({ project, id }) {
+  const [contracts, setContracts] = useState([]);
+  useEffect(() => {
+    const getData = async () => {
+      await axios
+        .get(`${url}/contract`, { withCredentials: true })
+        .then((resp) => {
+          if (resp.data.error) {
+          } else {
+            // console.log(resp.data);
+            const data = resp.data.filter((dt) => dt.ProjectId === id);
+            setContracts(data);
+          }
+        });
+    };
+    getData();
+  }, [id]);
 
   return (
-    <section className="contracts-section p-4 bg-white rounded-md shadow-md">
+    <section className="contracts-section p-4 bg-white rounded-md shadow-md dark:bg-gray-700">
       <h2 className="text-xl font-medium mb-4">Contracts</h2>
       <TableContainer className="mb-4">
         <Table>
@@ -40,55 +56,57 @@ useEffect(()=>{
             </TableRow>
           </TableHeader>
           <TableBody>
-          {contracts.map((contract,i)=>
+            {contracts.map((contract, i) => (
               <TableRow key={i}>
-                
                 <>
-              
-                <TableCell>
-                  <div className="flex items-center text-sm">
-                    <div>
-                      <p className="font-semibold">{contract.subject}</p>
+                  <TableCell>
+                    <div className="flex items-center text-sm">
+                      <div>
+                        <p className="font-semibold">{contract.subject}</p>
+                      </div>
                     </div>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <span className="text-sm">{contract.contractValue.toLocaleString()}</span>
-                </TableCell>
-                <TableCell>
-                  <span className="text-sm">{project.name}</span>
-                </TableCell>
-                <TableCell>
-                  <span className="text-sm"></span>
-                </TableCell>
-           
-             
-                <TableCell>
-                  <Badge style={{color:contract.status==='signed'?'green':'red'}}>{contract.status}</Badge>
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center space-x-4">
-                  <Link to={`/app/contract/${contract.id}`}>
-                    <Button 
-                     layout="link"
-                     size="icon"
-                     aria-label="View"
-                     style={{color:'red'}}
-                     >
-                      <AiFillEye className="w-5 h-5" aria-hidden="true" /> 
-                                       
-                   </Button>
-                   </Link>  
+                  </TableCell>
+                  <TableCell>
+                    <span className="text-sm">
+                      {contract.contractValue.toLocaleString()}
+                    </span>
+                  </TableCell>
+                  <TableCell>
+                    <span className="text-sm">{project.name}</span>
+                  </TableCell>
+                  <TableCell>
+                    <span className="text-sm"></span>
+                  </TableCell>
+
+                  <TableCell>
+                    <Badge
+                      style={{
+                        color: contract.status === "signed" ? "green" : "red",
+                      }}
+                    >
+                      {contract.status}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center space-x-4">
+                      <Link to={`/app/contract/${contract.id}`}>
+                        <Button
+                          layout="link"
+                          size="icon"
+                          aria-label="View"
+                          style={{ color: "red" }}
+                        >
+                          <AiFillEye className="w-5 h-5" aria-hidden="true" />
+                        </Button>
+                      </Link>
                     </div>
-                    </TableCell>
-                    </>  
-                    </TableRow>
-                    )}
-  
-                    </TableBody>
-                    </Table>
-                    </TableContainer>
-                    
+                  </TableCell>
+                </>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </section>
   );
 }
