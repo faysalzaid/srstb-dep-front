@@ -37,20 +37,20 @@ routes = [{
         path: '/app/dashboard', // the url
         icon: 'HomeIcon', // the component being exported from icons/index.js
         name: 'Dashboard', // name that appear in Sidebar
-        roles: ['admin', 'finance', 'design', 'client', 'roadquality', 'engineer', 'contractadmin', 'hr', 'manager']
+        roles: ['admin', 'finance', 'design', 'client', 'roadquality', 'planning', 'engineer', 'contractadmin', 'hr', 'manager']
     },
     {
         path: '/app/companies',
         icon: 'SunIcon',
         name: 'Companies',
-        roles: ['admin', 'finance', 'design', 'client', 'roadquality', 'engineer', 'contractadmin', 'hr', 'manager']
+        roles: ['admin', 'finance', 'design', 'roadquality', 'engineer', 'contractadmin', 'hr', 'manager', 'planning']
     },
 
     {
         path: '/app/bids',
         icon: 'FormsIcon',
         name: 'Bids',
-        roles: ['admin', 'finance', 'engineer', 'manager']
+        roles: ['admin', 'finance', 'engineer', 'manager', 'planning']
     },
 
     {
@@ -63,7 +63,7 @@ routes = [{
         path: '/app/charts',
         icon: 'ChartsIcon',
         name: 'Charts',
-        roles: ['admin', 'finance', 'design', 'client', 'roadquality', 'engineer', 'contractadmin']
+        roles: ['admin', 'finance', 'design', 'roadquality', 'planning', 'engineer', 'contractadmin', 'hr', 'manager']
     },
 
 
@@ -71,13 +71,13 @@ routes = [{
         path: '/app/chat',
         icon: 'ChatIcon',
         name: 'Chat',
-        roles: ['admin', 'finance', 'design', 'client', 'roadquality', 'engineer', 'contractadmin', 'hr']
+        roles: ['admin', 'finance', 'design', 'client', 'roadquality', 'planning', 'engineer', 'contractadmin', 'hr', 'manager']
     },
     {
         path: '/app/pglist',
         icon: 'TablesIcon',
         name: 'Projects',
-        roles: ['admin', 'finance', 'design', 'engineer']
+        roles: ['admin', 'finance', 'roadquality', 'engineer', 'manager', 'planning']
     },
     {
         path: '/app/archives',

@@ -364,6 +364,7 @@ const handleCloseError = (event, reason) => {
                   <option value="engineer">Engineer</option>
                   <option value="contractadmin">Contract Admin</option>
                   <option value="planning">Planning</option>
+                  <option value="hr">HR</option>
                 </Field>
               </Label>
               <Label className="mt-4">

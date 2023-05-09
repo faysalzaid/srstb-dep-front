@@ -405,7 +405,7 @@ navWrapper.classList.remove('active')
         <TableContainer>
         {/* Calendar section */}
         <div className='flex mb-2'>
-        <Button className="ml-0" onClick={openModal}>Update Project</Button>
+        <Button size="small" className="ml-0" onClick={openModal}>Update Project</Button>
         {project?.Invoice?.ProjectId===project.id?
         <Badge className='ml-2 mt-2'> <AiFillAlert  className='ml-2 mt-1'/>This Project is invoiced</Badge> 
         :<Link to={'/app/invoice'}> <Badge className='ml-2 mt-2' type="danger"> <AiOutlineAlert  className='ml-2 mt-1'/>This Project is Not Invoiced</Badge></Link>

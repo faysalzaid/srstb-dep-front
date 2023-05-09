@@ -298,7 +298,7 @@ const PgList = () => {
             <RoundIcon
               icon={ChatIcon}
               iconColorClass="text-teal-500 dark:text-teal-100"
-              bgColorClass="bg-teal-100 dark:bg-teal-500"
+            bgColorClass="bg-teal-100 dark:bg-teal-500"
               className="mr-4"
             />
           </InfoCard>
@@ -306,8 +306,12 @@ const PgList = () => {
   
         <TableContainer>
    
-  
-        <Button onClick={openModal}>New Project</Button>
+   
+          {authState.role==="admin" || authState.role==="engineer" || authState.role==="manager" || authState.role==="planning" ?
+        <Button size="small" onClick={openModal}>New Project</Button>
+        :<span>Read Only</span>}
+
+      
   
         </TableContainer>
         <Modal isOpen={isOpen} onClose={closeModal}>

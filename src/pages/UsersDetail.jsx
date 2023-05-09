@@ -29,7 +29,7 @@ import { AuthContext } from "../hooks/authContext";
 import useAuth from "hooks/useAuth";
 function UsersDetail(props) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const {authState} = useAuth(AuthContext)
+  const {authState,settings} = useAuth(AuthContext)
   function openModal() {
     setIsModalOpen(true);
   }
@@ -155,8 +155,11 @@ function UsersDetail(props) {
       />
       <PageTitle>{usersData.name}</PageTitle>
       <p></p>
+
       <div>
+      {authState.role==='admin'||authState.role==="manager"||authState.role==="hr" ?
         <Button onClick={openModal}>Update User</Button>
+        :<p>Read Only</p>}
       </div>
       <Modal isOpen={isModalOpen} onClose={closeModal}>
         <ModalHeader>Insert Client Info</ModalHeader>
@@ -218,16 +221,18 @@ function UsersDetail(props) {
                   className="w-full p-2.5 text-gray-500 bg-white border rounded-md shadow-sm outline-none appearance-none focus:border-indigo-600"
                   name="role"
                 >
-               <option>Select</option>
-                  <option>admin</option>
-                  <option>finance</option>
-                  <option>design</option>
-                  <option>roadquality</option>
-                  <option>client</option>
-                  <option>engineer</option>
-                  <option>hr</option>
-                  <option>contractadmin</option>
-                  <option>planning</option>
+              {authState.role==='admin'?
+                  <option value="admin">Admin</option>
+                  :""}
+                  {authState.role==="admin" || authState.role==="manager"? <option value="manager">Manager</option> :""}
+                  <option value="finance">Finance</option>
+                  <option value="design">Design</option>
+                  <option value="roadquality">Road Quality</option>
+                  <option value="client">Client</option>
+                  <option value="engineer">Engineer</option>
+                  <option value="contractadmin">Contract Admin</option>
+                  <option value="planning">Planning</option>
+                  <option value="hr">HR</option>
                 </Field>
               </Label>  
               </>}

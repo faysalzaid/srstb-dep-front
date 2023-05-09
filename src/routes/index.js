@@ -137,29 +137,29 @@ const ArchiveList = lazy(() =>
 const routes = [{
         path: '/dashboard', // the url
         component: Dashboard, // view rendered
-        roles: ['admin', 'manager', 'finance', 'design', 'client', 'roadquality', 'engineer', 'contractadmin', 'hr']
+        roles: ['admin', 'manager', 'finance', 'design', 'client', 'planning', 'roadquality', 'engineer', 'contractadmin', 'hr']
     },
     {
         path: '/bids',
         component: BidsList,
-        roles: ['admin', 'finance', 'engineer', 'manager']
+        roles: ['admin', 'finance', 'engineer', 'manager', 'planning']
     },
 
     {
         path: '/bids/:id',
         component: BidDetail,
-        roles: ['admin', 'finance', 'engineer', 'manager']
+        roles: ['admin', 'finance', 'engineer', 'manager', 'planning']
     },
 
     {
         path: '/companies',
         component: Companylist,
-        roles: ['admin', 'finance', 'design', 'engineer', 'hr', 'manager']
+        roles: ['admin', 'finance', 'design', 'engineer', 'hr', 'manager', 'planning']
     },
     {
         path: '/companies/:id',
         component: CompanyDetail,
-        roles: ['admin', 'finance', 'design', 'engineer', 'hr', 'manager']
+        roles: ['admin', 'finance', 'design', 'engineer', 'hr', 'manager', 'planning']
     },
     {
         path: '/departments/:id',
@@ -181,7 +181,7 @@ const routes = [{
     {
         path: '/charts',
         component: Charts,
-        roles: ['admin', 'finance', 'design', 'client', 'roadquality', 'engineer', 'contractadmin']
+        roles: ['admin', 'finance', 'design', 'planning', 'roadquality', 'engineer', 'contractadmin', 'manager']
     },
     {
         path: '/designations',
@@ -232,7 +232,7 @@ const routes = [{
     {
         path: '/chat',
         component: Chat,
-        roles: ['admin', 'finance', 'design', 'client', 'roadquality', 'engineer', 'contractadmin', 'hr']
+        roles: ['admin', 'manager', 'finance', 'design', 'client', 'planning', 'roadquality', 'engineer', 'contractadmin', 'hr']
     },
     {
         path: '/invoice',
@@ -252,7 +252,7 @@ const routes = [{
     {
         path: "/contract",
         component: ContractList,
-        roles: ['admin', 'finance', 'contractadmin']
+        roles: ['admin', 'manager', 'finance', 'contractadmin']
     },
     {
         path: "/contract/:id",
@@ -262,12 +262,12 @@ const routes = [{
     {
         path: "/pglist",
         component: PgList,
-        roles: ['admin', 'finance', 'design', 'engineer', 'planning']
+        roles: ['admin', 'finance', 'roadquality', 'engineer', 'manager', 'planning']
     },
     {
         path: "/pglist/:id",
         component: PgDetail,
-        roles: ['admin', 'finance', 'design', 'engineer', 'planning']
+        roles: ['admin', 'finance', 'roadquality', 'engineer', 'manager', 'planning']
     },
     {
         path: "/auther",
