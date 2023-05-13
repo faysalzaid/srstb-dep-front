@@ -1,0 +1,4 @@
+.sortable_arrow {
+  top: 50%;
+  transform: translateY(-50%);
+}
