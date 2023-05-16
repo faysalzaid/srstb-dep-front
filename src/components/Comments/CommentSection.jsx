@@ -175,9 +175,9 @@ function CommentSection({ project, id }) {
             add Comment
           </Button>
 
-      <h2 className="text-xl font-medium mb-4 mt-2">Comments</h2>
-      <div className="bg-white p-4 rounded-lg shadow-lg">
-  <h2 className="text-lg font-bold mb-4">Comments</h2>
+     
+      <div className="bg-white p-4 rounded-lg shadow-lg dark:bg-gray-700 dark:text-gray-300">
+  <h2 className="text-lg font-bold mb-4 dark:text-gray-300">Comments</h2>
 {comment?.map((cm)=>
   <div key={cm.id} className="border-t border-gray-200 py-4">
     <div className="flex items-center mb-4">
@@ -185,8 +185,8 @@ function CommentSection({ project, id }) {
         <img src={cm.image} alt="User picture" />
       </div>
       <div className="ml-4">
-        <p className="text-gray-800 font-bold">{cm.user}</p>
-        <p className="text-gray-500 text-sm">{new Date(cm.date).toLocaleString('en-US',options)}</p>
+        <p className="text-gray-800 dark:text-gray-300 font-bold">{cm.user}</p>
+        <p className="text-gray-500 text-sm dark:text-gray-300">{new Date(cm.date).toLocaleString('en-US',options)}</p>
       </div>
       <div className="ml-auto">
         {cm.approved? 
@@ -195,7 +195,7 @@ function CommentSection({ project, id }) {
         }
       </div>
     </div>
-    <p className="text-gray-700">{cm.comment}.</p>
+    <p className="text-gray-700 dark:text-gray-300">{cm.comment}.</p>
   </div>
 )}
   

@@ -122,7 +122,16 @@ const Settings = lazy(() =>
     import ('../components/Settings/Settings'))
 
 const ArchiveList = lazy(() =>
-        import ('../components/Archives/ArchiveList')
+    import ('../components/Archives/ArchiveList')
+)
+
+
+const AwardList = lazy(() =>
+    import ('../components/Awards/AwardList')
+)
+
+const AwardDetail = lazy(() =>
+        import ('../components/Awards/AwardLetterDetail')
     )
     /**
      * ⚠ These are internal routes!
@@ -348,6 +357,16 @@ const routes = [{
     {
         path: "/archives",
         component: ArchiveList,
+        roles: ['admin', 'roadquality']
+    },
+    {
+        path: "/awards",
+        component: AwardList,
+        roles: ['admin', 'roadquality']
+    },
+    {
+        path: "/awards/:id",
+        component: AwardDetail,
         roles: ['admin', 'roadquality']
     },
 ]

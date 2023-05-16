@@ -138,9 +138,7 @@ function Dashboard(props) {
   return (
     <>
       <TitleChange name={`Dashboard | ${settings.name}`} />
-      {authorization ? (
-        <UnAuthorized />
-      ) : (
+
         <>
           <PageTitle>Dashboard welcome {authState.username}</PageTitle>
 
@@ -195,6 +193,7 @@ function Dashboard(props) {
           </TableContainer>
 
           <PageTitle>Projects</PageTitle>
+    
           <div className="grid gap-6 mb-8 md:grid-cols-2">
             <ChartCard title="Project Percent Graph">
               <Doughnut {...projectPercentileGraph} />
@@ -207,19 +206,6 @@ function Dashboard(props) {
             </ChartCard>
           </div>
 
-          <section className=" w-full overflow-x-hidden flex flex-col gap-6 mb-6 ">
-            <ChartCard title="Yearly Data Comparison">
-              <div style={{ height: "260px" }}>
-                <Line_Chart />
-              </div>
-            </ChartCard>
-
-            <ChartCard title="Yearly Data Comparison">
-              <div style={{ height: "260px" }}>
-                <Area_Chart />
-              </div>
-            </ChartCard>
-          </section>
 
           <section className="grid gap-6 mb-8 md:grid-cols-2">
             <div className=" p-4 pb-0 bg-white rounded-lg shadow-xs dark:bg-gray-800 overflow-scroll">
@@ -237,6 +223,22 @@ function Dashboard(props) {
             </div>
           </section>
 
+          <section className=" w-full overflow-x-hidden flex flex-col gap-6 mb-6 ">
+            <ChartCard title="Yearly Data Comparison">
+              <div style={{ height: "260px" }}>
+                <Line_Chart />
+              </div>
+            </ChartCard>
+
+            <ChartCard title="Yearly Data Comparison">
+              <div style={{ height: "260px" }}>
+                <Area_Chart />
+              </div>
+            </ChartCard>
+          </section>
+
+
+         
           {/* <section className=" grid gap-6 md:grid-cols-1"> */}
           <div className=" p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800 overflow-scroll mb-6">
             <p className="mb-4 font-semibold text-gray-800 dark:text-gray-300">
@@ -246,7 +248,7 @@ function Dashboard(props) {
           </div>
           {/* </section> */}
         </>
-      )}
+
     </>
   );
 }

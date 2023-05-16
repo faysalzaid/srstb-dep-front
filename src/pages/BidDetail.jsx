@@ -501,7 +501,8 @@ function BidDetail(props) {
                 <TableCell>Owner</TableCell>
                 <TableCell>Phone</TableCell>
                 <TableCell>Amount</TableCell>
-                <TableCell>Status</TableCell>
+         
+                <TableCell>Selected</TableCell>
                 <TableCell>Actions</TableCell>
               </tr>
             </TableHeader>
@@ -543,9 +544,10 @@ function BidDetail(props) {
                   <TableCell>
                     <span className="text-sm">{parseFloat(bidsData?.amount).toLocaleString()} ETB</span>
                   </TableCell>
-                  
-                  <TableCell>
-                  <Badge type={bidsData.status==='approved'?"success":"danger"}>{bidsData.status}</Badge>
+    
+
+                <TableCell>
+                  <Badge type={bidsData.selected?"success":"danger"}>{bidsData.selected?"Yes":"No"}</Badge>
                 </TableCell>
                   
                   <TableCell>

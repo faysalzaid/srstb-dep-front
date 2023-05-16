@@ -11,7 +11,7 @@ import { CgMenuGridR } from 'react-icons/cg'
 import { BiCheckCircle, BiTime } from 'react-icons/bi'
 
 import { VscFiles } from 'react-icons/vsc'
-import { FaCommentDot,FaCommentDots } from 'react-icons/fa'
+import { FaAward, FaCommentDot,FaCommentDots } from 'react-icons/fa'
 import { GrTextAlignLeft } from 'react-icons/gr'
 import { AiFillFile, AiOutlineFile,AiFillAlert,AiOutlineAlert } from 'react-icons/ai'
 import { ErrorAlert, SuccessAlert } from "components/Alert";  
@@ -43,6 +43,7 @@ import CommentSection from 'components/Comments/CommentSection'
 import { useContext } from 'react'
 import { AuthContext } from 'hooks/authContext'
 import TitleChange from 'components/Title/Title'
+import AwardSection from 'components/AwardSection/AwardSection'
 
 
 
@@ -61,6 +62,7 @@ const PgDetail = () => {
     const [showBudget,setShowBudget] = useState(false)
     const [showComments,setShowComments] = useState(false)
     const [showBid,setShowBid] = useState(false)
+    const [showAwards,setShowAwards] = useState(false)
     const [isOpen,setIsOpen] = useState(false)
     const {authState,settings} = useContext(AuthContext)
 // Alert logic and initialization
@@ -129,6 +131,7 @@ const handleCloseError = (event, reason) => {
             if(resp.data.error){
               setOpenError({open:true,message:`${resp.data.error}`})
             }
+            // console.log(resp.data);
           setProject(resp.data)
           setBudgets(resp.data.yearlyBudgets)
           // console.log(resp.data.Invoice.length);
@@ -231,6 +234,7 @@ setTimeout(() => {
 }, 1000);
 
 function handleOverview(){
+setShowAwards(false)
 setShowOverview(true)
 setShowContract(false)
 setShowBudget(false)
@@ -243,6 +247,7 @@ function handleTask(){
 }
 
 function handleBids(){
+  setShowAwards(false)
   setShowContract(false)
   setShowOverview(false)
   setShowBudget(false)
@@ -253,6 +258,7 @@ function handleBids(){
 
 
 function handleBudgets(){
+  setShowAwards(false)
   setShowContract(false)
   setShowOverview(false)
   setShowBudget(true)
@@ -261,6 +267,7 @@ function handleBudgets(){
   }
 
 function handleContracts(){
+setShowAwards(false)
 setShowContract(true)
 setShowOverview(false)
 setShowBudget(false)
@@ -269,12 +276,23 @@ setShowComments(false)
 }
 
 function handleComments(){
+  setShowAwards(false)
   setShowContract(false)
   setShowOverview(false)
   setShowBudget(false)
   setShowBid(false)
   setShowComments(true)
   }
+
+
+  function handleAwards(){
+    setShowAwards(true)
+    setShowContract(false)
+    setShowOverview(false)
+    setShowBudget(false)
+    setShowBid(false)
+    setShowComments(false)
+    }
 
 const handleMenu = () => {
 let menu = document.querySelector('.menu')
@@ -646,8 +664,9 @@ navWrapper.classList.remove('active')
             <li className='nav-link dark:text-gray-300' onClick={()=>{handleBids(); hideNav()}}><VscFiles />Bids</li>
             <li className='nav-link dark:text-gray-300' onClick={()=>{handleBudgets(); hideNav()}}><GrTextAlignLeft />Budgets</li>
             <li className='nav-link dark:text-gray-300' onClick={()=>{handleContracts(); hideNav()}}><AiFillFile />Contracts</li>
-            <li className='nav-link' onClick={()=>{handleTask(); hideNav()}}><BiCheckCircle/> Reports</li>
-            <li className='nav-link' onClick={()=>{handleComments(); hideNav()}}><FaCommentDots/> Comments</li>
+            <li className='nav-link dark:text-gray-300' onClick={()=>{handleTask(); hideNav()}}><BiCheckCircle/> Reports</li>
+            <li className='nav-link dark:text-gray-300' onClick={()=>{handleComments(); hideNav()}}><FaCommentDots/> Comments</li>
+            <li className='nav-link dark:text-gray-300' onClick={()=>{handleAwards(); hideNav()}}><FaAward/> Awards</li>
         </ul>
       </div>
       <div className='menu' onClick={handleMenu}>
@@ -662,6 +681,7 @@ navWrapper.classList.remove('active')
           {showBudget&&<BudgetList id={id} budgets={budgets} setBudgets={setBudgets} invoiceIds={project?.Invoice?.id}/>}
           {showBid&&<BidSection bid={bids} project={project} users={usersData} setBids={setBids} setProject={setProject}/>}
           {showComments&&<CommentSection project={project} id={id}/>}
+          {showAwards&&<AwardSection bid={bids} project={project} users={usersData} setBids={setBids} setProject={setProject}/>}
 
 
 

@@ -47,8 +47,7 @@ function BidSection({ bid, project, users, setBids, setProject }) {
       BidId: bidSelect.id,
     };
     // console.log(request);
-    await axios
-      .post(`${url}/projects/bidselect/${project?.id}`, request, {
+    await axios.post(`${url}/projects/bidselect/${project?.id}`, request, {
         withCredentials: true,
       })
       .then((resp) => {
@@ -84,7 +83,7 @@ function BidSection({ bid, project, users, setBids, setProject }) {
   };
 
   return (
-    <section className="contracts-section p-4 bg-white rounded-md shadow-md dark:bg-gray-700">
+    <section className="contracts-section p-4 bg-white rounded-md shadow-md dark:bg-gray-700 dark:text-gray-300">
       <ErrorAlert
         open={openError.open}
         handleClose={handleCloseError}
@@ -166,7 +165,7 @@ function BidSection({ bid, project, users, setBids, setProject }) {
             {bid.map((bids) => (
               <TableRow key={bids.id}>
                 <TableCell>
-                  <div className="flex items-center text-sm">
+                  <div className="flex items-center text-sm ">
                     <div>
                       <p className="font-semibold">{bids.fullname}</p>
                     </div>

@@ -111,6 +111,12 @@ routes = [{
         roles: ['admin', 'finance']
     },
     {
+        path: '/app/awards',
+        icon: 'FaAward',
+        name: 'Awards',
+        roles: ['admin', 'finance']
+    },
+    {
         path: '/app/contract',
         icon: 'FaFileContract',
         name: 'Contracts',

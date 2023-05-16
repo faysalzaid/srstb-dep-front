@@ -646,7 +646,7 @@ function BudgetList({ id, budgets, setBudgets, invoiceIds }) {
                               colSpan="5"
                               className="px-6 py-4 whitespace-nowrap"
                             >
-                              <div className="overflow-x-auto">
+                              <div className="overflow-x-auto dark:text-gray-100 dark:bg-gray-700">
                                 <table className="min-w-full divide-y divide-gray-200">
                                   <thead>
                                     <tr>
@@ -682,7 +682,7 @@ function BudgetList({ id, budgets, setBudgets, invoiceIds }) {
                                       </th>
                                     </tr>
                                   </thead>
-                                  <tbody className="bg-white divide-y divide-gray-200">
+                                  <tbody className="bg-white divide-y divide-gray-200 dark:text-gray-100 dark:bg-gray-700">
                                     {row.bugetTracks?.map((detail, index) => (
                                       <tr key={index}>
                                         <td className="px-6 py-4 whitespace-nowrap">

@@ -378,13 +378,13 @@ const ArchivesList = () => {
 
           {/* Data section */}
           <h2 className="text-lg font-medium m-2">Filter</h2>
-       <div className="flex relative inline-flex">
+       <div className="flex relative inline-flex dark:bg-gray-700">
         <select onChange={(e)=>setDepFilter(e.target.value)} className="flex-2 mt-1 w-48 h-10 pl-3 pr-8 bg-white border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
           <option value={0}>All Departments</option>
           {departmentData?.map((pr)=> <option value={pr.id} key={pr.id}>{pr.name}</option>)}
          
         </select>
-        <div className="absolute inset-y-0 right-0 flex items-center px-2">
+        <div className="absolute inset-y-0 right-0 flex items-center px-2 ">
           <FaChevronDown className="text-gray-400" />
         </div>
       </div>
@@ -409,7 +409,7 @@ const ArchivesList = () => {
       <ModalHeader>Register File</ModalHeader>
       <ModalBody>
       <form onSubmit={handleSubmit} encType="multipart/form-data">
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-4 ">
           
           <Label>
             <span>Date</span>
@@ -494,7 +494,7 @@ const ArchivesList = () => {
     </Modal>
 
 
-    <div className="bg-gray-50 grid grid-cols-3 gap-4 mt-4">
+    <div className="bg-gray-50 grid grid-cols-3 gap-4 mt-4 dark:bg-gray-700">
 
   
   {fetchedResult.map((ar)=>
