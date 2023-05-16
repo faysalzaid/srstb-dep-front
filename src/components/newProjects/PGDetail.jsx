@@ -11,7 +11,7 @@ import { CgMenuGridR } from 'react-icons/cg'
 import { BiCheckCircle, BiTime } from 'react-icons/bi'
 
 import { VscFiles } from 'react-icons/vsc'
-import { FaCommentDots } from 'react-icons/fa'
+import { FaCommentDot,FaCommentDots } from 'react-icons/fa'
 import { GrTextAlignLeft } from 'react-icons/gr'
 import { AiFillFile, AiOutlineFile,AiFillAlert,AiOutlineAlert } from 'react-icons/ai'
 import { ErrorAlert, SuccessAlert } from "components/Alert";  
@@ -39,8 +39,10 @@ import { FadeLoader } from 'react-spinners'
 import OverView from 'components/overview/OverView'
 import BudgetList from 'components/Budgets/BudgetSection'
 import BidSection from 'components/Bids/BidsSection'
+import CommentSection from 'components/Comments/CommentSection'
 import { useContext } from 'react'
 import { AuthContext } from 'hooks/authContext'
+import TitleChange from 'components/Title/Title'
 
 
 
@@ -57,9 +59,10 @@ const PgDetail = () => {
     const [showContract,setShowContract] = useState(false)
     const [showOverview,setShowOverview] = useState(true)
     const [showBudget,setShowBudget] = useState(false)
+    const [showComments,setShowComments] = useState(false)
     const [showBid,setShowBid] = useState(false)
     const [isOpen,setIsOpen] = useState(false)
-    const {authState} = useContext(AuthContext)
+    const {authState,settings} = useContext(AuthContext)
 // Alert logic and initialization
 const [openSuccess, setOpenSuccess] = useState({ open: false, message: "" });
 
@@ -232,6 +235,7 @@ setShowOverview(true)
 setShowContract(false)
 setShowBudget(false)
 setShowBid(false)
+setShowComments(false)
 }
 
 function handleTask(){
@@ -243,6 +247,8 @@ function handleBids(){
   setShowOverview(false)
   setShowBudget(false)
   setShowBid(true)
+  setShowComments(false)
+
   }
 
 
@@ -251,6 +257,7 @@ function handleBudgets(){
   setShowOverview(false)
   setShowBudget(true)
   setShowBid(false)
+  setShowComments(false)
   }
 
 function handleContracts(){
@@ -258,7 +265,16 @@ setShowContract(true)
 setShowOverview(false)
 setShowBudget(false)
 setShowBid(false)
+setShowComments(false)
 }
+
+function handleComments(){
+  setShowContract(false)
+  setShowOverview(false)
+  setShowBudget(false)
+  setShowBid(false)
+  setShowComments(true)
+  }
 
 const handleMenu = () => {
 let menu = document.querySelector('.menu')
@@ -350,7 +366,7 @@ navWrapper.classList.remove('active')
    
   
         <PageTitle>Project | {project.name}</PageTitle>
-  
+        <TitleChange name={`Project Detail | ${settings.name}`}/>
         <ErrorAlert
         open={openError.open}
         handleClose={handleCloseError}
@@ -405,7 +421,10 @@ navWrapper.classList.remove('active')
         <TableContainer>
         {/* Calendar section */}
         <div className='flex mb-2'>
+        {authState.role==="admsin" || authState.role==="engineer" || authState.role==="manager" || authState.role==="planning" ?
         <Button size="small" className="ml-0" onClick={openModal}>Update Project</Button>
+        :<Badge className="mt-2">Read Only</Badge>}
+
         {project?.Invoice?.ProjectId===project.id?
         <Badge className='ml-2 mt-2'> <AiFillAlert  className='ml-2 mt-1'/>This Project is invoiced</Badge> 
         :<Link to={'/app/invoice'}> <Badge className='ml-2 mt-2' type="danger"> <AiOutlineAlert  className='ml-2 mt-1'/>This Project is Not Invoiced</Badge></Link>
@@ -413,7 +432,7 @@ navWrapper.classList.remove('active')
         </div>
         <div className=''>
         <Badge type={project.approved?"success":"danger"}>{project.approved?"Approved By Planning":"Didn't Get Approved By Planning"}</Badge>
-        {authState.role==='planning' || authState.role==='admin'?
+        {authState.role==='planning' || authState.role==='admin' || authState.role==="manager"?
         <Button onClick={projectApproval} size="small" className="ml-4" style={{background:project.approved?'green':'red'}} >{project.approved?"UnApprove":"Approve"}</Button>
         :""}
         </div>
@@ -623,11 +642,12 @@ navWrapper.classList.remove('active')
       <div className='nav-list-wrapper'>
         <ul className='nav-list-ul'>
             <li className='nav-link active dark:text-gray-300' onClick={()=>{handleOverview(); hideNav()}}><CgMenuGridR/>Overview</li>
-            {/* <li className='nav-link' onClick={()=>{handleTask(); hideNav()}}><BiCheckCircle/> Reports</li> */}
+            
             <li className='nav-link dark:text-gray-300' onClick={()=>{handleBids(); hideNav()}}><VscFiles />Bids</li>
             <li className='nav-link dark:text-gray-300' onClick={()=>{handleBudgets(); hideNav()}}><GrTextAlignLeft />Budgets</li>
             <li className='nav-link dark:text-gray-300' onClick={()=>{handleContracts(); hideNav()}}><AiFillFile />Contracts</li>
-
+            <li className='nav-link' onClick={()=>{handleTask(); hideNav()}}><BiCheckCircle/> Reports</li>
+            <li className='nav-link' onClick={()=>{handleComments(); hideNav()}}><FaCommentDots/> Comments</li>
         </ul>
       </div>
       <div className='menu' onClick={handleMenu}>
@@ -641,6 +661,7 @@ navWrapper.classList.remove('active')
           {showContract&&<ContractSection project={project} id={id}/>}
           {showBudget&&<BudgetList id={id} budgets={budgets} setBudgets={setBudgets} invoiceIds={project?.Invoice?.id}/>}
           {showBid&&<BidSection bid={bids} project={project} users={usersData} setBids={setBids} setProject={setProject}/>}
+          {showComments&&<CommentSection project={project} id={id}/>}
 
 
 

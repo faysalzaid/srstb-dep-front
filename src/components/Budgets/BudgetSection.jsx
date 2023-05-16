@@ -13,7 +13,7 @@ import {
 } from "@windmill/react-ui";
 import "../overview/overview.css";
 import { AiFillEye, AiFillDelete, AiFillEdit } from "react-icons/ai";
-import { Modal, ModalHeader, ModalBody, ModalFooter } from "@windmill/react-ui";
+import { Modal, ModalHeader, ModalBody, ModalFooter,Textarea } from "@windmill/react-ui";
 import PageTitle from "components/Typography/PageTitle";
 import { FaEdit, FaRemoveFormat } from "react-icons/fa";
 import { FaPlusCircle, FaCheckCircle, FaRegMoneyBillAlt } from "react-icons/fa";
