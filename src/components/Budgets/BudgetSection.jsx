@@ -301,7 +301,7 @@ function BudgetList({ id, budgets, setBudgets, invoiceIds }) {
                   <span>Date</span>
                 </label>
                 <input
-                  className="form-input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-500 focus:ring-opacity-50"
+                  className="form-input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-500 focus:ring-opacity-50 bg-transparent dark:border-gray-600"
                   type="date"
                   name="date"
                   onChange={(e) =>
@@ -328,20 +328,20 @@ function BudgetList({ id, budgets, setBudgets, invoiceIds }) {
         <Modal isOpen={isUtilized.open} onClose={onUtilizedClose}>
           <form onSubmit={handleUtilization}>
             <ModalHeader>
-              <span className="text-lg font-medium text-gray-700">
+              <span className="text-lg font-medium text-gray-700 dark:text-gray-300">
                 Utilize Budget
               </span>
             </ModalHeader>
             <ModalBody>
               <div className="mb-4">
                 <label
-                  className="mt-2 block text-gray-700 font-bold mb-2"
+                  className="mt-2 block text-gray-700 dark:text-gray-300 font-bold mb-2"
                   htmlFor="year"
                 >
                   <span>Date</span>
                 </label>
                 <input
-                  className="form-input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-500 focus:ring-opacity-50"
+                  className="form-input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-500 focus:ring-opacity-50 bg-transparent dark:border-gray-600"
                   type="date"
                   name="date"
                   onChange={(e) =>
@@ -353,7 +353,7 @@ function BudgetList({ id, budgets, setBudgets, invoiceIds }) {
                   required
                 />
                 <input
-                  className="mt-2 form-input block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-500 focus:ring-opacity-50"
+                  className="mt-2 form-input block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-500 focus:ring-opacity-50 bg-transparent dark:border-gray-600"
                   type="number"
                   name="utilized"
                   step={"0.01"}
@@ -385,7 +385,7 @@ function BudgetList({ id, budgets, setBudgets, invoiceIds }) {
         <Modal isOpen={isOpen} onClose={onClose}>
           <form onSubmit={handleSubmit}>
             <ModalHeader>
-              <span className="text-lg font-medium text-gray-700">
+              <span className="text-lg font-medium text-gray-700 dark:text-gray-300">
                 Add New Budget
               </span>
             </ModalHeader>
@@ -395,10 +395,10 @@ function BudgetList({ id, budgets, setBudgets, invoiceIds }) {
                   className="mt-2 block text-gray-700 font-bold mb-2"
                   htmlFor="year"
                 >
-                  <span>Year</span>
+                  <span className=" dark:text-gray-300">Year</span>
                 </label>
                 <input
-                  className="form-input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-500 focus:ring-opacity-50"
+                  className="form-input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-500 focus:ring-opacity-50 bg-transparent dark:border-gray-600"
                   type="date"
                   name="year"
                   onChange={(e) =>
@@ -410,11 +410,11 @@ function BudgetList({ id, budgets, setBudgets, invoiceIds }) {
                   className="mt-2 block text-gray-700 font-bold mb-2"
                   htmlFor="year"
                 >
-                  <span>Allocated Budget</span>
+                  <span className=" dark:text-gray-300">Allocated Budget</span>
                 </label>
                 <input
                   type="number"
-                  className="form-input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-500 focus:ring-opacity-50"
+                  className="form-input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-500 focus:ring-opacity-50 bg-transparent dark:border-gray-600"
                   name="allocatedBudget"
                   step="0.01"
                   onChange={(e) =>
@@ -430,11 +430,11 @@ function BudgetList({ id, budgets, setBudgets, invoiceIds }) {
                   className="mt-2 block text-gray-700 font-bold mb-2"
                   htmlFor="year"
                 >
-                  <span>Utilized Budget</span>
+                  <span className=" dark:text-gray-300">Utilized Budget</span>
                 </label>
                 <input
                   type="number"
-                  className="form-input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-500 focus:ring-opacity-50"
+                  className="form-input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-500 focus:ring-opacity-50 bg-transparent dark:border-gray-600"
                   name="utilizedBudget"
                   onChange={(e) =>
                     setBudgetForm({
@@ -544,7 +544,7 @@ function BudgetList({ id, budgets, setBudgets, invoiceIds }) {
                       key={rowIndex}
                     >
                       <>
-                        <tr className=" border-b border-gray-300 dark:border-gray-900">
+                        <tr className=" border-b border-gray-300 dark:border-gray-900 ">
                           <td className="px-6 py-4 whitespace-nowrap">
                             {row.year}
                           </td>
@@ -647,7 +647,7 @@ function BudgetList({ id, budgets, setBudgets, invoiceIds }) {
                               className="px-6 py-4 whitespace-nowrap"
                             >
                               <div className="overflow-x-auto">
-                                <table className="min-w-full divide-y divide-gray-200">
+                                <table className="min-w-full divide-y divide-gray-200 bg-gray-50 dark:bg-gray-800">
                                   <thead>
                                     <tr>
                                       <th
@@ -682,9 +682,9 @@ function BudgetList({ id, budgets, setBudgets, invoiceIds }) {
                                       </th>
                                     </tr>
                                   </thead>
-                                  <tbody className="bg-white divide-y divide-gray-200">
+                                  <tbody className="  divide-y divide-gray-200 ">
                                     {row.bugetTracks?.map((detail, index) => (
-                                      <tr key={index}>
+                                      <tr key={index} className=" border-b border-gray-200 dark:border-gray-600">
                                         <td className="px-6 py-4 whitespace-nowrap">
                                           {detail.date}
                                         </td>
