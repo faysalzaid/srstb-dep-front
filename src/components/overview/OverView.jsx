@@ -8,8 +8,8 @@ import { EditIcon, EyeIcon, EyeIconOne } from "icons";
 import { FiEdit } from "react-icons/fi";
 import axios from "axios";
 import { url } from "config/urlConfig";
-import Line_Chart from "recharts/Line_Chart";
-import Bar_Chart2 from "recharts/Bar_Chart2";
+import Line_Chart from "global/recharts/Line_Chart";
+import Bar_Chart2 from "global/recharts/Bar_Chart2";
 
 function OverView({ project, setProject, companyData, id }) {
   let companyUrl = companyData.map((cp) =>
@@ -40,7 +40,7 @@ function OverView({ project, setProject, companyData, id }) {
 
   return (
     <section className=" max-w-full overview-section show bg-white show p-4 rounded-md rounded-t-none shadow-md dark:bg-gray-700 mb-6 overflow-hidden">
-      <div className="left-overview dark:text-gray-400">
+      <div className="left-overview dark:text-gray-200">
         <div>
           <span id="overview-title" className="text-lg font-bold">
             OVERVIEW

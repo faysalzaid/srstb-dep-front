@@ -253,7 +253,7 @@ function BudgetList({ id, budgets, setBudgets, invoiceIds }) {
 
   return (
     <>
-      <section className="contracts-section p-4  rounded-md shadow-md dark:bg-gray-700">
+      <section className=" w-full overflow-hidden contracts-section p-4 mb-6 rounded-md shadow-md dark:bg-gray-700 ">
         <ErrorAlert
           open={openError.open}
           handleClose={handleCloseError}
@@ -466,11 +466,11 @@ function BudgetList({ id, budgets, setBudgets, invoiceIds }) {
         </PageTitle>
         <div></div>
 
-        <div className="flex flex-col ">
-          <div className="-my-2 overflow-x-auto sm:-mx-9 lg:-mx-8">
-            <div className="py-2 sm:px-9 lg:px-8">
-              <div className="shadow overflow-hidden border-b border-gray-200 dark:border-gray-900 sm:rounded-lg">
-                <table className="min-w-full divide-y divide-gray-200">
+        {/* <div className="flex flex-col bg-black  "> */}
+          {/* <div className=" bg-blue-500 "> */}
+            <div className=" shadow border-b border-gray-200 dark:border-gray-900 sm:rounded-lg py-0 sm:px-2 overflow-x-scroll ">
+              {/* <div className="shadow overflow-hidden border-b border-gray-200 dark:border-gray-900 sm:rounded-lg"> */}
+                <table className="  bg-cool-gray-50 dark:bg-transparent">
                   <thead className="bg-white dark:bg-gray-800">
                     <tr>
                       <th
@@ -540,11 +540,11 @@ function BudgetList({ id, budgets, setBudgets, invoiceIds }) {
                   </thead>
                   {budgets?.map((row, rowIndex) => (
                     <tbody
-                      className="bg-white divide-y divide-gray-200"
+                      className=" min-w-full bg-cool-gray-50 divide-y divide-gray-200 dark:bg-transparent dark:text-gray-300"
                       key={rowIndex}
                     >
                       <>
-                        <tr>
+                        <tr className=" border-b border-gray-300 dark:border-gray-900">
                           <td className="px-6 py-4 whitespace-nowrap">
                             {row.year}
                           </td>
@@ -744,13 +744,17 @@ function BudgetList({ id, budgets, setBudgets, invoiceIds }) {
                     </tbody>
                   ))}
                 </table>
-              </div>
+              {/* </div> */}
             </div>
-          </div>
-        </div>
+          {/* </div> */}
+        {/* </div> */}
       </section>
     </>
   );
 }
+
+{/* <div className=" py-2 sm:px-9 lg:px-8">
+Hello
+</div> */}
 
 export default BudgetList;

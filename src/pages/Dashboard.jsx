@@ -36,8 +36,12 @@ import {
 import { withRouter } from "react-router-dom";
 import { url } from "config/urlConfig";
 import axios from "axios";
-import Line_Chart from "recharts/Line_Chart";
-import Area_Chart from "recharts/Area_Chart";
+import Line_Chart from "global/recharts/Line_Chart";
+import Area_Chart from "global/recharts/Area_Chart";
+import Latest_Projects from "global/Latest_Projects";
+import BasicTable from "global/react-data-table/BasicTable";
+import OngoingProjects from "global/react-data-table/OngoingProjects";
+import EmplooyeesTable from "global/react-data-table/EmplooyeesTable";
 
 function Dashboard(props) {
   const { authState, settings } = useContext(AuthContext);
@@ -216,6 +220,31 @@ function Dashboard(props) {
               </div>
             </ChartCard>
           </section>
+
+          <section className="grid gap-6 mb-8 md:grid-cols-2">
+            <div className=" p-4 pb-0 bg-white rounded-lg shadow-xs dark:bg-gray-800 overflow-scroll">
+              <p className="mb-4 font-semibold text-gray-800 dark:text-gray-300">
+                Ongoing Projects
+              </p>
+              <OngoingProjects />
+            </div>
+
+            <div className=" p-4 pb-0 bg-white rounded-lg shadow-xs dark:bg-gray-800 overflow-scroll">
+              <p className="mb-4 font-semibold text-gray-800 dark:text-gray-300">
+                Ongoing Projects
+              </p>
+              <OngoingProjects />
+            </div>
+          </section>
+
+          {/* <section className=" grid gap-6 md:grid-cols-1"> */}
+          <div className=" p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800 overflow-scroll mb-6">
+            <p className="mb-4 font-semibold text-gray-800 dark:text-gray-300">
+              Our Emplooyees
+            </p>
+            <EmplooyeesTable />
+          </div>
+          {/* </section> */}
         </>
       )}
     </>
