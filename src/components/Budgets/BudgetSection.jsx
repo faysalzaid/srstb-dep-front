@@ -749,19 +749,10 @@ function BudgetList({ id, budgets, setBudgets, invoiceIds }) {
               </tbody>
             ))}
           </table>
-          {/* </div> */}
         </div>
-        {/* </div> */}
-        {/* </div> */}
       </section>
     </>
   );
-}
-
-{
-  /* <div className=" py-2 sm:px-9 lg:px-8">
-Hello
-</div> */
 }
 
 export default BudgetList;
