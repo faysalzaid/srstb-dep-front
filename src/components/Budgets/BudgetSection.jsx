@@ -13,7 +13,13 @@ import {
 } from "@windmill/react-ui";
 import "../overview/overview.css";
 import { AiFillEye, AiFillDelete, AiFillEdit } from "react-icons/ai";
-import { Modal, ModalHeader, ModalBody, ModalFooter,Textarea } from "@windmill/react-ui";
+import {
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Textarea,
+} from "@windmill/react-ui";
 import PageTitle from "components/Typography/PageTitle";
 import { FaEdit, FaRemoveFormat } from "react-icons/fa";
 import { FaPlusCircle, FaCheckCircle, FaRegMoneyBillAlt } from "react-icons/fa";
@@ -467,298 +473,295 @@ function BudgetList({ id, budgets, setBudgets, invoiceIds }) {
         <div></div>
 
         {/* <div className="flex flex-col bg-black  "> */}
-          {/* <div className=" bg-blue-500 "> */}
-            <div className=" shadow border-b border-gray-200 dark:border-gray-900 sm:rounded-lg py-0 sm:px-2 overflow-x-scroll ">
-              {/* <div className="shadow overflow-hidden border-b border-gray-200 dark:border-gray-900 sm:rounded-lg"> */}
-                <table className="  bg-cool-gray-50 dark:bg-transparent">
-                  <thead className="bg-white dark:bg-gray-800">
-                    <tr>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
-                      >
-                        Year
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
-                      >
-                        Allocated Budget
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
-                      >
-                        Utilized Budget
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
-                      >
-                        Remaining Budget
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
-                      >
-                        Invoice
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
-                      >
-                        Utilize
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
-                      >
-                        Edit
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
-                      >
-                        Delete
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
-                      >
-                        Approve
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
-                      >
-                        Expand
-                      </th>
-                      <th scope="col" className="relative px-6 py-3">
-                        <span className="sr-only">View details</span>
-                      </th>
-                    </tr>
-                  </thead>
-                  {budgets?.map((row, rowIndex) => (
-                    <tbody
-                      className=" min-w-full bg-cool-gray-50 divide-y divide-gray-200 dark:bg-transparent dark:text-gray-300"
-                      key={rowIndex}
+        {/* <div className=" bg-blue-500 "> */}
+        <div className=" shadow border-b border-gray-200 dark:border-gray-900 sm:rounded-lg py-0 sm:px-2 overflow-x-scroll ">
+          {/* <div className="shadow overflow-hidden border-b border-gray-200 dark:border-gray-900 sm:rounded-lg"> */}
+          <table className="  bg-cool-gray-50 dark:bg-transparent">
+            <thead className="bg-white dark:bg-gray-800">
+              <tr>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+                >
+                  Year
+                </th>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+                >
+                  Allocated Budget
+                </th>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+                >
+                  Utilized Budget
+                </th>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+                >
+                  Remaining Budget
+                </th>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+                >
+                  Invoice
+                </th>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+                >
+                  Utilize
+                </th>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+                >
+                  Edit
+                </th>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+                >
+                  Delete
+                </th>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+                >
+                  Approve
+                </th>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+                >
+                  Expand
+                </th>
+                <th scope="col" className="relative px-6 py-3">
+                  <span className="sr-only">View details</span>
+                </th>
+              </tr>
+            </thead>
+            {budgets?.map((row, rowIndex) => (
+              <tbody
+                className=" min-w-full bg-cool-gray-50 divide-y divide-gray-200 dark:bg-transparent dark:text-gray-300"
+                key={rowIndex}
+              >
+                <>
+                  <tr className=" border-b border-gray-300 dark:border-gray-900 ">
+                    <td className="px-6 py-4 whitespace-nowrap">{row.year}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      ETB{" "}
+                      {parseFloat(row.allocatedBudget).toLocaleString({
+                        maximumFractionDigits: 2,
+                      })}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      ETB{" "}
+                      {parseFloat(row.utilizedBudget).toLocaleString({
+                        maximumFractionDigits: 2,
+                      })}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      ETB{" "}
+                      {parseFloat(row.remainingBudget).toLocaleString({
+                        maximumFractionDigits: 2,
+                      })}
+                    </td>
+                    {parseFloat(row.remainingBudget) === 0 ? (
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <Badge type="success">FullyPaid</Badge>{" "}
+                      </td>
+                    ) : (
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <Badge type="danger">Partially </Badge>
+                      </td>
+                    )}
+                    <td
+                      className=" px-6 py-4 whitespace-nowrap"
+                      style={{ color: "green" }}
                     >
-                      <>
-                        <tr className=" border-b border-gray-300 dark:border-gray-900 ">
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            {row.year}
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            ETB{" "}
-                            {parseFloat(row.allocatedBudget).toLocaleString({
-                              maximumFractionDigits: 2,
-                            })}
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            ETB{" "}
-                            {parseFloat(row.utilizedBudget).toLocaleString({
-                              maximumFractionDigits: 2,
-                            })}
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            ETB{" "}
-                            {parseFloat(row.remainingBudget).toLocaleString({
-                              maximumFractionDigits: 2,
-                            })}
-                          </td>
-                          {parseFloat(row.remainingBudget) === 0 ? (
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              <Badge type="success">FullyPaid</Badge>{" "}
-                            </td>
-                          ) : (
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              <Badge type="danger">Partially </Badge>
-                            </td>
-                          )}
-                          <td
-                            className=" px-6 py-4 whitespace-nowrap"
-                            style={{ color: "green" }}
-                          >
-                            {row.approved ? (
-                              <FaRegMoneyBillAlt
-                                className="ml-3"
-                                onClick={() =>
-                                  setIsUtilized({
-                                    open: true,
-                                    id: row.id,
-                                    year: row.year,
-                                    allocatedBudget: row.allocatedBudget,
-                                    utilizedBudget: row.utilizedBudget,
-                                  })
-                                }
-                              />
-                            ) : (
-                              <Badge type="danger">UnApproved</Badge>
-                            )}
-                          </td>
-                          <td
-                            className=" px-6 py-4 whitespace-nowrap"
-                            style={{ color: "blue" }}
-                          >
-                            <FaEdit className="ml-3" />
-                          </td>
-                          <td
-                            className=" px-6 py-4 whitespace-nowrap"
-                            style={{ color: "red" }}
-                          >
-                            <AiFillDelete
-                              className="ml-4"
-                              onClick={() =>
-                                setIsDeleteOpen({ open: true, id: row.id })
-                              }
-                            />
-                          </td>
-                          {authState.role === "finance" ||
-                          authState.role === "admin" ? (
-                            <td className="px-6  py-4 whitespace-nowrap">
-                              <Button
-                                size="small"
-                                style={{
-                                  background: row.approved ? "green" : "red",
-                                }}
-                                onClick={() => budgetApprove(row.id)}
-                              >
-                                {row.approved ? "Approved" : "Approve"}
-                              </Button>
-                            </td>
-                          ) : (
-                            <td className="px-6  py-4 whitespace-nowrap">
-                              <Badge type="danger">UnAuthorized</Badge>
-                            </td>
-                          )}
-                          <td className=" px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <button
-                              className="text-indigo-600 hover:text-indigo-900 focus:outline-none"
-                              onClick={() => setIsExpanded(!isExpanded)}
-                            >
-                              {isExpanded ? <FiChevronUp /> : <FiChevronDown />}
-                            </button>
-                          </td>
-                        </tr>
-                        {isExpanded && (
-                          <tr>
-                            <td
-                              colSpan="5"
-                              className="px-6 py-4 whitespace-nowrap"
-                            >
-                              <div className="overflow-x-auto">
-                                <table className="min-w-full divide-y divide-gray-200 bg-gray-50 dark:bg-gray-800">
-                                  <thead>
-                                    <tr>
-                                      <th
-                                        scope="col"
-                                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                      >
-                                        Date
-                                      </th>
-                                      <th
-                                        scope="col"
-                                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                      >
-                                        Utilized
-                                      </th>
-                                      <th
-                                        scope="col"
-                                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                      >
-                                        Created By
-                                      </th>
-                                      <th
-                                        scope="col"
-                                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                      >
-                                        Add To Payment
-                                      </th>
-                                      <th
-                                        scope="col"
-                                        className="px-1 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                      >
-                                        Delete
-                                      </th>
-                                    </tr>
-                                  </thead>
-<<<<<<< HEAD
-                                  <tbody className="bg-white divide-y divide-gray-200 dark:text-gray-100 dark:bg-gray-700">
-=======
-                                  <tbody className="  divide-y divide-gray-200 ">
->>>>>>> 54eedfa16cc2f98e3a101b60e1ec9f89b22e0da7
-                                    {row.bugetTracks?.map((detail, index) => (
-                                      <tr key={index} className=" border-b border-gray-200 dark:border-gray-600">
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                          {detail.date}
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                          ETB{" "}
-                                          {parseFloat(
-                                            detail?.utilized
-                                          )?.toLocaleString()}
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                          {detail.createdBy}
-                                        </td>
+                      {row.approved ? (
+                        <FaRegMoneyBillAlt
+                          className="ml-3"
+                          onClick={() =>
+                            setIsUtilized({
+                              open: true,
+                              id: row.id,
+                              year: row.year,
+                              allocatedBudget: row.allocatedBudget,
+                              utilizedBudget: row.utilizedBudget,
+                            })
+                          }
+                        />
+                      ) : (
+                        <Badge type="danger">UnApproved</Badge>
+                      )}
+                    </td>
+                    <td
+                      className=" px-6 py-4 whitespace-nowrap"
+                      style={{ color: "blue" }}
+                    >
+                      <FaEdit className="ml-3" />
+                    </td>
+                    <td
+                      className=" px-6 py-4 whitespace-nowrap"
+                      style={{ color: "red" }}
+                    >
+                      <AiFillDelete
+                        className="ml-4"
+                        onClick={() =>
+                          setIsDeleteOpen({ open: true, id: row.id })
+                        }
+                      />
+                    </td>
+                    {authState.role === "finance" ||
+                    authState.role === "admin" ? (
+                      <td className="px-6  py-4 whitespace-nowrap">
+                        <Button
+                          size="small"
+                          style={{
+                            background: row.approved ? "green" : "red",
+                          }}
+                          onClick={() => budgetApprove(row.id)}
+                        >
+                          {row.approved ? "Approved" : "Approve"}
+                        </Button>
+                      </td>
+                    ) : (
+                      <td className="px-6  py-4 whitespace-nowrap">
+                        <Badge type="danger">UnAuthorized</Badge>
+                      </td>
+                    )}
+                    <td className=" px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <button
+                        className="text-indigo-600 hover:text-indigo-900 focus:outline-none"
+                        onClick={() => setIsExpanded(!isExpanded)}
+                      >
+                        {isExpanded ? <FiChevronUp /> : <FiChevronDown />}
+                      </button>
+                    </td>
+                  </tr>
+                  {isExpanded && (
+                    <tr>
+                      <td colSpan="5" className="px-6 py-4 whitespace-nowrap">
+                        <div className="overflow-x-auto">
+                          <table className="min-w-full divide-y divide-gray-200 bg-gray-50 dark:bg-gray-800">
+                            <thead>
+                              <tr>
+                                <th
+                                  scope="col"
+                                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                >
+                                  Date
+                                </th>
+                                <th
+                                  scope="col"
+                                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                >
+                                  Utilized
+                                </th>
+                                <th
+                                  scope="col"
+                                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                >
+                                  Created By
+                                </th>
+                                <th
+                                  scope="col"
+                                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                >
+                                  Add To Payment
+                                </th>
+                                <th
+                                  scope="col"
+                                  className="px-1 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                >
+                                  Delete
+                                </th>
+                              </tr>
+                            </thead>
+                            {/* <tbody className="bg-white divide-y divide-gray-200 dark:text-gray-100 dark:bg-gray-700"> */}
+                            <tbody className="  divide-y divide-gray-200 ">
+                              {row.bugetTracks?.map((detail, index) => (
+                                <tr
+                                  key={index}
+                                  className=" border-b border-gray-200 dark:border-gray-600"
+                                >
+                                  <td className="px-6 py-4 whitespace-nowrap">
+                                    {detail.date}
+                                  </td>
+                                  <td className="px-6 py-4 whitespace-nowrap">
+                                    ETB{" "}
+                                    {parseFloat(
+                                      detail?.utilized
+                                    )?.toLocaleString()}
+                                  </td>
+                                  <td className="px-6 py-4 whitespace-nowrap">
+                                    {detail.createdBy}
+                                  </td>
 
-                                        {detail.invoiced === 0 ? (
-                                          <td className="px-6 py-4 whitespace-nowrap">
-                                            <Badge type="danger">
-                                              <FaPlusCircle
-                                                onClick={() =>
-                                                  setIsPaymentOpen({
-                                                    open: true,
-                                                    paid: detail.utilized,
-                                                    budgetTrackId: detail.id,
-                                                  })
-                                                }
-                                                className="mt-1 mr-1"
-                                              />
-                                              Invoice{" "}
-                                            </Badge>{" "}
-                                          </td>
-                                        ) : (
-                                          <td className="px-6 py-4 whitespace-nowrap">
-                                            <Badge>
-                                              <FaCheckCircle className="mt-1 mr-1" />
-                                              Invoiced{" "}
-                                            </Badge>
-                                          </td>
-                                        )}
-                                        <td
-                                          style={{ color: "red" }}
-                                          className="mr-6 px-6"
-                                        >
-                                          <AiFillDelete
-                                            onClick={() =>
-                                              budgetTrackDelete(detail.id)
-                                            }
-                                          />
-                                        </td>
-                                      </tr>
-                                    ))}
-                                  </tbody>
-                                </table>
-                              </div>
-                            </td>
-                          </tr>
-                        )}
-                      </>
-                    </tbody>
-                  ))}
-                </table>
-              {/* </div> */}
-            </div>
+                                  {detail.invoiced === 0 ? (
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                      <Badge type="danger">
+                                        <FaPlusCircle
+                                          onClick={() =>
+                                            setIsPaymentOpen({
+                                              open: true,
+                                              paid: detail.utilized,
+                                              budgetTrackId: detail.id,
+                                            })
+                                          }
+                                          className="mt-1 mr-1"
+                                        />
+                                        Invoice{" "}
+                                      </Badge>{" "}
+                                    </td>
+                                  ) : (
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                      <Badge>
+                                        <FaCheckCircle className="mt-1 mr-1" />
+                                        Invoiced{" "}
+                                      </Badge>
+                                    </td>
+                                  )}
+                                  <td
+                                    style={{ color: "red" }}
+                                    className="mr-6 px-6"
+                                  >
+                                    <AiFillDelete
+                                      onClick={() =>
+                                        budgetTrackDelete(detail.id)
+                                      }
+                                    />
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      </td>
+                    </tr>
+                  )}
+                </>
+              </tbody>
+            ))}
+          </table>
           {/* </div> */}
+        </div>
+        {/* </div> */}
         {/* </div> */}
       </section>
     </>
   );
 }
 
-{/* <div className=" py-2 sm:px-9 lg:px-8">
+{
+  /* <div className=" py-2 sm:px-9 lg:px-8">
 Hello
-</div> */}
+</div> */
+}
 
 export default BudgetList;
