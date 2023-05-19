@@ -682,11 +682,7 @@ function BudgetList({ id, budgets, setBudgets, invoiceIds }) {
                                       </th>
                                     </tr>
                                   </thead>
-<<<<<<< HEAD
-                                  <tbody className="bg-white divide-y divide-gray-200 dark:text-gray-100 dark:bg-gray-700">
-=======
                                   <tbody className="  divide-y divide-gray-200 ">
->>>>>>> 54eedfa16cc2f98e3a101b60e1ec9f89b22e0da7
                                     {row.bugetTracks?.map((detail, index) => (
                                       <tr key={index} className=" border-b border-gray-200 dark:border-gray-600">
                                         <td className="px-6 py-4 whitespace-nowrap">

@@ -439,7 +439,7 @@ navWrapper.classList.remove('active')
         <TableContainer>
         {/* Calendar section */}
         <div className='flex mb-2'>
-        {authState.role==="admsin" || authState.role==="engineer" || authState.role==="manager" || authState.role==="planning" ?
+        {authState.role==="admin" || authState.role==="engineer" || authState.role==="manager" || authState.role==="planning" ?
         <Button size="small" className="ml-0" onClick={openModal}>Update Project</Button>
         :<Badge className="mt-2">Read Only</Badge>}
 

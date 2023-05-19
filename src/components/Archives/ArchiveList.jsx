@@ -494,7 +494,7 @@ const ArchivesList = () => {
     </Modal>
 
 
-    <div className="bg-gray-50 grid grid-cols-3 gap-4 mt-4 dark:bg-gray-700">
+    <div className="bg-gray-50 grid grid-cols-3 gap-4 mt-4 mb-4 dark:bg-gray-700">
 
   
   {fetchedResult.map((ar)=>
@@ -502,12 +502,15 @@ const ArchivesList = () => {
   <div className="flex flex-col items-left" key={ar.id}>
     <div className="p-4 rounded-lg" style={{background:`${ar.bcolor}`,opacity:0.6}}>
       <i className="ri-file-line text-3xl" style={{color:`${ar.color}`}}>
+        <a href={`${ar.fileUrl}`} target='_blank'>
         <BsFillFileEarmarkArrowDownFill/>
+        </a>
+        
       </i>
       <FaTrash className='ml-auto text-red-900 text-xl mt-2' onClick={()=>openDelete(ar.id)}/>
       
     </div>
-    <p className="m-2 text-sm font-medium text-gray-900" >{ar.filename}</p>
+    <p className="m-2 text-sm font-medium text-gray-900 dark:text-gray-300" >{ar.filename}</p>
   </div>
   
   )}
