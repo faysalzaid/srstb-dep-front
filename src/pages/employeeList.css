@@ -1,0 +1,82 @@
+.progress_bar {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  counter-reset: step;
+  margin: 10px 10% 50px 10%;
+}
+
+.progress_bar::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 4px;
+  width: 100%;
+  background-color: #dcdcdd;
+  z-index: 0;
+}
+
+.progress_step {
+  width: 30px;
+  height: 30px;
+  border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+  transition: 0.5s;
+}
+
+.progress_step.active {
+  background-color: #7e3af2;
+  color: white;
+}
+
+.progress_step::before {
+  counter-increment: step;
+  content: counter(step);
+}
+
+.progress_step::after {
+  content: attr(data-title);
+  position: absolute;
+  bottom: -30px;
+  width: max-content;
+  font-size: 0.85rem;
+  color: rgb(134, 134, 134);
+}
+
+.progress {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  height: 4px;
+  width: 0%;
+  background-color: #7e3af2;
+  transition: all 0.5s;
+}
+
+.form_container {
+  overflow: hidden;
+}
+
+.insert_person_form {
+  display: flex;
+  transition: all 0.3s;
+}
+
+.form_section {
+  min-width: 100%;
+  padding: 0 5px;
+}
+
+.form_button {
+  padding: 8px 15px;
+  background-color: #7e3af2;
+  color: white;
+  border-radius: 4px;
+  margin-top: 16px;
+}
