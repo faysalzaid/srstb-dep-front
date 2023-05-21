@@ -98,17 +98,17 @@ function AwardSection({ bid, project, users, setBids, setProject }) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {bid.map((bids) => (
+            {bid?.length>0&&bid.map((bids) => (
               <TableRow key={bids.id}>
                 
                 <TableCell>
                   <span className="text-sm">
-                    {bids.Award.date}
+                    {bids?.Award?.date}
                   </span>
                 </TableCell>
                 <TableCell>
                 <p className="text-sm font-semibold">
-                    <a href={`${bids.Award.file}`} target='_blank'>
+                    <a href={`${bids?.Award?.file}`} target='_blank'>
                      <FaDownload className=''/>
                   </a>
                 </p>
@@ -120,7 +120,7 @@ function AwardSection({ bid, project, users, setBids, setProject }) {
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center space-x-4">
-                    <Link to={`/app/awards/${bids.Award.id}`}>
+                    <Link to={`/app/awards/${bids?.Award?.id}`}>
                       <Button
                         layout="link"
                         size="icon"

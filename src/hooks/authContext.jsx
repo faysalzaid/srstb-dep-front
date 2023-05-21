@@ -69,6 +69,8 @@ export const AuthContextProvider = withRouter((props) => {
 
   jwtAxios.get(`${url}`)
   let isRefreshingTokenAuth = false;
+
+  
   const graphAuth = async(config) => {
     // If token is already being refreshed, exit early to avoid infinite loop
     if (isRefreshingTokenAuth) {

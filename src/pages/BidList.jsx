@@ -444,7 +444,7 @@ const openDelete = (id)=>{
                 <TableCell>Owner</TableCell>
                 <TableCell>Phone</TableCell>
                 <TableCell>Amount</TableCell>
-                <TableCell>Status</TableCell>
+                <TableCell>E.Status</TableCell>
                 <TableCell>Actions</TableCell>
               </tr>
             </TableHeader>
@@ -489,7 +489,7 @@ const openDelete = (id)=>{
                   </TableCell>
                   
                   <TableCell>
-                  <Badge type={bid.status==='approved'?"success":"danger"}>{bid.status}</Badge>
+                  <Badge type={bid.evaluationStatus==='YES'?"success":"danger"}>{bid.evaluationStatus}</Badge>
                 </TableCell>
                   
                   <TableCell>

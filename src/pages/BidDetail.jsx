@@ -71,7 +71,6 @@ function BidDetail(props) {
             await axios.get(`${url}/bids/${id}`,{withCredentials:true}).then((resp)=>{
               if(resp.data.error) setErrorMessage(resp.data.error);
               // console.log('from the main response',resp.data);
-
               setBidData(resp.data)
               setBidFormData({fullname:resp.data.fullname,
                 phone:resp.data.phone,
