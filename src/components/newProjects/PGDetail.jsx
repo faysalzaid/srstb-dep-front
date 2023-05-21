@@ -11,7 +11,7 @@ import { CgMenuGridR } from 'react-icons/cg'
 import { BiCheckCircle, BiTime } from 'react-icons/bi'
 
 import { VscFiles } from 'react-icons/vsc'
-import { FaAward, FaCommentDot,FaCommentDots } from 'react-icons/fa'
+import { FaAward, FaCircleNotch, FaCommentDot,FaCommentDots } from 'react-icons/fa'
 import { GrTextAlignLeft } from 'react-icons/gr'
 import { AiFillFile, AiOutlineFile,AiFillAlert,AiOutlineAlert } from 'react-icons/ai'
 import { ErrorAlert, SuccessAlert } from "components/Alert";  
@@ -44,6 +44,7 @@ import { useContext } from 'react'
 import { AuthContext } from 'hooks/authContext'
 import TitleChange from 'components/Title/Title'
 import AwardSection from 'components/AwardSection/AwardSection'
+import ProcurementSection from 'components/Procurement/ProcurementSection'
 
 
 
@@ -60,6 +61,7 @@ const PgDetail = () => {
     const [showContract,setShowContract] = useState(false)
     const [showOverview,setShowOverview] = useState(true)
     const [showBudget,setShowBudget] = useState(false)
+    const [showProcurement,setShowProcurement] = useState(false)
     const [showComments,setShowComments] = useState(false)
     const [showBid,setShowBid] = useState(false)
     const [showAwards,setShowAwards] = useState(false)
@@ -234,6 +236,7 @@ setTimeout(() => {
 }, 1000);
 
 function handleOverview(){
+setShowProcurement(false)
 setShowAwards(false)
 setShowOverview(true)
 setShowContract(false)
@@ -247,6 +250,7 @@ function handleTask(){
 }
 
 function handleBids(){
+  setShowProcurement(false)
   setShowAwards(false)
   setShowContract(false)
   setShowOverview(false)
@@ -258,6 +262,7 @@ function handleBids(){
 
 
 function handleBudgets(){
+  setShowProcurement(false)
   setShowAwards(false)
   setShowContract(false)
   setShowOverview(false)
@@ -267,6 +272,7 @@ function handleBudgets(){
   }
 
 function handleContracts(){
+  setShowProcurement(false)
 setShowAwards(false)
 setShowContract(true)
 setShowOverview(false)
@@ -276,6 +282,7 @@ setShowComments(false)
 }
 
 function handleComments(){
+  setShowProcurement(false)
   setShowAwards(false)
   setShowContract(false)
   setShowOverview(false)
@@ -286,6 +293,7 @@ function handleComments(){
 
 
   function handleAwards(){
+    setShowProcurement(false)
     setShowAwards(true)
     setShowContract(false)
     setShowOverview(false)
@@ -293,6 +301,18 @@ function handleComments(){
     setShowBid(false)
     setShowComments(false)
     }
+
+
+    function handleProcurement(){
+      setShowProcurement(true)
+      setShowAwards(false)
+      setShowContract(false)
+      setShowOverview(false)
+      setShowBudget(false)
+      setShowBid(false)
+      setShowComments(false)
+   
+      }
 
 const handleMenu = () => {
 let menu = document.querySelector('.menu')
@@ -667,6 +687,7 @@ navWrapper.classList.remove('active')
             <li className='nav-link dark:text-gray-300' onClick={()=>{handleTask(); hideNav()}}><BiCheckCircle/> Reports</li>
             <li className='nav-link dark:text-gray-300' onClick={()=>{handleComments(); hideNav()}}><FaCommentDots/> Comments</li>
             <li className='nav-link dark:text-gray-300' onClick={()=>{handleAwards(); hideNav()}}><FaAward/> Awards</li>
+            <li className='nav-link dark:text-gray-300' onClick={()=>{handleProcurement(); hideNav()}}><FaCircleNotch/> Procurement</li>
         </ul>
       </div>
       <div className='menu' onClick={handleMenu}>
@@ -682,6 +703,7 @@ navWrapper.classList.remove('active')
           {showBid&&<BidSection bid={bids} project={project} users={usersData} setBids={setBids} setProject={setProject}/>}
           {showComments&&<CommentSection project={project} id={id}/>}
           {showAwards&&<AwardSection bid={bids} project={project} users={usersData} setBids={setBids} setProject={setProject}/>}
+          {showProcurement&&<ProcurementSection bid={bids} project={project} users={usersData} setBids={setBids} setProject={setProject}/>}
 
 
 

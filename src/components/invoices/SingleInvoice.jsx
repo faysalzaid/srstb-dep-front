@@ -27,7 +27,7 @@ const printSection = () => {
     return (<>
           
    
-      <div ref={printSectionRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div ref={printSectionRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 dark:bg-gray-700 dark:text-gray-300">
         <div className='flex'>
       <h1 className="text-3xl font-bold mb-8">Invoice #{invoiceData?.id?.slice(0,5)}</h1>
       <h1 className='text-1xl font-bold mt-3 ml-3'>{invoiceData?.sequential?`Sequential | ${invoiceData?.sequential}`:"No Sequential Found"}</h1>

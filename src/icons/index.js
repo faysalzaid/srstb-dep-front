@@ -48,7 +48,8 @@ import {
     FaRoute,
     FaUserTie,
     FaRegFileArchive,
-    FaAward
+    FaAward,
+    FaCircleNotch
 } from 'react-icons/fa';
 import { BsCapsulePill } from 'react-icons/bs';
 
@@ -102,5 +103,7 @@ export {
     FaRoute,
     FaUserTie,
     FaRegFileArchive,
-    FaAward
+    FaAward,
+    FaCircleNotch
+
 }

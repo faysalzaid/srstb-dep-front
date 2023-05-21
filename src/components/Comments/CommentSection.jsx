@@ -20,7 +20,7 @@ import {
   EditIcon,
 } from "../../icons";
 import { AiFillEye } from "react-icons/ai";
-import { FaRegEdit } from "react-icons/fa";
+import { FaRegEdit, FaTrashAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { url } from "config/urlConfig";
@@ -32,6 +32,7 @@ function CommentSection({ project, id }) {
   const [comment, setComment] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const {authState} = useContext(AuthContext)
+  const [isDeleteOpen,setIsDeleteOpen] = useState({open:false,id:""})
   const [commentForm,setCommentForm] = useState({comment:"",user:"",image:"",ProjectId:""})
   const options = { timeZone: 'Africa/Addis_Ababa', year: 'numeric', month: 'long', day: 'numeric',hour:'numeric' };
   useEffect(() => {
@@ -50,6 +51,15 @@ function CommentSection({ project, id }) {
     };
     getData();
   }, [id]);
+
+
+  const closeDelete = ()=>{
+    setIsDeleteOpen({open:false,id:""})
+}
+  const openDelete = (ids)=>{
+    setIsDeleteOpen({open:true,id:ids})
+}
+
 
   const onClose = () => {
     setIsOpen(false);
@@ -75,6 +85,8 @@ function CommentSection({ project, id }) {
         setOpenSuccess({open:true,message:"Successfully Added"})
         onClose()
       }
+    }).catch((error)=>{
+      setOpenError({open:true,message:`${error.response.data.error}`})
     })
 
   }
@@ -90,7 +102,7 @@ function CommentSection({ project, id }) {
           setOpenSuccess({open:true,message:"Successfully Done"})
         }
       }).catch((error)=>{
-        // console.log(error);
+        setOpenError({open:true,message:`${error.response.data.error}`})
       })
   }
 
@@ -115,9 +127,47 @@ function CommentSection({ project, id }) {
   };
 
 
+  const handleDelete = async()=>{
+
+    axios.delete(`${url}/comment/${isDeleteOpen.id}`,{withCredentials:true}).then((resp)=>{
+      if(resp.data.error){
+        setOpenError({open:true,message:`${resp.data.error}`})
+      }else{
+        const data = comment.filter((cm)=>cm.id!==isDeleteOpen.id)
+        setComment(data)
+        setOpenSuccess({open:true,message:"Successfully Deleted"})
+        closeDelete()
+      }
+    }).catch((error)=>{
+      setOpenError({open:true,message:`${error.response.data.error}`})
+    })
+
+  }
+
+
+
   return (
+
+    
     
     <section className="contracts-section p-4 bg-white rounded-md shadow-md dark:bg-gray-700">
+
+         {/* Delete Confirm section */}
+         <Modal isOpen={isDeleteOpen.open} onClose={closeDelete}>
+          <ModalHeader>Confirm Action</ModalHeader>
+          <ModalBody>
+            <p>Are you sure you want to perform this action?</p>
+          </ModalBody>
+          <ModalFooter>
+            <button className="px-4 py-2 text-white bg-red-500 rounded-md hover:bg-red-600" onClick={handleDelete}>
+              Confirm
+            </button>
+          </ModalFooter>
+      </Modal>
+
+        {/* End of delete Section */}
+
+        {/*  Notifications */}
         <ErrorAlert
           open={openError.open}
           handleClose={handleCloseError}
@@ -130,6 +180,9 @@ function CommentSection({ project, id }) {
           message={openSuccess.message}
           horizontal="right"
         />
+        {/* End of Notifications */}
+
+
        {/* Modal section */}
        <Modal isOpen={isOpen} onClose={onClose}>
           <form onSubmit={handleSubmit}>
@@ -188,11 +241,13 @@ function CommentSection({ project, id }) {
         <p className="text-gray-800 dark:text-gray-300 font-bold">{cm.user}</p>
         <p className="text-gray-500 text-sm dark:text-gray-300">{new Date(cm.date).toLocaleString('en-US',options)}</p>
       </div>
-      <div className="ml-auto">
+      <div className="ml-auto flex">
         {cm.approved? 
         <span className='px-2 py-1 rounded-full bg-green-500 text-white text-xs' onClick={()=>handleApprove(cm.id)}>UnApprove</span>:
         <span className='px-2 py-1 rounded-full bg-red-500 text-white text-xs' onClick={()=>handleApprove(cm.id)}>Approved</span>
         }
+
+        <FaTrashAlt className="mt-1 ml-2 mr-4 text-red-600" onClick={()=>openDelete(cm.id)}/>
       </div>
     </div>
     <p className="text-gray-700 dark:text-gray-300">{cm.comment}.</p>

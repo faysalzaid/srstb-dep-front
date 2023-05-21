@@ -187,7 +187,7 @@ function BidSection({ bid, project, users, setBids, setProject }) {
 
                 <TableCell>
                   <span className="text-sm">
-                    {bids.amount.toLocaleString()}
+                    {parseFloat(bids.amount).toLocaleString({maximumFractionDigits:2})}
                   </span>
                 </TableCell>
                 <TableCell>

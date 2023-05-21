@@ -14,6 +14,8 @@ import RoundIcon from '../RoundIcon'
 import response from '../../utils/demo/tableData'
 import { IoIosEye, IoIosEyeOff } from 'react-icons/io';
 import { FaList } from 'react-icons/fa';
+import { Modal, ModalHeader, ModalBody, ModalFooter } from '@windmill/react-ui'
+import { Input, HelperText, Label, Select, Textarea } from '@windmill/react-ui'
 
 
 import {
@@ -40,7 +42,7 @@ import { Link, useParams, withRouter } from 'react-router-dom'
 import { url } from 'config/urlConfig'
 import axios from 'axios'
 import NewInvoice from './SingleInvoice'
-
+import { ErrorAlert, SuccessAlert } from "components/Alert";
 
 
 
@@ -56,7 +58,7 @@ const InvoiceDetailPage = () => {
     const {id} = useParams()
   
     const [isShowingPayments, setIsShowingPayments] = useState(false);
-
+    const [formValues,setFormValues] = useState({date:"",notes:"",totalPaid:"",total:0,UserId:"",ProjectId:"",PaymentModeId:"",sequential:""})
     function togglePayments() {
     setIsShowingPayments(!isShowingPayments);
   }
@@ -74,9 +76,11 @@ const InvoiceDetailPage = () => {
   
           await axios.get(`${url}/invoice/${id}`,{withCredentials:true}).then((resp)=>{
             if(resp.data.error){
-  
+              // setopenerr
             }else{
               setInvoiceData(resp.data)
+              setFormValues({date:resp.data.date,notes:resp.data.notes,sequential:resp.data.sequential,totalPaid:"",total:resp.data.total,UserId:resp.data.UserId,ProjectId:resp.data.ProjectId,PaymentModeId:resp.data.PaymentModeId,})
+
           
             }
           })
@@ -95,8 +99,70 @@ const InvoiceDetailPage = () => {
   
 
 
+        //  Notifications
+    const [openSuccess, setOpenSuccess] = useState({ open: false, message: "" });
+
+    const handleCloseSuccess = (event, reason) => {
+      if (reason === "clickaway") {
+        return;
+      }
+  
+      setOpenSuccess({ open: false, message: "" });
+    };
+  
+    const [openError, setOpenError] = useState({ open: false, message: "" });
+  
+    const handleCloseError = (event, reason) => {
+      if (reason === "clickaway") {
+        return;
+      }
+  
+      setOpenError({ open: false, message: "" });
+    };
+
+    // End of notifications
+
+
+    const [openModal,setOpenModal] = useState(false)
+    function onOpen(){
+      setOpenModal(true)
+    }
+
+    function onClose(){
+      setOpenModal(false)
+    }
+
  
     
+const handleSubmit = async(e)=>{
+  e.preventDefault();
+  // console.log(formValues);
+  const request = {
+    ProjectId:formValues.ProjectId,
+    UserId:authState.id,
+    date:formValues.date,
+    total:formValues.total,
+    totalPaid:formValues.totalPaid,
+    notes:formValues.notes,
+    PaymentModeId:formValues.PaymentModeId,
+    sequential:formValues.sequential
+  }
+  await axios.put(`${url}/invoice/${id}`,request,{withCredentials:true}).then((resp)=>{
+    // console.log(resp.data);
+    if(resp.data.error){
+      setOpenError({open:true,message:`${resp.data.error}`})
+    }else{
+      setInvoiceData(resp.data)
+      setOpenSuccess({open:true,message:"Succesfully Updated"})
+      onClose()
+    }
+  }).catch((error)=>{
+    setOpenError({open:true,message:`${error.response.data.error}`})
+ 
+  })
+}
+
+
   const [isTableVisible, setIsTableVisible] = useState(false);
 
   const toggleTableVisibility = () => {
@@ -111,6 +177,20 @@ const InvoiceDetailPage = () => {
   
     return (
       <>
+
+
+<ErrorAlert
+        open={openError.open}
+        handleClose={handleCloseError}
+        message={openError.message}
+        horizontal="right"
+      />
+      <SuccessAlert
+        open={openSuccess.open}
+        handleClose={handleCloseSuccess}
+        message={openSuccess.message}
+        horizontal="right"
+      />
 
        
         <PageTitle >Invoice</PageTitle>
@@ -135,9 +215,91 @@ const InvoiceDetailPage = () => {
         <div className="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
          
         </div>
+
+
+
+      <Modal isOpen={openModal} onClose={onclose}>
+      <ModalHeader>Update Invoice</ModalHeader>
+      <ModalBody>
+      <form onSubmit={handleSubmit}>
+        <div className="grid grid-cols-1 gap-4">
+          <Label>
+            <span>date</span>
+            <Input
+              type="date"
+              value={formValues.date}
+              className="mt-1"
+              name="totalPaid"
+              onChange={(e)=>setFormValues({...formValues,date:e.target.value})}
+              required
+            />
+          </Label>
+
+          <Label>
+            <span>Notes</span>
+            <Textarea
+              type="text"
+              // ref={modeInput}
+              value={formValues.notes}
+              className="mt-1"
+              name="totalPaid"
+              onChange={(e)=>setFormValues({...formValues,notes:e.target.value})}
+              required
+            />
+          </Label>
+
+          
+          <Label>
+            <span>Sequential</span>
+            <Select
+              className="mt-1"
+              name="sequential"
+              value={formValues.sequential}
+              onChange={(e)=>setFormValues({...formValues,sequential:e.target.value})}
+              required
+            >
+              <option disabled>Select Voucher</option>
+              <option>Payment Voucher</option>
+              <option>Receipt Voucher</option>
+              <option>Journal Voucher</option>
+              
+            </Select>
+          </Label>
+        </div>
+        <div className="hidden sm:block">
+
+        <Button className="mt-6" type="submit">Submit</Button>
+        </div>
+           <div className=" mt-2 block  sm:hidden">
+            <Button block size="large">
+              Accept
+            </Button>
+          </div>
+      
+        </form>
+      </ModalBody>
+      <ModalFooter>
+      <div className="hidden sm:block">
+            <Button layout="outline" onClick={onClose}>
+              Cancel
+            </Button>
+        </div>
+        <div className="block w-full sm:hidden">
+            <Button block size="large" layout="outline" onClick={onClose}>
+              Cancel
+            </Button>
+          </div>
+
+          {/* <div className="block w-full sm:hidden">
+            <Button block size="large">
+              Accept
+            </Button>
+          </div> */}
+      </ModalFooter>
+    </Modal>
   
         <TableContainer>
-
+        <Button className="mb-4" onClick={onOpen}>Update Invoice</Button>
         </TableContainer>
   
        

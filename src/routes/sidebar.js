@@ -85,6 +85,13 @@ routes = [{
         name: 'Archives',
         roles: ['admin', 'finance', 'design', 'engineer']
     },
+
+    {
+        path: '/app/procurement',
+        icon: 'FaCircleNotch',
+        name: 'Procurement',
+        roles: ['admin', 'finance', 'design', 'engineer']
+    },
     {
         path: '/app/requests',
         icon: 'CardsIcon',

@@ -306,7 +306,7 @@ const PaymentDetail = (props) => {
 
        
 
-<div ref={printSectionRef} className="max-w-6xl  py-8">
+<div ref={printSectionRef} className="max-w-6xl  py-8 dark:bg-gray-700 dark:text-gray-300">
 
 
 <div className="border-b-2 border-gray-300 pb-4">
@@ -336,8 +336,8 @@ const PaymentDetail = (props) => {
 <div className="py-4">
   <h3 className="text-xl font-bold mb-2">Project Details</h3>
   <div className="flex justify-between items-center mb-4">
-    <p className="text-gray-700">Project Name:</p>
-    <p className="font-bold">Example Project</p>
+    <p className="text-gray-700 dark:bg-gray-700 dark:text-gray-300">Project Name:</p>
+    <p className="font-bold  dark:text-gray-300">Example Project</p>
   </div>
   {/* <div className="flex justify-between items-center">
     <p className="text-gray-500">Client Name:</p>

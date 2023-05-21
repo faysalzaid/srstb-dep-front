@@ -435,7 +435,7 @@ const captureProject = ()=>{
               required
             >
               <option disabled>Select Voucher</option>
-              <option>Payment voucher</option>
+              <option>Payment Voucher</option>
               <option>Receipt Voucher</option>
               <option>Journal Voucher</option>
               
