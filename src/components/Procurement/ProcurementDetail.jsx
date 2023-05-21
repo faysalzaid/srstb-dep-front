@@ -44,11 +44,13 @@ import { Link, withRouter } from 'react-router-dom'
 import { url } from 'config/urlConfig'
 import axios from 'axios'
 import TitleChange from 'components/Title/Title'
+import { useParams } from 'react-router-dom/cjs/react-router-dom.min'
+import { FaTrashAlt } from 'react-icons/fa'
 
 
 
 
-const ProcurementList = () => {
+const ProcurementDetail = (props) => {
     const {authState,settings} = useContext(AuthContext)
     const [contracTypes, setContractTypes] = useState([]);
     const [users, setUsers] = useState([])
@@ -56,7 +58,7 @@ const ProcurementList = () => {
     const [projects,setProject] = useState([])
     const [contracts,setContracts] = useState([])
     const [countsData,setCountsData] = useState({ projectCount:"",bidCount:"",activeProjects:"",completedProjects:""})
-    const [procurementData,setProcurementData] = useState([])
+    const [procurementData,setProcurementData] = useState({})
     const [procurementForm,setProcurementForm] = useState({
         timeToSell: "",
         budgetFrom: "",
@@ -64,6 +66,8 @@ const ProcurementList = () => {
         procurementType: "",
         ProjectId:""
     })
+
+    const {id} = useParams()
 
 
     // Notifications
@@ -95,15 +99,7 @@ const ProcurementList = () => {
     function openModal(){
         setIsOpen(true)
     }
-    const [formValues, setFormValues] = useState({
-        UserId: "",
-        ProjectId: "",
-        subject: "",
-        contractValue: "",
-        ContractTypeId: "",
-        startDate: "",
-        endDate: ""
-      });
+
 
 
 
@@ -111,17 +107,24 @@ const ProcurementList = () => {
         const getData = async()=>{
 
 
-          await axios.get(`${url}/procurement`,{withCredentials:true}).then((resp)=>{
+          await axios.get(`${url}/procurement/${id}`,{withCredentials:true}).then((resp)=>{
             if(resp.data.error){
               setOpenError({open:true,message:true})
             }else{
               setProcurementData(resp.data)
+              setProcurementForm({
+                timeToSell: resp.data.timeToSell,
+                budgetFrom: resp.data.budgetFrom,
+                procurementMethod: resp.data.procurementMethod,
+                procurementType: resp.data.procurementType,
+                ProjectId:resp.data.ProjectId
+            })
             //   console.log(resp.data);
             }
           })
           await axios.get(`${url}/projects`,{withCredentials:true}).then((resp)=>{
             if(resp.data.error){
-              // console.log(resp.data.error);
+              console.log(resp.data.error);
             }
           const data = resp.data.projects.filter((pr)=>pr.approved)  
           setProject(data)
@@ -163,13 +166,13 @@ const ProcurementList = () => {
     
       const handleSubmit = async(e) => {
         e.preventDefault();
-        // console.log(procurementForm);
-        await axios.post(`${url}/procurement`,procurementForm,{withCredentials:true}).then((resp)=>{
-          // console.log(resp.data);
+        // console.log(formValues);
+        await axios.put(`${url}/procurement/${id}`,procurementForm,{withCredentials:true}).then((resp)=>{
+          console.log(resp.data);
           if(resp.data.error){
             setOpenError({open:true,message:`${resp.data.error}`})
           }else{
-            setProcurementData([...procurementData,resp.data])
+            setProcurementData(resp.data)
             setOpenSuccess({open:true,message:"Successfully Added"})
             closeModal();
           }
@@ -207,13 +210,14 @@ const ProcurementList = () => {
 
   // Delete row
   const handleDelete = async()=>{
-    await axios.delete(`${url}/procurement/${isDeleteOpen.id}`,{withCredentials:true}).then((resp)=>{
+    await axios.delete(`${url}/procurement/${id}`,{withCredentials:true}).then((resp)=>{
       if(resp.data.error){
         setOpenError({open:true,message:`${resp.data.error}`})
         // console.log(resp.data);
       }else{
-        const data = procurementData.filter((dt)=>dt.id!==isDeleteOpen.id)
-        setProcurementData(data)
+        setTimeout(() => {
+            props.history.goBack()
+        }, 1000);
         setOpenSuccess({open:true,message:"deleted Successfully"})
         closeDelete()
         
@@ -307,8 +311,11 @@ const ProcurementList = () => {
       </Modal>
 
         {/* End of delete Section */}
-
-        <Button onClick={openModal}>New Procurement</Button>
+        <div className='flex'>
+        <Button onClick={openModal}>Update Procurement</Button>
+        <FaTrashAlt className='m-2 text-3xl' style={{color:'red'}} onClick={()=>setIsDeleteOpen({open:true})}/>
+        </div>
+       
   
       
         </TableContainer>
@@ -325,7 +332,7 @@ const ProcurementList = () => {
               type="date"
               className="mt-1"
               name="contractType"
-            //   value={procurementForm.UserId}
+              value={procurementForm.timeToSell}
               onChange={(e)=>setProcurementForm({...procurementForm,timeToSell:e.target.value})}
               required
             >
@@ -338,7 +345,7 @@ const ProcurementList = () => {
             <Input
               className="mt-1"
               name="ProjectId"
-            //   value={procurementForm.ProjectId}
+              value={procurementForm.budgetFrom}
               onChange={(e)=>setProcurementForm({...procurementForm,budgetFrom:e.target.value})}
               required
             >
@@ -350,7 +357,7 @@ const ProcurementList = () => {
             <Input
               className="mt-1"
               name="subject"
-            //   value={procurementForm.subject}
+              value={procurementForm.procurementMethod}
               onChange={(e)=>setProcurementForm({...procurementForm,procurementMethod:e.target.value})}
               required
             />
@@ -361,7 +368,7 @@ const ProcurementList = () => {
             <Input
               className="mt-1"
               name="contractValue"
-            //   value={procurementForm.contractValue}
+              value={procurementForm.procurementType}
               onChange={(e)=>setProcurementForm({...procurementForm,procurementType:e.target.value})}
               required
             />
@@ -372,11 +379,11 @@ const ProcurementList = () => {
             <Select
               className="mt-1"
               name="ContractTypeId"
-            //   value={procurementForm.ContractTypeId}
+              value={procurementForm.ProjectId}
               onChange={(e)=>setProcurementForm({...procurementForm,ProjectId:e.target.value})}
               required
             >
-              <option value="">Select a Related Project</option>
+              <option value="" disabled>Select a Related Project</option>
               {projects.map((ctr,i)=>(
                 <option key={i} value={ctr.id}>{ctr.name}</option>
               ))}
@@ -426,43 +433,62 @@ const ProcurementList = () => {
         
 
 
-        <TableContainer className="bg-white rounded-lg shadow-lg">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableCell className="font-semibold">Time To Sell</TableCell>
-            <TableCell className="font-semibold">Budget From</TableCell>
-            <TableCell className="font-semibold">Procurement Method</TableCell>
-            <TableCell className="font-semibold">Procurement Type</TableCell>
-            <TableCell className="font-semibold">Project</TableCell>
-            <TableCell className="font-semibold text-center">Actions</TableCell>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {procurementData?procurementData.map((row, i) => (
-            <Fragment key={i}>
-              <TableRow>
-                <TableCell><span className="text-sm font-semibold">{row.timeToSell}</span></TableCell>
-                <TableCell><span className="text-sm font-semibold">{row.budgetFrom}</span></TableCell>
-                <TableCell><span className="text-sm font-semibold">{row.procurementMethod}</span></TableCell>
-                <TableCell><span className="text-sm font-semibold">{row.procurementType}</span></TableCell>
-                <TableCell><span className="text-sm font-semibold">{projects.map((pr)=>pr.id===row.ProjectId?pr.name:"")}</span></TableCell>
-                <TableCell className="flex justify-center space-x-2">
-                  <Link to={`/app/procurement/${row.id}`}>
-                  <Button layout="link" size="small">
-                    <EditIcon className="h-5 w-5 text-blue-600" />
-                  </Button>
-                  </Link>
-                  <Button layout="link" size="small" onClick={() => openDelete(row.id)}>
-                    <TrashIcon className="h-5 w-5 text-red-600" />
-                  </Button>
-                </TableCell>
-              </TableRow>
-            </Fragment>
-          )):""}
-        </TableBody>
-      </Table>
-    </TableContainer>
+  {/* Contract INformation */}
+  <div className="bg-gray-50  flex flex-col justify-center py-12 sm:px-9 lg:px-8 dark:bg-gray-900">
+  <div className="w-full">
+    <div className="bg-white shadow-md rounded-md overflow-hidden dark:bg-gray-700 dark:text-gray-300 ">
+      <div className="px-6 py-8">
+        <div className="flex justify-between items-center">
+          <div className=" items-center">
+            <img src={settings.logo}alt="Company Logo" className="h-12 w-18 mr-2" />
+            <h2 className="text-lg font-medium text-gray-900 dark:text-gray-300">{procurementData?.subject}</h2>
+          </div>
+          <div className="text-right">
+            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Procurement #1234</p>
+            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Time To sell: {procurementData?.timeToSell}</p>
+          </div>
+        </div>
+        <div className="mt-6">
+          <h3 className="text-md font-medium text-gray-900 dark:text-gray-300">Procurement Information</h3>
+          <div className="mt-2">
+            <div className="flex">
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Budget From:</p>
+              <p className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{procurementData.budgetFrom}</p>
+            </div>
+            <div className="flex mt-2">
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Procurement Method:</p>
+              <p className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{procurementData.procurementMethod}</p>
+            </div>
+            <div className="flex mt-2">
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Procurement Type:</p>
+              <p className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{procurementData.procurementType}</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-6">
+          <h3 className="text-md font-medium text-gray-900 dark:text-gray-300">Project Information</h3>
+          <div className="mt-2">
+            <div className="flex">
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Project:</p>
+              <p className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{projects.map((pr)=>pr.id==procurementData.ProjectId?pr.name:'')}</p>
+            </div>
+           
+            <div className="flex mt-2">
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Start Date:</p>
+              <p className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{projects.map((pr)=>pr.id==procurementData.ProjectId?pr.starttime:'')}</p>
+            </div>
+            <div className="flex mt-2">
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">End Date:</p>
+              <p className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{projects.map((pr)=>pr.id==procurementData.ProjectId?pr.endtime:'')}</p>
+            </div>
+          </div>
+        </div>
+       
+              </div>
+              </div>
+              </div>
+              </div>
 
       </>
     )
@@ -475,4 +501,4 @@ const ProcurementList = () => {
 
 
 
-export default ProcurementList
+export default ProcurementDetail

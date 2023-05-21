@@ -136,7 +136,11 @@ const AwardDetail = lazy(() =>
 
 
 const ProcurementList = lazy(() =>
-        import ('../components/Procurement/ProcurementList')
+    import ('../components/Procurement/ProcurementList')
+)
+
+const ProcurementDetail = lazy(() =>
+        import ('../components/Procurement/ProcurementDetail')
     )
     /**
      * ⚠ These are internal routes!
@@ -381,7 +385,7 @@ const routes = [{
     },
     {
         path: "/procurement/:id",
-        component: AwardDetail,
+        component: ProcurementDetail,
         roles: ['admin', 'roadquality']
     },
 ]

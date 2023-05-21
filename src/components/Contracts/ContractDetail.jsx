@@ -577,61 +577,61 @@ const ContractDetail = (props) => {
   
 
   {/* Contract INformation */}
-  <div className="bg-gray-50  flex flex-col justify-center py-12 sm:px-9 lg:px-8">
-  <div className="w-full">
-    <div className="bg-white shadow-md rounded-md overflow-hidden">
+  <div className="bg-gray-50  flex flex-col justify-center py-12 sm:px-9 lg:px-8 dark:border-gray-300 dark:bg-transparent ">
+  <div className="w-full ">
+    <div className="bg-white shadow-md rounded-md overflow-hidden dark:bg-transparent ">
       <div className="px-6 py-8">
         <div className="flex justify-between items-center">
           <div className=" items-center">
             <img src={settings.logo}alt="Company Logo" className="h-12 w-18 mr-2" />
-            <h2 className="text-lg font-medium text-gray-900">{contracts.subject}</h2>
+            <h2 className="text-lg font-medium text-gray-900 dark:text-gray-300">{contracts.subject}</h2>
           </div>
           <div className="text-right">
-            <p className="text-sm font-medium text-gray-500">Contract #1234</p>
-            <p className="text-sm font-medium text-gray-500">Signed: {contracts.startDate}</p>
+            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Contract #1234</p>
+            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Signed: {contracts.startDate}</p>
           </div>
         </div>
         <div className="mt-6">
-          <h3 className="text-md font-medium text-gray-900">Customer Information</h3>
+          <h3 className="text-md font-medium text-gray-900 dark:text-gray-300">Customer Information</h3>
           <div className="mt-2">
             <div className="flex">
-              <p className="text-sm font-medium text-gray-500">Name:</p>
-              <p className="ml-2 text-sm font-medium text-gray-900">{users.map((usr)=>usr.id===contracts.UserId?usr.name:'')}</p>
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Name:</p>
+              <p className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{users.map((usr)=>usr.id===contracts.UserId?usr.name:'')}</p>
             </div>
             <div className="flex mt-2">
-              <p className="text-sm font-medium text-gray-500">Email:</p>
-              <p className="ml-2 text-sm font-medium text-gray-900">{users.map((usr)=>usr.id===contracts.UserId?usr.email:'')}</p>
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Email:</p>
+              <p className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{users.map((usr)=>usr.id===contracts.UserId?usr.email:'')}</p>
             </div>
           </div>
         </div>
         <div className="mt-6">
-          <h3 className="text-md font-medium text-gray-900">Project Information</h3>
+          <h3 className="text-md font-medium text-gray-900 dark:text-gray-300">Project Information</h3>
           <div className="mt-2">
             <div className="flex">
-              <p className="text-sm font-medium text-gray-500">Project:</p>
-              <p className="ml-2 text-sm font-medium text-gray-900">{projects.map((pr)=>pr.id==contracts.ProjectId?pr.name:'')}</p>
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Project:</p>
+              <p className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{projects.map((pr)=>pr.id==contracts.ProjectId?pr.name:'')}</p>
             </div>
             <div className="flex mt-2">
-              <p className="text-sm font-medium text-gray-500">Contract Value:</p>
-              <p className="ml-2 text-sm font-medium text-gray-900">ETB {contracts.contractValue.toLocaleString()}</p>
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Contract Value:</p>
+              <p className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">ETB {contracts.contractValue.toLocaleString()}</p>
             </div>
             <div className="flex mt-2">
-              <p className="text-sm font-medium text-gray-500">Start Date:</p>
-              <p className="ml-2 text-sm font-medium text-gray-900">{contracts.startDate}</p>
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Start Date:</p>
+              <p className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{contracts.startDate}</p>
             </div>
             <div className="flex mt-2">
-              <p className="text-sm font-medium text-gray-500">End Date:</p>
-              <p className="ml-2 text-sm font-medium text-gray-900">{contracts.endDate}</p>
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">End Date:</p>
+              <p className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{contracts.endDate}</p>
             </div>
           </div>
         </div>
         <div className="mt-6">
-          <h3 className="text-md font-medium text-gray-900">Contract Status</h3>
+          <h3 className="text-md font-medium text-gray-900 dark:text-gray-300">Contract Status</h3>
           <div className="mt-2">
             
             <div className="flex mt-2">
-              <p className="text-sm font-medium text-gray-500">Status:</p>
-              <p className="ml-2 text-sm font-medium text-gray-900"><span className='text-teal-500 dark:text-teal-100'>{contracts.status}</span></p>
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Status:</p>
+              <p className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"><span className='text-teal-500 dark:text-teal-100'>{contracts.status}</span></p>
               </div>
               </div>
               </div>

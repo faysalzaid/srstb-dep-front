@@ -1,26 +1,31 @@
+import React, { useState, useEffect, Fragment } from "react";
 
-import React, { useState, useEffect,Fragment } from 'react'
-
-import CTA from '../../components/CTA'
-import InfoCard from '../../components/Cards/InfoCard'
-import ChartCard from '../../components/Chart/ChartCard'
-import { Doughnut, Line } from 'react-chartjs-2'
-import { AuthContext } from '../../hooks/authContext'
-import { useContext } from 'react'
-import ChartLegend from '../../components/Chart/ChartLegend'
-import PageTitle from '../../components/Typography/PageTitle'
-import { ChatIcon, CartIcon, MoneyIcon, PeopleIcon, TrashIcon, EditIcon } from '../../icons'
-import RoundIcon from '../RoundIcon'
-import response from '../../utils/demo/tableData'
+import CTA from "../../components/CTA";
+import InfoCard from "../../components/Cards/InfoCard";
+import ChartCard from "../../components/Chart/ChartCard";
+import { Doughnut, Line } from "react-chartjs-2";
+import { AuthContext } from "../../hooks/authContext";
+import { useContext } from "react";
+import ChartLegend from "../../components/Chart/ChartLegend";
+import PageTitle from "../../components/Typography/PageTitle";
+import {
+  ChatIcon,
+  CartIcon,
+  MoneyIcon,
+  PeopleIcon,
+  TrashIcon,
+  EditIcon,
+} from "../../icons";
+import RoundIcon from "../RoundIcon";
+import response from "../../utils/demo/tableData";
 import { PlusCircleIcon } from "@heroicons/react/outline";
-import { DocumentAddIcon } from '@heroicons/react/outline';
+import { DocumentAddIcon } from "@heroicons/react/outline";
 
 import { ErrorAlert, SuccessAlert } from "components/Alert";
 
-
 import {
   TableBody,
-  TableContainer, 
+  TableContainer,
   Table,
   TableHeader,
   TableCell,
@@ -30,203 +35,212 @@ import {
   Badge,
   Pagination,
   Button,
-} from '@windmill/react-ui'
-import { Modal, ModalHeader, ModalBody, ModalFooter } from '@windmill/react-ui'
-import { Input, HelperText, Label, Select, Textarea } from '@windmill/react-ui'
+} from "@windmill/react-ui";
+import { Modal, ModalHeader, ModalBody, ModalFooter } from "@windmill/react-ui";
+import { Input, HelperText, Label, Select, Textarea } from "@windmill/react-ui";
 
 import {
   doughnutOptions,
   lineOptions,
   doughnutLegends,
   lineLegends,
-} from '../../utils/demo/chartsData'
-import { Link, useParams, withRouter } from 'react-router-dom'
-import { url } from 'config/urlConfig'
-import axios from 'axios'
-import { FaTrashAlt } from 'react-icons/fa'
-
-
-
+} from "../../utils/demo/chartsData";
+import { Link, useParams, withRouter } from "react-router-dom";
+import { url } from "config/urlConfig";
+import axios from "axios";
+import { FaTrashAlt } from "react-icons/fa";
 
 const CandidateDetail = (props) => {
-    const {authState} = useContext(AuthContext)
-    const [countsData,setCountsData] = useState({ projectCount:"",bidCount:"",activeProjects:"",completedProjects:""})
-    const [candidateData,setCandidateData] = useState({})
-    const [candidateForm,setCandidateForm] = useState({date:"",name:"",
-        qualification:"",
-        yearsOfExperience:"",
-        organizationWorkedBefore:"",
-        address:"",
-        location:"",
-        vacancy:"",
-        status:""
+  const { authState } = useContext(AuthContext);
+  const [countsData, setCountsData] = useState({
+    projectCount: "",
+    bidCount: "",
+    activeProjects: "",
+    completedProjects: "",
+  });
+  const [candidateData, setCandidateData] = useState({});
+  const [candidateForm, setCandidateForm] = useState({
+    date: "",
+    name: "",
+    qualification: "",
+    yearsOfExperience: "",
+    organizationWorkedBefore: "",
+    address: "",
+    location: "",
+    vacancy: "",
+    status: "",
+  });
 
-    })
+  const { id } = useParams();
+  // Notifications
+  const [openSuccess, setOpenSuccess] = useState({ open: false, message: "" });
 
-    const {id} = useParams()
-    // Notifications
-    const [openSuccess, setOpenSuccess] = useState({ open: false, message: "" });
-
-    const handleCloseSuccess = (event, reason) => {
-      if (reason === "clickaway") {
-        return;
-      }
-  
-      setOpenSuccess({ open: false, message: "" });
-    };
-  
-    const [openError, setOpenError] = useState({ open: false, message: "" });
-  
-    const handleCloseError = (event, reason) => {
-      if (reason === "clickaway") {
-        return;
-      }
-  
-      setOpenError({ open: false, message: "" });
-    };
-
-    // End of notifications
-    const [isOpen,setIsOpen] = useState(false)
-    function closeModal(){
-        setIsOpen(false)
-    }
-    function openModal(){
-        setIsOpen(true)
+  const handleCloseSuccess = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
     }
 
+    setOpenSuccess({ open: false, message: "" });
+  };
 
+  const [openError, setOpenError] = useState({ open: false, message: "" });
 
-      useEffect(()=>{
-        const getData=async()=>{
-            await axios.get(`${url}/candidates/${id}`,{withCredentials:true}).then((resp)=>{
-                // console.log(resp.data);
-                if(resp.data.error){
-                    
-                }else{
-                    setCandidateData(resp.data)
-                    setCandidateForm({
-                            date:resp.data.date,
-                            name:resp.data.name,
-                            qualification:resp.data.qualification,
-                            yearsOfExperience:resp.data.yearsOfExperience,
-                            organizationWorkedBefore:resp.data.organizationWorkedBefore,
-                            address:resp.data.address,
-                            location:resp.data.location,
-                            vacancy:resp.data.vacancy,
-                            status:resp.data.status
-    
-                        })
-                }
-             
-            }).catch((error)=>{
-                if (error.response && error.response.data && error.response.data.error) {
-                    setOpenError({open:true,message:`${error.response.data.error}`});
-                  } else {
-                    setOpenError({open:true,message:"An unknown error occurred"});
-                  }
-            })
-          
-        
-      
-           
+  const handleCloseError = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
 
-          
-            await axios.get(`${url}/counts`,{withCredentials:true}).then((resp)=>{
-              const data = resp.data
-            //   console.log(resp.data);
-              setCountsData({ projectCount:data.projectsCount,bidCount:data.countBids,activeProjects:data.activeProjectsCount,completedProjects:data.completedProjects})
-            }).catch((error)=>{
-                if (error.response && error.response.data && error.response.data.error) {
-                    setOpenError({open:true,message:`${error.response.data.error}`});
-                  } else {
-                    setOpenError({open:true,message:"An unknown error occurred"});
-                  }
-            })
-        
-        }
+    setOpenError({ open: false, message: "" });
+  };
 
-        getData()
-    
-    },[])
+  // End of notifications
+  const [isOpen, setIsOpen] = useState(false);
+  function closeModal() {
+    setIsOpen(false);
+  }
+  function openModal() {
+    setIsOpen(true);
+  }
 
-      
-    
-      const handleSubmit = async(e) => {
-        e.preventDefault();
-       
-        // console.log(candidateForm);
-        await axios.put(`${url}/candidates/${id}`,candidateForm,{withCredentials:true}).then((resp)=>{
-          if(resp.data.error){
-            setOpenError({open:true,message:`${resp.data.error}`})
-            // console.log(resp.data);
-          }else{
-            // console.log(resp.data);
-            setCandidateData(resp.data)
-            setOpenSuccess({open:true,message:"Successfully Added"})
-            closeModal();   
+  useEffect(() => {
+    const getData = async () => {
+      await axios
+        .get(`${url}/candidates/${id}`, { withCredentials: true })
+        .then((resp) => {
+          // console.log(resp.data);
+          if (resp.data.error) {
+          } else {
+            setCandidateData(resp.data);
+            setCandidateForm({
+              date: resp.data.date,
+              name: resp.data.name,
+              qualification: resp.data.qualification,
+              yearsOfExperience: resp.data.yearsOfExperience,
+              organizationWorkedBefore: resp.data.organizationWorkedBefore,
+              address: resp.data.address,
+              location: resp.data.location,
+              vacancy: resp.data.vacancy,
+              status: resp.data.status,
+            });
           }
-
-        }).catch((error)=>{
-            if (error.response && error.response.data && error.response.data.error) {
-                setOpenError({open:true,message:`${error.response.data.error}`});
-              } else {
-                setOpenError({open:true,message:"An unknown error occurred"});
-              }
         })
+        .catch((error) => {
+          if (
+            error.response &&
+            error.response.data &&
+            error.response.data.error
+          ) {
+            setOpenError({
+              open: true,
+              message: `${error.response.data.error}`,
+            });
+          } else {
+            setOpenError({ open: true, message: "An unknown error occurred" });
+          }
+        });
 
-       
-      };
+      await axios
+        .get(`${url}/counts`, { withCredentials: true })
+        .then((resp) => {
+          const data = resp.data;
+          //   console.log(resp.data);
+          setCountsData({
+            projectCount: data.projectsCount,
+            bidCount: data.countBids,
+            activeProjects: data.activeProjectsCount,
+            completedProjects: data.completedProjects,
+          });
+        })
+        .catch((error) => {
+          if (
+            error.response &&
+            error.response.data &&
+            error.response.data.error
+          ) {
+            setOpenError({
+              open: true,
+              message: `${error.response.data.error}`,
+            });
+          } else {
+            setOpenError({ open: true, message: "An unknown error occurred" });
+          }
+        });
+    };
 
-      
+    getData();
+  }, []);
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
+    // console.log(candidateForm);
+    await axios
+      .put(`${url}/candidates/${id}`, candidateForm, { withCredentials: true })
+      .then((resp) => {
+        if (resp.data.error) {
+          setOpenError({ open: true, message: `${resp.data.error}` });
+          // console.log(resp.data);
+        } else {
+          // console.log(resp.data);
+          setCandidateData(resp.data);
+          setOpenSuccess({ open: true, message: "Successfully Added" });
+          closeModal();
+        }
+      })
+      .catch((error) => {
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.error
+        ) {
+          setOpenError({ open: true, message: `${error.response.data.error}` });
+        } else {
+          setOpenError({ open: true, message: "An unknown error occurred" });
+        }
+      });
+  };
 
+  const [isDeleteOpen, setIsDeleteOpen] = useState({ open: false, id: "" });
 
-
-
-
-  const [isDeleteOpen,setIsDeleteOpen] = useState({open:false,id:""})
-
-  const closeDelete = ()=>{
-    setIsDeleteOpen(false)
-}
-  const openDelete = (id)=>{
-    setIsDeleteOpen({open:true,id})
-}
-
-
+  const closeDelete = () => {
+    setIsDeleteOpen(false);
+  };
+  const openDelete = (id) => {
+    setIsDeleteOpen({ open: true, id });
+  };
 
   // Delete row
-  const handleDelete = async()=>{
-    await axios.delete(`${url}/candidates/${id}`,{withCredentials:true}).then((resp)=>{
-        if(resp.data.error){
-            setOpenError({open:true,message:`${resp.data.error}`})
-        }else{
-            setOpenSuccess({open:true,message:"deleted Successfully"})
-            closeDelete()
-            setTimeout(() => {
-                props.history.goBack()
-            }, 1000);
-         }
-       
-        
-    }).catch((error)=>{
-        if (error.response && error.response.data && error.response.data.error) {
-            setOpenError({open:true,message:`${error.response.data.error}`});
-          } else {
-            setOpenError({open:true,message:"An unknown error occurred"});
-          }
-    })
-}
+  const handleDelete = async () => {
+    await axios
+      .delete(`${url}/candidates/${id}`, { withCredentials: true })
+      .then((resp) => {
+        if (resp.data.error) {
+          setOpenError({ open: true, message: `${resp.data.error}` });
+        } else {
+          setOpenSuccess({ open: true, message: "deleted Successfully" });
+          closeDelete();
+          setTimeout(() => {
+            props.history.goBack();
+          }, 1000);
+        }
+      })
+      .catch((error) => {
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.error
+        ) {
+          setOpenError({ open: true, message: `${error.response.data.error}` });
+        } else {
+          setOpenError({ open: true, message: "An unknown error occurred" });
+        }
+      });
+  };
 
-
-
-  
-    return (
-      <>
-  
-        <PageTitle>Candidate | {candidateData.name}</PageTitle>
-        <ErrorAlert
+  return (
+    <>
+      <PageTitle>Candidate | {candidateData.name}</PageTitle>
+      <ErrorAlert
         open={openError.open}
         handleClose={handleCloseError}
         message={openError.message}
@@ -239,218 +253,250 @@ const CandidateDetail = (props) => {
         horizontal="right"
       />
 
-  
-        {/* <CTA /> */}
-        
-        {/* <!-- Cards --> */}
-        <div className="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
-          <InfoCard title="Total Projects " value={countsData.projectCount}>
-            <RoundIcon
-              icon={PeopleIcon}
-              iconColorclassName="text-orange-500 dark:text-orange-100"
-              bgColorclassName="bg-orange-100 dark:bg-orange-500"
-              className="mr-4"
-            />
-          </InfoCard>
-  
-          <InfoCard title="Bids Registered" value={countsData.bidCount}>
-            <RoundIcon
-              icon={MoneyIcon}
-              iconColorclassName="text-green-500 dark:text-green-100"
-              bgColorclassName="bg-green-100 dark:bg-green-500"
-              className="mr-4"
-            />
-          </InfoCard>
-  
-          <InfoCard title="Active Projects" value={countsData.activeProjects}>
-            <RoundIcon
-              icon={CartIcon}
-              iconColorclassName="text-blue-500 dark:text-blue-100"
-              bgColorclassName="bg-blue-100 dark:bg-blue-500"
-              className="mr-4"
-            />
-          </InfoCard>
-  
-          <InfoCard title="Completed Projects" value={countsData.completedProjects}>
-            <RoundIcon
-              icon={ChatIcon}
-              iconColorclassName="text-teal-500 dark:text-teal-100"
-              bgColorclassName="bg-teal-100 dark:bg-teal-500"
-              className="mr-4"
-            />
-          </InfoCard>
-        </div>
-  
+      {/* <CTA /> */}
 
+      {/* <!-- Cards --> */}
+      <div className="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
+        <InfoCard title="Total Projects " value={countsData.projectCount}>
+          <RoundIcon
+            icon={PeopleIcon}
+            iconColorclassName="text-orange-500 dark:text-orange-100"
+            bgColorclassName="bg-orange-100 dark:bg-orange-500"
+            className="mr-4"
+          />
+        </InfoCard>
 
+        <InfoCard title="Bids Registered" value={countsData.bidCount}>
+          <RoundIcon
+            icon={MoneyIcon}
+            iconColorclassName="text-green-500 dark:text-green-100"
+            bgColorclassName="bg-green-100 dark:bg-green-500"
+            className="mr-4"
+          />
+        </InfoCard>
 
-        <TableContainer>
-      {/* Delete Confirm section */}
+        <InfoCard title="Active Projects" value={countsData.activeProjects}>
+          <RoundIcon
+            icon={CartIcon}
+            iconColorclassName="text-blue-500 dark:text-blue-100"
+            bgColorclassName="bg-blue-100 dark:bg-blue-500"
+            className="mr-4"
+          />
+        </InfoCard>
+
+        <InfoCard
+          title="Completed Projects"
+          value={countsData.completedProjects}
+        >
+          <RoundIcon
+            icon={ChatIcon}
+            iconColorclassName="text-teal-500 dark:text-teal-100"
+            bgColorclassName="bg-teal-100 dark:bg-teal-500"
+            className="mr-4"
+          />
+        </InfoCard>
+      </div>
+
+      <TableContainer>
+        {/* Delete Confirm section */}
         <Modal isOpen={isDeleteOpen.open} onClose={closeDelete}>
           <ModalHeader>Confirm Action</ModalHeader>
           <ModalBody>
             <p>Are you sure you want to perform this action?</p>
           </ModalBody>
           <ModalFooter>
-            <button className="px-4 py-2 text-white bg-red-500 rounded-md hover:bg-red-600" onClick={handleDelete}>
+            <button
+              className="px-4 py-2 text-white bg-red-500 rounded-md hover:bg-red-600"
+              onClick={handleDelete}
+            >
               Confirm
             </button>
           </ModalFooter>
-      </Modal>
+        </Modal>
 
         {/* End of delete Section */}
 
         <Button onClick={openModal}>Update Candidate</Button>
-  
-      
-        </TableContainer>
+      </TableContainer>
 
-        <Modal isOpen={isOpen} onClose={closeModal}>
-      <ModalHeader>Register Candidate</ModalHeader>
-      <ModalBody>
-      <form onSubmit={handleSubmit}>
-        <div className="grid grid-cols-2 gap-4">
-          
-          <Label>
-            <span>Date</span>
-            <Input
-              type="date"
-              value={candidateForm.date}
-              className="mt-1"
-              name="date"
-              onChange={(e)=>setCandidateForm({...candidateForm,date:e.target.value})}
-              required
-            />
-          </Label>
+      <Modal isOpen={isOpen} onClose={closeModal}>
+        <ModalHeader>Register Candidate</ModalHeader>
+        <ModalBody>
+          <form onSubmit={handleSubmit}>
+            <div className="grid grid-cols-2 gap-4">
+              <Label>
+                <span>Date</span>
+                <Input
+                  type="date"
+                  value={candidateForm.date}
+                  className="mt-1"
+                  name="date"
+                  onChange={(e) =>
+                    setCandidateForm({ ...candidateForm, date: e.target.value })
+                  }
+                  required
+                />
+              </Label>
 
-          <Label>
-            <span>Full Name</span>
-            <Input
-            //   type="number"
-            value={candidateForm.name}  
-            className="mt-1"
-              name="name"
-              onChange={(e)=>setCandidateForm({...candidateForm,name:e.target.value})}
-              required
-            />
-          </Label>
+              <Label>
+                <span>Full Name</span>
+                <Input
+                  //   type="number"
+                  value={candidateForm.name}
+                  className="mt-1"
+                  name="name"
+                  onChange={(e) =>
+                    setCandidateForm({ ...candidateForm, name: e.target.value })
+                  }
+                  required
+                />
+              </Label>
 
+              <Label>
+                <span>status</span>
+                <Select
+                  value={candidateForm.status}
+                  className="mt-1"
+                  name="status"
+                  // value={formValues.ProjectId}
+                  onChange={(e) =>
+                    setCandidateForm({
+                      ...candidateForm,
+                      status: e.target.value,
+                    })
+                  }
+                  required
+                >
+                  <option value="">Status</option>
 
-          <Label>
-            <span>status</span>
-            <Select
-              value={candidateForm.status}
-              className="mt-1"
-              name="status"
-              // value={formValues.ProjectId}
-              onChange={(e)=>setCandidateForm({...candidateForm,status:e.target.value})}
-              required
-            >
-              <option value="" >Status</option>
-          
-                <option>pending</option>
-                <option>shortlisted</option>
-                <option>selected</option>
-                <option>rejected</option>
-              
-            </Select>
-          </Label>
+                  <option>pending</option>
+                  <option>shortlisted</option>
+                  <option>selected</option>
+                  <option>rejected</option>
+                </Select>
+              </Label>
 
+              <Label>
+                <span>Qualification</span>
+                <Input
+                  // type="number"
+                  value={candidateForm.qualification}
+                  className="mt-1"
+                  name="qualification"
+                  onChange={(e) =>
+                    setCandidateForm({
+                      ...candidateForm,
+                      qualification: e.target.value,
+                    })
+                  }
+                  required
+                />
+              </Label>
 
-          <Label>
-            <span>Qualification</span>
-            <Input
-            // type="number"
-            value={candidateForm.qualification}  
-            className="mt-1"
-              name="qualification"
-              onChange={(e)=>setCandidateForm({...candidateForm,qualification:e.target.value})}
-              required
-            />
-          </Label>
+              <Label>
+                <span>Years Of Experience</span>
+                <Input
+                  type="number"
+                  value={candidateForm.yearsOfExperience}
+                  className="mt-1"
+                  name="yearsOfExperience"
+                  onChange={(e) =>
+                    setCandidateForm({
+                      ...candidateForm,
+                      yearsOfExperience: e.target.value,
+                    })
+                  }
+                  required
+                />
+              </Label>
 
-          <Label>
-            <span>Years Of Experience</span>
-            <Input
-            type="number"
-            value={candidateForm.yearsOfExperience}  
-            className="mt-1"
-              name="yearsOfExperience"
-              onChange={(e)=>setCandidateForm({...candidateForm,yearsOfExperience:e.target.value})}
-              required
-            />
-          </Label>
+              <Label>
+                <span>Organization Worked Before</span>
+                <Input
+                  // type="number"
+                  value={candidateForm.organizationWorkedBefore}
+                  className="mt-1"
+                  name="organizationWorkedBefore"
+                  onChange={(e) =>
+                    setCandidateForm({
+                      ...candidateForm,
+                      organizationWorkedBefore: e.target.value,
+                    })
+                  }
+                  required
+                />
+              </Label>
 
-          <Label>
-            <span>Organization Worked Before</span>
-            <Input
-            // type="number"
-            value={candidateForm.organizationWorkedBefore}  
-            className="mt-1"
-              name="organizationWorkedBefore"
-              onChange={(e)=>setCandidateForm({...candidateForm,organizationWorkedBefore:e.target.value})}
-              required
-            />
-          </Label>
+              <Label>
+                <span>Adress</span>
+                <Input
+                  // type="number"
+                  value={candidateForm.address}
+                  className="mt-1"
+                  name="address"
+                  onChange={(e) =>
+                    setCandidateForm({
+                      ...candidateForm,
+                      address: e.target.value,
+                    })
+                  }
+                  required
+                />
+              </Label>
 
-          <Label>
-            <span>Adress</span>
-            <Input
-            // type="number"
-            value={candidateForm.address}  
-            className="mt-1"
-              name="address"
-              onChange={(e)=>setCandidateForm({...candidateForm,address:e.target.value})}
-              required
-            />
-          </Label>
+              <Label>
+                <span>Location</span>
+                <Input
+                  // type="number"
+                  value={candidateForm.location}
+                  className="mt-1"
+                  name="location"
+                  onChange={(e) =>
+                    setCandidateForm({
+                      ...candidateForm,
+                      location: e.target.value,
+                    })
+                  }
+                  required
+                />
+              </Label>
 
-          <Label>
-            <span>Location</span>
-            <Input
-            // type="number"
-            value={candidateForm.location}  
-            className="mt-1"
-              name="location"
-              onChange={(e)=>setCandidateForm({...candidateForm,location:e.target.value})}
-              required
-            />
-          </Label>
-
-          <Label>
-            <span>Vacancy</span>
-            <Input
-            // type="number"
-            value={candidateForm.vacancy}  
-            className="mt-1"
-              name="vacancy"
-              onChange={(e)=>setCandidateForm({...candidateForm,vacancy:e.target.value})}
-              required
-            />
-          </Label>
-
-
-
-        </div>
-        <div className="hidden sm:block">
-
-        <Button className="mt-6" type="submit">Submit</Button>
-        </div>
-           <div className=" mt-2 block  sm:hidden">
-            <Button block size="large">
-              Accept
-            </Button>
-          </div>
-      
-        </form>
-      </ModalBody>
-      <ModalFooter>
-      <div className="hidden sm:block">
+              <Label>
+                <span>Vacancy</span>
+                <Input
+                  // type="number"
+                  value={candidateForm.vacancy}
+                  className="mt-1"
+                  name="vacancy"
+                  onChange={(e) =>
+                    setCandidateForm({
+                      ...candidateForm,
+                      vacancy: e.target.value,
+                    })
+                  }
+                  required
+                />
+              </Label>
+            </div>
+            <div className="hidden sm:block">
+              <Button className="mt-6" type="submit">
+                Submit
+              </Button>
+            </div>
+            <div className=" mt-2 block  sm:hidden">
+              <Button block size="large">
+                Accept
+              </Button>
+            </div>
+          </form>
+        </ModalBody>
+        <ModalFooter>
+          <div className="hidden sm:block">
             <Button layout="outline" onClick={closeModal}>
               Cancel
             </Button>
-        </div>
-        <div className="block w-full sm:hidden">
+          </div>
+          <div className="block w-full sm:hidden">
             <Button block size="large" layout="outline" onClick={closeModal}>
               Cancel
             </Button>
@@ -461,90 +507,195 @@ const CandidateDetail = (props) => {
               Accept
             </Button>
           </div> */}
-      </ModalFooter>
-    </Modal>
+        </ModalFooter>
+      </Modal>
 
+      <main className=" w-full p-4 mt-4 border border-gray-200 bg-white rounded-md dark:bg-gray-800 dark:border-gray-700 mb-6">
+        <section className=" grid sm:grid-cols-1 lg:grid-cols-2 lg:gap-2 mt-6 ">
+          <div className=" mb-4">
+            <label className=" dark:text-gray-300 font-semibold">Name : </label>
+            <span className=" capitalize bg-purple-50 p-1 text-purple-600 dark:bg-gray-700 dark:text-purple-400">
+              {candidateData.name}
+            </span>
+          </div>
+          <div className=" mb-4">
+            <label className=" dark:text-gray-300 font-semibold">
+              Qualification :{" "}
+            </label>
+            <span className=" capitalize bg-purple-50 p-1 text-purple-600 dark:bg-gray-700 dark:text-purple-400">
+              {candidateData.qualification}
+            </span>
+          </div>
+          <div className=" mb-4">
+            <label className=" dark:text-gray-300 font-semibold">
+              Experience :{" "}
+            </label>
+            <span className=" capitalize bg-purple-50 p-1 text-purple-600 dark:bg-gray-700 dark:text-purple-400">
+              {candidateData.yearsOfExperience} years
+            </span>
+          </div>
+          <div className=" mb-4">
+            <label className=" dark:text-gray-300 font-semibold">
+              Worked before :{" "}
+            </label>
+            <span className=" capitalize bg-purple-50 p-1 text-purple-600 dark:bg-gray-700 dark:text-purple-400">
+              {candidateData.organizationWorkedBefore}
+            </span>
+          </div>
+          <div className=" mb-4">
+            <label className=" dark:text-gray-300 font-semibold">
+              Address :{" "}
+            </label>
+            <span className=" capitalize bg-purple-50 p-1 text-purple-600 dark:bg-gray-700 dark:text-purple-400">
+              {candidateData.address}
+            </span>
+          </div>
+          <div className=" mb-4">
+            <label className=" dark:text-gray-300 font-semibold">
+              Location :{" "}
+            </label>
+            <span className=" capitalize bg-purple-50 p-1 text-purple-600 dark:bg-gray-700 dark:text-purple-400">
+              {candidateData.location}
+            </span>
+          </div>
+          <div className=" mb-4">
+            <label className=" dark:text-gray-300 font-semibold">
+              Vacancy :{" "}
+            </label>
+            <span className=" capitalize bg-purple-50 p-1 text-purple-600 dark:bg-gray-700 dark:text-purple-400">
+              {candidateData.vacancy}
+            </span>
+          </div>
+          <div className=" mb-4">
+            <label className=" dark:text-gray-300 font-semibold">
+              Status :{" "}
+            </label>
+            <span className=" capitalize bg-purple-50 p-1 text-purple-600 dark:bg-gray-700 dark:text-purple-400">
+              {candidateData.status}
+            </span>
+          </div>
+        </section>
 
-
-
-
-
-<div className="bg-gray-100 flex flex-col items-center justify-center font-sans">
-  <div className="w-full">
-    <div className="bg-white shadow-md rounded-lg px-8 pt-6 pb-8 mb-4 flex flex-wrap">
-      <div className="w-full md:w-1/2 mb-4">
-        <div className="mb-4">
-          <label className="block text-gray-700 font-bold mb-2" htmlFor="name">
-            Name:
-          </label>
-          <p className="text-gray-900 font-semibold"><Badge>{ candidateData.name }</Badge></p>
+        <div className="w-full flex items-center justify-between">
+          <span
+            className=" text-white font-bold py-2 px-4 rounded"
+            href="#"
+          ></span>
+          <a className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-2 rounded">
+            <FaTrashAlt onClick={() => setIsDeleteOpen({ open: true })} />
+          </a>
         </div>
-        <div className="mb-4 flex">
-          <label className="block text-gray-700 font-bold mb-2" htmlFor="qualification">
-            Qualification:
-          </label>
-          <p className="text-gray-900 font-semibold"><Badge>{candidateData.qualification}</Badge></p>
+      </main>
+
+      {/* <div className="bg-gray-100 flex flex-col items-center justify-center font-sans">
+        <div className="w-full">
+          <div className="bg-white shadow-md rounded-lg px-8 pt-6 pb-8 mb-4 flex flex-wrap">
+            <div className="w-full md:w-1/2 mb-4">
+              <div className="mb-4">
+                <label
+                  className="block text-gray-700 font-bold mb-2"
+                  htmlFor="name"
+                >
+                  Name:
+                </label>
+                <p className="text-gray-900 font-semibold">
+                  <Badge>{candidateData.name}</Badge>
+                </p>
+              </div>
+              <div className="mb-4 flex">
+                <label
+                  className="block text-gray-700 font-bold mb-2"
+                  htmlFor="qualification"
+                >
+                  Qualification:
+                </label>
+                <p className="text-gray-900 font-semibold">
+                  <Badge>{candidateData.qualification}</Badge>
+                </p>
+              </div>
+              <div className="mb-4 flex">
+                <label
+                  className="block text-gray-700 font-bold mb-2"
+                  htmlFor="experience"
+                >
+                  Experience:
+                </label>
+                <p className="text-gray-900 font-semibold">
+                  <Badge>{candidateData.yearsOfExperience}</Badge>
+                </p>
+              </div>
+              <div className="mb-4 flex">
+                <label
+                  className="block text-gray-700 font-bold mb-2"
+                  htmlFor="worked-before"
+                >
+                  Worked Before:
+                </label>
+                <p className="text-gray-900 font-semibold">
+                  <Badge>{candidateData.organizationWorkedBefore}</Badge>
+                </p>
+              </div>
+            </div>
+            <div className="w-full md:w-1/2 mb-4 mt-2">
+              <div className="mb-4 flex">
+                <label
+                  className="block text-gray-700 font-bold mb-2"
+                  htmlFor="address"
+                >
+                  Address:
+                </label>
+                <p className="text-gray-900 font-semibold">
+                  <Badge>{candidateData.address}</Badge>
+                </p>
+              </div>
+              <div className="mb-4 flex">
+                <label
+                  className="block text-gray-700 font-bold mb-2"
+                  htmlFor="location"
+                >
+                  Location:
+                </label>
+                <p className="text-gray-900 font-semibold">
+                  <Badge>{candidateData.location}</Badge>
+                </p>
+              </div>
+              <div className="mb-4 flex">
+                <label
+                  className="block text-gray-700 font-bold mb-2"
+                  htmlFor="vacancy"
+                >
+                  Vacancy:
+                </label>
+                <p className="text-gray-900 font-semibold">
+                  <Badge>{candidateData.vacancy}</Badge>
+                </p>
+              </div>
+              <div className="mb-4 flex">
+                <label
+                  className="block text-gray-700 font-bold mb-2"
+                  htmlFor="status"
+                >
+                  Status:
+                </label>
+                <p className="text-gray-900 font-semibold">
+                  <Badge>{candidateData.status}</Badge>
+                </p>
+              </div>
+            </div>
+            <div className="w-full flex items-center justify-between">
+              <span
+                className=" text-white font-bold py-2 px-4 rounded"
+                href="#"
+              ></span>
+              <a className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-2 rounded">
+                <FaTrashAlt onClick={() => setIsDeleteOpen({ open: true })} />
+              </a>
+            </div>
+          </div>
         </div>
-        <div className="mb-4 flex">
-          <label className="block text-gray-700 font-bold mb-2" htmlFor="experience">
-            Experience:
-          </label>
-          <p className="text-gray-900 font-semibold"><Badge>{candidateData.yearsOfExperience}</Badge></p>
-        </div>
-        <div className="mb-4 flex">
-          <label className="block text-gray-700 font-bold mb-2" htmlFor="worked-before">
-            Worked Before:
-          </label>
-          <p className="text-gray-900 font-semibold"><Badge>{candidateData.organizationWorkedBefore}</Badge></p>
-        </div>
-      </div>
-      <div className="w-full md:w-1/2 mb-4 mt-2">
-        <div className="mb-4 flex">
-          <label className="block text-gray-700 font-bold mb-2" htmlFor="address">
-            Address:
-          </label>
-          <p className="text-gray-900 font-semibold"><Badge>{candidateData.address}</Badge></p>
-        </div>
-        <div className="mb-4 flex">
-          <label className="block text-gray-700 font-bold mb-2" htmlFor="location">
-            Location:
-          </label>
-          <p className="text-gray-900 font-semibold"><Badge>{candidateData.location}</Badge></p>
-        </div>
-        <div className="mb-4 flex">
-          <label className="block text-gray-700 font-bold mb-2" htmlFor="vacancy">
-            Vacancy:
-          </label>
-          <p className="text-gray-900 font-semibold"><Badge>{candidateData.vacancy}</Badge></p>
-        </div>
-        <div className="mb-4 flex">
-          <label className="block text-gray-700 font-bold mb-2" htmlFor="status">
-            Status:
-          </label>
-          <p className="text-gray-900 font-semibold"><Badge>{candidateData.status}</Badge></p>
-        </div>
-      </div>
-      <div className="w-full flex items-center justify-between">
-        <span className=" text-white font-bold py-2 px-4 rounded" href="#"></span>
-        <a className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-2 rounded" ><FaTrashAlt onClick={()=>setIsDeleteOpen({open:true})}/></a>
-      </div>
-    </div>
-  </div>
-</div>
+      </div> */}
+    </>
+  );
+};
 
-
-
-
-
-      </>
-    )
-
-
-   
-
-}
-
-
-
-
-export default CandidateDetail
+export default CandidateDetail;
