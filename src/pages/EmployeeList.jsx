@@ -5,7 +5,7 @@ import SectionTitle from "../components/Typography/SectionTitle";
 import axios from "axios";
 import { ErrorAlert, SuccessAlert } from "components/Alert";
 import "./employeeList.css";
-
+import { EmplFileDownload } from "../config/urlConfig";
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import {
   Table,
@@ -27,7 +27,7 @@ import { url } from "../config/urlConfig";
 import EditUser from "components/Users/EditUser";
 import { useRef } from "react";
 import AddEmployee from "components/Users/AddEmployee";
-import { FaCloudUploadAlt } from "react-icons/fa";
+import { FaCloudUploadAlt,FaFileDownload } from "react-icons/fa";
 import TitleChange from "components/Title/Title";
 import { AuthContext } from "hooks/authContext";
 import useAuth from "hooks/useAuth";
@@ -409,6 +409,16 @@ function EmployeeList(props) {
             className="text-5xl"
             style={{ color: "#642BD9" }}
           />
+        </div>
+        <div className="mt-6 ml-4">
+          <a href={`${EmplFileDownload}`} target='_blank'>
+          <FaFileDownload
+            // onClick={EmplFileDownload}
+            className="text-3xl mt-1"
+            style={{ color: "#642BD9" }}
+          />
+          </a>
+          
         </div>
       </div>
 
