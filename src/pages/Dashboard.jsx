@@ -8,11 +8,12 @@ import { AuthContext } from "../hooks/authContext";
 import { useContext } from "react";
 import ChartLegend from "../components/Chart/ChartLegend";
 import PageTitle from "../components/Typography/PageTitle";
-import { ChatIcon, CartIcon, MoneyIcon, PeopleIcon } from "../icons";
+import { ChatIcon, CartIcon, MoneyIcon, PeopleIcon, EyeIcon, TrashIcon, EditIcon } from "../icons";
 import RoundIcon from "../components/RoundIcon";
 import response from "../utils/demo/tableData";
 import UnAuthorized from "components/UnAuthorized/UnAuthorized";
 import TitleChange from "components/Title/Title";
+import { Link } from "react-router-dom/cjs/react-router-dom.min";
 
 import {
   TableBody,
@@ -38,16 +39,15 @@ import { url } from "config/urlConfig";
 import axios from "axios";
 import Line_Chart from "global/recharts/Line_Chart";
 import Area_Chart from "global/recharts/Area_Chart";
-import Latest_Projects from "global/Latest_Projects";
-import BasicTable from "global/react-data-table/BasicTable";
-import OngoingProjects from "global/react-data-table/OngoingProjects";
-import EmplooyeesTable from "global/react-data-table/EmplooyeesTable";
+
+import { Button } from "@mui/material";
 
 function Dashboard(props) {
   const { authState, settings } = useContext(AuthContext);
 
   const [page, setPage] = useState(1);
-  const [data, setData] = useState([]);
+  const [procurement, setProcurement] = useState([]);
+  const [deadlineProjects,setDeadlineProjects] = useState([])
   const [projects, setProject] = useState([]);
   const [countsData, setCountsData] = useState({
     projectCount: "",
@@ -67,17 +67,19 @@ function Dashboard(props) {
             console.log(resp.data.error);
           }
           setProject(resp.data.projects);
+          const ddata = resp.data.projects.filter((pr)=>{
+            const currentDate = new Date();
+            const endTime = new Date(pr.endtime);
+            return endTime.getTime() <= currentDate.getTime();
+          })
+          console.log(ddata);
+          setDeadlineProjects(ddata)
         })
         .catch((err) => {
           setAuthorization(true);
         });
     };
 
-    getData();
-    // console.log(favicon);
-  }, []);
-
-  useEffect(() => {
     const getCounts = async () => {
       await axios
         .get(`${url}/counts`, { withCredentials: true })
@@ -92,7 +94,27 @@ function Dashboard(props) {
         });
     };
 
+
+    const getProcurements = async()=>{
+      await axios.get(`${url}/procurement`,{withCredentials:true}).then((resp)=>{
+          if(resp.data.error){
+
+          }else{
+            const data = resp.data.filter((pr)=>{
+              const currentDate = new Date();
+              const endTime = new Date(pr.endtime);
+              return endTime.getTime() <= currentDate.getTime();
+            })
+            setProcurement(resp.data)
+          }
+      })
+    }
+
     getCounts();
+
+    getData();
+
+    // console.log(favicon);
   }, []);
 
   // pagination setup
@@ -131,9 +153,7 @@ function Dashboard(props) {
   // on page change, load new sliced data
   // here you would make another server request for new data
 
-  useEffect(() => {
-    setData(response.slice((page - 1) * resultsPerPage, page * resultsPerPage));
-  }, [page]);
+
 
   return (
     <>
@@ -210,16 +230,74 @@ function Dashboard(props) {
           <section className="grid gap-6 mb-8 md:grid-cols-2">
             <div className=" p-4 pb-0 bg-white rounded-lg shadow-xs dark:bg-gray-800 overflow-scroll">
               <p className="mb-4 font-semibold text-gray-800 dark:text-gray-300">
-                Ongoing Projects
+                Deadlined Projects
               </p>
-              <OngoingProjects />
+
+
+              <TableContainer className="mb-8">
+          <Table>
+            <TableHeader>
+              <tr>
+                <TableCell>Name</TableCell>
+                <TableCell>P.Cost</TableCell>
+                <TableCell>Start Date</TableCell>
+                <TableCell>End Date</TableCell>
+                <TableCell>Actions</TableCell>
+              </tr>
+            </TableHeader>
+            
+            <TableBody>
+            {deadlineProjects.map((project, i) => (  
+                <TableRow key={i} className="bg-red-200">
+                  <TableCell>
+                    <div className="flex items-center text-sm">
+                      
+                      <div>
+                        <p className="font-semibold">{project.name}</p>
+                      </div>
+                    </div>
+                  </TableCell>
+                  
+                  
+                  <TableCell>
+                    <span className="text-sm">{project.totalCost}</span>
+                  </TableCell>
+                  <TableCell>
+                    <span className="text-sm">{project.starttime}</span>
+                  </TableCell>
+                  
+                  <TableCell>
+                    <span className="text-sm">{project.endtime}</span>
+                  </TableCell>
+                  
+                  
+                  <TableCell>
+                    <div className="flex items-center space-x-4">
+                      <Link to={{pathname:`/app/projects/${project.id}`}}>
+                      <Button layout="link" size="icon" aria-label="Edit">
+                        <EditIcon className="w-5 h-5" aria-hidden="true" />
+                      </Button>
+                      </Link>
+                    
+                    </div>
+                  </TableCell>
+                </TableRow>
+          ))}
+            </TableBody>
+                
+          </Table>
+          <TableFooter>
+          </TableFooter>
+        </TableContainer>
+
+
             </div>
 
             <div className=" p-4 pb-0 bg-white rounded-lg shadow-xs dark:bg-gray-800 overflow-scroll">
               <p className="mb-4 font-semibold text-gray-800 dark:text-gray-300">
-                Ongoing Projects
+                Deadlined Procurements
               </p>
-              <OngoingProjects />
+              {/* <OngoingProjects /> */}
             </div>
           </section>
 
@@ -244,7 +322,7 @@ function Dashboard(props) {
             <p className="mb-4 font-semibold text-gray-800 dark:text-gray-300">
               Our Emplooyees
             </p>
-            <EmplooyeesTable />
+       
           </div>
           {/* </section> */}
         </>

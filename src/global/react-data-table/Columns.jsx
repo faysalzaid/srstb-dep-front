@@ -36,7 +36,50 @@ export const OngoingProjectsColumn = [
   },
 ];
 
+
+
+export const DeadLinedProjects = [
+  {
+    Header: "Project Name",
+    accessor: "name",
+  },
+  {
+    Header: "Project Cost",
+    accessor: "totalCost",
+  },
+  {
+    Header: "Started Date",
+    accessor: "starttime",
+  },
+  {
+    Header: "Deadline",
+    accessor: "endtime",
+  },
+
+];
+
 export const EmplooyeesColumn = [
+  {
+    Header: "First Name",
+    accessor: "first_name",
+  },
+  {
+    Header: "Surname",
+    accessor: "last_name",
+  },
+  {
+    Header: "Gender",
+    accessor: "gender",
+  },
+  {
+    Header: "Email",
+    accessor: "email",
+  },
+]
+
+
+
+export const NewColumn = [
   {
     Header: "First Name",
     accessor: "first_name",

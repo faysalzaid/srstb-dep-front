@@ -62,7 +62,7 @@ function DesignationList(props) {
         setDepartmentData(resp.data)
     })
       }
-        
+        getData()
 
     },[])
 

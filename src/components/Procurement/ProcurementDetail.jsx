@@ -52,7 +52,7 @@ import { FaTrashAlt } from 'react-icons/fa'
 
 const ProcurementDetail = (props) => {
     const {authState,settings} = useContext(AuthContext)
-    const [contracTypes, setContractTypes] = useState([]);
+    const [departments, setDepartments] = useState([]);
     const [users, setUsers] = useState([])
     const [data, setData] = useState([])
     const [projects,setProject] = useState([])
@@ -64,7 +64,8 @@ const ProcurementDetail = (props) => {
         budgetFrom: "",
         procurementMethod: "",
         procurementType: "",
-        ProjectId:""
+        ProjectId:"",
+        DepartmentId:""
     })
 
     const {id} = useParams()
@@ -117,7 +118,8 @@ const ProcurementDetail = (props) => {
                 budgetFrom: resp.data.budgetFrom,
                 procurementMethod: resp.data.procurementMethod,
                 procurementType: resp.data.procurementType,
-                ProjectId:resp.data.ProjectId
+                ProjectId:resp.data.ProjectId,
+                DepartmentId:resp.data.DepartmentId
             })
             //   console.log(resp.data);
             }
@@ -141,11 +143,11 @@ const ProcurementDetail = (props) => {
           })
     
     
-          await axios.get(`${url}/contracttype`,{withCredentials:true}).then((resp)=>{
+          await axios.get(`${url}/departments`,{withCredentials:true}).then((resp)=>{
             if(resp.data.error){
     
             }else{
-              setContractTypes(resp.data)
+              setDepartments(resp.data)
             }
           })
     
@@ -168,7 +170,7 @@ const ProcurementDetail = (props) => {
         e.preventDefault();
         // console.log(formValues);
         await axios.put(`${url}/procurement/${id}`,procurementForm,{withCredentials:true}).then((resp)=>{
-          console.log(resp.data);
+          // console.log(resp.data);
           if(resp.data.error){
             setOpenError({open:true,message:`${resp.data.error}`})
           }else{
@@ -224,6 +226,16 @@ const ProcurementDetail = (props) => {
        
       }
     })}
+
+
+
+
+    function isTimeToSellReached(prcrmnt) {
+      const tTSell = new Date(prcrmnt.timeToSell);
+      // console.log('runned');
+      // console.log(tTSell);
+      return tTSell <= new Date();
+    }
 
 
 
@@ -311,8 +323,8 @@ const ProcurementDetail = (props) => {
       </Modal>
 
         {/* End of delete Section */}
-        <div className='flex'>
-        <Button onClick={openModal}>Update Procurement</Button>
+        <div className='flex ml-6'>
+        <Button onClick={openModal} className='ml-4 '>Update Procurement</Button>
         <FaTrashAlt className='m-2 text-3xl' style={{color:'red'}} onClick={()=>setIsDeleteOpen({open:true})}/>
         </div>
        
@@ -384,7 +396,25 @@ const ProcurementDetail = (props) => {
               required
             >
               <option value="" disabled>Select a Related Project</option>
-              {projects.map((ctr,i)=>(
+              {projects?.map((ctr,i)=>(
+                <option key={i} value={ctr.id}>{ctr.name}</option>
+              ))}
+              
+            </Select>
+          </Label>
+
+
+          <Label>
+            <span>Department</span>
+            <Select
+              className="mt-1"
+              name="ContractTypeId"
+              value={procurementForm.DepartmentId}
+              onChange={(e)=>setProcurementForm({...procurementForm,DepartmentId:e.target.value})}
+              required
+            >
+              <option value="">Select a Department</option>
+              {departments?.map((ctr,i)=>(
                 <option key={i} value={ctr.id}>{ctr.name}</option>
               ))}
               
@@ -436,7 +466,7 @@ const ProcurementDetail = (props) => {
   {/* Contract INformation */}
   <div className="bg-gray-50  flex flex-col justify-center py-12 sm:px-9 lg:px-8 dark:bg-gray-900">
   <div className="w-full">
-    <div className="bg-white shadow-md rounded-md overflow-hidden dark:bg-gray-700 dark:text-gray-300 ">
+    <div className={`${isTimeToSellReached(procurementData)?'bg-red-200 dark:bg-red-900 dark:text-gray-100':'bg-white dark:bg-gray-700 dark:text-gray-300'} shadow-md rounded-md overflow-hidden `}>
       <div className="px-6 py-8">
         <div className="flex justify-between items-center">
           <div className=" items-center">
@@ -454,6 +484,10 @@ const ProcurementDetail = (props) => {
             <div className="flex">
               <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Budget From:</p>
               <p className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{procurementData.budgetFrom}</p>
+            </div>
+            <div className="flex">
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Department:</p>
+              <p className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{departments.map((dp)=>dp.id===procurementData.DepartmentId?dp.name:"")}</p>
             </div>
             <div className="flex mt-2">
               <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Procurement Method:</p>

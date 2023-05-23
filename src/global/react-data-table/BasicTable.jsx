@@ -13,13 +13,13 @@ import {
 } from "react-icons/bi";
 import { defaultColumns } from "./Columns";
 import { defaultData } from "./Data";
+// import { defaultData } from "./Data";
 
-const BasicTable = ({
-  Column = defaultColumns,
-  Data = defaultData,
+const BasicTable = ({Column = defaultColumns,Data=defaultData,
   Pagination = false,
   NextAndPrev = false,
   PageIndex = false,
+  project
 }) => {
   const columns = useMemo(() => {
     return Column;
@@ -36,6 +36,8 @@ const BasicTable = ({
     useSortBy,
     usePagination
   );
+
+  console.log('from basic table',Data);
 
   const {
     getTableProps,
@@ -65,12 +67,12 @@ const BasicTable = ({
         id="react_table"
       >
         <thead>
-          {headerGroups.map((headerGroup) => (
+          {headerGroups?.map((headerGroup) => (
             <tr
               className=" border-b border-gray-200 dark:border-gray-700 "
               {...headerGroup.getHeaderGroupProps()}
             >
-              {headerGroup.headers.map((column) => (
+              {headerGroup?.headers?.map((column) => (
                 <th
                   className=" relative min-w-32 p-2 text-left font-medium "
                   {...column.getHeaderProps(column.getSortByToggleProps())}
@@ -94,8 +96,7 @@ const BasicTable = ({
           ))}
         </thead>
         <tbody {...getTableBodyProps}>
-          {Pagination
-            ? page.map((row) => {
+          {Pagination?page?.map((row) => {
                 prepareRow(row);
                 return (
                   <tr
@@ -115,14 +116,14 @@ const BasicTable = ({
                   </tr>
                 );
               })
-            : rows.map((row) => {
+            : rows?.map((row) => {
                 prepareRow(row);
                 return (
                   <tr
                     className=" border-b border-gray-200 dark:border-gray-700 "
-                    {...row.getRowProps()}
+                    {...row.getRowProps()} 
                   >
-                    {row.cells.map((cell) => {
+                    {row?.cells?.map((cell) => {
                       return (
                         <td
                           className=" min-w-32 p-2 text-sm "

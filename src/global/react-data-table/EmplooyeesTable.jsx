@@ -7,11 +7,11 @@ const EmplooyeesTable = () => {
   return (
     <div>
       <BasicTable
-        Column={EmplooyeesColumn}
-        Data={EmplooyeesData}
-        Pagination
-        PageIndex
-        NextAndPrev
+        // Column={EmplooyeesColumn}
+        // Data={EmplooyeesData}
+        // Pagination
+        // PageIndex
+        // NextAndPrev
       />
     </div>
   );

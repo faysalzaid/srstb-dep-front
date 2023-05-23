@@ -50,7 +50,7 @@ import TitleChange from 'components/Title/Title'
 
 const ProcurementList = () => {
     const {authState,settings} = useContext(AuthContext)
-    const [contracTypes, setContractTypes] = useState([]);
+    const [Departments, setDepartments] = useState([]);
     const [users, setUsers] = useState([])
     const [data, setData] = useState([])
     const [projects,setProject] = useState([])
@@ -62,7 +62,8 @@ const ProcurementList = () => {
         budgetFrom: "",
         procurementMethod: "",
         procurementType: "",
-        ProjectId:""
+        ProjectId:"",
+        DepartmentId:""
     })
 
 
@@ -138,11 +139,11 @@ const ProcurementList = () => {
           })
     
     
-          await axios.get(`${url}/contracttype`,{withCredentials:true}).then((resp)=>{
+          await axios.get(`${url}/departments`,{withCredentials:true}).then((resp)=>{
             if(resp.data.error){
     
             }else{
-              setContractTypes(resp.data)
+              setDepartments(resp.data)
             }
           })
     
@@ -163,7 +164,7 @@ const ProcurementList = () => {
     
       const handleSubmit = async(e) => {
         e.preventDefault();
-        // console.log(procurementForm);
+        console.log(procurementForm);
         await axios.post(`${url}/procurement`,procurementForm,{withCredentials:true}).then((resp)=>{
           // console.log(resp.data);
           if(resp.data.error){
@@ -221,6 +222,14 @@ const ProcurementList = () => {
       }
     })}
 
+
+
+    function isTimeToSellReached(prcrmnt) {
+      const tTSell = new Date(prcrmnt.timeToSell);
+      // console.log('runned');
+      // console.log(tTSell);
+      return tTSell <= new Date();
+    }
 
 
 
@@ -384,6 +393,27 @@ const ProcurementList = () => {
             </Select>
           </Label>
 
+
+
+          <Label>
+            <span>Department</span>
+            <Select
+              className="mt-1"
+              name="ContractTypeId"
+            //   value={procurementForm.ContractTypeId}
+              onChange={(e)=>setProcurementForm({...procurementForm,DepartmentId:e.target.value})}
+              required
+            >
+              <option value="">Select a Department</option>
+              {Departments.map((ctr,i)=>(
+                <option key={i} value={ctr.id}>{ctr.name}</option>
+              ))}
+              
+            </Select>
+          </Label>
+
+
+
          
           
 
@@ -432,8 +462,9 @@ const ProcurementList = () => {
           <TableRow>
             <TableCell className="font-semibold">Time To Sell</TableCell>
             <TableCell className="font-semibold">Budget From</TableCell>
-            <TableCell className="font-semibold">Procurement Method</TableCell>
-            <TableCell className="font-semibold">Procurement Type</TableCell>
+            <TableCell className="font-semibold">Procur.Method</TableCell>
+            <TableCell className="font-semibold">Department</TableCell>
+            <TableCell className="font-semibold">Procur.Type</TableCell>
             <TableCell className="font-semibold">Project</TableCell>
             <TableCell className="font-semibold text-center">Actions</TableCell>
           </TableRow>
@@ -441,10 +472,11 @@ const ProcurementList = () => {
         <TableBody>
           {procurementData?procurementData.map((row, i) => (
             <Fragment key={i}>
-              <TableRow>
-                <TableCell><span className="text-sm font-semibold">{row.timeToSell}</span></TableCell>
+              <TableRow className={`${isTimeToSellReached(row)?'bg-red-200':''}`}>
+                <TableCell><span className="text-sm font-semibold">{row.timeToSell}{isTimeToSellReached(row)?<Badge className="ml-2">Time To Sell Reached</Badge>:''}</span></TableCell>
                 <TableCell><span className="text-sm font-semibold">{row.budgetFrom}</span></TableCell>
                 <TableCell><span className="text-sm font-semibold">{row.procurementMethod}</span></TableCell>
+                <TableCell><span className="text-sm font-semibold">{Departments.map((dp)=>dp.id===row.DepartmentId?dp.name:"")}</span></TableCell>
                 <TableCell><span className="text-sm font-semibold">{row.procurementType}</span></TableCell>
                 <TableCell><span className="text-sm font-semibold">{projects.map((pr)=>pr.id===row.ProjectId?pr.name:"")}</span></TableCell>
                 <TableCell className="flex justify-center space-x-2">
