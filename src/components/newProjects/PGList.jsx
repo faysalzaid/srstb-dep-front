@@ -162,6 +162,27 @@ const PgList = () => {
       
       };
 
+
+
+      function isEndTimeReached(project) {
+        const endTime = new Date(project.endtime);
+        // console.log('runned');
+        return endTime <= new Date();
+      }
+
+      function getDaysPassed(endtime) {
+        const endTime = new Date(endtime);
+        // console.log('The endTime',endTime);
+        const currentDate = new Date();
+        // console.log('currentTime',currentDate);
+        const timeDifference = currentDate.getTime() - endTime.getTime();
+        // console.log('Time Difference', timeDifference);
+        const daysPassed = Math.floor(timeDifference / (1000 * 3600 * 24));
+        // console.log('The days passed',daysPassed); // Milliseconds to days conversion
+        return daysPassed;
+      }
+
+
       
 
   
@@ -173,6 +194,8 @@ const PgList = () => {
               console.log(resp.data.error);
             }
           setProject(resp.data.projects)
+          const nD = resp.data.projects[0].endtime
+          getDaysPassed(nD)
           console.log(resp.data);
       
           })
@@ -536,7 +559,7 @@ const PgList = () => {
           </TableHeader>
           <TableBody>
             {projects?.map((project) => (
-              <TableRow key={project.id}>
+              <TableRow key={project.id} className={`${isEndTimeReached(project)?'bg-red-200':''}`}>
                 <TableCell>
                   <div className="flex items-center text-sm">
                     <div>
@@ -555,7 +578,7 @@ const PgList = () => {
                   <span className="text-sm">{project.starttime}</span>
                 </TableCell>
                 <TableCell>
-                  <span className="text-sm">{project.endtime}</span>
+                  <span className="text-sm">{project.endtime}{isEndTimeReached(project)? <Badge className="text-sm ml-2" type='danger'>{getDaysPassed(project.endtime)} days passed</Badge>:''}</span>
                 </TableCell>
                 <TableCell>
                   <span className="text-sm">ETB {(parseFloat(project.totalCost).toLocaleString('en-Us',{maximumFractionDigits:2}))}</span>
