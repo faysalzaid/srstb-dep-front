@@ -178,6 +178,12 @@ routes = [{
                 roles: ['admin', 'finance', 'hr']
             },
             {
+                path: '/app/area',
+                name: 'Areas',
+                icon: 'FaPlaceOfWorship',
+                roles: ['admin', 'finance', 'hr']
+            },
+            {
                 path: '/app/payroll',
                 name: 'Payroll',
                 icon: 'FaMoneyCheckAlt',

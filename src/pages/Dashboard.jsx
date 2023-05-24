@@ -102,13 +102,15 @@ function Dashboard(props) {
           }else{
             const data = resp.data.filter((pr)=>{
               const currentDate = new Date();
-              const endTime = new Date(pr.endtime);
+              const endTime = new Date(pr.timeToSell);
               return endTime.getTime() <= currentDate.getTime();
             })
-            setProcurement(resp.data)
+            setProcurement(data)
           }
       })
     }
+
+    getProcurements()
 
     getCounts();
 
@@ -230,11 +232,12 @@ function Dashboard(props) {
           <section className="grid gap-6 mb-8 md:grid-cols-2">
             <div className=" p-4 pb-0 bg-white rounded-lg shadow-xs dark:bg-gray-800 overflow-scroll">
               <p className="mb-4 font-semibold text-gray-800 dark:text-gray-300">
-                Deadlined Projects
+              Projects surpassed their deadline.
               </p>
 
 
               <TableContainer className="mb-8">
+              {deadlineProjects.length>0?
           <Table>
             <TableHeader>
               <tr>
@@ -245,7 +248,7 @@ function Dashboard(props) {
                 <TableCell>Actions</TableCell>
               </tr>
             </TableHeader>
-            
+         
             <TableBody>
             {deadlineProjects.map((project, i) => (  
                 <TableRow key={i} className="bg-red-200">
@@ -273,7 +276,7 @@ function Dashboard(props) {
                   
                   <TableCell>
                     <div className="flex items-center space-x-4">
-                      <Link to={{pathname:`/app/projects/${project.id}`}}>
+                      <Link to={`/app/pglist/${project.id}`}>
                       <Button layout="link" size="icon" aria-label="Edit">
                         <EditIcon className="w-5 h-5" aria-hidden="true" />
                       </Button>
@@ -284,8 +287,10 @@ function Dashboard(props) {
                 </TableRow>
           ))}
             </TableBody>
+           
                 
           </Table>
+          :<span className="text-center mb-4 mt-4">No Deadlines</span>}
           <TableFooter>
           </TableFooter>
         </TableContainer>
@@ -295,8 +300,71 @@ function Dashboard(props) {
 
             <div className=" p-4 pb-0 bg-white rounded-lg shadow-xs dark:bg-gray-800 overflow-scroll">
               <p className="mb-4 font-semibold text-gray-800 dark:text-gray-300">
-                Deadlined Procurements
+              Procurements surpassed their  deadline.
               </p>
+             
+              <TableContainer className="mb-8">
+              {procurement.length>0?
+          <Table>
+            <TableHeader>
+              <tr>
+                <TableCell>Time To sell</TableCell>
+                <TableCell>B.From</TableCell>
+                <TableCell>Proc.Type</TableCell>
+                <TableCell>Proc.Method</TableCell>
+                <TableCell>Actions</TableCell>
+              </tr>
+            </TableHeader>
+          
+            <TableBody>
+            {procurement.map((prc, i) => (  
+                <TableRow key={i} className="bg-red-200">
+                  <TableCell>
+                    <div className="flex items-center text-sm">
+                      
+                      <div>
+                        <p className="font-semibold">{prc.timeToSell}</p>
+                      </div>
+                    </div>
+                  </TableCell>
+                  
+                  
+                  <TableCell>
+                    <span className="text-sm">{prc.budgetFrom}</span>
+                  </TableCell>
+                  <TableCell>
+                    <span className="text-sm">{prc.procurementType}</span>
+                  </TableCell>
+                  
+                  <TableCell>
+                    <span className="text-sm">{prc.procurementMethod}</span>
+                  </TableCell>
+                  
+                  
+                  <TableCell>
+                    <div className="flex items-center space-x-4">
+                      <Link to={`/app/procurement/${prc.id}`}>
+                      <Button layout="link" size="icon" aria-label="Edit">
+                        <EditIcon className="w-5 h-5" aria-hidden="true" />
+                      </Button>
+                      </Link>
+                    
+                    </div>
+                  </TableCell>
+                </TableRow>
+          ))}
+            </TableBody>
+              
+                
+          </Table>
+             :<span className="text-center mb-4 mt-4">No Deadlines</span>}
+          <TableFooter>
+          </TableFooter>
+        </TableContainer>
+
+       
+            
+
               {/* <OngoingProjects /> */}
             </div>
           </section>
@@ -304,7 +372,7 @@ function Dashboard(props) {
           <section className=" w-full overflow-x-hidden flex flex-col gap-6 mb-6 ">
             <ChartCard title="Yearly Data Comparison">
               <div style={{ height: "260px" }}>
-                <Line_Chart />
+                <Line_Chart project={projects}/>
               </div>
             </ChartCard>
 

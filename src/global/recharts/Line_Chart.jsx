@@ -26,14 +26,15 @@ import {
 //   { name: "Sep", now: 2000, previous: 4000 },
 //   { name: "Oct", now: 2780, previous: 3908 },
 //   { name: "Nov", now: 1890, previous: 4800 },
-//   { name: "Dec", now: 4000, previous: 2400 },
+//   { name: "Dec", now: 4000, previous: 2400 },  
 // ];
 
-const Line_Chart = () => {
+
+const Line_Chart = ({project}) => {
   return (
     <ResponsiveContainer width="100%" height="100%">
       <LineChart
-        data={data}
+        data={project}
         margin={{
           top: 10,
           right: 20,
@@ -49,14 +50,14 @@ const Line_Chart = () => {
         <Line
           connectNulls
           type="monotone"
-          dataKey="now"
+          dataKey='remainingCost'
           stroke="rgb(59 130 246)"
           strokeWidth={2}
         />
         <Line
           connectNulls
           type="monotone"
-          dataKey="Last_Year"
+          dataKey='totalCost[0]'
           stroke="orange"
           strokeWidth={2}
         />

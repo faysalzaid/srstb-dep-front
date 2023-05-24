@@ -42,6 +42,7 @@ import { Link, withRouter } from 'react-router-dom'
 import { url } from 'config/urlConfig'
 import axios from 'axios'
 import TitleChange from 'components/Title/Title'
+import { FaChevronDown } from 'react-icons/fa'
 
 
 
@@ -50,7 +51,7 @@ const PgList = () => {
     const {authState,settings} = useContext(AuthContext)
     const [users, setUsers] = useState(null);
     const [companies, setCompanies] = useState([])
-    const [projectForm, setProjectForm] = useState({})
+    const [allProjects, setAllProjects] = useState({})
     const [projects,setProject] = useState([])
     const [countsData,setCountsData] = useState({ projectCount:"",bidCount:"",activeProjects:"",completedProjects:""})
   
@@ -196,6 +197,7 @@ const PgList = () => {
               console.log(resp.data.error);
             }
           setProject(resp.data.projects)
+          setAllProjects(resp.data.projects)
           const nD = resp.data.projects[0].endtime
           getDaysPassed(nD)
           // console.log(resp.data);
@@ -244,7 +246,59 @@ const PgList = () => {
 
 
 
+  const filterByStatus = async(e)=>{
+    // console.log(e.target.value);
+    if(e.target.value==='all'){
+      setProject(allProjects)
+    }else{
+      const data = allProjects.filter((pr)=>pr.status===e.target.value)
+      setProject(data)
+    }
+  }
 
+
+
+
+  const filterByYear = async(e)=>{
+    // console.log(e.target.value);
+    if(e.target.value==='all'){
+      setProject(allProjects)
+    }else{
+      const data = allProjects.filter((pr)=>pr.year.slice(0,4)===e.target.value)
+      setProject(data)
+    }
+  }
+
+
+
+  const filterByApproval = async(e)=>{
+    // console.log(e.target.value);
+    if(e.target.value==='all'){
+      setProject(allProjects)
+    }else if(e.target.value==='false'){
+      // console.log('in the false');
+      const data = allProjects.filter((pr)=>!(pr.approved))
+      setProject(data)
+    }else if(e.target.value==='true'){
+      // console.log('in the true');
+      const data = allProjects.filter((pr)=>pr.approved)
+      setProject(data)
+    }
+  }
+
+
+  function generateYearOptions() {
+    const currentYear = new Date().getFullYear();
+    const yearOptions = [];
+    for (let i = currentYear; i >= currentYear - 4; i--) {
+      yearOptions.push(
+        <option key={i} value={i}>{i}</option>
+      );
+    }
+    return yearOptions;
+  }
+
+  
   const handleDelete = async() => {
    await axios.get(`${url}/projects/delete/${isDeleteOpen.id}`,{withCredentials:true}).then((resp)=>{
     if(resp.data.error){
@@ -331,10 +385,54 @@ const PgList = () => {
   
         <TableContainer>
    
-   
           {authState.role==="admin" || authState.role==="engineer" || authState.role==="manager" || authState.role==="planning" ?
         <Button size="small" onClick={openModal}>New Project</Button>
         :<span>Read Only</span>}
+
+
+<div className="max-w-screen-lg flex flex-col sm:flex-row">
+  {/* Data section 1 */}
+  <div className="flex flex-col sm:flex-row mb-4">
+    <div className="flex relative inline-flex">
+      <select className="w-full flex-2 mt-1 w-48 h-10 pl-3 pr-8 border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" onChange={filterByStatus}>
+        <option value="all">All Projects (status)</option>
+        <option value="open">Open</option>
+        <option value="pending">Pending</option>
+        <option value="active">Active</option>
+        <option value="completed">Completed</option>
+      </select>
+      
+    </div>
+  </div>
+  {/* End of Data section 1 */}
+
+  {/* Data section 2 */}
+  <div className="flex flex-col sm:flex-row mb-4">
+   
+    <div className="flex relative inline-flex lg:ml-4">
+      <select className="w-full flex-2 mt-1 w-48 h-10 pl-3 pr-8 border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" onChange={filterByApproval}>
+        <option value="all">All Projects(Approval)</option>
+        <option value='true'>Approved</option>
+        <option value='false'>Not Approved</option>
+      </select>
+    
+    </div>
+  </div>
+  {/* End of Data section 2 */}
+
+  {/* Data section 3 */}
+  <div className="flex flex-col sm:flex-row mb-4">
+
+  <div className="flex relative inline-flex lg:ml-4">
+    <select className="w-full flex-2 mt-1 w-48 h-10 pl-3 pr-8 border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" onChange={filterByYear}>
+      <option value={'all'}>All Projects(Year)</option>
+      {generateYearOptions()}
+    </select>
+  </div>
+</div>
+
+  {/* End of Data section 3 */}
+</div>
 
       
   
@@ -544,7 +642,7 @@ const PgList = () => {
         
 
 
-    <TableContainer className="mb-8">
+    <TableContainer className="mb-8 mt-4">
         <Table>
           <TableHeader>
             <TableRow>
@@ -590,7 +688,7 @@ const PgList = () => {
                 </TableCell>
              
                 <TableCell>
-                  <Badge type={project.approved?"success":"danger"}>{project.approved?"Approved":"Un Approved"}</Badge>
+                  <Badge type={project.approved?"success":"danger"}>{project.approved?"Approved":"Not Approved"}</Badge>
                 </TableCell>
              
                 <TableCell>

@@ -470,8 +470,7 @@ const ProcurementDetail = (props) => {
       <div className="px-6 py-8">
         <div className="flex justify-between items-center">
           <div className=" items-center">
-            <img src={settings.logo}alt="Company Logo" className="h-12 w-18 mr-2" />
-            <h2 className="text-lg font-medium text-gray-900 dark:text-gray-300">{procurementData?.subject}</h2>
+        
           </div>
           <div className="text-right">
             <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Procurement #1234</p>
