@@ -305,7 +305,7 @@ function EmployeeList(props) {
         );
         setEmployeeData(newEmployee);
         closeModal();
-        setSuccessMessage("Successfully Deleted");
+        // setSuccessMessage("Successfully Deleted");
         setOpenSuccess({ open: true, message: "Deleted Successfully" });
         closeDelete();
       });
@@ -315,10 +315,12 @@ function EmployeeList(props) {
   const [indexNumber, setIndexNumber] = useState(0);
   const [step, setStep] = useState(1);
   const [progress, setProgress] = useState(0);
+
   const ShowNext = () => {
     setIndexNumber((indexNumber) => indexNumber + 100);
     setStep((setp) => setp + 1);
     setProgress((progress) => progress + 33.3);
+
   };
   const ShowPrev = () => {
     setIndexNumber((indexNumber) => indexNumber - 100);
@@ -425,7 +427,6 @@ function EmployeeList(props) {
       {/* Add new employee form start */}
       <Modal isOpen={isModalOpen} onClose={closeModal}>
         <ModalHeader>Insert Employee Info</ModalHeader>
-        <span style={{ color: "red" }}>{errorMessage}</span>
         <ModalBody>
           <div className=" form_container w-full ">
             <section className=" progress_bar">
