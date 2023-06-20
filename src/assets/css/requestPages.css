@@ -1,0 +1,132 @@
+@import url("https://fonts.googleapis.com/css2?family=Raleway:wght@200;300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap");
+
+.request_button {
+  transition: all 0.3s;
+  text-align: center;
+}
+
+.request_button:focus {
+  outline: none;
+}
+
+.request_history {
+  box-shadow: rgba(80, 79, 79, 0.2) 0px 2px 8px 0px;
+}
+
+.request_history thead tr th,
+.request_history tbody tr td {
+  white-space: nowrap;
+  text-align: left;
+  padding: 13px 10px;
+}
+
+.request_history tbody tr:last-child {
+  border-bottom: none;
+}
+
+.non-ouline:focus {
+  outline: none;
+}
+
+.fill_form {
+  width: fit-content;
+  font-family: "Open Sans";
+  padding: 40px 20px;
+}
+
+.fill_form input {
+  width: 240px;
+  outline: none;
+  padding: 4px;
+}
+
+.fill_form input:focus {
+  outline: none;
+}
+
+.printable_container {
+  width: 100%;
+  max-width: 650px;
+  margin: 40px auto 20px auto;
+  font-family: "Open Sans";
+  line-height: 40px;
+}
+
+.main_content {
+  line-height: 30px;
+  margin: 0 auto;
+}
+
+.printable_container input {
+  outline: none;
+  font-weight: 600;
+  border-bottom: 0.5px solid gray;
+  background-color: transparent;
+  width: min-content;
+}
+
+.printable_container input::placeholder {
+  font-size: medium;
+}
+
+.bottom_section {
+  line-height: 30px;
+  max-width: 700px;
+  border: 1px solid gainsboro;
+}
+
+@media print {
+  .side_bar,
+  .header_nav,
+  .printable_title,
+  .printable_button,
+  .fill_form,
+  .preview {
+    display: none;
+  }
+
+  .layout {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .main_content {
+    width: 100%;
+  }
+
+  .printable_container {
+    max-width: none;
+    border: none;
+    padding: 0;
+    margin: auto;
+  }
+
+  .fuel_display {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    font-size: 22px;
+  }
+
+  .contract-page {
+    position: fixed;
+    top: 0;
+  }
+
+  .top_section {
+    display: none;
+  }
+
+  .bottom_section {
+    position: absolute;
+    top: 0;
+    border: none;
+    padding: 0;
+    max-width: none;
+  }
+}
