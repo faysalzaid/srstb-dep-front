@@ -33,7 +33,7 @@ function AwardSection({ bid, project, users, setBids, setProject }) {
 
     useEffect(()=>{
         const data = bid.filter((b)=>b.selected)
-        console.log(data);
+        // console.log(data);
         setBids(data)
     },[])
   const onBidSelect = () => {

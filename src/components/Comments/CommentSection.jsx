@@ -217,7 +217,7 @@ function CommentSection({ project, id }) {
                 className="bg-green-500 text-white hover:bg-green-600 focus:outline-none focus:shadow-outline-green"
                
               >
-              
+              Add Comment
               </Button>
             </ModalFooter>
           </form>
@@ -243,8 +243,8 @@ function CommentSection({ project, id }) {
       </div>
       <div className="ml-auto flex">
         {cm.approved? 
-        <span className='px-2 py-1 rounded-full bg-green-500 text-white text-xs' onClick={()=>handleApprove(cm.id)}>UnApprove</span>:
-        <span className='px-2 py-1 rounded-full bg-red-500 text-white text-xs' onClick={()=>handleApprove(cm.id)}>Approved</span>
+        <span className='px-2 py-1 rounded-full bg-green-500 text-white text-xs' onClick={()=>handleApprove(cm.id)}>Decline</span>:
+        <span className='px-2 py-1 rounded-full bg-red-500 text-white text-xs' onClick={()=>handleApprove(cm.id)}>approve</span>
         }
 
         <FaTrashAlt className="mt-1 ml-2 mr-4 text-red-600" onClick={()=>openDelete(cm.id)}/>

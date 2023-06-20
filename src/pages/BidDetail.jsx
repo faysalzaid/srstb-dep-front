@@ -513,7 +513,7 @@ function BidDetail(props) {
                       
                       <div>
                         <p className="font-semibold">{bidsData.fullname}</p>
-                        <p className="text-xs text-gray-600 dark:text-gray-400">{bidsData.job}</p>
+                        {/* <p className="text-xs text-gray-600 dark:text-gray-400">{bidsData.job}</p> */}
                       </div>
                     </div>
                   </TableCell>
@@ -521,7 +521,10 @@ function BidDetail(props) {
                     <div className="flex items-center text-sm">
                       
                       <div>
-                        <p className="font-semibold">{projects.map(pr=>pr.id===bidsData.ProjectId?pr.name:"")}</p>
+                      {projects.map(pr => pr.id === bidsData.ProjectId ? (
+                      <Link to={`/app/pglist/${pr.id}`} key={pr.id}>{pr.name}</Link>
+                    ) : null)}
+                 
                         {/* <p className='font-semibold'>{bid.ProjectId}sdf</p> */}
                      
                       </div>

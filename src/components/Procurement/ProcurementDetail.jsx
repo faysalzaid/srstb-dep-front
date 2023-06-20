@@ -112,6 +112,7 @@ const ProcurementDetail = (props) => {
             if(resp.data.error){
               setOpenError({open:true,message:true})
             }else{
+              console.log(resp.data);
               setProcurementData(resp.data)
               setProcurementForm({
                 timeToSell: resp.data.timeToSell,
@@ -504,16 +505,16 @@ const ProcurementDetail = (props) => {
           <div className="mt-2">
             <div className="flex">
               <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Project:</p>
-              <p className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{projects.map((pr)=>pr.id==procurementData.ProjectId?pr.name:'')}</p>
+              <p className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{procurementData?.Project?.name}</p>
             </div>
            
             <div className="flex mt-2">
               <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Start Date:</p>
-              <p className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{projects.map((pr)=>pr.id==procurementData.ProjectId?pr.starttime:'')}</p>
+              <p className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{procurementData?.Project?.starttime}</p>
             </div>
             <div className="flex mt-2">
               <p className="text-sm font-medium text-gray-500 dark:text-gray-400">End Date:</p>
-              <p className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{projects.map((pr)=>pr.id==procurementData.ProjectId?pr.endtime:'')}</p>
+              <p className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{procurementData?.Project?.endtime}</p>
             </div>
           </div>
         </div>

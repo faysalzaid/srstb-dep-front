@@ -112,7 +112,7 @@ const AwardLetterDetail = () => {
                 // if(resp.data.error) return setOpenError({open:true,message:`${resp.data.error}`})
                 const data = resp.data.bid.filter((bd)=>bd.selected)
                 setBidData(data)
-                console.log(resp.data);
+                // console.log(resp.data);
               }).catch((error)=>{
                 if (error.response && error.response.data && error.response.data.error) {
                     setOpenError({open:true,message:`${error.response.data.error}`});
@@ -152,7 +152,7 @@ const AwardLetterDetail = () => {
         const formData = new FormData()
         formData.append('BidId',awardForm.BidId)
         formData.append('file',awardForm.file)
-        console.log(formData);
+        // console.log(formData);
         await axios.put(`${url}/awardletter/${id}`,formData,{withCredentials:true}).then((resp)=>{
             if(resp.data.error){
                 setOpenError({open:true,message:`${resp.data.error}`})
@@ -177,10 +177,6 @@ const AwardLetterDetail = () => {
 
 
 
-  const handleEdit = (index) => {
-    // Implement your own edit logic here   
-    console.log(`Edit row ${index}`);
-  };
 
 
 

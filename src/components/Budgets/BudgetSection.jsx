@@ -23,7 +23,7 @@ import { ErrorAlert, SuccessAlert } from "components/Alert";
 import { useContext } from "react";
 import { AuthContext } from "hooks/authContext";
 
-function BudgetList({ id, budgets, setBudgets, invoiceIds }) {
+function BudgetList({ id, budgets, setBudgets, invoiceIds ,project}) {
   const { authState } = useContext(AuthContext);
   // console.log(budgets);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -575,6 +575,7 @@ function BudgetList({ id, budgets, setBudgets, invoiceIds }) {
                               <Badge type="danger">Partially </Badge>
                             </td>
                           )}
+                        
                           <td
                             className=" px-6 py-4 whitespace-nowrap"
                             style={{ color: "green" }}

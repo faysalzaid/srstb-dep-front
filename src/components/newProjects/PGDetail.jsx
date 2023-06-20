@@ -9,7 +9,7 @@ import RoundIcon from '../RoundIcon'
 import ContractSection from 'components/ContractSection/ContractSection'
 import { CgMenuGridR } from 'react-icons/cg'
 import { BiCheckCircle, BiTime } from 'react-icons/bi'
-
+import { Doughnut, Line } from "react-chartjs-2";
 import { VscFiles } from 'react-icons/vsc'
 import { FaAward, FaCircleNotch, FaCommentDot,FaCommentDots } from 'react-icons/fa'
 import { GrTextAlignLeft } from 'react-icons/gr'
@@ -45,6 +45,7 @@ import { AuthContext } from 'hooks/authContext'
 import TitleChange from 'components/Title/Title'
 import AwardSection from 'components/AwardSection/AwardSection'
 import ProcurementSection from 'components/Procurement/ProcurementSection'
+import ReportSection from 'components/ReportSection/ReportSection'
 
 
 
@@ -65,6 +66,7 @@ const PgDetail = () => {
     const [showComments,setShowComments] = useState(false)
     const [showBid,setShowBid] = useState(false)
     const [showAwards,setShowAwards] = useState(false)
+    const [showReport,setShowReport] = useState(false)
     const [isOpen,setIsOpen] = useState(false)
     const {authState,settings} = useContext(AuthContext)
 // Alert logic and initialization
@@ -115,15 +117,6 @@ const handleCloseError = (event, reason) => {
     });
 
 
-    
-      const handleSubmit = e => {
-        e.preventDefault();
-        // handle form submission here
-        // e.g. make an API call to save the form data
-        closeModal();
-      };
-
-      
 
   
     // console.log('data from app',authState);
@@ -243,6 +236,7 @@ setShowContract(false)
 setShowBudget(false)
 setShowBid(false)
 setShowComments(false)
+setShowReport(false)
 }
 
 function handleTask(){
@@ -257,6 +251,7 @@ function handleBids(){
   setShowBudget(false)
   setShowBid(true)
   setShowComments(false)
+  setShowReport(false)
 
   }
 
@@ -269,6 +264,7 @@ function handleBudgets(){
   setShowBudget(true)
   setShowBid(false)
   setShowComments(false)
+  setShowReport(false)
   }
 
 function handleContracts(){
@@ -279,6 +275,7 @@ setShowOverview(false)
 setShowBudget(false)
 setShowBid(false)
 setShowComments(false)
+setShowReport(false)
 }
 
 function handleComments(){
@@ -289,6 +286,7 @@ function handleComments(){
   setShowBudget(false)
   setShowBid(false)
   setShowComments(true)
+  setShowReport(false)
   }
 
 
@@ -300,11 +298,27 @@ function handleComments(){
     setShowBudget(false)
     setShowBid(false)
     setShowComments(false)
+    setShowReport(false)
     }
 
 
     function handleProcurement(){
       setShowProcurement(true)
+      setShowAwards(false)
+      setShowContract(false)
+      setShowOverview(false)
+      setShowBudget(false)
+      setShowBid(false)
+      setShowComments(false)
+      setShowReport(false)
+   
+      }
+
+
+
+    function handleReports(){
+      setShowReport(true)
+      setShowProcurement(false)
       setShowAwards(false)
       setShowContract(false)
       setShowOverview(false)
@@ -329,29 +343,6 @@ navWrapper.classList.remove('active')
 }
 
 
-
-
-  const projectPercentileGraph = {
-    data: {
-        datasets: [{
-            data: '34',
-            /**
-             * These colors come from Tailwind CSS palette
-             * https://tailwindcss.com/docs/customizing-colors/#default-color-palette
-             */
-            backgroundColor: 'green',
-            label: 'Percentage',
-        }, ],
-        labels: 'Cellu-project',
-    },
-    options: {
-        responsive: true,
-        cutoutPercentage: 80,
-    },
-    legend: {
-        display: false,
-    },
-  }
 
 
 
@@ -684,7 +675,7 @@ navWrapper.classList.remove('active')
             <li className='nav-link dark:text-gray-300' onClick={()=>{handleBids(); hideNav()}}><VscFiles />Bids</li>
             <li className='nav-link dark:text-gray-300' onClick={()=>{handleBudgets(); hideNav()}}><GrTextAlignLeft />Budgets</li>
             <li className='nav-link dark:text-gray-300' onClick={()=>{handleContracts(); hideNav()}}><AiFillFile />Contracts</li>
-            <li className='nav-link dark:text-gray-300' onClick={()=>{handleTask(); hideNav()}}><BiCheckCircle/> Reports</li>
+            <li className='nav-link dark:text-gray-300' onClick={()=>{handleReports(); hideNav()}}><BiCheckCircle/> Reports</li>
             <li className='nav-link dark:text-gray-300' onClick={()=>{handleComments(); hideNav()}}><FaCommentDots/> Comments</li>
             <li className='nav-link dark:text-gray-300' onClick={()=>{handleAwards(); hideNav()}}><FaAward/> Awards</li>
             <li className='nav-link dark:text-gray-300' onClick={()=>{handleProcurement(); hideNav()}}><FaCircleNotch/> Procurement</li>
@@ -699,10 +690,11 @@ navWrapper.classList.remove('active')
           
           {showOverview&&<OverView project={project} setProject={setProject} companyData={companyData} id={id} setOpenSuccess={setOpenSuccess}/>}
           {showContract&&<ContractSection project={project} id={id}/>}
-          {showBudget&&<BudgetList id={id} budgets={budgets} setBudgets={setBudgets} invoiceIds={project?.Invoice?.id}/>}
+          {showBudget&&<BudgetList id={id} budgets={budgets} setBudgets={setBudgets} invoiceIds={project?.Invoice?.id} project={project}/>}
           {showBid&&<BidSection bid={bids} project={project} users={usersData} setBids={setBids} setProject={setProject}/>}
           {showComments&&<CommentSection project={project} id={id}/>}
           {showAwards&&<AwardSection bid={bids} project={project} users={usersData} setBids={setBids} setProject={setProject}/>}
+          {showReport&&<ReportSection bid={bids} project={project} users={usersData} setBids={setBids} setProject={setProject}/>}
           {showProcurement&&<ProcurementSection bid={bids} project={project} users={usersData} setBids={setBids} setProject={setProject}/>}
 
 

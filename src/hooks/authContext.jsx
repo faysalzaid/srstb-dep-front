@@ -46,24 +46,46 @@ export const AuthContextProvider = withRouter((props) => {
 
   jwtAxios.interceptors.request.use(
     async (config) => {
-      // config here includes our headers
-      let currentDate = new Date();
-      let decodedToken = jwt_decode(userData?.token);
-      if (decodedToken.exp * 1000 < currentDate.getTime()) {
-        if (!refreshingToken) {
-          refreshingToken = true;
-          console.log('calling graph auth function:::::');
-          await graphAuth(config);
-          refreshingToken = false;
-          // return newConfig;
+      try {
+        let currentDate = new Date();
+        let decodedToken;
+        try {
+          decodedToken = jwt_decode(userData?.token);
+        } catch (error) {
+          return config
         }
+        // if(decodedToken === undefined) console.log('what');
+        if (decodedToken.exp * 1000 < currentDate.getTime()) {
+          if (!refreshingToken) {
+            refreshingToken = true;
+            console.log('calling graph auth function:::::');
+            await graphAuth(config).catch((error) => {
+              // Handle error from graphAuth() appropriately
+              console.error('Error in graphAuth:', error);
+              throw error; // Rethrow the error to reject the promise
+            });
+            refreshingToken = false;
+            // return newConfig;
+          }
+        }
+        return config;
+      } catch (error) {
+        // Handle other potential errors appropriately
+        // console.error('Error in request interceptor:', error);
+        return Promise.reject(error);
       }
-      return config;
     },
     (error) => {
       return Promise.reject(error);
     }
   );
+
+  
+
+
+
+
+  
 // End of jwt Response Interceptor
 
 
@@ -108,7 +130,7 @@ export const AuthContextProvider = withRouter((props) => {
       setAuthState({ id: data?.id, username: data?.name,email: data?.email,image:data?.image,role:data?.role,state:true,refreshToken:data?.refreshToken });
       config.headers.Authorization = `Bearer ${data.token}`; // update the headers with the new token
     } catch (error) {
-      console.error(error);
+      // console.error(error);
       // setAuthState({ id: "", token: "", username: "", email: "",image:"", role: "", state: false, refreshToken: "" });
     }
   }

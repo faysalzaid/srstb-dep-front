@@ -361,12 +361,6 @@ const AwardList = () => {
               Cancel
             </Button>
           </div>
-
-          {/* <div className="block w-full sm:hidden">
-            <Button block size="large">
-              Accept
-            </Button>
-          </div> */}
       </ModalFooter>
     </Modal>
 
@@ -381,6 +375,7 @@ const AwardList = () => {
           <TableRow>
             <TableCell className="font-semibold">Date</TableCell>
             <TableCell className="font-semibold">Bidder</TableCell>
+            <TableCell className="font-semibold">Project</TableCell>
             <TableCell className="font-semibold text-center">Actions</TableCell>
           </TableRow>
         </TableHeader>
@@ -391,6 +386,7 @@ const AwardList = () => {
                 <TableCell><span className="text-sm font-semibold">{row.date}</span></TableCell>
                 <TableCell><span className="text-sm font-semibold">{bidData.map((usr)=>usr.id===row.BidId?usr.fullname:"")}</span></TableCell>
                
+                <TableCell><span className="text-sm font-semibold">{row?.Bid?.Project?.name}</span></TableCell>
 
                 <TableCell className="flex justify-center space-x-2">
                   <Link to={`/app/awards/${row.id}`}>

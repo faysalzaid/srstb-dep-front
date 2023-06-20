@@ -76,7 +76,7 @@ const onSubmit = async(data)=>{
           // Add other properties as needed
         }
           const stringFied = JSON.stringify(userData?userData:undefined)
-          setCookie('accessToken',stringFied)
+          setCookie('accessToken',stringFied,{ sameSite:'None' })
           setAuthState({id:data.id,username:data.name,email:data.email,image:data.image,role:data.role,state:true,refreshToken:data.refreshToken})
           setOpenSuccess({open:true,message:"Logged In Successfully"})
          setTimeout(() => {

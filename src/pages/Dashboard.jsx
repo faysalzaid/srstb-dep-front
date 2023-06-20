@@ -49,6 +49,7 @@ function Dashboard(props) {
   const [procurement, setProcurement] = useState([]);
   const [deadlineProjects,setDeadlineProjects] = useState([])
   const [projects, setProject] = useState([]);
+  const [comments,setComments] = useState([])
   const [countsData, setCountsData] = useState({
     projectCount: "",
     bidCount: "",
@@ -64,7 +65,7 @@ function Dashboard(props) {
         .get(`${url}/projects`, { withCredentials: true })
         .then((resp) => {
           if (resp.data.error) {
-            console.log(resp.data.error);
+            // console.log(resp.data.error);
           }
           setProject(resp.data.projects);
           const ddata = resp.data.projects.filter((pr)=>{
@@ -72,7 +73,7 @@ function Dashboard(props) {
             const endTime = new Date(pr.endtime);
             return endTime.getTime() <= currentDate.getTime();
           })
-          console.log(ddata);
+          // console.log(ddata);
           setDeadlineProjects(ddata)
         })
         .catch((err) => {
@@ -91,6 +92,17 @@ function Dashboard(props) {
             activeProjects: data.activeProjectsCount,
             completedProjects: data.completedProjects,
           });
+        });
+    };
+
+
+    const getComments = async () => {
+      await axios
+        .get(`${url}/comment`, { withCredentials: true })
+        .then((resp) => {
+          // console.log(resp.data);
+          const data = resp.data.filter((dt)=>dt.approved===0);
+          setComments(data)
         });
     };
 
@@ -115,6 +127,7 @@ function Dashboard(props) {
     getCounts();
 
     getData();
+    getComments()
 
     // console.log(favicon);
   }, []);
@@ -213,6 +226,84 @@ function Dashboard(props) {
 
             {/* end of calendar section */}
           </TableContainer>
+
+
+          <div className=" p-4 pb-0 bg-white rounded-lg shadow-xs dark:bg-gray-800 overflow-scroll">
+              <p className="mb-4 font-semibold text-gray-800 dark:text-gray-300">
+              Pending Comments.
+              </p>
+             
+              <TableContainer className="mb-8">
+              {comments.length>0?
+          <Table>
+            <TableHeader>
+              <tr>
+                <TableCell>Comment</TableCell>
+                <TableCell>Project</TableCell>
+                <TableCell>Date</TableCell>
+                <TableCell>User</TableCell>
+                <TableCell>Approved</TableCell>
+                <TableCell>Actions</TableCell>
+              </tr>
+            </TableHeader>
+          
+            <TableBody>
+            {comments.map((prc, i) => (  
+                <TableRow key={i} >
+                  <TableCell>
+                    <div className="flex items-center text-sm">
+                      
+                      <div>
+                        <p className="font-semibold">{prc.comment}</p>
+                      </div>
+                    </div>
+                  </TableCell>
+                  
+                  
+                  <TableCell>
+                    <span className="text-sm">{prc.Project.name}</span>
+                  </TableCell>
+                  <TableCell>
+                    <span className="text-sm">{prc.date}</span>
+                  </TableCell>
+                  
+                  <TableCell>
+                    <span className="text-sm">{prc.user}</span>
+                  </TableCell>
+
+                  <TableCell>
+                    <span className="text-sm">Not Approved</span>
+                  </TableCell>
+                  
+                  
+                  <TableCell>
+                    <div className="flex items-center space-x-4">
+                      <Link to={`/app/pglist/${prc.Project.id}`}>
+                      <Button layout="link" size="icon" aria-label="Edit">
+                        <EditIcon className="w-5 h-5" aria-hidden="true" />
+                      </Button>
+                      </Link>
+                    
+                    </div>
+                  </TableCell>
+                </TableRow>
+          ))}
+            </TableBody>
+              
+                
+          </Table>
+             :<span className="text-center mb-4 mt-4">No comments available</span>}
+          <TableFooter>
+          </TableFooter>
+        </TableContainer>
+
+       
+            
+
+              {/* <OngoingProjects /> */}
+            </div>
+
+
 
           <PageTitle>Projects</PageTitle>
     
@@ -369,30 +460,10 @@ function Dashboard(props) {
             </div>
           </section>
 
-          <section className=" w-full overflow-x-hidden flex flex-col gap-6 mb-6 ">
-            <ChartCard title="Yearly Data Comparison">
-              <div style={{ height: "260px" }}>
-                <Line_Chart project={projects}/>
-              </div>
-            </ChartCard>
-
-            <ChartCard title="Yearly Data Comparison">
-              <div style={{ height: "260px" }}>
-                <Area_Chart />
-              </div>
-            </ChartCard>
-          </section>
-
-
          
-          {/* <section className=" grid gap-6 md:grid-cols-1"> */}
-          <div className=" p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800 overflow-scroll mb-6">
-            <p className="mb-4 font-semibold text-gray-800 dark:text-gray-300">
-              Our Emplooyees
-            </p>
-       
-          </div>
-          {/* </section> */}
+
+
+  
         </>
 
     </>

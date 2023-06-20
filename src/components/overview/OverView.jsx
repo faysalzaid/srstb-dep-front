@@ -5,11 +5,16 @@ import "./overview.css";
 import { Link } from "react-router-dom";
 import { AiFillDelete } from "react-icons/ai";
 import { EditIcon, EyeIcon, EyeIconOne } from "icons";
+import InfoCard from "../../components/Cards/InfoCard";
+import ChartCard from "../../components/Chart/ChartCard";
+import { Doughnut, Line } from "react-chartjs-2";
+import ChartLegend from "../../components/Chart/ChartLegend";
 import { FiEdit } from "react-icons/fi";
 import axios from "axios";
 import { url } from "config/urlConfig";
 import Line_Chart from "global/recharts/Line_Chart";
 import Bar_Chart2 from "global/recharts/Bar_Chart2";
+import ChartBudgetLegend from "components/Chart/ChartBudgetLegend";
 
 function OverView({ project, setProject, companyData, id }) {
   let companyUrl = companyData.map((cp) =>
@@ -38,6 +43,69 @@ function OverView({ project, setProject, companyData, id }) {
     getData();
   }, []);
 
+
+  
+
+
+  const projectBudgetGraph = {
+    data: {
+      datasets: [
+        {
+          data: project?.yearlyBudgets?.map((pr) => pr?.financialPerformance),
+          /**
+           * These colors come from Tailwind CSS palette
+           * https://tailwindcss.com/docs/customizing-colors/#default-color-palette
+           */
+          backgroundColor: project?.yearlyBudgets?.map((pr) => pr?.color),
+          label: "Financial Performance",
+        },
+      ],
+      labels: project?.yearlyBudgets?.map((pr) => pr?.year?.slice(0,4)) || [], // Add a default empty array if yearlyBudgets is undefined
+    },
+    options: {
+      responsive: true,
+      cutoutPercentage: 80,
+    },
+    legend: {
+      display: false,
+    },
+  };
+
+
+  const projectAmountUtilized = {
+    data: {
+      datasets: [
+        {
+          data: project?.yearlyBudgets?.map((pr) =>
+            parseFloat(pr?.utilizedBudget)
+          ),
+          backgroundColor: project?.yearlyBudgets?.map((pr) => pr?.color),
+          label: "Amount Utilized",
+        },
+      ],
+      labels: project?.yearlyBudgets?.map((pr) => pr?.year?.slice(0,4)) || [],
+    },
+    options: {
+      responsive: true,
+      cutoutPercentage: 80,
+      tooltips: {
+        callbacks: {
+          label: (tooltipItem) => {
+            const value = tooltipItem.yLabel;
+            return value.toLocaleString();
+          },
+        },
+      },
+    },
+    legend: {
+      display: true,
+    },
+  };
+  
+
+
+
+    
   return (
     <section className=" max-w-full overview-section show bg-white show p-4 rounded-md rounded-t-none shadow-md dark:bg-gray-700 mb-6 overflow-hidden">
       <div className="left-overview dark:text-gray-200">
@@ -192,7 +260,19 @@ function OverView({ project, setProject, companyData, id }) {
         )}
         <section className=" specific-width w-fit h-full flex justify-center">
           <div className="right-overview-chart ">
-            <Bar_Chart2 />
+           
+      
+            <ChartCard title="Project Financial Performance">
+              <Line {...projectBudgetGraph} />
+              <ChartBudgetLegend legends={project} />
+            </ChartCard>
+
+            <ChartCard title="Project Utilized Amount On Year">
+              <Line {...projectAmountUtilized} />
+              <ChartBudgetLegend legends={project} />
+            </ChartCard>
+
+
           </div>
         </section>
       </div>
