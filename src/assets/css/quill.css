@@ -1,0 +1,112 @@
+.ql-editor {
+  min-height: 300px;
+}
+
+.quill-preview {
+  min-height: 200px;
+  width: 90%;
+  max-width: 624px;
+  border: 1px solid rgb(232, 231, 231);
+  margin: 0 auto;
+}
+
+.quill-preview h1 {
+  font-size: 27px;
+}
+
+.quill-preview h2 {
+  font-size: 24px;
+}
+
+.quill-preview h3 {
+  font-size: 20;
+}
+
+.quill-preview p {
+  font-size: 17px;
+}
+
+.ql-align-center {
+  text-align: center;
+}
+
+.ql-align-right {
+  text-align: right;
+}
+
+.ql-align-justify {
+  display: flex;
+  justify-content: space-between;
+  text-align: justify;
+}
+
+.quill-preview ul {
+  margin-left: 5%;
+}
+.quill-preview ul * {
+  list-style-type: disc;
+}
+
+.quill-preview .ql-indent-1 {
+  margin-left: 5%;
+}
+
+.quill-preview .ql-indent-2 {
+  margin-left: 7%;
+}
+
+.quill-preview .ql-indent-3 {
+  margin-left: 9%;
+}
+
+.quill-preview .ql-indent-4 {
+  margin-left: 11%;
+}
+
+.quill-preview .ql-indent-5 {
+  margin-left: 13%;
+}
+
+.quill-preview .ql-indent-6 {
+  margin-left: 15%;
+}
+
+.quill-preview .ql-indent-7 {
+  margin-left: 17%;
+}
+
+.quill-preview .ql-indent-8 {
+  margin-left: 19%;
+}
+
+@media print {
+  /* .not_printable {
+    display: none;
+  }
+  .quill-preview {
+    min-height: none;
+    width: 100%;
+    max-width: none;
+    border: none;
+    margin: 0 auto;
+  } */
+
+  .my-div {
+    margin: 0;
+  }
+
+  .not_printable {
+    display: none;
+  }
+
+  .quill-preview {
+    border: none;
+    max-width: none;
+    min-height: 0;
+    width: 100%;
+    background-color: bisque;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+}
