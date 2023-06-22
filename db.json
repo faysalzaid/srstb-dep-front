@@ -1,48 +1,16 @@
 {
-  "news": [
+  "blog-posts": [
     {
-      "id": "2486c985-101d-4b7f-912e-841d12345678",
-      "date": "12/05/2022",
-      "time": "06:33 AM",
-      "title": "Wakhtiga la soo xaroon doono",
-      "img": "https://th.bing.com/th/id/OIP._0LuYHqo4BD1n5Rkw5pFvgHaE7?pid=ImgDet&rs=1",
-      "body": "Wuxuu xafiisku ogaysiinayaa dhamaan shaqaalaha, laga bilaabo bari in xafiiska la soogali doono 8:15 aroornimo ugudanbayn."
+      "id": "4c2e7a5d-7b0f-4e4f-c9b2-fc1c7a7e9d7d",
+      "date": "July 6, 2022",
+      "img": "https://images.pexels.com/photos/325185/pexels-photo-325185.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+      "top_title": "Your most unhappy customers are your greatest source of learning.",
+      "sub_title": "Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.",
+      "content": "Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar.When she reached the first hills of the Italic Mountains, she had a last view back on the skyline of her hometown Bookmarksgrove, the headline of Alphabet Village and the subline of her own road, the Line Lane. Pityful a rethoric question ran over her cheek, then she continued her way. Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean. A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth.      ",
+      "trending": true,
+      "popular": false,
+      "topic": ["building", "cloud", "skyScraper"]
     },
-    {
-      "id": "2e7a6d1b-8a5f-4f6e-bb9c-1a3f0e9b4d8d",
-      "date": "12/05/2022",
-      "time": "06:33 AM",
-      "title": "Ogaysiiska Ciidul Fidriga",
-      "img": "https://th.bing.com/th/id/OIP.OmCrH7fyAeGJunzO-s2ueAHaE8?w=285&h=190&c=7&r=0&o=5&dpr=2&pid=1.7",
-      "body": "Wuxuu xafiisku ogaysiinayaa dhamaan shaqaalaha, laga bilaabo bari in xafiiska la soogali doono 8:15 aroornimo ugudanbayn."
-    },
-    {
-      "id": "123e4567-e89b-12d3-a456-426655440000",
-      "date": "12/05/2022",
-      "time": "06:33 AM",
-      "title": "Dhismaha Jidka FD-57",
-      "img": "https://th.bing.com/th/id/OIP.sElk-IlOVVtvCrwkwzqqUwHaE8?w=264&h=180&c=7&r=0&o=5&dpr=2&pid=1.7",
-      "body": "Wuxuu xafiisku ogaysiinayaa dhamaan shaqaalaha, laga bilaabo bari in xafiiska la soogali doono 8:15 aroornimo ugudanbayn."
-    },
-    {
-      "id": "9385nuf-8579345n-358936-4334435-466556",
-      "date": "12/05/2022",
-      "time": "06:33 AM",
-      "title": "Kusocota Ingineerada Xafiiska",
-      "img": "https://th.bing.com/th/id/OIP.7GMqRnhWSBc1akb7Ec4hJgHaEK?w=310&h=180&c=7&r=0&o=5&dpr=2&pid=1.7",
-      "body": "Wuxuu xafiisku ogaysiinayaa dhamaan shaqaalaha, laga bilaabo bari in xafiiska la soogali doono 8:15 aroornimo ugudanbayn."
-    },
-    {
-      "id": "36789abc-def0-1234-5678-90abcde12345",
-      "date": "12/05/2022",
-      "time": "06:33 AM",
-      "title": "Bixinta Bushaaraadka",
-      "img": "https://th.bing.com/th/id/OIP.PML1DngJih2DEw7XqmrRNQHaDR?w=311&h=154&c=7&r=0&o=5&dpr=2&pid=1.7",
-      "body": "Wuxuu xafiisku ogaysiinayaa dhamaan shaqaalaha, laga bilaabo bari in xafiiska la soogali doono 8:15 aroornimo ugudanbayn."
-    }
-  ],
-
-  "landing_page_news": [
     {
       "id": "9a0c7f3a-1d0e-4c4f-8b6c-5b8a2f3c9e2a",
       "date": "July 1, 2022",
@@ -51,7 +19,8 @@
       "sub_title": "Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.",
       "content": "Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar.When she reached the first hills of the Italic Mountains, she had a last view back on the skyline of her hometown Bookmarksgrove, the headline of Alphabet Village and the subline of her own road, the Line Lane. Pityful a rethoric question ran over her cheek, then she continued her way. Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean. A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth.      ",
       "trending": false,
-      "popular": false
+      "popular": false,
+      "topic": ["mountain", "ice", "sky"]
     },
     {
       "id": "5b7f0f1d-1d6e-4d9f-bb1d-0a7a9c8e6b5c",
@@ -61,7 +30,8 @@
       "sub_title": "Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.",
       "content": "Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar.When she reached the first hills of the Italic Mountains, she had a last view back on the skyline of her hometown Bookmarksgrove, the headline of Alphabet Village and the subline of her own road, the Line Lane. Pityful a rethoric question ran over her cheek, then she continued her way. Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean. A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth.      ",
       "trending": true,
-      "popular": false
+      "popular": true,
+      "topic": ["mountain", "sky", "night"]
     },
     {
       "id": "2c3e8a5d-3b0f-4e4f-a9b2-dc1c8a7e9d7d",
@@ -71,7 +41,8 @@
       "sub_title": "Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.",
       "content": "Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar.When she reached the first hills of the Italic Mountains, she had a last view back on the skyline of her hometown Bookmarksgrove, the headline of Alphabet Village and the subline of her own road, the Line Lane. Pityful a rethoric question ran over her cheek, then she continued her way. Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean. A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth.      ",
       "trending": false,
-      "popular": false
+      "popular": true,
+      "topic": ["tree", "branch"]
     },
     {
       "id": "6f3a2b7e-4d8f-4f6f-bb6e-fa8c9b3e8e2e",
@@ -81,28 +52,10 @@
       "sub_title": "Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.",
       "content": "Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar.When she reached the first hills of the Italic Mountains, she had a last view back on the skyline of her hometown Bookmarksgrove, the headline of Alphabet Village and the subline of her own road, the Line Lane. Pityful a rethoric question ran over her cheek, then she continued her way. Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean. A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth.      ",
       "trending": true,
-      "popular": false
+      "popular": false,
+      "topic": ["railway", "tree", "road"]
     },
-    {
-      "id": "1a7f9c3d-5d6f-4e9f-ab7d-da7a8c6e6b5a",
-      "date": "July 5, 2022",
-      "img": "https://images.pexels.com/photos/210186/pexels-photo-210186.jpeg?auto=compress&cs=tinysrgb&w=800&lazy=load",
-      "top_title": "Your most unhappy customers are your greatest source of learning.",
-      "sub_title": "Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.",
-      "content": "Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar.When she reached the first hills of the Italic Mountains, she had a last view back on the skyline of her hometown Bookmarksgrove, the headline of Alphabet Village and the subline of her own road, the Line Lane. Pityful a rethoric question ran over her cheek, then she continued her way. Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean. A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth.      ",
-      "trending": false,
-      "popular": false
-    },
-    {
-      "id": "4c2e7a5d-7b0f-4e4f-c9b2-fc1c7a7e9d7d",
-      "date": "July 6, 2022",
-      "img": "https://images.pexels.com/photos/325185/pexels-photo-325185.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-      "top_title": "Your most unhappy customers are your greatest source of learning.",
-      "sub_title": "Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.",
-      "content": "Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar.When she reached the first hills of the Italic Mountains, she had a last view back on the skyline of her hometown Bookmarksgrove, the headline of Alphabet Village and the subline of her own road, the Line Lane. Pityful a rethoric question ran over her cheek, then she continued her way. Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean. A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth.      ",
-      "trending": true,
-      "popular": false
-    },
+
     {
       "id": "8f3a2b7e-6d8f-4f6f-db6e-ea8c9b3e8e2e",
       "date": "July 7, 2022",
@@ -110,8 +63,130 @@
       "top_title": "Your most unhappy customers are your greatest source of learning.",
       "sub_title": "Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.",
       "content": "Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar.When she reached the first hills of the Italic Mountains, she had a last view back on the skyline of her hometown Bookmarksgrove, the headline of Alphabet Village and the subline of her own road, the Line Lane. Pityful a rethoric question ran over her cheek, then she continued her way. Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean. A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth.      ",
-      "trending": false,
-      "popular": false
+      "trending": true,
+      "popular": true,
+      "topic": ["water", "tree", "night"]
+    }
+  ],
+
+  "jobs": [
+    {
+      "id": "89395-53859345-353857345-834",
+      "date": "July 1, 2022",
+      "type": "Mechanical Systems Engineer",
+      "long_desc": "Thrivent is a different kind of financial services provider. We believe money is a tool, not a goal. Driven by a higher purpose at our core, we are committed to providing financial advice, investments, insurance, banking and generosity programs to help people make the most of all they’ve been given. We’re hiring entrepreneurial people to grow with us. If you have a heart for service and a passion for helping others reach their financial goals, we'd like to connect with you.",
+      "short_desc": "As a passionate and UI specialist, you will be primarily focused on front end web UIs but also able to get across the back end for frontend services.",
+      "requirments": [
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
+      ],
+      "salary": "$$$ - $$$"
+    },
+
+    {
+      "id": "ghe745t80-564507-70567-5970536",
+      "date": "July 1, 2022",
+      "type": "Database Administrator",
+      "long_desc": "Thrivent is a different kind of financial services provider. We believe money is a tool, not a goal. Driven by a higher purpose at our core, we are committed to providing financial advice, investments, insurance, banking and generosity programs to help people make the most of all they’ve been given. We’re hiring entrepreneurial people to grow with us. If you have a heart for service and a passion for helping others reach their financial goals, we'd like to connect with you.",
+      "short_desc": "As a passionate and UI specialist, you will be primarily focused on front end web UIs but also able to get across the back end for frontend services.",
+      "requirments": [
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
+      ],
+      "salary": "$$$ - $$$"
+    },
+
+    {
+      "id": "9943-405835-353n99356-666066-63",
+      "date": "July 1, 2022",
+      "type": "Quality Control Specialist",
+      "long_desc": "Thrivent is a different kind of financial services provider. We believe money is a tool, not a goal. Driven by a higher purpose at our core, we are committed to providing financial advice, investments, insurance, banking and generosity programs to help people make the most of all they’ve been given. We’re hiring entrepreneurial people to grow with us. If you have a heart for service and a passion for helping others reach their financial goals, we'd like to connect with you.",
+      "short_desc": "As a passionate and UI specialist, you will be primarily focused on front end web UIs but also able to get across the back end for frontend services.",
+      "requirments": [
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
+      ],
+      "salary": "$$$ - $$$"
+    },
+
+    {
+      "id": "95945-j56j549-46456984056-645-546",
+      "date": "July 1, 2022",
+      "type": "Human Resources Manager",
+      "long_desc": "Thrivent is a different kind of financial services provider. We believe money is a tool, not a goal. Driven by a higher purpose at our core, we are committed to providing financial advice, investments, insurance, banking and generosity programs to help people make the most of all they’ve been given. We’re hiring entrepreneurial people to grow with us. If you have a heart for service and a passion for helping others reach their financial goals, we'd like to connect with you.",
+      "short_desc": "As a passionate and UI specialist, you will be primarily focused on front end web UIs but also able to get across the back end for frontend services.",
+      "requirments": [
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
+      ],
+      "salary": "$$$ - $$$"
+    },
+
+    {
+      "id": "494n923-4324924n92-25-251242-42424",
+      "date": "July 1, 2022",
+      "type": "Geological Engineer",
+      "long_desc": "Thrivent is a different kind of financial services provider. We believe money is a tool, not a goal. Driven by a higher purpose at our core, we are committed to providing financial advice, investments, insurance, banking and generosity programs to help people make the most of all they’ve been given. We’re hiring entrepreneurial people to grow with us. If you have a heart for service and a passion for helping others reach their financial goals, we'd like to connect with you.",
+      "short_desc": "As a passionate and UI specialist, you will be primarily focused on front end web UIs but also able to get across the back end for frontend services.",
+      "requirments": [
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
+      ],
+      "salary": "$$$ - $$$"
+    },
+
+    {
+      "id": "nids09345-593450245n09-323-4350-523",
+      "date": "July 1, 2022",
+      "type": "Software Engineer",
+      "long_desc": "Thrivent is a different kind of financial services provider. We believe money is a tool, not a goal. Driven by a higher purpose at our core, we are committed to providing financial advice, investments, insurance, banking and generosity programs to help people make the most of all they’ve been given. We’re hiring entrepreneurial people to grow with us. If you have a heart for service and a passion for helping others reach their financial goals, we'd like to connect with you.",
+      "short_desc": "As a passionate and UI specialist, you will be primarily focused on front end web UIs but also able to get across the back end for frontend services.",
+      "requirments": [
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
+      ],
+      "salary": "$$$ - $$$"
+    },
+
+    {
+      "id": "039403-5345-534j5j3v-f-303905830-49203",
+      "date": "July 1, 2022",
+      "type": "Analog Circuit Design manager",
+      "long_desc": "Thrivent is a different kind of financial services provider. We believe money is a tool, not a goal. Driven by a higher purpose at our core, we are committed to providing financial advice, investments, insurance, banking and generosity programs to help people make the most of all they’ve been given. We’re hiring entrepreneurial people to grow with us. If you have a heart for service and a passion for helping others reach their financial goals, we'd like to connect with you.",
+      "short_desc": "As a passionate and UI specialist, you will be primarily focused on front end web UIs but also able to get across the back end for frontend services.",
+      "requirments": [
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
+      ],
+      "salary": "$$$ - $$$"
     }
   ]
 }
