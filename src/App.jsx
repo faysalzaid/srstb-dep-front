@@ -1,91 +1,82 @@
-import axios  from 'axios'
-import React, { lazy, useContext, useState } from 'react'
-import { useEffect } from 'react'
-import { BrowserRouter as Router, Switch, Route, Redirect, withRouter } from 'react-router-dom'
-import AccessibleNavigationAnnouncer from './components/AccessibleNavigationAnnouncer'
-import { AuthContext } from './hooks/authContext'
-import getCookie from './hooks/getCookie'
-import { url } from './config/urlConfig'
-import Header from './components/Header'
-import { createContext } from 'react'
-import ResetPassword from './pages/ResetPassword'
-import HomePage from './pages/home'
-import { QueryClientProvider,QueryClient } from '@tanstack/react-query'
-import jwt_decode from 'jwt-decode'
-import Chat from './components/Chat/Chat'
-import { ref } from 'yup'
-import setCookie from 'hooks/setCookie'
+import axios from "axios";
+import React, { lazy, useContext, useState } from "react";
+import { useEffect } from "react";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+  withRouter,
+} from "react-router-dom";
+import AccessibleNavigationAnnouncer from "./components/AccessibleNavigationAnnouncer";
+import { AuthContext } from "./hooks/authContext";
+import getCookie from "./hooks/getCookie";
+import { url } from "./config/urlConfig";
+import Header from "./components/Header";
+import { createContext } from "react";
+import ResetPassword from "./pages/ResetPassword";
+import HomePage from "./pages/home";
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import jwt_decode from "jwt-decode";
+import Chat from "./components/Chat/Chat";
+import { ref } from "yup";
+import setCookie from "hooks/setCookie";
+import { BrowserRouter } from "react-router-dom/cjs/react-router-dom";
 
+const BlogPost = lazy(() => import("./components/Landing/BlogPost"));
+const BlogPostDetail = lazy(() => import("./components/Landing/BlogDetail"));
+const JobsBlog = lazy(() => import("./components/Landing/Jobs"));
 
-const Layout = lazy(() => import('./containers/Layout'))
-const Login = lazy(() => import('./pages/Login'))
-const CreateAccount = lazy(() => import('./pages/CreateAccount'))
-const ForgotPassword = lazy(() => import('./pages/ForgotPassword'))
+const Layout = lazy(() => import("./containers/Layout"));
+const Login = lazy(() => import("./pages/Login"));
+const CreateAccount = lazy(() => import("./pages/CreateAccount"));
+const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
 
-const queryClient = new QueryClient({defaultOptions:{
-  queries:{
-    refetchOnWindowFocus:false
-  }
-}})
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
-
-const cookie = getCookie('accessToken')
-
-
-
-
+const cookie = getCookie("accessToken");
 
 function App(props) {
-  let {authState,setAuthState} = useContext(AuthContext)
+  let { authState, setAuthState } = useContext(AuthContext);
 
+  // useEffect(()=>{
+  //   if(!authState.state){
+  //     props.history.push('/login')
+  //   }
 
-
-
-
-
-// useEffect(()=>{
-//   if(!authState.state){
-//     props.history.push('/login')
-//   }
-
-
-// },[])
-
-
-
-
+  // },[])
 
   return (
     <>
-
-<QueryClientProvider client={queryClient}>     
-   
-     
+      <QueryClientProvider client={queryClient}>
         <AccessibleNavigationAnnouncer />
-        
+
         <Switch>
-        <Route path="/reset-password/:id/:token" component={ResetPassword} />
-        
+          <Route path="/" exact component={BlogPost} />
+          <Route path="/jobs" exact component={JobsBlog} />
+          <Route path="/:id" exact component={BlogPostDetail} />
+          <Route path="/reset-password/:id/:token" component={ResetPassword} />
+
           <Route path="/login" component={Login} />
           <Route path="/create-account" component={CreateAccount} />
           <Route path="/forgot-password" component={ForgotPassword} />
 
-          {/* Place new routes over this */} 
-          <Route path="/app" component={Layout} />  
-          <Route path="/headers" component={Header}/>
+          {/* Place new routes over this */}
+          <Route path="/app" component={Layout} />
+          <Route path="/headers" component={Header} />
           {/* If you have an index page, you can remothis Redirect */}
           {/* <Route path={'/'} component={HomePage} /> */}
-          <Redirect exact from="/" to="/login" />
-          
+          {/* <Redirect exact from="/" to="/login" /> */}
         </Switch>
-       
-        </QueryClientProvider>
-      
+      </QueryClientProvider>
     </>
-    
-
-     
-  )
+  );
 }
 
-export default withRouter(App)
+export default withRouter(App);

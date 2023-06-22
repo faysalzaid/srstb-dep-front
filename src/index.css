@@ -1,4 +1,12 @@
 @font-face {
-    font-family: 'ubuntu';
-    src: local('ubuntu'), url(./fonts/Ubuntu-Regular.ttf) format('truetype');
+  font-family: "ubuntu";
+  src: local("ubuntu"), url(./fonts/Ubuntu-Regular.ttf) format("truetype");
+}
+
+.side_bar {
+  overflow: scroll;
+}
+
+.side_bar::-webkit-scrollbar {
+  display: none;
 }
