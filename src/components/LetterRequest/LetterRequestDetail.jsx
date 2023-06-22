@@ -122,7 +122,7 @@ const LetterRequestDetail = (props) => {
           await axios.get(`${url}/requestLetter/${id}`,{withCredentials:true}).then((resp)=>{
             if(resp.data.error) return setOpenError({open:true,message:`${resp.data.error}`})
             // console.log(resp.data);
-            setLetterUser(resp.data?.User?.username)
+            setLetterUser(resp.data?.User?.name)
             setValue(resp.data.letter)
           })
         }
@@ -174,7 +174,7 @@ const handleDelete = async()=>{
     return (
       <>
   
-        <PageTitle>Letter By | Requests</PageTitle>
+        <PageTitle>Letter By | {letterUser}</PageTitle>
         {/* Notifications */}
         <ErrorAlert
         open={openError.open}
