@@ -653,7 +653,6 @@ const PgList = () => {
               <TableCell>T.Cost</TableCell>
               <TableCell>Utiliz.Cost</TableCell>
               <TableCell>Approved</TableCell>
-            
               <TableCell>Edit / Delete</TableCell>
             </TableRow>
           </TableHeader>

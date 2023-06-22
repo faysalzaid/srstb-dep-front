@@ -262,12 +262,12 @@ function OverView({ project, setProject, companyData, id }) {
           <div className="right-overview-chart ">
            
       
-            <ChartCard title="Project Financial Performance">
+            <ChartCard title="Budget Financial Performance (Year Based)">
               <Line {...projectBudgetGraph} />
               <ChartBudgetLegend legends={project} />
             </ChartCard>
 
-            <ChartCard title="Project Utilized Amount On Year">
+            <ChartCard title="Budget Utilized Amount (Year Based)">
               <Line {...projectAmountUtilized} />
               <ChartBudgetLegend legends={project} />
             </ChartCard>
