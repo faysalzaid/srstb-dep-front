@@ -11,7 +11,7 @@ export default function LandingPageNavBar() {
   let navigate = useHistory();
 
   const showDashboard = () => {
-    navigate.push("./app/dashboard");
+    navigate.push("/app/dashboard");
   };
   const showJobs = () => {
     navigate.push("/jobs");

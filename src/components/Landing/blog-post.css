@@ -26,7 +26,10 @@
   -webkit-line-clamp: 3;
 }
 
-.blog_post_section {
+.blog_post_section,
+.blog_post_nav,
+.job_section,
+.job_application {
   font-family: "Poppins";
 }
 
