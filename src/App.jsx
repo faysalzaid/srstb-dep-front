@@ -26,6 +26,8 @@ import { BrowserRouter } from "react-router-dom/cjs/react-router-dom";
 const BlogPost = lazy(() => import("./components/Landing/BlogPost"));
 const BlogPostDetail = lazy(() => import("./components/Landing/BlogDetail"));
 const JobsBlog = lazy(() => import("./components/Landing/Jobs"));
+const JobsDetail = lazy(() => import("./components/Landing/JobDetail"));
+const ApplyJob = lazy(() => import("./components/Landing/ApplyJob"));
 
 const Layout = lazy(() => import("./containers/Layout"));
 const Login = lazy(() => import("./pages/Login"));
@@ -61,6 +63,8 @@ function App(props) {
           <Route path="/" exact component={BlogPost} />
           <Route path="/jobs" exact component={JobsBlog} />
           <Route path="/:id" exact component={BlogPostDetail} />
+          <Route path="/jobs/:id" exact component={JobsDetail} />
+          <Route path="/jobs/:id/apply" exact component={ApplyJob} />
           <Route path="/reset-password/:id/:token" component={ResetPassword} />
 
           <Route path="/login" component={Login} />
