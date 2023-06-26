@@ -10,12 +10,12 @@ import {Formik,Form,Field,ErrorMessage} from 'formik'
 import axios from 'axios'
 import {url} from '../config/urlConfig'
 import { useState } from 'react'
-import setCookie from '../hooks/setCookie'
-import getCookie from 'hooks/getCookie'
+
 import { AuthContext } from '../hooks/authContext'
 
 import { ErrorAlert, SuccessAlert } from "components/Alert";
 import TitleChange from 'components/Title/Title'
+import setCookie from 'hooks/setCookie'
 
 function Login(props) {
 
@@ -45,7 +45,7 @@ function Login(props) {
   };
 
 
-  const cookie = getCookie('accessToken')
+ 
 
   const validation = Yup.object().shape({
     email:Yup.string().email().min(5).required("Email is required"),
@@ -55,12 +55,10 @@ function Login(props) {
 
 const onSubmit = async(data)=>{
   try {
-    await axios.post(`${url}/login`,data).then((response)=>{
+    await axios.post(`${url}/login`,data,{ withCredentials: true }).then((response)=>{
       if(response.data.error){
           setOpenError({open:true,message:`${response.data.error}`})  
-          setTimeout(() => {
-            setFrontErrorMessage("")
-          }, 2000);
+         
       }else{
         let data = response.data
         const userData ={
@@ -72,17 +70,19 @@ const onSubmit = async(data)=>{
           email:data.email,
           role:data.role,
           state:true,
-          refreshToken:data.refreshToken
+          accessToken:data.token
           // Add other properties as needed
         }
           const stringFied = JSON.stringify(userData?userData:undefined)
-          setCookie('accessToken',stringFied)
-          setAuthState({id:data.id,username:data.name,email:data.email,image:data.image,role:data.role,state:true,refreshToken:data.refreshToken})
+          setAuthState({id:data.id,username:data.name,email:data.email,image:data.image,role:data.role,state:true})
           setOpenSuccess({open:true,message:"Logged In Successfully"})
-         setTimeout(() => {
+   
+          // console.log(accessToken);
+          // setCookie('accessToken', accessToken, { expires: 7, path: '/' })
+          localStorage.setItem('User', stringFied); 
           props.history.push('/app/dashboard')
-         }, 1000);
-          
+
+           
         
       }
     })

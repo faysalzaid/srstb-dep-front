@@ -36,11 +36,14 @@ import {
 } from "../utils/demo/chartsData";
 import { withRouter } from "react-router-dom";
 import { url } from "config/urlConfig";
-import axios from "axios";
+import axios from "../config/axios";
+
 import Line_Chart from "global/recharts/Line_Chart";
 import Area_Chart from "global/recharts/Area_Chart";
 
 import { Button } from "@mui/material";
+import useGrapAuth from "hooks/useRefresh";
+
 
 function Dashboard(props) {
   const { authState, settings } = useContext(AuthContext);
@@ -57,7 +60,7 @@ function Dashboard(props) {
     completedProjects: "",
   });
   const [authorization, setAuthorization] = useState(false);
-
+  const refresh = useGrapAuth()
   // console.log('data from app',authState);
   useEffect(() => {
     const getData = async () => {
@@ -65,7 +68,7 @@ function Dashboard(props) {
         .get(`${url}/projects`, { withCredentials: true })
         .then((resp) => {
           if (resp.data.error) {
-            // console.log(resp.data.error);
+            console.log(resp.data.error);
           }
           setProject(resp.data.projects);
           const ddata = resp.data.projects.filter((pr)=>{
@@ -175,7 +178,7 @@ function Dashboard(props) {
       <TitleChange name={`Dashboard | ${settings.name}`} />
 
         <>
-          <PageTitle>Dashboard welcome {authState.username}</PageTitle>
+          <PageTitle>Dashboard welcome {authState.username}  <Button onClick={()=>refresh()}>Refresh</Button></PageTitle>
 
           {/* <CTA /> */}
 

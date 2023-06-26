@@ -58,19 +58,19 @@ function App(props) {
         <AccessibleNavigationAnnouncer />
 
         <Switch>
-          <Route path="/" exact component={BlogPost} />
-          <Route path="/jobs" exact component={JobsBlog} />
-          <Route path="/:id" exact component={BlogPostDetail} />
+          <Route path="/login"  component={Login} />
           <Route path="/reset-password/:id/:token" component={ResetPassword} />
 
-          <Route path="/login" component={Login} />
           <Route path="/create-account" component={CreateAccount} />
           <Route path="/forgot-password" component={ForgotPassword} />
 
           {/* Place new routes over this */}
           <Route path="/app" component={Layout} />
           <Route path="/headers" component={Header} />
-          {/* If you have an index page, you can remothis Redirect */}
+          <Route path="/" exact component={BlogPost} />
+          <Route path="/jobs"  component={JobsBlog} />
+          <Route path="/:id" component={BlogPostDetail} />
+          {/* If you have an index page, you can remothis Redirect */} 
           {/* <Route path={'/'} component={HomePage} /> */}
           {/* <Redirect exact from="/" to="/login" /> */}
         </Switch>
@@ -80,3 +80,5 @@ function App(props) {
 }
 
 export default withRouter(App);
+
+

@@ -65,7 +65,7 @@ function ProfilePage(props) {
     setIsDeleteOpen({open:true,id:id})
 }
 
-    const cookie = getCookie('accessToken');
+    const cookie = localStorage.getItem('User');
 
 
 

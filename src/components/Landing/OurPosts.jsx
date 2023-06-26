@@ -7,7 +7,7 @@ export default function OurPosts() {
   let history = useHistory()
 
   useEffect(() => {
-    fetch("http://localhost:3200/blog-posts")
+    fetch("http://localhost:4000/blog-posts")
       .then((res) => res.json())
       .then((json) => setBlogData(json));
   }, []);
