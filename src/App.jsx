@@ -60,14 +60,16 @@ function App(props) {
         <AccessibleNavigationAnnouncer />
 
         <Switch>
+          <Route path="/login" exact component={Login} />
+
           <Route path="/" exact component={BlogPost} />
           <Route path="/jobs" exact component={JobsBlog} />
           <Route path="/:id" exact component={BlogPostDetail} />
           <Route path="/jobs/:id" exact component={JobsDetail} />
           <Route path="/jobs/:id/apply" exact component={ApplyJob} />
+
           <Route path="/reset-password/:id/:token" component={ResetPassword} />
 
-          <Route path="/login" component={Login} />
           <Route path="/create-account" component={CreateAccount} />
           <Route path="/forgot-password" component={ForgotPassword} />
 
