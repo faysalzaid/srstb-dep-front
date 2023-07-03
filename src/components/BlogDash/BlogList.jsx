@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import PageTitle from "../components/Typography/PageTitle";
-import SectionTitle from "../components/Typography/SectionTitle";
+import PageTitle from "../../components/Typography/PageTitle";
+import SectionTitle from "../../components/Typography/SectionTitle";
 import axios from "axios";
 import { ErrorAlert, SuccessAlert } from "components/Alert";  
+import ReactQuill from "react-quill";
+import "../../assets/css/requestPages.css";
+import "../../assets/css/quill.css";
+import "../../../node_modules/react-quill/dist/quill.snow.css";
+// import "../../../node_modules/react-quill"
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import {
   Table,
@@ -17,18 +22,24 @@ import {
   Avatar,
   Button,
   Pagination,
+
 } from "@windmill/react-ui";
-import { EditIcon, EyeIconOne, TrashIcon } from "../icons";
+import { EditIcon, EyeIconOne, TrashIcon } from "../../icons";
 import { Modal, ModalHeader, ModalBody, ModalFooter } from "@windmill/react-ui";
 import { Input, HelperText, Label, Select, Textarea } from "@windmill/react-ui";
-import { url } from "../config/urlConfig";
+import { url } from "../../config/urlConfig";
 import * as Yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useContext } from "react";
-import { AuthContext } from "../hooks/authContext";
+import { AuthContext } from "../../hooks/authContext";
 import useAuth from "hooks/useAuth";
 import TitleChange from "components/Title/Title";
-function UsersList(props) {
+import { FaCloudUploadAlt } from "react-icons/fa";
+
+
+
+
+function BlogList(props) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   function openModal() {
@@ -40,87 +51,86 @@ function UsersList(props) {
   }
 
   // const [companyData,setCompanyData] = useState([])
-  const [userForm, setUserForm] = useState({
-    name: "",
-    email: "",
-    role: "",
-    password: "",
+  const [blogForm, setBlogForm] = useState({
+    title: "",
+    description: "",
+    date: "",
+    user: "",
+    BlogCategoryId: "",
     image: "",
   });
-  const [errorMessage, setErrorMessage] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
-  const [usersData, setUsersData] = useState([]);
+
   const [searchResult, setSearchResult] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [fetchedResult, setFetchedResult] = useState([]);
   const [showModal, setShowModal] = useState({show:false,id:""});
   const {authState,settings} = useAuth(AuthContext)
-  const validation = Yup.object().shape({
-    name: Yup.string().min(3).max(15).required(),
-    email: Yup.string().email().min(5).required("Email is required"),
-    password: Yup.string().min(8).max(25).required(),
-  });
-  const initialValues = {
-    name: "",
-    email: "",
-    password: "",
-  };
+  const [blogData,setBlogData] = useState([])
+  const [category,setCatogory] = useState([])
+
 
   useEffect(() => {
     const getData =async()=>{
-      await axios.get(`${url}/users`,{withCredentials: true}).then((resp) => {
+      await axios.get(`${url}/blog`,{withCredentials: true}).then((resp) => {
         if(resp.data.error){
-          setUsersData([])
-          // console.log(resp.data.error);
+          console.log(resp.data.error);
           setOpenError({open:true,message:`${resp.data.error}`})
         }else{
          
-          setUsersData(resp.data);
+          setBlogData(resp.data);
   
         }
       });
+
+
+      await axios.get(`${url}/blogCategory`,{withCredentials: true}).then((resp) => {
+        if(resp.data.error){
+          console.log(resp.data.error);
+          setOpenError({open:true,message:`${resp.data.error}`})
+        }else{
+         
+          setCatogory(resp.data);
+  
+        }
+      });
+
+
     }
 
     getData()
     
   }, []);
 
-  const addUser = async (data) => {
+  const handleSubmit = async (e) => {
     
-    if(data.role===undefined || data.role==="Select"){
-      setErrorMessage('Please Provide role ')
-      setTimeout(() => {
-        setErrorMessage("")
-      }, 2000);
-    }
-
+    e.preventDefault()
+    if(blogForm.image==="" || blogForm.image ===undefined) return setOpenError({open:true,message:"Please Provide Image"})
     const formData = new FormData();
-    formData.append("name", data.name);
-    formData.append("email", data.email);
-    formData.append("role", data.role);
-    formData.append("password", data.password);
-    formData.append("image", userForm.image);
+    formData.append("title", blogForm.title);
+    formData.append("description", blogForm.description);
+    formData.append("user", authState.username);
+    formData.append("image", blogForm.image);
+    formData.append("BlogCategoryId",blogForm.BlogCategoryId)
 
-
-    await axios.post(`${url}/users`, formData,{withCredentials:true}).then((resp) => {
+    // console.log(formData);
+    await axios.post(`${url}/blog`, formData,{withCredentials:true}).then((resp) => {
       if (resp.data.error) {
-        // console.log("error: ", resp.data.error);
         setOpenError({open:true,message:`${resp.data.error}`})
       } else {
-        setUsersData([ resp.data,...usersData]);
+        setBlogData([...blogData, resp.data]);
         closeModal();
         setOpenSuccess({open:true,message:"Successfully Added"})
       }
     });
   };
 
-  const deleteUser = async(ids) => {
-    await axios.get(`${url}/users/delete/${ids}`).then((resp) => {
+  const deleteBlog = async(ids) => {
+    await axios.delete(`${url}/blog/${ids}`).then((resp) => {
       if (resp.data.error) {
         setOpenError({open:true,message:`${resp.data.error}`})
       }
-      const newdata = usersData.filter((d) => d.id !== ids);
-      setUsersData(newdata);
+      const newdata = blogData.filter((d) => d.id !== ids);
+      setBlogData(newdata);
       closeModal();
       setShowModal({show:false,id:""})
       setOpenSuccess({open:true,message:"Successfully Deleted"})
@@ -128,13 +138,13 @@ function UsersList(props) {
   };
 
   useEffect(() => {
-    setFetchedResult(searchTerm.length < 1 ? usersData : searchResult);
-  }, [usersData, searchTerm]);
+    setFetchedResult(searchTerm.length < 1 ? blogData : searchResult);
+  }, [blogData, searchTerm]);
 
   const searchHandler = async (search) => {
     setSearchTerm(search);
     if (search !== 0) {
-      const newProjectData = usersData.filter((prj) => {
+      const newProjectData = blogData.filter((prj) => {
         return Object.values(prj)
           .join(" ")
           .toLowerCase()
@@ -143,7 +153,7 @@ function UsersList(props) {
       // console.log(newProjectData);
       setSearchResult(newProjectData);
     } else {
-      setSearchResult(usersData);
+      setSearchResult(blogData);
     }
   };
 
@@ -169,6 +179,14 @@ const handleCloseError = (event, reason) => {
 };
 
 
+
+
+
+const handleChange = (e) => {
+  setBlogForm({...blogForm,description:e})
+  // console.log('This is e',e);
+};
+
   return (
     <>
       <ErrorAlert
@@ -189,7 +207,7 @@ const handleCloseError = (event, reason) => {
         rel="stylesheet"
         href="https://unpkg.com/flowbite@1.4.4/dist/flowbite.min.css"
       />
-      <PageTitle>List of Users</PageTitle>
+      <PageTitle>List of Blog</PageTitle>
          {/* Delete MOdal section  */}
          {showModal.show ? (
         <>
@@ -231,7 +249,7 @@ const handleCloseError = (event, reason) => {
                   <button
                     className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                     type="button"
-                    onClick={() => deleteUser(showModal.id)}
+                    onClick={() => deleteBlog(showModal.id)}
                     style={{backgroundColor:'darkred'}}
                   >
                     Continue Deleting
@@ -289,195 +307,152 @@ const handleCloseError = (event, reason) => {
       <p></p>
       {authState.role==='admin'||authState.role==="manager"||authState.role==="hr" ?
       <div>
-        <Button size="small" onClick={openModal}>Register User</Button>
+        <Button size="small" onClick={openModal}>Create Blog</Button>
       </div>
       :<p>Read Only</p>}
-      <Modal isOpen={isModalOpen} onClose={closeModal}>
-        <ModalHeader>Insert Client Info</ModalHeader>
-        <span style={{ color: "red" }}>{errorMessage}</span>
-        <ModalBody>
-          <Formik
-            initialValues={initialValues}
-            validationSchema={validation}
-            onSubmit={addUser}
-          >
-            <Form>
-              <Label className="mt-4">
-                <span>Name</span>
-                <Field
-                  name="name"
-                  className="block w-full text-sm focus:outline-none dark:text-gray-300 form-input leading-5 focus:border-purple-400 dark:border-gray-600 focus:shadow-outline-purple dark:focus:border-gray-600 dark:focus:shadow-outline-gray dark:bg-gray-700 mt-1"
-                  type="text"
-                  placeholder="Your Name"
-                />
-                <ErrorMessage
-                  className="text-red-500 text-xs italic"
-                  name="name"
-                  component="p"
-                />
-              </Label>
-              <Label className="mt-4">
-                <span>Email</span>
-                <Field
-                  name="email"
-                  className="block w-full text-sm focus:outline-none dark:text-gray-300 form-input leading-5 focus:border-purple-400 dark:border-gray-600 focus:shadow-outline-purple dark:focus:border-gray-600 dark:focus:shadow-outline-gray dark:bg-gray-700 mt-1"
-                  type="email"
-                  placeholder="YourEmal@gmail.com"
-                />
-                <ErrorMessage
-                  className="text-red-500 text-xs italic"
-                  name="email"
-                  component="p"
-                />
-              </Label>
-              <Label className="mt-4">
-                <span>Password</span>
-                <Field
-                  name="password"
-                  className="block w-full text-sm focus:outline-none dark:text-gray-300 form-input leading-5 focus:border-purple-400 dark:border-gray-600 focus:shadow-outline-purple dark:focus:border-gray-600 dark:focus:shadow-outline-gray dark:bg-gray-700 mt-1"
-                  type="password"
-                  placeholder="******************"
-                />
-                <ErrorMessage
-                  className="text-red-500 text-xs italic"
-                  name="password"
-                  component="p"
-                />
-              </Label>
+        <Modal isOpen={isModalOpen} onClose={closeModal}>
+      <ModalHeader>Create Blog</ModalHeader>
+      <ModalBody>
+      <form onSubmit={handleSubmit}>
+        <div className="grid grid-cols-1 gap-4">
+          
+          <Label>
+            <span>Title</span>
+            <Input
+            //   type="date"
+              className="mt-1"
+            //   value={timesheetForm.date}
+              name="title"
+              onChange={(e)=>setBlogForm({...blogForm,title:e.target.value})}
+              required
+            />
+          </Label>
 
-              <Label className="mt-4">
-                <span>Role</span>
-                <Field
-                  as="select"
-                  className="w-full p-2.5 text-gray-500 bg-white border rounded-md shadow-sm outline-none appearance-none focus:border-indigo-600"
-                  name="role"
-                >
-                  <option>Select</option>
-                  {authState.role==='admin'?
-                  <option value="admin">Admin</option>
-                  :""}
-                  {authState.role==="admin" || authState.role==="manager"? <option value="manager">Manager</option> :""}
-                  <option value="finance">Finance</option>
-                  <option value="design">Design</option>
-                  <option value="roadquality">Road Quality</option>
-                  <option value="client">Client</option>
-                  <option value="engineer">Engineer</option>
-                  <option value="contractadmin">Contract Admin</option>
-                  <option value="planning">Planning</option>
-                  <option value="hr">HR</option>
-                </Field>
-              </Label>
-              <Label className="mt-4">
-                <span>Image</span>
-                <input
-                  type="file"
-                  name="image"
-                  onChange={(e) =>
-                    setUserForm({ ...userForm, image: e.target.files[0] })
-                  }
-                  className="block w-full text-sm focus:outline-none dark:text-gray-300 form-input leading-5 focus:border-purple-400 dark:border-gray-600 focus:shadow-outline-purple dark:focus:border-gray-600 dark:focus:shadow-outline-gray dark:bg-gray-700 mt-1"
-                />
-              </Label>
 
-              <Button type="submit" block className="mt-4">
-                Create account
-              </Button>
-            </Form>
-          </Formik>
-        </ModalBody>
-        <ModalFooter>
-          {/* I don't like this approach. Consider passing a prop to ModalFooter
-           * that if present, would duplicate the buttons in a way similar to this.
-           * Or, maybe find some way to pass something like size="large md:regular"
-           * to Button
-           */}
-          <div className="hidden sm:block">
+   
+
+          <ReactQuill
+          placeholder="Write Something Here...."
+          className=" mb-6"
+          modules={BlogList.modules}
+          value={blogForm.description}
+          onChange={handleChange}
+          />
+
+          <Label className="mt-6">
+            {/* <span>Category</span> */}
+            <Select
+              className="mt-6"
+              name="BlogCategoryId"
+              // value={formValues.ProjectId}
+              onChange={(e)=>setBlogForm({...blogForm,BlogCategoryId:e.target.value})}
+              required
+            >
+              <option value="" >Select Category</option>
+              {category.map((pr,i)=>(
+                <option key={i} value={pr.id}>{pr.name}</option>
+              ))}
+              
+              
+            </Select>
+          </Label>
+
+          <label htmlFor="file" className="w-full p-4 rounded-lg shadow-lg cursor-pointer text-center bg-gradient-to-r from-purple-400 to-pink-500 text-black hover:from-pink-500 hover:to-purple-400 transition duration-300">
+                <FaCloudUploadAlt className="w-8 h-8 mx-auto mb-2" />
+                <span className="text-lg font-semibold">Upload File</span>
+              </label>
+              <input
+                type="file"
+                id="file"
+                className="hidden"
+                name="attach"
+                // required
+                onChange={(e)=>setBlogForm({...blogForm,image:e.target.files[0]})}
+              />
+
+
+              
+        </div>
+        <Button className="mt-6 lg:block" type="submit">Submit</Button>
+    
+          
+      
+        </form>
+      </ModalBody>
+      <ModalFooter>
+      <div className="hidden sm:block">
             <Button layout="outline" onClick={closeModal}>
               Cancel
             </Button>
-          </div>
-
-          <div className="block w-full sm:hidden">
+        </div>
+        <div className="block w-full sm:hidden">
             <Button block size="large" layout="outline" onClick={closeModal}>
               Cancel
             </Button>
           </div>
-        </ModalFooter>
-      </Modal>
+
+          {/* <div className="block w-full sm:hidden">
+            <Button block size="large">
+              Accept
+            </Button>
+          </div> */}
+      </ModalFooter>
+    </Modal>
 
     
-      {successMessage ? (
-        <div
-          className="bg-blue-100 border-t border-b border-blue-500 text-blue-700 px-4 py-3"
-          role="alert"
-        >
-          <p className="text-sm">{successMessage}.</p>
-        </div>
-      ) : (
-        ""
-      )}
-       {errorMessage ? (
-        <div
-          className="bg-red-100 border-t border-b border-red-500 text-red-700 px-4 py-3"
-          role="alert"
-        >
-          <p className="text-sm">{errorMessage}.</p>
-        </div>
-      ) : (
-        ""
-      )}
+
       <TableContainer className="mb-8">
         <Table>
           <TableHeader>
             <tr>
-              <TableCell>Name</TableCell>
+              <TableCell>Title</TableCell>
               <TableCell>Image</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell>Role</TableCell>
+              <TableCell>User</TableCell>
+              <TableCell>Date</TableCell>
               <TableCell>Actions</TableCell>
             </tr>
           </TableHeader>
           <TableBody>
-            {fetchedResult.map((user, i) => (
+            {fetchedResult.map((blog, i) => (
               <TableRow key={i}>
                 <TableCell>
                   <div className="flex items-center text-sm">
                     <div>
-                      <p className="font-semibold">{user.name}</p>
+                      <p className="font-semibold">{blog.title}</p>
                     </div>
                   </div>
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center text-sm">
                     <div>
-                      <img style={{ width: 30 }} src={user.image} />
+                      <img style={{ width: 30 }} src={blog.image} />
                     </div>
                   </div>
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center text-sm">
                     <div>
-                      <p className="font-semibold">{user.email}</p>
+                      <p className="font-semibold">{blog.user}</p>
                     </div>
                   </div>
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center text-sm">
                     <div>
-                      <p className="font-semibold">{user.role}</p>
+                      <p className="font-semibold">{blog.date}</p>
                     </div>
                   </div>
                 </TableCell>
 
                 <TableCell>
                   <div className="flex items-center space-x-4">
-                    <Link to={{ pathname: `/app/users/${user.id}` }}>
+                    <Link to={{ pathname: `/app/bloglist/${blog.id}` }}>
                       <Button layout="link" size="icon" aria-label="Edit">
                         <EditIcon className="w-5 h-5" aria-hidden="true" />
                       </Button>
                     </Link>
                     <Button
-                      onClick={() => setShowModal({show:true,id:user.id})}
+                      onClick={() => setShowModal({show:true,id:blog.id})}
                       style={{ color: "red" }}
                       layout="link"
                       size="icon"
@@ -504,4 +479,23 @@ const handleCloseError = (event, reason) => {
   );
 }
 
-export default UsersList;
+
+BlogList.modules = {
+  toolbar: [
+    [{ header: ["3", false] }, { header: 1 }, { header: 2 }],
+    ["bold", "italic", "underline", "strike"],
+    [
+      { align: "" },
+      { align: "center" },
+      { align: "right" },
+      { align: "justify" },
+    ],
+    [{ list: "bullet" }, { indent: "-1" }, { indent: "+1" }],
+  
+    [{ color: [] }],
+    ["clean"],
+  ],
+};
+
+
+export default BlogList;

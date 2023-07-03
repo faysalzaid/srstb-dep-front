@@ -209,15 +209,18 @@ function EmployeeList(props) {
         if (resp.data.error) {
           setOpenError({ open: true, message: `${resp.data.error}` });
         }
-        console.log(resp.data);
+        // console.log(resp.data);
         setEmployeeData([...employeeData, ...resp.data]);
         setUplModal(false);
         setOpenSuccess({ open: true, message: "Successfully Uploaded" });
       })
-      .catch((error) => {
-        console.log(error);
-        setOpenError({ open: true, message: `${error.response.data.message}` });
-      });
+      .catch((error)=>{
+        if (error.response && error.response.data && error.response.data.error) {
+            setOpenError({open:true,message:`${error.response.data.error}`});
+          } else {
+            setOpenError({open:true,message:"An unknown error occurred"});
+          }
+    })
   };
 
   const addEmployee = async (e) => {
@@ -227,14 +230,12 @@ function EmployeeList(props) {
       emplForm.email === "" ||
       emplForm.phone === "" ||
       emplForm.status === "" ||
-      emplForm.image === "" ||
       emplForm.DepartmentId === "" ||
-      emplForm.DesignationId === ""
+      emplForm.DesignationId === ""||
+      emplForm.AreaId===""
     ) {
-      setErrorMessage("Please Provide all data");
-      setTimeout(() => {
-        setErrorMessage("");
-      }, 2000);
+      setOpenError({open:true,message:"Please Provide all data"});
+     
     } else {
       const formData = new FormData();
       formData.append("name", emplForm.name);
@@ -244,12 +245,11 @@ function EmployeeList(props) {
       formData.append("image", emplForm.image);
       formData.append("DepartmentId", emplForm.DepartmentId);
       formData.append("AreaId", emplForm.AreaId);
-      formData.append("hiredDate", emplForm.hiredDate);
+      // formData.append("hiredDate", emplForm.hiredDate);
       formData.append("ssn", emplForm.ssn);
       formData.append("passportNo", emplForm.passportNo);
       formData.append("contactPhone", emplForm.contactPhone);
       formData.append("address", emplForm.address);
-      formData.append("birthday", emplForm.birthday);
       formData.append("postCode", emplForm.postCode);
       formData.append("nationality", emplForm.nationality);
       formData.append("DesignationId", emplForm.DesignationId);
@@ -266,9 +266,13 @@ function EmployeeList(props) {
             setOpenSuccess({ open: true, message: "Successfully Added" });
           }
         })
-        .catch((error) => {
-          setOpenError({ open: true, message: `${error.response.data.error}` });
-        });
+        .catch((error)=>{
+          if (error.response && error.response.data && error.response.data.error) {
+              setOpenError({open:true,message:`${error.response.data.error}`});
+            } else {
+              setOpenError({open:true,message:"An unknown error occurred"});
+            }
+      })
     }
   };
 
@@ -308,7 +312,13 @@ function EmployeeList(props) {
         // setSuccessMessage("Successfully Deleted");
         setOpenSuccess({ open: true, message: "Deleted Successfully" });
         closeDelete();
-      });
+      }).catch((error)=>{
+        if (error.response && error.response.data && error.response.data.error) {
+            setOpenError({open:true,message:`${error.response.data.error}`});
+          } else {
+            setOpenError({open:true,message:"An unknown error occurred"});
+          }
+    });
   };
 
   // Moving between form Sections start
@@ -481,7 +491,7 @@ function EmployeeList(props) {
               <section className=" form_section">
                 <div className=" grid grid-cols-1 gap-2">
                   <Label>
-                    <span>Name</span>
+                    <span>Name <span className="text-red-600 text-1xl">*</span></span>
                     <Input
                       type="text"
                       className="mt-1"
@@ -492,10 +502,11 @@ function EmployeeList(props) {
                         setEmplForm({ ...emplForm, name: e.target.value })
                       }
                     />
+                    
                   </Label>
 
                   <Label>
-                    <span>Email</span>
+                    <span>Email <span className="text-red-600 text-1xl">*</span></span>
                     <Input
                       type="text"
                       className="mt-1"
@@ -509,7 +520,7 @@ function EmployeeList(props) {
                   </Label>
 
                   <Label>
-                    <span>Phone</span>
+                    <span>Phone <span className="text-red-600 text-1xl">*</span></span>
                     <Input
                       type="text"
                       className="mt-1"
@@ -523,7 +534,7 @@ function EmployeeList(props) {
                   </Label>
 
                   <Label className="mt-1">
-                    <span>Status</span>
+                    <span>Status <span className="text-red-600 text-1xl">*</span></span>
                     <Select
                       className="mt-1"
                       name="status"
@@ -553,7 +564,7 @@ function EmployeeList(props) {
               <section className=" form_section">
                 <div className=" grid grid-cols-1 gap-2">
                   <Label className="mt-1">
-                    <span>Department</span>
+                    <span>Department <span className="text-red-600 text-1xl">*</span></span>
                     <Select
                       className="mt-1"
                       name="DepartmentId"
@@ -574,7 +585,7 @@ function EmployeeList(props) {
                   </Label>
 
                   <Label className="mt-1">
-                    <span>Position</span>
+                    <span>Position <span className="text-red-600 text-1xl">*</span></span>
                     <Select
                       className="mt-1"
                       name="DesignationId"
@@ -595,7 +606,7 @@ function EmployeeList(props) {
                   </Label>
 
                   <Label className="mt-1">
-                    <span>Area</span>
+                    <span>Area <span className="text-red-600 text-1xl">*</span></span>
                     <Select
                       className="mt-1"
                       name="AreaId"

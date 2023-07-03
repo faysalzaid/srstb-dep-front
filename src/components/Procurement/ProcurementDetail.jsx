@@ -112,7 +112,7 @@ const ProcurementDetail = (props) => {
             if(resp.data.error){
               setOpenError({open:true,message:true})
             }else{
-              console.log(resp.data);
+              // console.log(resp.data);
               setProcurementData(resp.data)
               setProcurementForm({
                 timeToSell: resp.data.timeToSell,
@@ -127,7 +127,7 @@ const ProcurementDetail = (props) => {
           })
           await axios.get(`${url}/projects`,{withCredentials:true}).then((resp)=>{
             if(resp.data.error){
-              console.log(resp.data.error);
+              // console.log(resp.data.error);
             }
           const data = resp.data.projects.filter((pr)=>pr.approved)  
           setProject(data)
@@ -226,7 +226,15 @@ const ProcurementDetail = (props) => {
         
        
       }
-    })}
+    }).catch((error)=>{
+      if (error.response && error.response.data && error.response.data.error) {
+          setOpenError({open:true,message:`${error.response.data.error}`});
+        } else {
+          setOpenError({open:true,message:"An unknown error occurred"});
+        }
+  })
+  
+  }
 
 
 

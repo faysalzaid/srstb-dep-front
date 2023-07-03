@@ -26,7 +26,7 @@ import { AuthContext } from "hooks/authContext";
 function BudgetList({ id, budgets, setBudgets, invoiceIds ,project}) {
   const { authState } = useContext(AuthContext);
   // console.log(budgets);
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState({open:false,id:""});
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [isPaymentOpen, setIsPaymentOpen] = useState({
@@ -635,13 +635,13 @@ function BudgetList({ id, budgets, setBudgets, invoiceIds ,project}) {
                           <td className=" px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                             <button
                               className="text-indigo-600 hover:text-indigo-900 focus:outline-none"
-                              onClick={() => setIsExpanded(!isExpanded)}
+                              onClick={() => setIsExpanded({open:!(isExpanded.open),id:row.id})}
                             >
-                              {isExpanded ? <FiChevronUp /> : <FiChevronDown />}
+                        {isExpanded.open && isExpanded.id==row.id ? <FiChevronUp /> : <FiChevronDown />}
                             </button>
                           </td>
                         </tr>
-                        {isExpanded && (
+                        {isExpanded.open&&isExpanded.id==row.id&&( 
                           <tr>
                             <td
                               colSpan="5"

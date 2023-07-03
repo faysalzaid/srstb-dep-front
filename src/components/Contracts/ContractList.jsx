@@ -113,7 +113,7 @@ const ContractList = () => {
           })
           await axios.get(`${url}/projects`,{withCredentials:true}).then((resp)=>{
             if(resp.data.error){
-              console.log(resp.data.error);
+              // console.log(resp.data.error);
             }
           const data = resp.data.projects.filter((pr)=>pr.approved)  
           setProject(data)
@@ -155,9 +155,9 @@ const ContractList = () => {
     
       const handleSubmit = async(e) => {
         e.preventDefault();
-        console.log(formValues);
+        // console.log(formValues);
         await axios.post(`${url}/contract`,formValues,{withCredentials:true}).then((resp)=>{
-          console.log(resp.data);
+          // console.log(resp.data);
           if(resp.data.error){
             setOpenError({open:true,message:`${resp.data.error}`})
           }else{
@@ -210,7 +210,15 @@ const ContractList = () => {
         
        
       }
-    })}
+    }).catch((error)=>{
+      if (error.response && error.response.data && error.response.data.error) {
+          setOpenError({open:true,message:`${error.response.data.error}`});
+        } else {
+          setOpenError({open:true,message:"An unknown error occurred"});
+        }
+  })
+  
+  }
 
 
 

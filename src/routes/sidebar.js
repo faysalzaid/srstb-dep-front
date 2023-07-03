@@ -200,33 +200,41 @@ routes = [{
 
         ],
     },
+
     {
-        name: 'Jobs',
-        icon: 'FaForumbee',
-        routes: [
-            // submenu
-            {
-                path: '/app/candidates',
-                icon: 'FaIoxhost',
-                name: 'Candidates',
-                roles: ['admin', 'finance', 'hr']
-            },
-            {
-                path: '/app/candidate/shortlisted',
-                icon: 'FaSlideshare',
-                name: 'ShortListed',
-                roles: ['admin', 'finance', 'hr']
-            },
-            {
-                path: '/app/candidate/selected',
-                icon: 'FaHandsHelping',
-                name: 'Selected',
-                roles: ['admin', 'finance', 'hr']
-            },
-
-
-        ],
+        path: '/app/bloglist',
+        icon: 'FaHtml5',
+        name: 'Website',
+        roles: ['admin', ]
     },
+
+    // {
+    //     name: 'Jobs',
+    //     icon: 'FaForumbee',
+    //     routes: [
+    //         // submenu
+    //         {
+    //             path: '/app/candidates',
+    //             icon: 'FaIoxhost',
+    //             name: 'Candidates',
+    //             roles: ['admin', 'finance', 'hr']
+    //         },
+    //         {
+    //             path: '/app/candidate/shortlisted',
+    //             icon: 'FaSlideshare',
+    //             name: 'ShortListed',
+    //             roles: ['admin', 'finance', 'hr']
+    //         },
+    //         {
+    //             path: '/app/candidate/selected',
+    //             icon: 'FaHandsHelping',
+    //             name: 'Selected',
+    //             roles: ['admin', 'finance', 'hr']
+    //         },
+
+
+    //     ],
+    // },
     {
         path: '/app/settings',
         icon: 'BsFillGearFill',

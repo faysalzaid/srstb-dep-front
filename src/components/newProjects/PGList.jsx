@@ -156,8 +156,12 @@ const PgList = () => {
               closeModal();
             }
         }).catch((error)=>{
-          setOpenError({open:true,message:`${error.response.data.error}`})
-        })
+          if (error.response && error.response.data && error.response.data.error) {
+              setOpenError({open:true,message:`${error.response.data.error}`});
+            } else {
+              setOpenError({open:true,message:"An unknown error occurred"});
+            }
+      })
         // handle form submission here
         // e.g. make an API call to save the form data
       
@@ -262,7 +266,7 @@ const PgList = () => {
   const filterByYear = async(e)=>{
     // console.log(e.target.value);
     if(e.target.value==='all'){
-      setProject(allProjects)
+      // setProject(allProjects)
     }else{
       const data = allProjects.filter((pr)=>pr.year.slice(0,4)===e.target.value)
       setProject(data)
@@ -274,7 +278,7 @@ const PgList = () => {
   const filterByApproval = async(e)=>{
     // console.log(e.target.value);
     if(e.target.value==='all'){
-      setProject(allProjects)
+      // setProject(allProjects)
     }else if(e.target.value==='false'){
       // console.log('in the false');
       const data = allProjects.filter((pr)=>!(pr.approved))
@@ -300,16 +304,22 @@ const PgList = () => {
 
   
   const handleDelete = async() => {
-   await axios.get(`${url}/projects/delete/${isDeleteOpen.id}`,{withCredentials:true}).then((resp)=>{
+   await axios.delete(`${url}/projects/${isDeleteOpen.id}`,{withCredentials:true}).then((resp)=>{
     if(resp.data.error){
-
+      setOpenError({open:true,message: `${resp.data.error}`})
     }else{
       const data = projects.filter((pr)=>pr.id!==isDeleteOpen.id)
       setProject(data)
       setOpenSuccess({open:true,message:"Successfully Deleted"})
       closeDelete()
     }
-   })
+   }).catch((error)=>{
+    if (error.response && error.response.data && error.response.data.error) {
+        setOpenError({open:true,message:`${error.response.data.error}`});
+      } else {
+        setOpenError({open:true,message:"An unknown error occurred"});
+      }
+})
   };
 
 
@@ -411,7 +421,7 @@ const PgList = () => {
    
     <div className="flex relative inline-flex lg:ml-4">
       <select className="w-full flex-2 mt-1 w-48 h-10 pl-3 pr-8 border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" onChange={filterByApproval}>
-        <option value="all">All Projects(Approval)</option>
+        <option value="all">Choose Approval</option>
         <option value='true'>Approved</option>
         <option value='false'>Not Approved</option>
       </select>
@@ -425,7 +435,7 @@ const PgList = () => {
 
   <div className="flex relative inline-flex lg:ml-4">
     <select className="w-full flex-2 mt-1 w-48 h-10 pl-3 pr-8 border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" onChange={filterByYear}>
-      <option value={'all'}>All Projects(Year)</option>
+      <option value={'all'}>Choose(Year)</option>
       {generateYearOptions()}
     </select>
   </div>
@@ -658,7 +668,7 @@ const PgList = () => {
           </TableHeader>
           <TableBody>
             {projects?.map((project) => (
-              <TableRow key={project.id} className={`${isEndTimeReached(project)?'bg-red-200':''}`}>
+              <TableRow key={project.id} className={`${isEndTimeReached(project)?'bg-red-200 text-gray-600':''}`}>
                 <TableCell>
                   <div className="flex items-center text-sm">
                     <div>

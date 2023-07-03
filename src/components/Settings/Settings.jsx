@@ -48,7 +48,7 @@ const Settings = () => {
 
   const history = useHistory();
   const currentUrl = history.location.pathname;
-  console.log(currentUrl);
+  // console.log(currentUrl);
 
   const [settingsForm, setSettingsForm] = useState({
     logo: "",
@@ -160,14 +160,14 @@ const Settings = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("this is settings id", settingsData.id);
+    // console.log("this is settings id", settingsData.id);
     const formData = new FormData();
     formData.append("name", settingsForm.name);
     formData.append("logo", settingsForm.logo);
     formData.append("loginlogo", settingsForm.loginlogo);
     formData.append("address1", settingsForm.address1);
     formData.append("address2", settingsForm.address2);
-    console.log(formData);
+    // console.log(formData);
     await axios
       .put(`${url}/settings/1`, formData, { withCredentials: true })
       .then((resp) => {

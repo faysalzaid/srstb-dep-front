@@ -103,7 +103,7 @@ function EmployeeDetail(props) {
             if (resp.data.error) {
               setOpenError({ open: true, message: `${resp.data.error}` });
             } else {
-              console.log(resp.data);
+              // console.log(resp.data);
               setEmployeeData(resp.data);
               setEmplForm({
                 name: resp.data.name,

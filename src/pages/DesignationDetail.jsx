@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom'
 import PageTitle from '../components/Typography/PageTitle'
 import SectionTitle from '../components/Typography/SectionTitle'
 import axios from 'axios'
+import { ErrorAlert, SuccessAlert } from "components/Alert";
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import {
   Table,
@@ -47,6 +48,27 @@ function DesignationDetail(props) {
 
     const {authState} = useContext(AuthContext)
 
+
+    const [openSuccess, setOpenSuccess] = useState({ open: false, message: "" });
+    const [openError, setOpenError] = useState({ open: false, message: "" });
+  
+    const handleCloseSuccess = (event, reason) => {
+      if (reason === "clickaway") {
+        return;
+      }
+  
+      setOpenSuccess({ open: false, message: "" });
+    };
+  
+    const handleCloseError = (event, reason) => {
+      if (reason === "clickaway") {
+        return;
+      }
+  
+      setOpenError({ open: false, message: "" });
+    };
+    
+
     
     useEffect(()=>{
       const getData =async()=>{
@@ -77,13 +99,18 @@ function DesignationDetail(props) {
         }
         // console.log('request',request);
         await axios.post(`${url}/designations/${id}`,request,{withCredentials:true}).then((resp)=>{
+          if(resp.data.error) return setOpenError({open:true,message:`${resp.data.error}`})
             setDesignationData(resp.data)
             closeModal()
-            setSuccessMessage("Successfully Updated")
-            setTimeout(() => {
-              setSuccessMessage("")
-            }, 2000);
-          })
+            setOpenSuccess({open:true,message:"Successfully Updated"})
+
+          }).catch((error)=>{
+            if (error.response && error.response.data && error.response.data.error) {
+                setOpenError({open:true,message:`${error.response.data.error}`});
+              } else {
+                setOpenError({open:true,message:"An unknown error occurred"});
+              }
+        });
      
 
     }
@@ -95,12 +122,17 @@ function DesignationDetail(props) {
         }
         setDesignationData({})
         closeModal()
-        setSuccessMessage("Successfully Deleted")
+        setOpenSuccess({open:true,message:"Successfully Deleted"})
         setTimeout(() => {
-          setSuccessMessage("")
-          props.history.push('/app/designations')
+          props.history.goBack()
         }, 1000);
-      })
+      }).catch((error)=>{
+        if (error.response && error.response.data && error.response.data.error) {
+            setOpenError({open:true,message:`${error.response.data.error}`});
+          } else {
+            setOpenError({open:true,message:"An unknown error occurred"});
+          }
+    });
     }
 
 
@@ -109,7 +141,18 @@ function DesignationDetail(props) {
     return ( 
         <>
         <PageTitle>{designationData.name}</PageTitle>
-        <p></p>
+        <ErrorAlert
+        open={openError.open}
+        handleClose={handleCloseError}
+        message={openError.message}
+        horizontal="right"
+      />
+      <SuccessAlert
+        open={openSuccess.open}
+        handleClose={handleCloseSuccess}
+        message={openSuccess.message}
+        horizontal="right"
+      />
         <div>
           <Button onClick={openModal}>Update Designation</Button>
         </div>

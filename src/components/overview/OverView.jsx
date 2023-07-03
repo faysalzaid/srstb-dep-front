@@ -33,6 +33,7 @@ function OverView({ project, setProject, companyData, id }) {
         .get(`${url}/invoice`, { withCredentials: true })
         .then((resp) => {
           if (resp.data.error) {
+            return
           } else {
             const data = resp.data.filter((inv) => inv.ProjectId === id);
             setInvoiceData(data[0]);

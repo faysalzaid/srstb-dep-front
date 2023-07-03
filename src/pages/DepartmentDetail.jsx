@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom'
 import PageTitle from '../components/Typography/PageTitle'
 import SectionTitle from '../components/Typography/SectionTitle'
 import axios from 'axios'
+import { ErrorAlert, SuccessAlert } from "components/Alert";
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import {
   Table,
@@ -46,6 +47,30 @@ function DepartmentDetail(props) {
 
     const {authState} = useContext(AuthContext)
 
+
+
+
+    const [openSuccess, setOpenSuccess] = useState({ open: false, message: "" });
+    const [openError, setOpenError] = useState({ open: false, message: "" });
+  
+    const handleCloseSuccess = (event, reason) => {
+      if (reason === "clickaway") {
+        return;
+      }
+  
+      setOpenSuccess({ open: false, message: "" });
+    };
+  
+    const handleCloseError = (event, reason) => {
+      if (reason === "clickaway") {
+        return;
+      }
+  
+      setOpenError({ open: false, message: "" });
+    };
+
+
+
     
 
     useEffect(()=>{
@@ -75,17 +100,15 @@ function DepartmentDetail(props) {
       e.preventDefault()
       await axios.post(`${url}/departments/${id}`,depForm,{withCredentials:true}).then((resp)=>{
         if(resp.data.error){
-            setErrorMessage(resp.data.error)
+            setOpenError({open:true,message:`${resp.data.error}`})
         }else{
             // console.log('this is from depform',depForm);
             let newdata = resp.data
             setDepartmentData(newdata)
             // console.log('this is from resp.data',resp.data);
             closeModal()
-            setSuccessMessage("Successfully Updated")
-            setTimeout(() => {
-              setSuccessMessage("")
-            }, 2000);            
+            setOpenSuccess({open:true,message:"Successfully Updated"})
+                     
         }
 
       })
@@ -95,14 +118,13 @@ function DepartmentDetail(props) {
         e.preventDefault()
         await axios.get(`${url}/departments/delete/${id}`,{withCredentials:true}).then((resp)=>{
           if(resp.data.error){
-              setErrorMessage(resp.data.error)
+              setOpenError({open:true,message:`${resp.data.error}`})
           }
           setDepartmentData({})
           closeModal()
-          setSuccessMessage("Successfully Deleted")
+          setOpenSuccess({open:true,message:"Successfully Deleted"})
           setTimeout(() => {
-            setSuccessMessage("")
-            props.history.push('/app/departments')
+            props.history.goBack()
           }, 1000);
         })
       }
@@ -112,7 +134,18 @@ function DepartmentDetail(props) {
     return ( 
         <>
         <PageTitle>List of Departments </PageTitle>
-        <p></p>
+        <ErrorAlert
+        open={openError.open}
+        handleClose={handleCloseError}
+        message={openError.message}
+        horizontal="right"
+      />
+      <SuccessAlert
+        open={openSuccess.open}
+        handleClose={handleCloseSuccess}
+        message={openSuccess.message}
+        horizontal="right"
+      />
         <div>
           <Button onClick={openModal}>Update Department</Button>
         </div>

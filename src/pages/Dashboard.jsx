@@ -47,8 +47,6 @@ import useGrapAuth from "hooks/useRefresh";
 
 function Dashboard(props) {
   const { authState, settings } = useContext(AuthContext);
-
-  const [page, setPage] = useState(1);
   const [procurement, setProcurement] = useState([]);
   const [deadlineProjects,setDeadlineProjects] = useState([])
   const [projects, setProject] = useState([]);
@@ -68,7 +66,9 @@ function Dashboard(props) {
         .get(`${url}/projects`, { withCredentials: true })
         .then((resp) => {
           if (resp.data.error) {
-            console.log(resp.data.error);
+            // console.log(resp.data.error);
+            
+            return
           }
           setProject(resp.data.projects);
           const ddata = resp.data.projects.filter((pr)=>{
@@ -80,7 +80,7 @@ function Dashboard(props) {
           setDeadlineProjects(ddata)
         })
         .catch((err) => {
-          setAuthorization(true);
+         return
         });
     };
 
@@ -104,6 +104,7 @@ function Dashboard(props) {
         .get(`${url}/comment`, { withCredentials: true })
         .then((resp) => {
           // console.log(resp.data);
+          if(resp.data.error) return
           const data = resp.data.filter((dt)=>dt.approved===0);
           setComments(data)
         });
@@ -113,7 +114,7 @@ function Dashboard(props) {
     const getProcurements = async()=>{
       await axios.get(`${url}/procurement`,{withCredentials:true}).then((resp)=>{
           if(resp.data.error){
-
+              return
           }else{
             const data = resp.data.filter((pr)=>{
               const currentDate = new Date();
@@ -124,35 +125,22 @@ function Dashboard(props) {
           }
       })
     }
-
+   
     getProcurements()
-
     getCounts();
-
     getData();
     getComments()
 
-    // console.log(favicon);
+    console.log('favicon');
   }, []);
 
-  // pagination setup
-  const resultsPerPage = 10;
-  const totalResults = response.length;
 
-  // pagination change control
-  function onPageChange(p) {
-    setPage(p);
-  }
 
   const projectPercentileGraph = {
     data: {
       datasets: [
         {
           data: projects?.map((pr) => pr.physicalPerformance),
-          /**
-           * These colors come from Tailwind CSS palette
-           * https://tailwindcss.com/docs/customizing-colors/#default-color-palette
-           */
           backgroundColor: projects?.map((pr) => pr.color),
           label: "Percentage",
         },
@@ -178,7 +166,7 @@ function Dashboard(props) {
       <TitleChange name={`Dashboard | ${settings.name}`} />
 
         <>
-          <PageTitle>Dashboard welcome {authState.username}  <Button onClick={()=>refresh()}>Refresh</Button></PageTitle>
+          <PageTitle>Dashboard welcome {authState.username}</PageTitle>
 
           {/* <CTA /> */}
 

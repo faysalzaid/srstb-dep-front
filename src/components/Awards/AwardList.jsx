@@ -150,7 +150,7 @@ const AwardList = () => {
         const formData = new FormData()
         formData.append('BidId',awardForm.BidId)
         formData.append('file',awardForm.file)
-        console.log(formData);
+        // console.log(formData);
         await axios.post(`${url}/awardletter`,formData,{withCredentials:true}).then((resp)=>{
             if(resp.data.error){
                 setOpenError({open:true,message:`${resp.data.error}`})
@@ -174,11 +174,6 @@ const AwardList = () => {
       
 
 
-
-  const handleEdit = (index) => {
-    // Implement your own edit logic here   
-    console.log(`Edit row ${index}`);
-  };
 
 
 

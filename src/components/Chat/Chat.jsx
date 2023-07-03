@@ -227,6 +227,7 @@ const ChatUI = () => {
                   return (
                     <motion.div
                       className="hover:cursor-pointer"
+                      key={chat.id}
                       onClick={() => {
                         const usr = {id: chat.id, name: chat.name}
                         setSelectedUser((su) =>usr);

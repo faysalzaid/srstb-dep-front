@@ -1,5 +1,6 @@
 import React, { useContext, useState, useEffect, useRef } from "react";
 import { SidebarContext } from "../context/SidebarContext";
+import { FiEye } from 'react-icons/fi';
 import {
   SearchIcon,
   MoonIcon,
@@ -13,6 +14,7 @@ import {
 import {
   Avatar,
   // Badge,
+  Button,
   Input,
   Dropdown,
   DropdownItem,
@@ -27,6 +29,9 @@ import * as constants from "../constants";
 import removeCookie from "../hooks/removeCookie";
 import { AuthContext } from "../hooks/authContext";
 import { Link, useHistory, withRouter } from "react-router-dom";
+import axios from "axios";
+import { url } from "config/urlConfig";
+import { ErrorAlert, SuccessAlert } from "components/Alert";
 
 function Header(props) {
   const { authState, setAuthState } = useContext(AuthContext);
@@ -45,10 +50,38 @@ function Header(props) {
     setIsProfileMenuOpen(!isProfileMenuOpen);
   }
 
-  const handleLogout = () => {
-    removeCookie("accessToken");
-    setAuthState({ id: "", username: "", email: "", role: "", state: false });
-    props.history.push("/login");
+
+
+  const [openSuccess, setOpenSuccess] = useState({ open: false, message: "" });
+
+  const handleCloseSuccess = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpenSuccess({ open: false, message: "" });
+  };
+
+  const [openError, setOpenError] = useState({ open: false, message: "" });
+
+  const handleCloseError = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpenError({ open: false, message: "" });
+  };
+
+
+
+  const handleLogout = async() => {
+    await axios.post(`${url}/login/logout`,{id:authState.id},{withCredentials:true}).then((resp)=>{
+      if(resp.data.error) return setOpenError({open:true,message:`${resp.data.error}`})
+      localStorage.removeItem('User')
+      setAuthState({ id: "", username: "", email: "", role: "", state: false });
+      props.history.push("/login");
+      setOpenSuccess({open:true,message:"Successfully Logged Out"})
+    })
   };
 
   const StyledBadge = styled(Badge)(({ theme }) => ({
@@ -89,6 +122,20 @@ function Header(props) {
 
   return (
     <header className="header_nav z-40 py-4 bg-white shadow-bottom dark:bg-gray-800">
+
+      <ErrorAlert
+        open={openError.open}
+        handleClose={handleCloseError}
+        message={openError.message}
+        horizontal="right"
+      />
+      <SuccessAlert
+        open={openSuccess.open}
+        handleClose={handleCloseSuccess}
+        message={openSuccess.message}
+        horizontal="right"
+      />
+
       <div className="container flex items-center justify-between h-full px-6 mx-auto text-purple-600 dark:text-purple-300">
         {/* <!-- Mobile hamburger --> */}
         <button
@@ -127,6 +174,7 @@ function Header(props) {
             </button>
           </li>
           {/* <!-- Notifications menu --> */}
+          <Link to={'/'}><Button size="small" className="mt-1" iconLeft={FiEye}>View Site</Button></Link>
           <li className="relative">
             <button
               className="relative align-middle rounded-md focus:outline-none focus:shadow-outline-purple"
@@ -153,6 +201,7 @@ function Header(props) {
                 )}
               </Link>
             </button>
+
           </li>
           {/* <!-- Profile menu --> */}
           <li className="relative flex">
@@ -175,7 +224,7 @@ function Header(props) {
 
             <button
               className="ml-4 rounded-full focus:shadow-outline-purple focus:outline-none text-xs px-0 py-2"
-              onClick={handleProfileClick}
+              onClick={handleLogout}
               aria-label=""
               // aria-hidden="true"
               aria-haspopup="true"

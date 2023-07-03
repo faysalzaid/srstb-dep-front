@@ -82,11 +82,15 @@ function AreaList(props) {
       const getData = async()=>{
         await axios.get(`${url}/area`,{withCredentials:true}).then((resp)=>{
          if(resp.data.error) return setOpenError({open:true,message:`${resp.data.error}`})
-         console.log(resp.data);
+        //  console.log(resp.data);
           setAreaData(resp.data.area)
-      }).catch((err)=>{
-
-      })
+      }).catch((error)=>{
+        if (error.response && error.response.data && error.response.data.error) {
+            setOpenError({open:true,message:`${error.response.data.error}`});
+          } else {
+            setOpenError({open:true,message:"An unknown error occurred"});
+          }
+    })
       }
         getData()
 
@@ -108,9 +112,13 @@ function AreaList(props) {
             closeModal()
             setOpenSuccess({open:true,message:"Added Successfully"})
             
-          }).catch((err)=>{
-            console.log(err);
-          })
+          }).catch((error)=>{
+            if (error.response && error.response.data && error.response.data.error) {
+                setOpenError({open:true,message:`${error.response.data.error}`});
+              } else {
+                setOpenError({open:true,message:"An unknown error occurred"});
+              }
+        })
      
 
     }
@@ -123,11 +131,15 @@ function AreaList(props) {
         const newdata = AreaData.filter((d)=>d.id!==isDeleteOpen.id)
         setAreaData(newdata)
         closeDelete()
-        setSuccessMessage("Successfully Deleted")
-        setTimeout(() => {
-          setSuccessMessage("")
-        }, 1000);
-      })
+        setOpenSuccess({open:true,message:"Successfully Deleted"})
+        
+      }).catch((error)=>{
+        if (error.response && error.response.data && error.response.data.error) {
+            setOpenError({open:true,message:`${error.response.data.error}`});
+          } else {
+            setOpenError({open:true,message:"An unknown error occurred"});
+          }
+    })
     }
 
 

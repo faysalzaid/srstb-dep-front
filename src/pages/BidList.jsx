@@ -135,7 +135,7 @@ function BidList(props) {
         if(resp.data.error){
           setOpenError({open:true,message:`${resp.data.error}`});
         }else{
-            setBidData([...bidsData,resp.data])
+            setBidData([resp.data,...bidsData])
             setBidFormData({fullname:"",phone:"",license:"",status:"",performa:"",
             proposal:"",companydoc:"",
             amount:"",bidUserPic:"",ProjectId:"",UserId:"",
@@ -156,7 +156,7 @@ function BidList(props) {
 
 }
 const deleteBid =async()=>{
-  const response = await axios.get(`${url}/bids/delete/${isDeleteOpen.id}`,{withCredentials:true}).then((resp)=>{
+  const response = await axios.delete(`${url}/bids/${isDeleteOpen.id}`,{withCredentials:true}).then((resp)=>{
     
     if(resp.data.error){
       setOpenError({open:true,message:`${resp.data.error}`});

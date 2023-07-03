@@ -52,12 +52,11 @@ const LeaveList = () => {
     const {authState,settings} = useContext(AuthContext)
     const [LeaveData,setLeaveData] = useState([])
     const [countsData,setCountsData] = useState({ projectCount:"",bidCount:"",activeProjects:"",completedProjects:""})
-    const [leaveTypeForm,setLeaveTypeForm] = useState({type:""})
     const [leaveFormData,setLeaveFormData] = useState({date:"",numberOfDays:"",startDate:"",endDate:"",comments:"",createdBy:"",status:"",EmployeeId:"",checkedBy:"",approvedBy:"",LeaveTypeId:""})
     const [leaveType,setLeaveType] = useState([])
-    const [users, setUsers] = useState([])
+    const [employees, setEmployees] = useState([])
     const [userCheckedBy, setUserCheckedBy] = useState([])
-    const [approvedBy, setApprovedBy] = useState([])
+    const [users, setUsers] = useState([])
     const [employeeData,setEmployeeData] = useState([])
   
 
@@ -97,7 +96,7 @@ const LeaveList = () => {
       useEffect(()=>{
         const getData=async()=>{
             await axios.get(`${url}/leave`,{withCredentials:true}).then((resp)=>{
-                // console.log(resp.data);
+                console.log(resp.data);
               if(resp.data.error){
                 setOpenError({open:true,message:true})
               }else{
@@ -106,11 +105,8 @@ const LeaveList = () => {
             })
           
             await axios.get(`${url}/users`,{withCredentials:true}).then((resp)=>{
-                
-                  const filteredClients = resp.data.filter((cl)=>cl.role==="client")
-                  setUsers(filteredClients)
-                  setUserCheckedBy(resp.data)
-                  setApprovedBy(resp.data)
+                  setUsers(resp.data)
+                 
               }).catch((error)=>{
                 if (error.response && error.response.data && error.response.data.error) {
                     setOpenError({open:true,message:`${error.response.data.error}`});
@@ -118,6 +114,17 @@ const LeaveList = () => {
                     setOpenError({open:true,message:"An unknown error occurred"});
                   }
             })
+
+            await axios.get(`${url}/employees`,{withCredentials:true}).then((resp)=>{
+              setEmployees(resp.data)
+             
+          }).catch((error)=>{
+            if (error.response && error.response.data && error.response.data.error) {
+                setOpenError({open:true,message:`${error.response.data.error}`});
+              } else {
+                setOpenError({open:true,message:"An unknown error occurred"});
+              }
+        })
         
               await axios.get(`${url}/leavetype`,{withCredentials:true}).then((resp)=>{
                  setLeaveType(resp.data)
@@ -169,10 +176,11 @@ const LeaveList = () => {
           approvedBy:leaveFormData.approvedBy,
           LeaveTypeId:leaveFormData.LeaveTypeId
         }
-        console.log(request);
+        // console.log(request);
       
         await axios.post(`${url}/leave`,request,{withCredentials:true}).then((resp)=>{
         //   console.log(resp.data);
+        if(resp.data.error) return setOpenError({open:true,message:`${resp.data.error}`})
             setLeaveData((prev)=>[...prev,resp.data])
             setOpenSuccess({open:true,message:"Successfully Added"})
             closeModal();
@@ -192,11 +200,6 @@ const LeaveList = () => {
       
 
 
-
-  const handleEdit = (index) => {
-    // Implement your own edit logic here   
-    console.log(`Edit row ${index}`);
-  };
 
 
 
@@ -354,7 +357,7 @@ const LeaveList = () => {
               required
             >
               <option value="" >Select Employee</option>
-              {users.map((pr,i)=>(
+              {employees.map((pr,i)=>(
                 <option key={i} value={pr.id}>{pr.name}</option>
               ))}
               
@@ -526,7 +529,7 @@ const LeaveList = () => {
               <TableRow>
                 <TableCell><span className="text-sm font-semibold">{row.date}</span></TableCell>
                 <TableCell><span className="text-sm font-semibold">{row.numberOfDays}</span></TableCell>
-                <TableCell><span className="text-sm font-semibold">{users.map((usr)=>usr.id===row.EmployeeId?usr.name:"")}</span></TableCell>
+                <TableCell><span className="text-sm font-semibold">{employees.map((usr)=>usr.id===row.EmployeeId?usr.name:"")}</span></TableCell>
                 <TableCell><span className="text-sm font-semibold">{row.startDate}</span></TableCell>
                 <TableCell><span className="text-sm font-semibold">{row.endDate}</span></TableCell>
                 <TableCell><span className="text-sm font-semibold">{row.status}</span></TableCell>

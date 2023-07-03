@@ -68,7 +68,7 @@ const InvoiceDetailPage = () => {
         const getData = async()=>{
           await axios.get(`${url}/projects`,{withCredentials:true}).then((resp)=>{
             if(resp.data.error){
-              console.log(resp.data.error);
+              // console.log(resp.data.error);
             }else{
               setProject(resp.data.projects)
             }
@@ -157,9 +157,12 @@ const handleSubmit = async(e)=>{
       onClose()
     }
   }).catch((error)=>{
-    setOpenError({open:true,message:`${error.response.data.error}`})
- 
-  })
+    if (error.response && error.response.data && error.response.data.error) {
+        setOpenError({open:true,message:`${error.response.data.error}`});
+      } else {
+        setOpenError({open:true,message:"An unknown error occurred"});
+      }
+})
 }
 
 

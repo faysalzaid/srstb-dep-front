@@ -86,9 +86,13 @@ function AreaDetail(props) {
         //  console.log(resp.data);/
           setAreaData(resp.data)
           setAreaForm({name:resp.data.name})
-      }).catch((err)=>{
-
-      })
+      }).catch((error)=>{
+        if (error.response && error.response.data && error.response.data.error) {
+            setOpenError({open:true,message:`${error.response.data.error}`});
+          } else {
+            setOpenError({open:true,message:"An unknown error occurred"});
+          }
+    })
       }
         getData()
 
@@ -110,9 +114,13 @@ function AreaDetail(props) {
             closeModal()
             setOpenSuccess({open:true,message:"Updated Successfully"})
             
-          }).catch((err)=>{
-            console.log(err);
-          })
+          }).catch((error)=>{
+            if (error.response && error.response.data && error.response.data.error) {
+                setOpenError({open:true,message:`${error.response.data.error}`});
+              } else {
+                setOpenError({open:true,message:"An unknown error occurred"});
+              }
+        })
      
 
     }
@@ -122,13 +130,19 @@ function AreaDetail(props) {
         if(resp.data.error){
             setOpenError({open:true,message:`${resp.data.error}`})
         }
-        console.log(resp.data);
+        // console.log(resp.data);
         closeDelete()
-        setOpenSuccess({open:true,message:"Successfully Updated"})
+        setOpenSuccess({open:true,message:"Successfully Deleted"})
         setTimeout(() => {
           props.history.goBack()
         }, 1000);
-      })
+      }).catch((error)=>{
+        if (error.response && error.response.data && error.response.data.error) {
+            setOpenError({open:true,message:`${error.response.data.error}`});
+          } else {
+            setOpenError({open:true,message:"An unknown error occurred"});
+          }
+    })
     }
 
 

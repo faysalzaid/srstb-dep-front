@@ -69,7 +69,7 @@ function BidDetail(props) {
     useEffect(()=>{
         const bidsFetch = async()=>{
             await axios.get(`${url}/bids/${id}`,{withCredentials:true}).then((resp)=>{
-              if(resp.data.error) setErrorMessage(resp.data.error);
+              if(resp.data.error) setOpenError({open:true,message:`${resp.data.error}`});
               // console.log('from the main response',resp.data);
               setBidData(resp.data)
               setBidFormData({fullname:resp.data.fullname,
@@ -92,7 +92,7 @@ function BidDetail(props) {
             //   console.log('from bidformdata',bidFormData);
               
             }).catch((err)=>{
-              console.log(err.response);
+              // console.log(err.response);
             })
 
             await axios.get(`${url}/projects`,{withCredentials:true}).then((resp)=>{
@@ -156,13 +156,13 @@ function BidDetail(props) {
             
         }
       }).catch((err)=>{
-        console.log(err);
+        // console.log(err);
       })
     }
 
 }
         const deleteBid =async()=>{
-          const response = await axios.get(`${url}/bids/delete/${id}`,{withCredentials:true}).then((resp)=>{
+          const response = await axios.delete(`${url}/bids/${id}`,{withCredentials:true}).then((resp)=>{
             
             if(resp.data.error){
               setOpenError({open:true,message:`${resp.data.error}`});
@@ -231,7 +231,7 @@ function BidDetail(props) {
           formData.append('score',bidFormData.score)
           formData.append('evaluationFile',bidFormData.evaluationFile)
           formData.append('evaluationStatus',bidFormData.evaluationStatus)
-          console.log(formData);
+          // console.log(formData);
           await axios.post(`${url}/bids/evaluate/${id}`,formData,{withCredentials:true}).then((resp)=>{
             if(resp.data.error){
               setOpenError({open:true,message:`${resp.data.error}`})

@@ -5,6 +5,7 @@ import './invoice.css';
 import {  Badge,Button} from  '@windmill/react-ui'
 import useAuth from 'hooks/useAuth';
 import { AuthContext } from 'hooks/authContext';
+import { Link } from 'react-router-dom';
 function NewInvoice({invoiceData,mode,project}) {
 
 
@@ -81,7 +82,7 @@ const printSection = () => {
       <div className="flex justify-between">
         <div>
           <h2 className="text-xl font-bold mb-2">Project Name</h2>
-          <p>{project.map((pr)=>pr.id===invoiceData.ProjectId?pr.name:"")}</p>
+          <p>{project.map((pr)=>pr.id===invoiceData.ProjectId?<Link to={`/app/pglist/${pr.id}`} key={pr.id}>{pr.name}</Link>:"")}</p>
         </div>
         <div>
           <h2 className="text-xl font-bold mb-2">Price</h2>

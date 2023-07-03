@@ -133,7 +133,7 @@ const InvoiceList = () => {
         const getData =async()=>{
           await axios.get(`${url}/projects`,{withCredentials:true}).then((resp)=>{
             if(resp.data.error){
-              console.log(resp.data.error);
+              // console.log(resp.data.error);
             }else{
               const data = resp.data.projects.filter((pr)=>pr.approved)
               setProject(data)
@@ -206,9 +206,12 @@ const handleSubmit = async(e)=>{
       closeModal()
     }
   }).catch((error)=>{
-    setOpenError({open:true,message:`${error.response.data.error}`})
- 
-  })
+    if (error.response && error.response.data && error.response.data.error) {
+        setOpenError({open:true,message:`${error.response.data.error}`});
+      } else {
+        setOpenError({open:true,message:"An unknown error occurred"});
+      }
+})
 }
 
 const handleDelete = async()=>{
@@ -221,7 +224,13 @@ const handleDelete = async()=>{
       setOpenSuccess({open:true,message:"Successfully Deleted"})
       closeDelete()
     }
-  })
+  }).catch((error)=>{
+    if (error.response && error.response.data && error.response.data.error) {
+        setOpenError({open:true,message:`${error.response.data.error}`});
+      } else {
+        setOpenError({open:true,message:"An unknown error occurred"});
+      }
+})
 
 }
   

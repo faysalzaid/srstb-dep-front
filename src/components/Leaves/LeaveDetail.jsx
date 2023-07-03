@@ -150,11 +150,11 @@ const LeaveDetail = (props) => {
           approvedBy:leaveFormData.approvedBy,
           LeaveTypeId:leaveFormData.LeaveTypeId
         }
-        console.log(request);
+        // console.log(request);
       
         await axios.put(`${url}/leave/${id}`,request,{withCredentials:true}).then((resp)=>{
         //   console.log(resp.data);
-        console.log(resp.data);
+        // console.log(resp.data);
             setLeaveData((prev)=>resp.data)
             setOpenSuccess({open:true,message:"Successfully Added"})
             closeModal();
@@ -172,13 +172,6 @@ const LeaveDetail = (props) => {
       };
 
       
-
-
-
-  const handleEdit = (index) => {
-    // Implement your own edit logic here   
-    console.log(`Edit row ${index}`);
-  };
 
 
 

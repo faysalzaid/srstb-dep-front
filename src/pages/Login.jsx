@@ -110,7 +110,7 @@ const initialValues ={
 
     <>
 <TitleChange name={`Login | ${settings.name}`}/>
-<ErrorAlert
+      <ErrorAlert
         open={openError.open}
         handleClose={handleCloseError}
         message={openError.message}

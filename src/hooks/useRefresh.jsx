@@ -7,7 +7,7 @@ import useAuth from "./useAuth";
 
 const useGrapAuth = (props) => {
 
-    const { setAuthState,authState } = useAuth()
+    const { setAuthState,authState } = useContext(AuthContext)
     const storedValue = localStorage.getItem('User');
 
     // const navigate = useNavigate()
@@ -31,6 +31,7 @@ const useGrapAuth = (props) => {
             localStorage.setItem('User', stringFied);
             setAuthState({ id: data?.id, username: data?.name, email: data?.email, image: data?.image, role: data?.role, state: true });
             const token = data.token; // Store the token in a variable
+            console.log('sent the refresh success');
             return console.log(token); // Return the token
         } catch (error) {
             console.error('Error from the grapauth', error);

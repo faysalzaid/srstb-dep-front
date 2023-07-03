@@ -128,10 +128,11 @@ function CompanyDetail(props) {
   const updateCompany =async(e)=>{
     e.preventDefault()
     // console.log(e.data);
-    if(companyFormData.name==="" || companyFormData.location===""){
-      setErrorMessage('Please Provide all data')  
+    if(companyFormData.name==="" || companyFormData.location==="" || companyFormData.UserId==="" || companyFormData.UserId==="Select a Customer"){
+      setOpenError({open:true,message:'Please Provide all data'})  
     }else{
-      const response = await axios.post(`${url}/companies/${id}`,companyFormData,{withCredentials:true}).then((resp)=>{
+      // console.log(companyFormData);
+      const response = await axios.put(`${url}/companies/${id}`,companyFormData,{withCredentials:true}).then((resp)=>{
         if(resp.data.error){
           setErrorMessage(resp.data.error)
         }else{
@@ -143,20 +144,23 @@ function CompanyDetail(props) {
       })
     }
 
-}
+} 
 const deleteCompany =async()=>{
-  const response = await axios.get(`${url}/companies/delete/${id}`,{withCredentials:true}).then((resp)=>{
+  const response = await axios.delete(`${url}/companies/${id}`,{withCredentials:true}).then((resp)=>{
     
     if(resp.data.error){
       setErrorMessage(resp.data.error)
     }else{
       setOpenSuccess({open:true,message:"Successfully Deleted"})
       closeDelete()
-      props.history.push('/app/companies')
+      props.history.goBack()
       
     }
   })
 }
+
+
+
   return (
     <>
       <PageTitle>{companyData.name} page</PageTitle>
@@ -218,7 +222,7 @@ const deleteCompany =async()=>{
               onChange={(e)=>setCompanyFormData({...companyFormData,UserId:e.target.value})}
               required
             >
-              <option  >Select a Customer type</option>
+              <option>Select a Customer</option>
               {users.map((usr,i)=>(
                 <option key={i} value={usr.id}>{usr.name}</option>
               ))}
@@ -289,7 +293,7 @@ const deleteCompany =async()=>{
                 <TableCell>
                   <div className="flex items-center space-x-4">
                     
-                    <Button layout="link" size="icon" aria-label="Delete" onClick={()=>setIsDeleteOpen(true)}>
+                    <Button layout="link" size="icon" aria-label="Delete" onClick={()=>setIsDeleteOpen({open:true})}>
                       <TrashIcon style={{color:'red'}} className="w-5 h-5" aria-hidden="true" />
                     </Button>
                   </div>

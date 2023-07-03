@@ -4,9 +4,9 @@
 
 .quill-preview {
   min-height: 200px;
-  width: 90%;
-  max-width: 624px;
-  border: 1px solid rgb(232, 231, 231);
+  /* width: 90%;
+  max-width: 624px; */
+  border: 1px solid rgb(199, 197, 197);
   margin: 0 auto;
 }
 

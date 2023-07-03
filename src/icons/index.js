@@ -50,7 +50,8 @@ import {
     FaRegFileArchive,
     FaAward,
     FaCircleNotch,
-    FaPlaceOfWorship
+    FaPlaceOfWorship,
+    FaHtml5
 } from 'react-icons/fa';
 import { BsCapsulePill } from 'react-icons/bs';
 
@@ -106,6 +107,7 @@ export {
     FaRegFileArchive,
     FaAward,
     FaCircleNotch,
-    FaPlaceOfWorship
+    FaPlaceOfWorship,
+    FaHtml5
 
 }

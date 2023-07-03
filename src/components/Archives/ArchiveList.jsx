@@ -152,7 +152,7 @@ const ArchivesList = () => {
     
       const handleSubmit = async(e) => {
         e.preventDefault();
-       console.log(archiveForm);
+      //  console.log(archiveForm);
        const formData = new FormData()
        formData.append('filename',archiveForm.filename)
        formData.append('fileUrl',archiveForm.fileUrl)

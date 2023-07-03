@@ -86,8 +86,12 @@ function CommentSection({ project, id }) {
         onClose()
       }
     }).catch((error)=>{
-      setOpenError({open:true,message:`${error.response.data.error}`})
-    })
+      if (error.response && error.response.data && error.response.data.error) {
+          setOpenError({open:true,message:`${error.response.data.error}`});
+        } else {
+          setOpenError({open:true,message:"An unknown error occurred"});
+        }
+  })
 
   }
 
@@ -102,8 +106,12 @@ function CommentSection({ project, id }) {
           setOpenSuccess({open:true,message:"Successfully Done"})
         }
       }).catch((error)=>{
-        setOpenError({open:true,message:`${error.response.data.error}`})
-      })
+        if (error.response && error.response.data && error.response.data.error) {
+            setOpenError({open:true,message:`${error.response.data.error}`});
+          } else {
+            setOpenError({open:true,message:"An unknown error occurred"});
+          }
+    })
   }
 
   const [openSuccess, setOpenSuccess] = useState({ open: false, message: "" });

@@ -164,7 +164,7 @@ const ProcurementList = () => {
     
       const handleSubmit = async(e) => {
         e.preventDefault();
-        console.log(procurementForm);
+        // console.log(procurementForm);
         await axios.post(`${url}/procurement`,procurementForm,{withCredentials:true}).then((resp)=>{
           // console.log(resp.data);
           if(resp.data.error){
@@ -220,7 +220,15 @@ const ProcurementList = () => {
         
        
       }
-    })}
+    }).catch((error)=>{
+      if (error.response && error.response.data && error.response.data.error) {
+          setOpenError({open:true,message:`${error.response.data.error}`});
+        } else {
+          setOpenError({open:true,message:"An unknown error occurred"});
+        }
+  })
+  
+  }
 
 
 

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import PageTitle from '../components/Typography/PageTitle'
 import SectionTitle from '../components/Typography/SectionTitle'
 import axios from 'axios'
+import { ErrorAlert, SuccessAlert } from "components/Alert";
 
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import {
@@ -45,6 +46,26 @@ function DesignationList(props) {
     const [successMessage,setSuccessMessage] = useState("")
     const [designationData,setDesignationData] = useState([])
     const [departmentData,setDepartmentData] = useState([])
+
+
+    const [openSuccess, setOpenSuccess] = useState({ open: false, message: "" });
+    const [openError, setOpenError] = useState({ open: false, message: "" });
+  
+    const handleCloseSuccess = (event, reason) => {
+      if (reason === "clickaway") {
+        return;
+      }
+  
+      setOpenSuccess({ open: false, message: "" });
+    };
+  
+    const handleCloseError = (event, reason) => {
+      if (reason === "clickaway") {
+        return;
+      }
+  
+      setOpenError({ open: false, message: "" });
+    };
     
 
     const {authState,settings} = useAuth(AuthContext)
@@ -77,13 +98,19 @@ function DesignationList(props) {
         }
         // console.log('request',request);
         await axios.post(`${url}/designations`,request,{withCredentials:true}).then((resp)=>{
+          if(resp.data.error)  return setOpenError({open:true,message:`${resp.data.error}`})
             setDesignationData([...designationData,resp.data])
             closeModal()
-            setSuccessMessage("Successfully registerd")
-            setTimeout(() => {
-              setSuccessMessage("")
-            }, 2000);
-          })
+            // setSuccessMessage("Successfully registerd")
+            setOpenSuccess({open:true,message:"Successfully Added"})
+         
+          }).catch((error)=>{
+            if (error.response && error.response.data && error.response.data.error) {
+                setOpenError({open:true,message:`${error.response.data.error}`});
+              } else {
+                setOpenError({open:true,message:"An unknown error occurred"});
+              }
+        });
      
 
     }
@@ -91,16 +118,23 @@ function DesignationList(props) {
     const deleteDesignation = async(ids)=>{
       await axios.get(`${url}/departments/delete/${ids}`,{withCredentials:true}).then((resp)=>{
         if(resp.data.error){
-            setErrorMessage(resp.data.error)
+            setOpenError({open:true,message:`${resp.data.error}`})
         }
         const newdata = designationData.filter((d)=>d.id!==ids)
         setDesignationData(newdata)
         closeModal()
-        setSuccessMessage("Successfully Deleted")
-        setTimeout(() => {
-          setSuccessMessage("")
-        }, 1000);
-      })
+        // setSuccessMessage("Successfully Deleted")
+        setOpenSuccess({open:true,message:"Successfully Deleted"})
+        // setTimeout(() => {
+        //   setSuccessMessage("")
+        // }, 1000);
+      }).catch((error)=>{
+        if (error.response && error.response.data && error.response.data.error) {
+            setOpenError({open:true,message:`${error.response.data.error}`});
+          } else {
+            setOpenError({open:true,message:"An unknown error occurred"});
+          }
+    });
     }
 
 
@@ -113,6 +147,18 @@ function DesignationList(props) {
 
         <PageTitle>List of Designations</PageTitle>
         <TitleChange name={`Designations | ${settings.name}`} />
+        <ErrorAlert
+        open={openError.open}
+        handleClose={handleCloseError}
+        message={openError.message}
+        horizontal="right"
+      />
+      <SuccessAlert
+        open={openSuccess.open}
+        handleClose={handleCloseSuccess}
+        message={openSuccess.message}
+        horizontal="right"
+      />
         <div>
         <form>   
         <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>

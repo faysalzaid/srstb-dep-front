@@ -90,7 +90,7 @@ const ContractDetail = (props) => {
 
         await axios.get(`${url}/contract/${id}`).then((resp)=>{
           if(resp.data.error){
-            console.log(resp.data);
+            // console.log(resp.data);
             setOpenError({open:true,message:`${resp.data.error}`})
             
           }else{
@@ -124,7 +124,7 @@ const ContractDetail = (props) => {
           setOpenError({open:true,message:`$${resp.data.error}`})
         }
       setProject(resp.data.projects)
-      console.log(resp.data.projects);
+      // console.log(resp.data.projects);
   
       })
 
@@ -163,7 +163,7 @@ const ContractDetail = (props) => {
         }else{
           // console.log(resp.data);
           const data = resp.data.filter((res)=>res.ContractId===id)
-          console.log(data);
+          // console.log(data);
           setFilesList(data)
         }
       })
@@ -182,7 +182,7 @@ const ContractDetail = (props) => {
 
     const handleSubmit = async(e) => {
       e.preventDefault();
-      console.log(formValues);
+      // console.log(formValues);
       await axios.put(`${url}/contract/${id}`,formValues,{withCredentials:true}).then((resp)=>{
         if(resp.data.error){
           setOpenError({open:true,message:`$${resp.data.error}`})
@@ -226,7 +226,7 @@ const ContractDetail = (props) => {
         const formdata = new FormData()
         formdata.append('attach',fileUpload.attach)
         formdata.append('ContractId',id)
-        console.log(formdata);
+        // console.log(formdata);
         const request = {
           file:fileUpload.attach,
           ContractId:id
@@ -305,12 +305,6 @@ const ContractDetail = (props) => {
 // Invoice Data  
 
 
-
-  const handleEdit = (index) => {
-    // Implement your own edit logic here
-    console.log(`Edit row ${index}`);
-  };
-
   // Delete row
   const handleFileDelete = async(dfile) => {
     // Implement your own delete logic here
@@ -322,7 +316,13 @@ const ContractDetail = (props) => {
         setFilesList(data)
         setOpenSuccess({open:true,message:"Successfully deleted"})
       }
-    })
+    }).catch((error)=>{
+      if (error.response && error.response.data && error.response.data.error) {
+          setOpenError({open:true,message:`${error.response.data.error}`});
+        } else {
+          setOpenError({open:true,message:"An unknown error occurred"});
+        }
+  })
   };
 
 
@@ -337,7 +337,13 @@ const ContractDetail = (props) => {
           closeDelete()
         }, 1000);
       }
-    })
+    }).catch((error)=>{
+      if (error.response && error.response.data && error.response.data.error) {
+          setOpenError({open:true,message:`${error.response.data.error}`});
+        } else {
+          setOpenError({open:true,message:"An unknown error occurred"});
+        }
+  })
 
 
   }

@@ -26,6 +26,8 @@ import { BrowserRouter } from "react-router-dom/cjs/react-router-dom";
 const BlogPost = lazy(() => import("./components/Landing/BlogPost"));
 const BlogPostDetail = lazy(() => import("./components/Landing/BlogDetail"));
 const JobsBlog = lazy(() => import("./components/Landing/Jobs"));
+const JobsDetail = lazy(() => import("./components/Landing/JobDetail"));
+const ApplyJob = lazy(() => import("./components/Landing/ApplyJob"));
 
 const Layout = lazy(() => import("./containers/Layout"));
 const Login = lazy(() => import("./pages/Login"));
@@ -40,7 +42,7 @@ const queryClient = new QueryClient({
   },
 });
 
-const cookie = getCookie("accessToken");
+
 
 function App(props) {
   let { authState, setAuthState } = useContext(AuthContext);
@@ -58,18 +60,19 @@ function App(props) {
         <AccessibleNavigationAnnouncer />
 
         <Switch>
-          <Route path="/login"  component={Login} />
-          <Route path="/reset-password/:id/:token" component={ResetPassword} />
-
-          <Route path="/create-account" component={CreateAccount} />
-          <Route path="/forgot-password" component={ForgotPassword} />
 
           {/* Place new routes over this */}
           <Route path="/app" component={Layout} />
+          <Route path="/login" exact component={Login} />
+          <Route path="/reset-password/:id/:token" component={ResetPassword} />
+          <Route path="/create-account" component={CreateAccount} />
+          <Route path="/forgot-password" component={ForgotPassword} />
           <Route path="/headers" component={Header} />
           <Route path="/" exact component={BlogPost} />
-          <Route path="/jobs"  component={JobsBlog} />
           <Route path="/:id" component={BlogPostDetail} />
+          <Route path="/jobs"  component={JobsBlog} />
+          <Route path="/jobs/:id" exact component={JobsDetail} />
+          <Route path="/jobs/:id/apply" exact component={ApplyJob} />
           {/* If you have an index page, you can remothis Redirect */} 
           {/* <Route path={'/'} component={HomePage} /> */}
           {/* <Redirect exact from="/" to="/login" /> */}

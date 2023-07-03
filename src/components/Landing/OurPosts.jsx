@@ -1,21 +1,30 @@
+import axios from "axios";
+import { url } from "constants";
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom/cjs/react-router-dom";
 import './blog-post.css' 
+import ReactHtmlParser from 'react-html-parser';
 
 export default function OurPosts() {
-  const [blogData, setBlogData] = useState();
+  const [blogData, setBlogData] = useState([]);
   let history = useHistory()
 
   useEffect(() => {
-    fetch("http://localhost:4000/blog-posts")
-      .then((res) => res.json())
-      .then((json) => setBlogData(json));
+    const getData = async()=>{
+
+      await axios.get(`${url}/blog`,{withCredentials:true}).then((resp)=>{
+        if(resp.data.error){
+  
+        }else{
+          setBlogData(resp.data)
+        }
+      })
+    }
+    getData()
   }, []);
 
-  const displayDetail = (id) => {
-    history.push(`/${id}`)
-    window.scrollTo (0, 0);
-  }
+
 
   return (
     <section className=" mt-6">
@@ -27,25 +36,28 @@ export default function OurPosts() {
             <article
             key={post.id}
               className=" border border-gray-200 rounded-md flex flex-col p-3 cursor-pointer"
-              onClick={() => displayDetail(post.id)}
+             
             >
               <section className=" post_image_container">
-                <img src={post.img} className=" w-full h-full rounded-md" />
+                <Link to={`/${post.id}`}>
+                <img src={post.image} className=" w-full h-full object-cover rounded-md" />
+                </Link>
+               
               </section>
-              <section className=" post_info_container mt-3">
-                <p className=" text-gray-400 text-sm ">
-                  <span className=" text-black">Published on </span>
-                  {post.date}
-                </p>
+              <section className="post_info_container mt-6">
+              <p className="text-gray-400 text-sm">
+                <span className="text-black">Published on </span>
+                {post.date}
+              </p>
 
-                <p className=" long_top_title text-xl font-semibold mt-3">
-                  {post.top_title}
-                </p>
+              <h3 className="long_top_title text-xl font-semibold mt-3">
+                {post.title}
+              </h3>
 
-                <p className=" short_sub_title text-sm text-gray-400 mt-3">
-                  {post.sub_title}
-                </p>
-              </section>
+              <span className="short_sub_title text-sm text-gray-400 mt-3">
+                {ReactHtmlParser(post.description.slice(0, 30))}
+              </span>
+            </section>
             </article>
           ))
         ) : (

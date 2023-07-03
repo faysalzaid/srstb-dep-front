@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import PageTitle from '../components/Typography/PageTitle'
 import SectionTitle from '../components/Typography/SectionTitle'
 import axios from 'axios'
+import { ErrorAlert, SuccessAlert } from "components/Alert";
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import {
   Table,
@@ -44,6 +45,26 @@ function DepartmentList(props) {
     
 
 
+
+    const [openSuccess, setOpenSuccess] = useState({ open: false, message: "" });
+    const [openError, setOpenError] = useState({ open: false, message: "" });
+  
+    const handleCloseSuccess = (event, reason) => {
+      if (reason === "clickaway") {
+        return;
+      }
+  
+      setOpenSuccess({ open: false, message: "" });
+    };
+  
+    const handleCloseError = (event, reason) => {
+      if (reason === "clickaway") {
+        return;
+      }
+  
+      setOpenError({ open: false, message: "" });
+    };
+
     const {authState,settings} = useContext(AuthContext)
 
     
@@ -62,28 +83,37 @@ function DepartmentList(props) {
     const addDepartment = async(e)=>{
       e.preventDefault()
       await axios.post(`${url}/departments`,depForm,{withCredentials:true}).then((resp)=>{
+        if(resp.data.error) return setOpenError({open:true,message:`${resp.data.error}`})
         setDepartmentData([...departmentData,resp.data])
         closeModal()
-        setSuccessMessage("Successfully registerd")
-        setTimeout(() => {
-          setSuccessMessage("")
-        }, 2000);
-      })
+        setOpenSuccess({open:true,message:"Successfully registerd"})
+        
+      }).catch((error)=>{
+        if (error.response && error.response.data && error.response.data.error) {
+            setOpenError({open:true,message:`${error.response.data.error}`});
+          } else {
+            setOpenError({open:true,message:"An unknown error occurred"});
+          }
+    });
     }
 
     const deleteDepartment = async(ids)=>{
       await axios.get(`${url}/departments/delete/${ids}`,{withCredentials:true}).then((resp)=>{
         if(resp.data.error){
-            setErrorMessage(resp.data.error)
+          setOpenError({open:true,message:`${resp.data.error}`})
         }
         const newdata = departmentData.filter((d)=>d.id!==ids)
         setDepartmentData(newdata)
         closeModal()
-        setSuccessMessage("Successfully Deleted")
-        setTimeout(() => {
-          setSuccessMessage("")
-        }, 1000);
-      })
+        setOpenSuccess({open:true,message:"Successfully Deleted"})
+        
+      }).catch((error)=>{
+        if (error.response && error.response.data && error.response.data.error) {
+            setOpenError({open:true,message:`${error.response.data.error}`});
+          } else {
+            setOpenError({open:true,message:"An unknown error occurred"});
+          }
+    });
     }
 
 
@@ -92,6 +122,18 @@ function DepartmentList(props) {
     return ( 
         <>
         <PageTitle>List of Departments</PageTitle>
+        <ErrorAlert
+        open={openError.open}
+        handleClose={handleCloseError}
+        message={openError.message}
+        horizontal="right"
+      />
+      <SuccessAlert
+        open={openSuccess.open}
+        handleClose={handleCloseSuccess}
+        message={openSuccess.message}
+        horizontal="right"
+      />
         <TitleChange name={`Departments | ${settings.name}`} />
         <div>
           <Button onClick={openModal}>Register Department</Button>

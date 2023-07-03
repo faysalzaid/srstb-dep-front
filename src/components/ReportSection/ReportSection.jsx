@@ -97,7 +97,13 @@ function ReportSection({ bid, project, users, setBids, setProject }) {
             setProjectReportData([...projectReportData,resp.data])
             setOpenSuccess({open:true,message:"Successfully Added"})
             onClose()
-        })
+        }).catch((error)=>{
+          if (error.response && error.response.data && error.response.data.error) {
+              setOpenError({open:true,message:`${error.response.data.error}`});
+            } else {
+              setOpenError({open:true,message:"An unknown error occurred"});
+            }
+      })
 
   }
 
@@ -111,11 +117,17 @@ function ReportSection({ bid, project, users, setBids, setProject }) {
     }
     // console.log('request is ',request);
     await axios.post(`${url}/projectReport/approve`,request,{withCredentials:true}).then((resp)=>{
-        console.log(resp.data);
+        // console.log(resp.data);
         if(resp.data.error) return setOpenError({open:true,message:`${resp.data.error}`})
         setProjectReportData(resp.data)
         setOpenSuccess({open:true,message:`Successfully Updated`})
-    })
+    }).catch((error)=>{
+      if (error.response && error.response.data && error.response.data.error) {
+          setOpenError({open:true,message:`${error.response.data.error}`});
+        } else {
+          setOpenError({open:true,message:"An unknown error occurred"});
+        }
+  })
   }
 
 

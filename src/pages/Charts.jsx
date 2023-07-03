@@ -32,10 +32,11 @@ useEffect(()=>{
   const getData =async()=>{
     await axios.get(`${url}/projects`,{withCredentials:true}).then((resp)=>{
       if(resp.data.error){
-        console.log(resp.data.error);
+        // console.log(resp.data.error);
+        return
       }
     setProject(resp.data.projects)
-    console.log(resp.data.projects);
+    // console.log(resp.data.projects);
     
     
     })

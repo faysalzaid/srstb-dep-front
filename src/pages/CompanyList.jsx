@@ -94,7 +94,7 @@ useEffect(()=>{
   const getData = async()=>{
     await axios.get(`${url}/users`,{withCredentials:true}).then((resp)=>{
       if(resp.data.error){
-  
+          return
       }else{
         const data = resp.data.filter((usr)=>usr.role=="client")
         setUsers(data)
@@ -104,7 +104,7 @@ useEffect(()=>{
   
     await axios.get(`${url}/companies`,{withCredentials:true}).then((resp)=>{
       if(resp.data.error){
-  
+          return
       }else{
         setCompanyData(resp.data.company)
         setCount(resp.data.count)
@@ -165,7 +165,7 @@ useEffect(()=>{
         }else{
           // console.log('added data',resp.data);
       
-          setCompanyData((prev)=>[...prev,resp.data])
+          setCompanyData((prev)=>[resp.data,...prev])
           setCompanyFormData({name:"",location:"",UserId:""})
           setOpenSuccess({open:true,message:"Added Successfully"})
          
@@ -176,9 +176,7 @@ useEffect(()=>{
 
 }
 const deleteCompany =async()=>{
-  // console.log('new data ',newData[0]);
-  // console.log(query.indexOf(newData[0]));
-  const response = await axios.get(`${url}/companies/delete/${isDeleteOpen.id}`,{withCredentials:true}).then((resp)=>{
+  const response = await axios.delete(`${url}/companies/${isDeleteOpen.id}`,{withCredentials:true}).then((resp)=>{
     
     if(resp.data.error){
       setOpenError({open:true,message:`${resp.data.error}`})

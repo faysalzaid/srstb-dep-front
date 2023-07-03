@@ -4,6 +4,7 @@ import { BiSearch } from "react-icons/bi";
 import { BsInstagram, BsTwitter } from "react-icons/bs";
 import { FaFacebookF } from "react-icons/fa";
 import { IoBagSharp } from "react-icons/io5";
+import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom/cjs/react-router-dom";
 import "./blog-post.css";
 
@@ -11,16 +12,13 @@ export default function LandingPageNavBar() {
   let navigate = useHistory();
 
   const showDashboard = () => {
-    navigate.push("./app/dashboard");
+    navigate.push("/app/dashboard");
   };
   const showJobs = () => {
     navigate.push("/jobs");
   };
 
-  const homePage = () => {
-    navigate.push("/");
-    window.scrollTo(0, 0);
-  };
+
 
   return (
     <nav className=" blog_post_nav grid grid-cols-3 gap-4 border-b border-gray-300">
@@ -37,9 +35,11 @@ export default function LandingPageNavBar() {
       <div className=" blog_post_nav_middle flex items-center">
         <p
           className=" w-full font-medium text-2xl text-center "
-          onClick={homePage}
         >
+          <Link to={'/'}>
+          
           SRS-RB
+          </Link>
         </p>
       </div>
 

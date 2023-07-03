@@ -25,64 +25,19 @@ export const AuthContextProvider = withRouter((props) => {
 
     const [settings,setSettings] = useState({logo:"", name:"", loginlogo:"", address1:"", address2:""})
     const [authState, setAuthState] = useState({
-        id: "",
-        username: "",
-        email: "",
-        role: "",
+        id:"",
+        username:"",
+        email:"",
+        role:"",
         image:"",
-        state: false,
+        state:false,
         accessToken:""
     })
 
 
 
-    let jwtAxios = axios.create({withCredentials:true})
-
-    jwtAxios.interceptors.request.use(
-      async (config) => {
-        // Check for specific status codes
-        // console.log('about tho do ');
-        if (config.status === 403) {
-          console.log('within the config');
-          await refresh(); // Call the graphauth function
-        }
-        return config;
-      },
-      (error) => Promise.reject(error)
-    );
-    
-
-        jwtAxios.interceptors.response.use(
-          response => response,
-          async (error) => {
-              const prevRequest = error?.config;
-              if (error?.response?.status === 403 && !prevRequest?.sent) {
-                  prevRequest.sent = true;
-                  const newAccessToken = await refresh();
-                  console.log('This is the new ',);
-                  prevRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
-                  return jwtAxios(prevRequest);
-              }
-              return Promise.reject(error);
-          }
-      );
-        
-        jwtAxios.get(`${url}`)
-
   
 
-  
-
-
-
-
-  
-// End of jwt Response Interceptor
-
-
-
-  
-// console.log(history.length);
 
 useEffect(()=>{
 
@@ -92,7 +47,7 @@ useEffect(()=>{
             // console.log(resp.data[0]);
             setSettings({id:data.id,logo:data.logo,name:data.name,loginlogo:data.loginlogo,address1:data.address1, address2:data.address2})
         }).catch((error)=>{
-          console.log(error);
+          // console.log(error);
       })
 
           if(userData?.state!==true){
@@ -100,19 +55,60 @@ useEffect(()=>{
             }else{
               setAuthState({ id:userData?.id,username:userData?.username, email:userData?.email,image:userData?.image, role:userData?.role,state:true,accessToken:userData?.accessToken })
               if(props.history.length>0){
+                // console.log('hello')
                   // console.log(props.history);
                   if(history.location.pathname==='/login'){
                     history.goBack()
                   }
                  
-                 console.log('runned',userData?.state);
+                //  console.log('runned',userData?.state);
               }
             }
 
 
         }
+
+
+
        
         getData()
+
+      
+    
+        // Set the interval to send the refresh token every 5 minutes
+        const intervalId = setInterval(async() => {
+          try {
+            const resp = await axios.post(`${url}/login/refreshToken`, { id: userData?.id });
+            if(resp.data.error) return setAuthState({ id: '', username: '', email: '', image: '', role: '', state: false });
+            const data = resp.data;
+            const usersData = {
+                id: data.id,
+                username: data.name,
+                email: data.email,
+                image: data.image,
+                role: data.role,
+                state: true,
+            
+            };
+            const stringFied = JSON.stringify(usersData);
+            localStorage.setItem('User', stringFied);
+            setAuthState({ id: data?.id, username: data?.name, email: data?.email, image: data?.image, role: data?.role, state: true });
+            const token = data.token; // Store the token in a variable
+            // console.log('updated the token');
+            // console.log('sent the refresh success');
+            // return console.log(token); // Return the token
+        } catch (error) {
+            // console.error('Error from the grapauth', error);
+            setAuthState({ id: '', username: '', email: '', image: '', role: '', state: false });
+            throw error; // Rethrow the error to be caught by the interceptor
+        }
+        },15*60*1000); // 5 minutes (in milliseconds)
+    
+        // Clean up the interval when the component unmounts
+        return () => {
+          clearInterval(intervalId);
+        };
+
        
     },[])
 
