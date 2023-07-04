@@ -29,7 +29,7 @@ import * as constants from "../constants";
 import removeCookie from "../hooks/removeCookie";
 import { AuthContext } from "../hooks/authContext";
 import { Link, useHistory, withRouter } from "react-router-dom";
-import axios from "axios";
+import axios from '../config/axiosConfig'
 import { url } from "config/urlConfig";
 import { ErrorAlert, SuccessAlert } from "components/Alert";
 

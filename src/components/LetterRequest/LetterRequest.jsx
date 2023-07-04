@@ -38,7 +38,7 @@ import {
 } from '../../utils/demo/chartsData'
 import { Link, withRouter } from 'react-router-dom'
 import { url } from 'config/urlConfig'
-import axios from 'axios'
+import axios from '../../config/axiosConfig'
 
 // import NewInvoice from './SingleInvoice'
 import { useRef } from 'react'

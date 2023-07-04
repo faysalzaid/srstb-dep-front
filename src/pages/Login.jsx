@@ -7,7 +7,7 @@ import { GithubIcon, TwitterIcon } from '../icons'
 import { Label, Input, Button } from '@windmill/react-ui'
 import * as Yup from 'yup'
 import {Formik,Form,Field,ErrorMessage} from 'formik'
-import axios from 'axios'
+import axios from '../config/axiosConfig'
 import {url} from '../config/urlConfig'
 import { useState } from 'react'
 
@@ -45,6 +45,12 @@ function Login(props) {
   };
 
 
+
+  const callProjects = async()=>{
+    axios.get(`${url}/tasks`,{withCredentials:true}).then((resp)=>{
+      console.log(resp.data);
+    })
+  }
  
 
   const validation = Yup.object().shape({
@@ -56,6 +62,7 @@ function Login(props) {
 const onSubmit = async(data)=>{
   try {
     await axios.post(`${url}/login`,data,{ withCredentials: true }).then((response)=>{
+      console.log(response.data);
       if(response.data.error){
           setOpenError({open:true,message:`${response.data.error}`})  
          
@@ -122,7 +129,7 @@ const initialValues ={
         message={openSuccess.message}
         horizontal="right"
       />
-
+      <Button onClick={callProjects}>Call</Button>
 
     <div className="flex items-center min-h-screen p-6 bg-gray-50 dark:bg-gray-900">
       <div className="flex-1 h-full max-w-4xl mx-auto overflow-hidden bg-white rounded-lg shadow-xl dark:bg-gray-800">

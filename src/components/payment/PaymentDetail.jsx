@@ -42,7 +42,7 @@ import {
 } from '../../utils/demo/chartsData'
 import { Link, useParams, withRouter } from 'react-router-dom'
 import { url } from 'config/urlConfig'
-import axios from 'axios'
+import axios from '../../config/axiosConfig'
 import { FaPrint,FaTrash } from 'react-icons/fa'
 import { areDayPropsEqual } from '@mui/x-date-pickers/PickersDay/PickersDay'
 import { useRef } from 'react'

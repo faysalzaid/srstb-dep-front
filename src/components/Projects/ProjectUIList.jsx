@@ -11,7 +11,7 @@ import Fade from '@mui/material/Fade';
 
 import {MdModeEditOutline, MdOutlineDeleteOutline} from 'react-icons/md';
 import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
+import axios from '../../config/axiosConfig'
 import { url } from 'config/urlConfig';
 
 const ProjectUIList = ({pr, setProfile, openDetail}) => {

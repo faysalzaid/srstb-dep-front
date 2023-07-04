@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react'
 import { Link } from 'react-router-dom'
 import PageTitle from '../../components/Typography/PageTitle'
 import SectionTitle from '../../components/Typography/SectionTitle'
-import axios from 'axios'
+import axios from '../../config/axiosConfig'
 import { FiLock } from "react-icons/fi";
 
 // import 'bootstrap/dist/css/bootstrap.min.css';

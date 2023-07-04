@@ -36,7 +36,7 @@ import {
 } from "../utils/demo/chartsData";
 import { withRouter } from "react-router-dom";
 import { url } from "config/urlConfig";
-import axios from "../config/axios";
+import axios from "../config/axiosConfig";
 
 import Line_Chart from "global/recharts/Line_Chart";
 import Area_Chart from "global/recharts/Area_Chart";

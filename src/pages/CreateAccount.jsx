@@ -7,7 +7,7 @@ import { GithubIcon, TwitterIcon } from '../icons'
 import { Input, Label, Button } from '@windmill/react-ui'
 import * as Yup from 'yup'
 import {Formik,Form,Field,ErrorMessage} from 'formik'
-import axios from 'axios'
+import axios from '../config/axiosConfig'
 import {url} from '../config/urlConfig'
 import { useState } from 'react'
 

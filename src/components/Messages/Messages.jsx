@@ -8,7 +8,7 @@ import DeleteDialog from './DeleteConfirm';
 import NewMessageDialog from './AddMessage';
 import parse from 'html-react-parser'
 import { ErrorAlert, SuccessAlert } from "components/Alert";
-import axios from "axios";
+import axios from '../../config/axiosConfig'
 import { url } from "config/urlConfig";
 
 

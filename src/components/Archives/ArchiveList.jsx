@@ -42,7 +42,7 @@ import {
 } from '../../utils/demo/chartsData'
 import { Link, withRouter } from 'react-router-dom'
 import { url } from 'config/urlConfig'
-import axios from 'axios'
+import axios from '../../config/axiosConfig'
 import TitleChange from 'components/Title/Title'
 import { FilledInput } from '@mui/material'
 import { FaArchive, FaChevronDown, FaFile, FaFileArchive, FaRegFileArchive, FaTrash } from 'react-icons/fa'

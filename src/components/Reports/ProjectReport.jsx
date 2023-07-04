@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import PageTitle from '../Typography/PageTitle';
 import SectionTitle from '../Typography/SectionTitle';
-import axios from 'axios';
+import axios from '../../config/axiosConfig'
 import { ErrorAlert, SuccessAlert } from "components/Alert";
 import { SelectorIcon } from '@heroicons/react/solid';
 import { FaCheckCircle, FaChevronDown, FaEdit, FaEye, FaFilePdf, FaPlusCircle, FaRegMoneyBillAlt } from 'react-icons/fa';

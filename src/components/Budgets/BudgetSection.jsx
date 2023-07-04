@@ -17,7 +17,7 @@ import { Modal, ModalHeader, ModalBody, ModalFooter,Textarea } from "@windmill/r
 import PageTitle from "components/Typography/PageTitle";
 import { FaEdit, FaRemoveFormat } from "react-icons/fa";
 import { FaPlusCircle, FaCheckCircle, FaRegMoneyBillAlt } from "react-icons/fa";
-import axios from "axios";
+import axios from '../../config/axiosConfig'
 import { url } from "config/urlConfig";
 import { ErrorAlert, SuccessAlert } from "components/Alert";
 import { useContext } from "react";

@@ -34,7 +34,7 @@ import {
 } from '../../utils/demo/chartsData'
 import { Link, useParams, withRouter } from 'react-router-dom'
 import { url } from 'config/urlConfig'
-import axios from 'axios'
+import axios from '../../config/axiosConfig'
 import { FadeLoader } from 'react-spinners'
 import OverView from 'components/overview/OverView'
 import BudgetList from 'components/Budgets/BudgetSection'

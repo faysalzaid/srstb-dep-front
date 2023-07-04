@@ -6,7 +6,7 @@ import ProjectUIList from "./ProjectUIList";
 import "./projects.scss";
 import { BsGrid, BsList } from "react-icons/bs";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
+import axios from '../../config/axiosConfig'
 import { url } from "config/urlConfig";
 import { BiSearch, BiAddToQueue } from "react-icons/bi";
 import { AiOutlinePlus } from "react-icons/ai";

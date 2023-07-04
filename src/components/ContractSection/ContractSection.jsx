@@ -20,7 +20,7 @@ import {
 import { AiFillEye } from "react-icons/ai";
 import { FaRegEdit } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import axios from '../../config/axiosConfig'
 import { url } from "config/urlConfig";
 function ContractSection({ project, id }) {
   const [contracts, setContracts] = useState([]);

@@ -7,7 +7,7 @@ import RoundIcon from '../components/RoundIcon'
 import { ChatIcon, CartIcon, MoneyIcon, PeopleIcon } from '../icons'
 import {FaBullseye,FaDownload,FaCloudUploadAlt} from 'react-icons/fa'
 import { ErrorAlert, SuccessAlert } from "components/Alert";
-import axios from "../config/axios";
+import axios from '../config/axiosConfig'
 import { MdArrowForward } from "react-icons/md";
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import {

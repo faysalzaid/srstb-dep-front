@@ -31,7 +31,7 @@ import {
 } from '@windmill/react-ui'
 import { Modal, ModalHeader, ModalBody, ModalFooter } from '@windmill/react-ui'
 import { Input, HelperText, Label, Select, Textarea } from '@windmill/react-ui'
-import axios from "axios";
+import axios from '../../config/axiosConfig'
 import { url } from "config/urlConfig";
 
 let Container = "div";

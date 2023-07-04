@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import PageTitle from '../../components/Typography/PageTitle'
 import SectionTitle from '../../components/Typography/SectionTitle'
-import axios from 'axios'
+import axios from '../../config/axiosConfig'
 
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import {
