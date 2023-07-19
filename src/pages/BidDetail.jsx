@@ -144,7 +144,7 @@ function BidDetail(props) {
       formData.append('description',bidFormData.description)
       // console.log(formData);
 
-       const response = await axios.post(`http://localhost:4000/bids/${id}`,formData,{withCredentials:true}).then((resp)=>{
+       const response = await axios.post(`${url}/bids/${id}`,formData,{withCredentials:true}).then((resp)=>{
         // console.log('From resp.data',resp.data);
         if(resp.data.error){
           setOpenError({open:true,message:`${resp.data.error}`});
