@@ -4,7 +4,7 @@ import './tasks.scss';
 import { MdAdd } from 'react-icons/md';
 import { EditableTextContent, EditableText } from "../Inputs/EditableInputs";
 import { TextField, TextArea, Dropdown, DateInput } from "../Inputs/Inputs";
-import axios from '../../../config/axiosConfig'
+import axios from 'config/axios'
 import { url } from 'config/urlConfig';
 import { useEffect } from 'react';
 

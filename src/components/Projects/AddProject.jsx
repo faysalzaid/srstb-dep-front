@@ -16,7 +16,7 @@ import { useState } from "react";
 import * as constants from "constants.js";
 import Loader from 'components/Loader';
 import {url} from 'config/urlConfig'
-import axios from '../../config/axiosConfig'
+import axios from 'config/axios'
 
 function PaperComponent(props) {
   return (

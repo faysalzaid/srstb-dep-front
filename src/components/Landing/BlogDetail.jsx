@@ -3,7 +3,7 @@ import { useParams, Link, useHistory } from "react-router-dom";
 import LandingPageNavBar from "./LandingPageNavBar";
 import "./blog-post.css";
 import BlogFooter from "./BlogFooter";
-import axios from "axios";
+import axios from 'config/axios'
 import { url } from "constants";
 import ReactHtmlParser from 'react-html-parser';
 

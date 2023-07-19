@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import PageTitle from "../components/Typography/PageTitle";
 import SectionTitle from "../components/Typography/SectionTitle";
-import axios from "axios";
+import axios from 'config/axios';
 import { ErrorAlert, SuccessAlert } from "components/Alert"; 
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import {
@@ -225,12 +225,13 @@ function UsersDetail(props) {
                   <option value="admin">Admin</option>
                   :""}
                   {authState.role==="admin" || authState.role==="manager"? <option value="manager">Manager</option> :""}
+                   <option value="pRelation">Public Relation</option>
+                  <option value="contractadmin">Contract Admin</option>
+                  <option value="roadquality">Road Quality</option>
                   <option value="finance">Finance</option>
                   <option value="design">Design</option>
-                  <option value="roadquality">Road Quality</option>
                   <option value="client">Client</option>
                   <option value="engineer">Engineer</option>
-                  <option value="contractadmin">Contract Admin</option>
                   <option value="planning">Planning</option>
                   <option value="hr">HR</option>
                 </Field>

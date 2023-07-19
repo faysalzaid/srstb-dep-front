@@ -3,7 +3,7 @@ import { Link, useParams, useHistory, useLocation } from "react-router-dom";
 import PageTitle from "../components/Typography/PageTitle";
 import "../assets/css/employee.css";
 
-import axios from "axios";
+import axios from 'config/axios';
 import { ErrorAlert, SuccessAlert } from "components/Alert";
 
 import { Card, CardBody } from "@windmill/react-ui";

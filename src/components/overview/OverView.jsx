@@ -10,7 +10,7 @@ import ChartCard from "../../components/Chart/ChartCard";
 import { Doughnut, Line } from "react-chartjs-2";
 import ChartLegend from "../../components/Chart/ChartLegend";
 import { FiEdit } from "react-icons/fi";
-import axios from '../../config/axiosConfig'
+import axios from 'config/axios'
 import { url } from "config/urlConfig";
 import Line_Chart from "global/recharts/Line_Chart";
 import Bar_Chart2 from "global/recharts/Bar_Chart2";

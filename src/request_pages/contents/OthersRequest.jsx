@@ -6,7 +6,7 @@ import "../../../node_modules/react-quill/dist/quill.snow.css";
 import { url } from "config/urlConfig";
 import {Button } from '@windmill/react-ui'
 import { AuthContext } from "hooks/authContext";
-import axios from "axios";
+import axios from 'config/axios';
 import { ErrorAlert, SuccessAlert } from "components/Alert";  
 export default function OthersRequest(props) {
   const [value, setValue] = useState("");

@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from 'config/axios';
 import { url } from "constants";
 import { useContext } from "react";
 import { AuthContext } from "./authContext";

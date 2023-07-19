@@ -7,7 +7,7 @@ import {MdDeleteOutline} from 'react-icons/md';
 import {IconButton} from '@mui/material';
 import DeleteDialog from './DeleteConfirm';
 import { useEffect } from 'react';
-import axios from '../../../config/axiosConfig'
+import axios from 'config/axios'
 import { url } from 'config/urlConfig';
 
 export const Budgets = ({budget,setOpenSuccess,setOpenError}) => {

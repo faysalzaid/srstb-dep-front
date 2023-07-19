@@ -19,7 +19,6 @@ import * as constants from "constants.js";
 import TitleChange from "components/Title/Title";
 import useAuth from "hooks/useAuth";
 import { AuthContext } from "hooks/authContext";
-import { url } from "config/urlConfig";
 
 const ChatUI = () => {
   const {authState,settings} = useAuth(AuthContext)
@@ -50,7 +49,7 @@ const ChatUI = () => {
   }, [search]);
 
   const fetchUsers = async () => {
-    fetch(`${url}/chat/userslist/show`, { credentials: "include" })
+    fetch(`${constants.url}/chat/userslist/show`, { credentials: "include" })
       .then((res) => res.json())
       .then((resp) => {
         let users = [];

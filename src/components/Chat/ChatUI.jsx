@@ -5,7 +5,6 @@ import FromChat from "./FromChat";
 import ToChat from "./ToChat";
 
 import * as constants from "constants.js";
-import { url } from "config/urlConfig";
 
 const ChatUIList = ({ to, toUser }) => {
   let ref = useRef(null);
@@ -16,7 +15,7 @@ const ChatUIList = ({ to, toUser }) => {
   const [users, setUsers] = useState([]);
 
   const fetchChats = async () => {
-    fetch(`${url}/chat/get/${to}`, { credentials: "include" })
+    fetch(`${constants.url}/chat/get/${to}`, { credentials: "include" })
       .then((res) => res.json())
       .then((resp) => {
         let chts = [];

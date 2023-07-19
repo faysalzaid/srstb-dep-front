@@ -42,7 +42,7 @@ import {
 } from '../../utils/demo/chartsData'
 import { Link, withRouter } from 'react-router-dom'
 import { url } from 'config/urlConfig'
-import axios from '../../config/axiosConfig'
+import axios from 'config/axios'
 import TitleChange from 'components/Title/Title'
 import { useParams } from 'react-router-dom/cjs/react-router-dom.min'
 import { FaTrashAlt } from 'react-icons/fa'

@@ -12,7 +12,7 @@ import Fade from '@mui/material/Fade';
 
 import {MdModeEditOutline, MdOutlineDeleteOutline} from 'react-icons/md';
 import { Link } from 'react-router-dom';
-import axios from '../../config/axiosConfig'
+import axios from 'config/axios'
 import { url } from 'config/urlConfig';
 
 const ProjectUI = ({pr, setProfile,openDetail,setProjects,projects,setOpenSuccess}) => {

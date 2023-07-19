@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { Link, useParams } from "react-router-dom";
 import PageTitle from "../components/Typography/PageTitle";
 import SectionTitle from "../components/Typography/SectionTitle";
-import axios from "axios";
+import axios from 'config/axios';
 import { ErrorAlert, SuccessAlert } from "components/Alert";
 import "./employeeList.css";
 import { EmplFileDownload } from "../config/urlConfig";

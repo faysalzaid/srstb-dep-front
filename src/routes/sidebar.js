@@ -37,7 +37,7 @@ routes = [{
         path: '/app/dashboard', // the url
         icon: 'HomeIcon', // the component being exported from icons/index.js
         name: 'Dashboard', // name that appear in Sidebar
-        roles: ['admin', 'finance', 'design', 'client', 'roadquality', 'planning', 'engineer', 'contractadmin', 'hr', 'manager']
+        roles: ['admin', 'finance', 'design', 'client', 'roadquality', 'planning', 'engineer', 'contractadmin', 'hr', 'manager', 'pRelation']
     },
     {
         path: '/app/companies',
@@ -71,7 +71,7 @@ routes = [{
         path: '/app/chat',
         icon: 'ChatIcon',
         name: 'Chat',
-        roles: ['admin', 'finance', 'design', 'client', 'roadquality', 'planning', 'engineer', 'contractadmin', 'hr', 'manager']
+        roles: ['admin', 'finance', 'design', 'client', 'roadquality', 'planning', 'engineer', 'contractadmin', 'hr', 'manager', 'pRelation']
     },
     {
         path: '/app/pglist',
@@ -83,7 +83,7 @@ routes = [{
         path: '/app/archives',
         icon: 'FaRegFileArchive',
         name: 'Archives',
-        roles: ['admin', 'finance', 'design', 'engineer']
+        roles: ['admin', 'finance', 'design', 'engineer', 'pRelation']
     },
 
     {
@@ -205,7 +205,7 @@ routes = [{
         path: '/app/bloglist',
         icon: 'FaHtml5',
         name: 'Website',
-        roles: ['admin', ]
+        roles: ['admin', 'pRelation']
     },
 
     // {

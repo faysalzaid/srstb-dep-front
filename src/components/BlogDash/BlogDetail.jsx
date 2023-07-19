@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import PageTitle from "../../components/Typography/PageTitle";
 import SectionTitle from "../../components/Typography/SectionTitle";
-import axios from '../../config/axiosConfig'
+import axios from "../../config/axios";
 import { ErrorAlert, SuccessAlert } from "components/Alert";  
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import ReactQuill from "react-quill";
@@ -280,7 +280,7 @@ const handleChange = (e) => {
 
 
       <p></p>
-      {authState.role==='admin'||authState.role==="manager"||authState.role==="hr" ?
+      {authState.role==='admin'||authState.role==="manager"||authState.role==="hr"||authState.role==="pRelation" ?
       <div>
         <Button size="small" onClick={openModal}>Update Blog</Button>
       </div>

@@ -11,7 +11,7 @@ import { TextField, Dropdown } from 'components/Projects/Inputs/Inputs';
 import {A1, A2, A3, A4, A5, A6} from './avatars';
 import { BsPersonPlus } from 'react-icons/bs';
 import { useEffect } from 'react';
-import axios from '../../config/axiosConfig'
+import axios from 'config/axios'
 import { url } from 'config/urlConfig';
 import { ErrorAlert, SuccessAlert } from "components/Alert";
 import { AuthContext } from 'hooks/authContext';

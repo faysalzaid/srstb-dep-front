@@ -47,7 +47,7 @@ import {
 } from "../../utils/demo/chartsData";
 import { Link, useParams, withRouter } from "react-router-dom";
 import { url } from "config/urlConfig";
-import axios from '../../config/axiosConfig'
+import axios from "../../config/axios";
 import { FaTrashAlt } from "react-icons/fa";
 
 const CandidateDetail = (props) => {

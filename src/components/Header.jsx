@@ -29,7 +29,7 @@ import * as constants from "../constants";
 import removeCookie from "../hooks/removeCookie";
 import { AuthContext } from "../hooks/authContext";
 import { Link, useHistory, withRouter } from "react-router-dom";
-import axios from '../config/axiosConfig'
+import axios from "../config/axios";
 import { url } from "config/urlConfig";
 import { ErrorAlert, SuccessAlert } from "components/Alert";
 
@@ -96,7 +96,7 @@ function Header(props) {
   const [newMessages, setNewMessages] = useState(0);
 
   const fetchNewMessage = () => {
-    fetch(`${url}/chat/count`, {
+    fetch(`${constants.url}/chat/count`, {
       method: "GET",
       credentials: "include",
     })

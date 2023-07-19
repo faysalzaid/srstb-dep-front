@@ -17,7 +17,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import {Button} from '@windmill/react-ui'
 import { url } from 'config/urlConfig';
-import axios from 'axios';
+import axios from 'config/axios';
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });

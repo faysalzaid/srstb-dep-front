@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from 'config/axios'
 import { url } from "constants";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";

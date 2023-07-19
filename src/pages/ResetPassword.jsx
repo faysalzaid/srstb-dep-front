@@ -5,7 +5,7 @@ import ImageLight from '../assets/img/forgot-password-office.jpeg'
 import ImageDark from '../assets/img/forgot-password-office-dark.jpeg'
 import { Label, Input, Button } from '@windmill/react-ui'
 import { url } from '../config/urlConfig'
-import axios from '../config/axiosConfig'
+import axios from 'config/axios'
 import { useState } from 'react'
 
 import { useRef } from 'react'

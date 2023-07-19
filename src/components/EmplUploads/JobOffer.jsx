@@ -1,5 +1,5 @@
 import { Button } from "@mui/material";
-import axios from '../../config/axiosConfig'
+import axios from "../../config/axios";
 import { url } from "config/urlConfig";
 import React from "react";
 import { useState } from "react";

@@ -25,7 +25,7 @@ import { Input, HelperText, Label, Select, Textarea } from "@windmill/react-ui";
 
 import { Link, useHistory, withRouter } from "react-router-dom";
 import { url } from "config/urlConfig";
-import axios from '../../config/axiosConfig'
+import axios from 'config/axios'
 import TitleChange from "components/Title/Title";
 
 const Settings = () => {

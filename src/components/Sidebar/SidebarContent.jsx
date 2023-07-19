@@ -34,6 +34,34 @@ function SidebarContent() {
       const n = newRoute.filter((r)=>r.roles?.find((r)=>r==='engineer'))  
       setNewRoleRoutes(n)
     }
+    else if(authState.role=='pRelation'){
+      const n = newRoute.filter((r)=>r.roles?.find((r)=>r==='pRelation'))  
+      setNewRoleRoutes(n)
+    }
+    else if(authState.role=='design'){
+      const n = newRoute.filter((r)=>r.roles?.find((r)=>r==='design'))  
+      setNewRoleRoutes(n)
+    }
+    else if(authState.role=='roadquality'){
+      const n = newRoute.filter((r)=>r.roles?.find((r)=>r==='roadquality'))  
+      setNewRoleRoutes(n)
+    }
+    else if(authState.role=='contractadmin'){
+      const n = newRoute.filter((r)=>r.roles?.find((r)=>r==='contractadmin'))  
+      setNewRoleRoutes(n)
+    }
+    else if(authState.role=='hr'){
+      const n = newRoute.filter((r)=>r.roles?.find((r)=>r==='hr'))  
+      setNewRoleRoutes(n)
+    }
+    else if(authState.role=='manager'){
+      const n = newRoute.filter((r)=>r.roles?.find((r)=>r==='manager'))  
+      setNewRoleRoutes(n)
+    }
+    // else if(authState.role=='pRelation'){
+    //   const n = newRoute.filter((r)=>r.roles?.find((r)=>r==='pRelation'))  
+    //   setNewRoleRoutes(n)
+    // }
     // newRoute.filter((r)=>r.roles.find((r)=>r==='admin'))
     // console.log(newRoute.filter((r)=>r.roles.find((r)=>r==='admin'))); 
   },[authState.role])

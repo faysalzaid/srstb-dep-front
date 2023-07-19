@@ -4,7 +4,7 @@ import { useState } from "react";
 import "./file.css";
 import { url } from "../config/urlConfig";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import axios from "axios";
+import axios from 'config/axios';
 import { Badge } from "@windmill/react-ui";
 import * as Yup from "yup";
 

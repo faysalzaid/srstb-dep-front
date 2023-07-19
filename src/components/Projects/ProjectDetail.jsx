@@ -17,7 +17,7 @@ import Tasks from './Tasks/Tasks';
 import Budgets from "./Tasks/Budgets";
 import {Bids} from "./Bids/Bids";
 import { useEffect } from "react";
-import axios from '../../config/axiosConfig'
+import axios from 'config/axios'
 import { url } from "config/urlConfig";
 
 import {IoIosArrowForward, IoIosArrowDown} from 'react-icons/io';

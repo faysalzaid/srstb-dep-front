@@ -5,7 +5,7 @@ import {TbListSearch} from 'react-icons/tb';
 import {IconButton} from '@mui/material';
 import ShowDetail from './ShowDialog';
 import {IoMdCall} from 'react-icons/io';
-import axios from '../../../config/axiosConfig'
+import axios from 'config/axios'
 import { url } from 'config/urlConfig';
 
 export const Bids = ({showInterface, setSelectedWinner,Bid,setProject,setFormData,setOpenSuccess}) => {

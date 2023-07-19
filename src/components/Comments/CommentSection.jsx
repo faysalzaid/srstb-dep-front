@@ -22,7 +22,7 @@ import {
 import { AiFillEye } from "react-icons/ai";
 import { FaRegEdit, FaTrashAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import axios from '../../config/axiosConfig'
+import axios from "../../config/axios";
 import { url } from "config/urlConfig";
 import PageTitle from "components/Typography/PageTitle";
 import { AuthContext } from "hooks/authContext";

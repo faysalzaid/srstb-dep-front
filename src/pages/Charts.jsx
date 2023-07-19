@@ -15,7 +15,7 @@ import {
   lineLegends,
   barLegends,
 } from '../utils/demo/chartsData'
-import axios from '../config/axiosConfig'
+import axios from 'config/axios'
 import { url } from 'config/urlConfig'
 import { useState } from 'react'
 import useAuth from 'hooks/useAuth'

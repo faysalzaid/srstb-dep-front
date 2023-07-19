@@ -3,7 +3,7 @@ import { BiLeftArrow, BiRightArrow } from "react-icons/bi";
 import "./blog-post.css";
 import { AiOutlineDoubleLeft, AiOutlineDoubleRight } from "react-icons/ai";
 import { useHistory } from "react-router-dom/cjs/react-router-dom";
-import axios from "axios";
+import axios from 'config/axios'
 import { url } from "constants";
 import { Link } from "react-router-dom";
 import ReactHtmlParser from 'react-html-parser';

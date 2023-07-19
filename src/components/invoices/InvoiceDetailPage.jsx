@@ -40,7 +40,7 @@ import {
 } from '../../utils/demo/chartsData'
 import { Link, useParams, withRouter } from 'react-router-dom'
 import { url } from 'config/urlConfig'
-import axios from 'axios'
+import axios from 'config/axios'
 import NewInvoice from './SingleInvoice'
 import { ErrorAlert, SuccessAlert } from "components/Alert";
 

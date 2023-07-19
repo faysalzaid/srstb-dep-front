@@ -42,7 +42,7 @@ import {
 } from '../../utils/demo/chartsData'
 import { Link, useParams, withRouter } from 'react-router-dom'
 import { url } from 'config/urlConfig'
-import axios from '../../config/axiosConfig'
+import axios from '../../config/axios'
 import { FaCloudUploadAlt } from 'react-icons/fa'
 import { date } from 'faker/lib/locales/az'
 import TitleChange from 'components/Title/Title'

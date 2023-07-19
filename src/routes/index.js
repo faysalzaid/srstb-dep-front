@@ -198,6 +198,7 @@ const routes = [{
             "engineer",
             "contractadmin",
             "hr",
+            "pRelation"
         ],
     },
     {
@@ -326,6 +327,7 @@ const routes = [{
             "engineer",
             "contractadmin",
             "hr",
+            "pRelation"
         ],
     },
     {
@@ -451,13 +453,14 @@ const routes = [{
     {
         path: "/profile",
         component: ProfilePage,
-        roles: ["admin", "roadquality"],
+        roles: ['admin', 'finance', 'design', 'client', 'roadquality', 'planning', 'engineer', 'contractadmin', 'hr', 'manager', 'pRelation']
+
     },
 
     {
         path: "/archives",
         component: ArchiveList,
-        roles: ["admin", "roadquality"],
+        roles: ["admin", "roadquality", 'pRelation'],
     },
     {
         path: "/awards",
@@ -521,12 +524,12 @@ const routes = [{
     {
         path: "/bloglist",
         component: BlogList,
-        roles: ["admin", "finance", "hr"],
+        roles: ["admin", "finance", "hr", "pRelation"],
     },
     {
         path: "/bloglist/:id",
         component: BlogDetail,
-        roles: ["admin", "finance", "hr"],
+        roles: ["admin", "finance", "hr", "pRelation"],
     },
 ];
 

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import {useParams} from 'react-router-dom'
 import PageTitle from '../../components/Typography/PageTitle'
 import SectionTitle from '../../components/Typography/SectionTitle'
-import axios from '../../config/axiosConfig'
+import axios from 'config/axios'
 import getCookie from 'hooks/getCookie'
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import {
@@ -147,7 +147,7 @@ function ProfilePage(props) {
     formData.append("role", usersForm.role);
     formData.append("password", usersForm.password);
     formData.append("image",usersForm.image)
-    console.log(usersForm);
+    // console.log(usersForm);
     const response = await axios.post(`${url}/users/${authState.id}`,formData,{withCredentials:true}).then((resp)=>{
         if(resp.data.error){
           setOpenError({open:true,message:`${resp.data.error}`})

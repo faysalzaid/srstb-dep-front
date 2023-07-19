@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from 'config/axios';
 import React, { lazy, useContext, useState } from "react";
 import { useEffect } from "react";
 import {

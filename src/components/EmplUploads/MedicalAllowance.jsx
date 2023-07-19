@@ -1,6 +1,7 @@
 import { Button } from "@mui/material";
-import axios from '../../config/axiosConfig'
+
 import { url } from "config/urlConfig";
+import axios from 'config/axios'
 import React from "react";
 import { useState } from "react";
 import { FaCloudUploadAlt } from "react-icons/fa";
