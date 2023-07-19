@@ -1,1 +1,1 @@
-export const url = "http://react.amiigotech.com";
+export const url = "https://react.amiigotech.com";
