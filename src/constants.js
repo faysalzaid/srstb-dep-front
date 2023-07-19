@@ -1,1 +1,1 @@
-export const url = "https://cicd.amiigotech.com";
+export const url = "http://react.amiigotech.com";

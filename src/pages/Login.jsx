@@ -7,7 +7,8 @@ import { GithubIcon, TwitterIcon } from '../icons'
 import { Label, Input, Button } from '@windmill/react-ui'
 import * as Yup from 'yup'
 import {Formik,Form,Field,ErrorMessage} from 'formik'
-import axios from '../config/axiosConfig'
+// import axios from '../config/axiosConfig'
+
 import {url} from '../config/urlConfig'
 import { useState } from 'react'
 
@@ -16,6 +17,7 @@ import { AuthContext } from '../hooks/authContext'
 import { ErrorAlert, SuccessAlert } from "components/Alert";
 import TitleChange from 'components/Title/Title'
 import setCookie from 'hooks/setCookie'
+import axios from 'axios'
 
 function Login(props) {
 
@@ -60,7 +62,12 @@ function Login(props) {
 
 
 const onSubmit = async(data)=>{
+  // console.log('called one',data);
   try {
+    const request = {
+      email:data.email,
+      password:data.password
+    }
     await axios.post(`${url}/login`,data,{ withCredentials: true }).then((response)=>{
       console.log(response.data);
       if(response.data.error){

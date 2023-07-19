@@ -96,7 +96,7 @@ function Header(props) {
   const [newMessages, setNewMessages] = useState(0);
 
   const fetchNewMessage = () => {
-    fetch(`${constants.url}/chat/count`, {
+    fetch(`${url}/chat/count`, {
       method: "GET",
       credentials: "include",
     })

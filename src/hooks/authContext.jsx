@@ -102,7 +102,7 @@ useEffect(()=>{
             setAuthState({ id: '', username: '', email: '', image: '', role: '', state: false });
             throw error; // Rethrow the error to be caught by the interceptor
         }
-        },15*60*1000); // 5 minutes (in milliseconds)
+        },15*60*1000); // 15 minutes (in milliseconds)
     
         // Clean up the interval when the component unmounts
         return () => {
