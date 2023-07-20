@@ -1,4 +1,5 @@
-import React from "react";
+import { AuthContext } from "hooks/authContext";
+import React, { useContext, useState } from "react";
 import { AiOutlineLogin } from "react-icons/ai";
 import { BiSearch } from "react-icons/bi";
 import { BsInstagram, BsTwitter } from "react-icons/bs";
@@ -10,6 +11,8 @@ import "./blog-post.css";
 
 export default function LandingPageNavBar() {
   let navigate = useHistory();
+
+  const {authState} = useContext(AuthContext)
 
   const showDashboard = () => {
     navigate.push("/app/dashboard");
@@ -57,12 +60,9 @@ export default function LandingPageNavBar() {
           >
             Jobs
           </span>
-          <span
-            className=" box-content p-3 border border-transparent rounded-md hover:border-gray-300 cursor-pointer"
-            onClick={showDashboard}
-          >
-            Dashboard
-          </span>
+          {authState.state?
+          <Link to={'/app/dashboard'}><span className=" box-content p-3 border border-transparent rounded-md hover:border-gray-300 cursor-pointer"> Dashboard</span></Link>:
+          <Link to={'/login'}><span className=" box-content p-3 border border-transparent rounded-md hover:border-gray-300 cursor-pointer"> Login</span></Link>}
         </section>
       </div>
     </nav>

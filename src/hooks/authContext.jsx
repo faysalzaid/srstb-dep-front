@@ -1,4 +1,4 @@
-import axios from 'config/axios';
+import axios from "axios";
 import { createContext, useState } from "react";
 import getCookie from "./getCookie";
 import jwt_decode from 'jwt-decode'
@@ -44,14 +44,17 @@ useEffect(()=>{
         const getData = async()=>{
           await axios.get(`${url}/settings`).then((resp)=>{
             const data = resp.data[0]
-            // console.log(resp.data[0]);
             setSettings({id:data.id,logo:data.logo,name:data.name,loginlogo:data.loginlogo,address1:data.address1, address2:data.address2})
         }).catch((error)=>{
           // console.log(error);
       })
 
           if(userData?.state!==true){
-            history.push('/login')
+            if(history.location.pathname==='/login'){
+                return
+            }else{
+              history.push('/')
+            }
             }else{
               setAuthState({ id:userData?.id,username:userData?.username, email:userData?.email,image:userData?.image, role:userData?.role,state:true,accessToken:userData?.accessToken })
               if(props.history.length>0){
@@ -59,6 +62,8 @@ useEffect(()=>{
                   // console.log(props.history);
                   if(history.location.pathname==='/login'){
                     history.goBack()
+                  }else{
+                    return
                   }
                  
                 //  console.log('runned',userData?.state);

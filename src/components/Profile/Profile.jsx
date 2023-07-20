@@ -124,7 +124,7 @@ function ProfilePage(props) {
         // console.log('this is from params',id);
         await axios.get(`${url}/users`,{withCredentials:true}).then((resp)=>{
           if(resp.data.error){
-    
+            setOpenError({open:true,message:`${resp.data.error}`})
           }else{
             const data = resp.data.filter((usr)=>usr.role=="client")
             setUsers(data)
@@ -324,7 +324,7 @@ const deleteCompany =async()=>{
       <div className="px-6 py-8">
         <div className="flex justify-between items-center">
           <div className=" items-center">
-            <img src={authState.image} alt="Company Logo" style={{width:200}} className=" mr-2" />
+            <img src={authState.image} alt="profile image" style={{width:200}} className=" mr-2" />
             <h2 className="text-lg font-medium text-gray-900">Profile Info</h2>
           </div>
          
