@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import {useParams} from 'react-router-dom'
 import PageTitle from '../../components/Typography/PageTitle'
 import SectionTitle from '../../components/Typography/SectionTitle'
-import axios from 'config/axios'
+import axios from 'axios'
 import getCookie from 'hooks/getCookie'
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import {
@@ -78,7 +78,7 @@ function ProfilePage(props) {
     const [errorMessage,setErrorMessage] = useState('')
     const [frontErrorMessage,setFrontErrorMessage] = useState('')
     const [showModal, setShowModal] = useState({show:false,id:""});
-    const [users,setUsers] = useState([])
+    const [users,setUsers] = useState({})
     const [usersForm,setUsersForm] = useState({
       id:authState.id,
       name:authState.username,
@@ -122,12 +122,20 @@ function ProfilePage(props) {
         setCompanyFormData({name:response.data.name,location:response.data.location,UserId:response.data.UserId})
         // console.log(response.data);
         // console.log('this is from params',id);
-        await axios.get(`${url}/users`,{withCredentials:true}).then((resp)=>{
+        await axios.get(`${url}/users/${authState.id}`,{withCredentials:true}).then((resp)=>{
           if(resp.data.error){
-            setOpenError({open:true,message:`${resp.data.error}`})
           }else{
-            const data = resp.data.filter((usr)=>usr.role=="client")
-            setUsers(data)
+            
+            setUsers(resp.data)
+            setUsersForm({
+              id:resp.data.id,
+              name:resp.data.name,
+              email:resp.data.email,
+              image:resp.data.image,
+              role:resp.data.role,
+              password:""
+
+            })
           }
         })
     }
@@ -162,10 +170,10 @@ function ProfilePage(props) {
           image:resp.data.image,
           role: resp.data.role,
           state: true,
-          refreshToken: resp.data.refreshToken
+ 
           }
           const newCookie = JSON.stringify(newData)
-          setCookie('accessToken',newCookie)
+          localStorage.setItem('User', newCookie); 
           setAuthState({ 
             id:resp.data.id,
             username:resp.data.name, 
@@ -173,7 +181,7 @@ function ProfilePage(props) {
             image:resp.data.image, 
             role:resp.data.role,
             state:true,
-            refreshToken:resp.data.refreshToken 
+       
           })
           setUsersForm({ 
             id:resp.data.id,
@@ -324,7 +332,7 @@ const deleteCompany =async()=>{
       <div className="px-6 py-8">
         <div className="flex justify-between items-center">
           <div className=" items-center">
-            <img src={authState.image} alt="profile image" style={{width:200}} className=" mr-2" />
+            <img src={authState.image} alt="Company Logo" style={{width:200}} className=" mr-2" />
             <h2 className="text-lg font-medium text-gray-900">Profile Info</h2>
           </div>
          
