@@ -38,7 +38,7 @@ import {
 } from '../../utils/demo/chartsData'
 import { Link, withRouter } from 'react-router-dom'
 import { url } from 'config/urlConfig'
-import axios from 'config/axios'
+import axios from 'axios'
 
 import NewInvoice from './SingleInvoice'
 import { useRef } from 'react'
@@ -379,6 +379,7 @@ const captureProject = ()=>{
             <Input
             type="number"
               className="mt-1"
+              step="0.001"
               name="totalPaid"
               value={formValues.totalPaid}
               onChange={(e)=>setFormValues({...formValues,totalPaid:e.target.value})}
