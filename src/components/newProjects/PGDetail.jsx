@@ -461,7 +461,7 @@ navWrapper.classList.remove('active')
         </div>
         <div className=''>
         <Badge type={project.approved?"success":"danger"}>{project.approved?"Approved By Planning":"Didn't Get Approved By Planning"}</Badge>
-        {authState.role==='planning' || authState.role==='admin' || authState.role==="manager"?
+        {authState.role==='planning' || authState.role==='admin' || authState.role==="manager" || authState.role==="finance"?
         <Button onClick={projectApproval} size="small" className="ml-4" style={{background:project.approved?'green':'red'}} >{project.approved?"UnApprove":"Approve"}</Button>
         :""}
         </div>
