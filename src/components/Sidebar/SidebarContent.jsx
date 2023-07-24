@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import routes from '../../routes/sidebar'
-import { NavLink, Route } from 'react-router-dom'
+import { Link, NavLink, Route } from 'react-router-dom'
 import * as Icons from '../../icons'
 import SidebarSubmenu from './SidebarSubmenu'
 import { Button } from '@windmill/react-ui'
@@ -66,11 +66,12 @@ function SidebarContent() {
     // console.log(newRoute.filter((r)=>r.roles.find((r)=>r==='admin'))); 
   },[authState.role])
 
+ 
   return (
-    <div className="py-4 text-gray-500 dark:text-gray-400">
-      <a className="ml-6 text-lg font-bold text-gray-800 dark:text-gray-200" href="#">
+    <div className="py-6  text-gray-100  bg-blue-600 min-h-screen overflow-y-auto">
+      <Link className="ml-6 text-lg font-bold text-gray-100 dark:text-gray-200" to="#">
         {settings.name}
-      </a>
+      </Link>
       <ul className="mt-6">
         {newRoleRoutes.map((route) =>
           route.routes ? (
@@ -80,12 +81,12 @@ function SidebarContent() {
               <NavLink
                 exact
                 to={route.path}
-                className="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-                activeClassName="text-gray-800 dark:text-gray-100"
+                className="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-300 "
+                activeClassName="text-gray-100 "
               >
                 <Route path={route.path} exact={route.exact}>
                   <span
-                    className="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg"
+                    className="absolute inset-y-0 left-0 w-1 bg-gray-100 rounded-tr-lg rounded-br-lg"
                     aria-hidden="true"
                   ></span>
                 </Route>

@@ -447,7 +447,7 @@ const routes = [{
     {
         path: "/reports/projects",
         component: ProjectReport,
-        roles: ["admin", "roadquality"],
+        roles: ["admin", "roadquality", "finance"],
     },
 
     {
@@ -460,17 +460,17 @@ const routes = [{
     {
         path: "/archives",
         component: ArchiveList,
-        roles: ["admin", "roadquality", 'pRelation'],
+        roles: ["admin", "roadquality", 'pRelation', "finance"],
     },
     {
         path: "/awards",
         component: AwardList,
-        roles: ["admin", "roadquality"],
+        roles: ["admin", "roadquality", "finance"],
     },
     {
         path: "/awards/:id",
         component: AwardDetail,
-        roles: ["admin", "roadquality"],
+        roles: ["admin", "roadquality", "finance"],
     },
     {
         path: "/procurement/",

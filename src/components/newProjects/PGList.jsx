@@ -40,7 +40,7 @@ import {
 } from '../../utils/demo/chartsData'
 import { Link, withRouter } from 'react-router-dom'
 import { url } from 'config/urlConfig'
-import axios from 'config/axios'
+import axios from 'axios'
 import TitleChange from 'components/Title/Title'
 import { FaChevronDown } from 'react-icons/fa'
 
@@ -54,7 +54,9 @@ const PgList = () => {
     const [allProjects, setAllProjects] = useState({})
     const [projects,setProject] = useState([])
     const [countsData,setCountsData] = useState({ projectCount:"",bidCount:"",activeProjects:"",completedProjects:""})
-  
+    const [searchTerm,setSearchTerm] = useState("")
+    const [fetchedResult,setFetchedResult] = useState([])
+    const [searchResult,setSearchResult] = useState([])
     const [isOpen,setIsOpen] = useState(false)
 
 
@@ -166,6 +168,30 @@ const PgList = () => {
         // e.g. make an API call to save the form data
       
       };
+
+
+
+      useEffect(()=>{
+        setSearchResult(searchTerm.length<1?projects:searchResult)
+      },[projects,searchTerm])
+
+
+
+
+      const searchHandler = async(search)=>{
+        setSearchTerm(search)
+        if(search!==0){
+          const newBidList = projects.filter((bid)=>{
+            return Object.values(bid).join(" ").toLowerCase().includes(search.toLowerCase())
+          })
+          // console.log(newBidList);
+          setSearchResult(newBidList)
+        }else{
+          setSearchResult(projects)
+        }
+      }
+
+      
 
 
 
@@ -341,6 +367,24 @@ const PgList = () => {
         message={openSuccess.message}
         horizontal="right"
       />
+
+                      {/* Search section */}
+                      <div className='mb-5'>
+        <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+        <div className="relative">
+            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                <svg aria-hidden="true" className="w-5 h-5 text-gray-500 dark:text-gray-400" fill="none" strokeWidth="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            </div>
+            <Input type="search" id="default-search" value={searchTerm} onChange={(e)=>searchHandler(e.target.value)} 
+            className="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 
+            dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search Project Full-Name..." required />
+        </div>
+            
+        </div>
+        {/* End of search List */}
+        
+
+        
         {/* Delete Confirm section */}
      <Modal isOpen={isDeleteOpen.open} onClose={closeDelete}>
           <ModalHeader>Confirm Action</ModalHeader>
@@ -395,7 +439,7 @@ const PgList = () => {
   
         <TableContainer>
    
-          {authState.role==="admin" || authState.role==="engineer" || authState.role==="manager" || authState.role==="planning" ?
+          {authState.role==="admin" || authState.role==="engineer" || authState.role==="manager" || authState.role==="planning" || authState.role==="finance" ?
         <Button size="small" onClick={openModal}>New Project</Button>
         :<span>Read Only</span>}
 
@@ -667,7 +711,7 @@ const PgList = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {projects?.map((project) => (
+            {searchResult?.map((project) => (
               <TableRow key={project.id} className={`${isEndTimeReached(project)?'bg-red-200 text-gray-600':''}`}>
                 <TableCell>
                   <div className="flex items-center text-sm">

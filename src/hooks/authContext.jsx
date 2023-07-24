@@ -99,15 +99,16 @@ useEffect(()=>{
             localStorage.setItem('User', stringFied);
             setAuthState({ id: data?.id, username: data?.name, email: data?.email, image: data?.image, role: data?.role, state: true });
             const token = data.token; // Store the token in a variable
-            // console.log('updated the token');
+            console.log('updated the token');
             // console.log('sent the refresh success');
             // return console.log(token); // Return the token
         } catch (error) {
             // console.error('Error from the grapauth', error);
             setAuthState({ id: '', username: '', email: '', image: '', role: '', state: false });
-            throw error; // Rethrow the error to be caught by the interceptor
+            props.history.push('/login') // Rethrow the error to be caught by the interceptor
+
         }
-        },15*60*1000); // 5 minutes (in milliseconds)
+        },5*60*1000); // 5 minutes (in milliseconds)
     
         // Clean up the interval when the component unmounts
         return () => {
