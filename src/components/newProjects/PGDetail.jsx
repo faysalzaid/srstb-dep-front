@@ -34,7 +34,7 @@ import {
 } from '../../utils/demo/chartsData'
 import { Link, useParams, withRouter } from 'react-router-dom'
 import { url } from 'config/urlConfig'
-import axios from 'config/axios'
+import axios from 'axios'
 import { FadeLoader } from 'react-spinners'
 import OverView from 'components/overview/OverView'
 import BudgetList from 'components/Budgets/BudgetSection'
@@ -450,7 +450,7 @@ navWrapper.classList.remove('active')
         <TableContainer>
         {/* Calendar section */}
         <div className='flex mb-2'>
-        {authState.role==="admin" || authState.role==="engineer" || authState.role==="manager" || authState.role==="planning" ?
+        {authState.role==="admin" || authState.role==="engineer" || authState.role==="manager" || authState.role==="planning" || authState.role==="finance" ?
         <Button size="small" className="ml-0" onClick={openModal}>Update Project</Button>
         :<Badge className="mt-2">Read Only</Badge>}
 

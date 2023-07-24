@@ -108,7 +108,7 @@ useEffect(()=>{
             props.history.push('/login') // Rethrow the error to be caught by the interceptor
 
         }
-        },5*60*1000); // 5 minutes (in milliseconds)
+        },15*60*1000); // 5 minutes (in milliseconds)
     
         // Clean up the interval when the component unmounts
         return () => {
