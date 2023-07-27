@@ -239,7 +239,7 @@ function Dashboard(props) {
             </TableHeader>
           
             <TableBody>
-            {comments.map((prc, i) => (  
+            {comments?.map((prc, i) => (  
                 <TableRow key={i} >
                   <TableCell>
                     <div className="flex items-center text-sm">
@@ -269,7 +269,7 @@ function Dashboard(props) {
                   
                   <TableCell>
                     <div className="flex items-center space-x-4">
-                      <Link to={`/app/pglist/${prc.Project.id}`}>
+                      <Link to={`/app/pglist/${prc?.Project?.id}`}>
                       <Button layout="link" size="icon" aria-label="Edit">
                         <EditIcon className="w-5 h-5" aria-hidden="true" />
                       </Button>
@@ -405,27 +405,27 @@ function Dashboard(props) {
                     <div className="flex items-center text-sm">
                       
                       <div>
-                        <p className="font-semibold">{prc.timeToSell}</p>
+                        <p className="font-semibold">{prc?.timeToSell}</p>
                       </div>
                     </div>
                   </TableCell>
                   
                   
                   <TableCell>
-                    <span className="text-sm">{prc.budgetFrom}</span>
+                    <span className="text-sm">{prc?.budgetFrom}</span>
                   </TableCell>
                   <TableCell>
-                    <span className="text-sm">{prc.procurementType}</span>
+                    <span className="text-sm">{prc?.procurementType}</span>
                   </TableCell>
                   
                   <TableCell>
-                    <span className="text-sm">{prc.procurementMethod}</span>
+                    <span className="text-sm">{prc?.procurementMethod}</span>
                   </TableCell>
                   
                   
                   <TableCell>
                     <div className="flex items-center space-x-4">
-                      <Link to={`/app/procurement/${prc.id}`}>
+                      <Link to={`/app/procurement/${prc?.id}`}>
                       <Button layout="link" size="icon" aria-label="Edit">
                         <EditIcon className="w-5 h-5" aria-hidden="true" />
                       </Button>
