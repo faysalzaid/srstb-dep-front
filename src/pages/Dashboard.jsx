@@ -131,7 +131,7 @@ function Dashboard(props) {
     getData();
     getComments()
 
-    console.log('favicon');
+    // console.log('favicon');
   }, []);
 
 
