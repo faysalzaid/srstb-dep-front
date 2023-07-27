@@ -70,8 +70,8 @@ function Dashboard(props) {
             
             return
           }
-          setProject(resp.data.projects);
-          const ddata = resp.data.projects.filter((pr)=>{
+          setProject(resp.data?.projects);
+          const ddata = resp.data?.projects.filter((pr)=>{
             const currentDate = new Date();
             const endTime = new Date(pr.endtime);
             return endTime.getTime() <= currentDate.getTime();
@@ -90,7 +90,7 @@ function Dashboard(props) {
         .then((resp) => {
           const data = resp.data;
           setCountsData({
-            projectCount: data.projectsCount,
+            projectCount: data?.projectsCount,
             bidCount: data.countBids,
             activeProjects: data.activeProjectsCount,
             completedProjects: data.completedProjects,
@@ -172,7 +172,7 @@ function Dashboard(props) {
 
           {/* <!-- Cards --> */}
           <div className="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
-            <InfoCard title="Total Projects " value={countsData.projectCount}>
+            <InfoCard title="Total Projects " value={countsData?.projectCount}>
               <RoundIcon
                 icon={PeopleIcon}
                 iconColorClass="text-orange-500 dark:text-orange-100"
@@ -245,21 +245,21 @@ function Dashboard(props) {
                     <div className="flex items-center text-sm">
                       
                       <div>
-                        <p className="font-semibold">{prc.comment}</p>
+                        <p className="font-semibold">{prc?.comment}</p>
                       </div>
                     </div>
                   </TableCell>
                   
                   
                   <TableCell>
-                    <span className="text-sm">{prc.Project.name}</span>
+                    <span className="text-sm">{prc?.Project?.name}</span>
                   </TableCell>
                   <TableCell>
-                    <span className="text-sm">{prc.date}</span>
+                    <span className="text-sm">{prc?.date}</span>
                   </TableCell>
                   
                   <TableCell>
-                    <span className="text-sm">{prc.user}</span>
+                    <span className="text-sm">{prc?.user}</span>
                   </TableCell>
 
                   <TableCell>
@@ -332,7 +332,7 @@ function Dashboard(props) {
             </TableHeader>
          
             <TableBody>
-            {deadlineProjects.map((project, i) => (  
+            {deadlineProjects?.map((project, i) => (  
                 <TableRow key={i} className="bg-red-200">
                   <TableCell>
                     <div className="flex items-center text-sm">
