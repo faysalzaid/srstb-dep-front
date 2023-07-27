@@ -181,7 +181,7 @@ const PgList = () => {
       const searchHandler = async(search)=>{
         setSearchTerm(search)
         if(search!==0){
-          const newBidList = projects.filter((bid)=>{
+          const newBidList = projects?.filter((bid)=>{
             return Object.values(bid).join(" ").toLowerCase().includes(search.toLowerCase())
           })
           // console.log(newBidList);
@@ -228,7 +228,7 @@ const PgList = () => {
             }
           setProject(resp.data.projects)
           setAllProjects(resp.data.projects)
-          const nD = resp.data.projects[0].endtime
+          const nD = resp?.data?.projects[0]?.endtime
           getDaysPassed(nD)
           // console.log(resp.data);
       
@@ -281,7 +281,7 @@ const PgList = () => {
     if(e.target.value==='all'){
       setProject(allProjects)
     }else{
-      const data = allProjects.filter((pr)=>pr.status===e.target.value)
+      const data = allProjects?.filter((pr)=>pr.status===e.target.value)
       setProject(data)
     }
   }
@@ -294,7 +294,7 @@ const PgList = () => {
     if(e.target.value==='all'){
       // setProject(allProjects)
     }else{
-      const data = allProjects.filter((pr)=>pr.year.slice(0,4)===e.target.value)
+      const data = allProjects?.filter((pr)=>pr.year.slice(0,4)===e.target.value)
       setProject(data)
     }
   }
@@ -307,11 +307,11 @@ const PgList = () => {
       // setProject(allProjects)
     }else if(e.target.value==='false'){
       // console.log('in the false');
-      const data = allProjects.filter((pr)=>!(pr.approved))
+      const data = allProjects?.filter((pr)=>!(pr.approved))
       setProject(data)
     }else if(e.target.value==='true'){
       // console.log('in the true');
-      const data = allProjects.filter((pr)=>pr.approved)
+      const data = allProjects?.filter((pr)=>pr.approved)
       setProject(data)
     }
   }
@@ -334,7 +334,7 @@ const PgList = () => {
     if(resp.data.error){
       setOpenError({open:true,message: `${resp.data.error}`})
     }else{
-      const data = projects.filter((pr)=>pr.id!==isDeleteOpen.id)
+      const data = projects?.filter((pr)=>pr.id!==isDeleteOpen.id)
       setProject(data)
       setOpenSuccess({open:true,message:"Successfully Deleted"})
       closeDelete()
